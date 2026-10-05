@@ -1,0 +1,365 @@
+/**
+ * =====================================================================
+ * GMKI CABANG PADANG - SISTEM INFORMASI & MANAJEMEN KEANGGOTAAN
+ * File: frontend/public/assets/css/pengawas.css
+ * Deskripsi: Stylesheet Khusus Panel Pengawas (KETCAB, SEKCAB, BENCAB, MPPC)
+ * Lapisan: Mode Baca Saja & Pengawasan Eksekutif
+ * =====================================================================
+ */
+
+@import url('admin.css');
+
+/* Body & Background */
+.pengawas-body {
+    background-color: #f1f5f9;
+}
+
+.pengawas-body .dashboard-content {
+    width: 100%;
+    max-width: 1680px;
+    margin: 0 auto;
+}
+
+.executive-dashboard-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1.5rem;
+    margin-bottom: 1.75rem;
+}
+
+.executive-dashboard-eyebrow {
+    display: inline-block;
+    margin-bottom: 0.4rem;
+    color: #b45309;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.executive-dashboard-title {
+    margin: 0 0 0.45rem;
+    color: var(--primary);
+    font-size: clamp(1.5rem, 2.5vw, 2rem);
+    font-weight: 800;
+    line-height: 1.2;
+    letter-spacing: -0.035em;
+}
+
+.executive-dashboard-description,
+.executive-dashboard-audit-description {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+
+.executive-dashboard-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+    flex-shrink: 0;
+}
+
+.executive-dashboard-actions .btn {
+    justify-content: center;
+}
+
+.pengawas-body .metrics-grid {
+    gap: 1rem;
+    margin-bottom: 1.75rem;
+}
+
+.pengawas-body .stat-card {
+    min-width: 0;
+}
+
+.executive-tabs {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.75rem;
+    padding: 1rem;
+    background: #f8fafc;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.executive-tab-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    min-width: 0;
+    padding: 0.9rem 1rem;
+    color: #475569;
+    text-decoration: none;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.85rem;
+    transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, color 0.2s ease;
+}
+
+.executive-tab-btn:hover {
+    color: var(--primary);
+    border-color: #cbd5e1;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
+}
+
+.executive-tab-btn.active {
+    color: #ffffff;
+    background: linear-gradient(135deg, #0f3d64, #1e5687);
+    border-color: #0f3d64;
+    box-shadow: 0 6px 16px rgba(15, 61, 100, 0.2);
+}
+
+.executive-tab-icon {
+    display: grid;
+    width: 2.65rem;
+    height: 2.65rem;
+    flex: 0 0 2.65rem;
+    place-items: center;
+    background: #f1f5f9;
+    border-radius: 0.75rem;
+    font-size: 1.2rem;
+}
+
+.executive-tab-btn.active .executive-tab-icon {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.executive-tab-copy {
+    display: grid;
+    gap: 0.2rem;
+    min-width: 0;
+}
+
+.executive-tab-copy strong {
+    font-size: 0.82rem;
+    line-height: 1.3;
+}
+
+.executive-tab-copy small {
+    color: #64748b;
+    font-size: 0.75rem;
+    line-height: 1.4;
+}
+
+.executive-tab-btn.active .executive-tab-copy small {
+    color: #dbeafe;
+}
+
+.executive-dashboard-charts {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(280px, 1fr);
+    gap: 1.25rem;
+    margin-bottom: 1.75rem;
+}
+
+.executive-dashboard-charts > * {
+    min-width: 0;
+}
+
+.executive-dashboard-audit-header {
+    align-items: center;
+}
+
+.executive-dashboard-audit-title {
+    margin: 0 0 0.25rem;
+    color: var(--primary);
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.sekcab-summary-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem;
+    margin-bottom: 1.5rem;
+}
+
+.sekcab-summary-card {
+    min-width: 0;
+}
+
+.sekcab-summary-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.sekcab-summary-header h4 {
+    margin: 0;
+    color: var(--primary);
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.sekcab-stage-list {
+    display: grid;
+}
+
+.sekcab-stage-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.8rem 0;
+    border-bottom: 1px dashed var(--border-color);
+    color: var(--text-main);
+    font-size: 0.875rem;
+    line-height: 1.5;
+}
+
+.sekcab-stage-row:last-child {
+    border-bottom: 0;
+}
+
+.sekcab-stage-row strong {
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
+.sekcab-document-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+/* Pengawas Sidebar Accent */
+.pengawas-sidebar {
+    background-color: #0b1e33;
+    border-right: 1px solid rgba(217, 119, 6, 0.2);
+}
+
+.readonly-badge-container {
+    padding: 0.75rem 1rem;
+    background: rgba(217, 119, 6, 0.08);
+    border-bottom: 1px solid rgba(217, 119, 6, 0.15);
+}
+
+/* Sidebar Nav item hover & active in Pengawas */
+.pengawas-sidebar .sidebar-nav-link:hover {
+    background: rgba(217, 119, 6, 0.12);
+    color: #fef3c7;
+}
+
+.pengawas-sidebar .sidebar-nav-link.active {
+    background: linear-gradient(135deg, #b45309 0%, #d97706 100%);
+    box-shadow: 0 4px 12px rgba(217, 119, 6, 0.35);
+    color: #ffffff;
+}
+
+.tab-pane {
+    display: none;
+}
+
+.tab-pane.active {
+    display: block;
+    animation: fadeInTab 0.25s ease-in-out;
+}
+
+@keyframes fadeInTab {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Executive Cards */
+.oversight-card {
+    border-top: 3px solid #d97706;
+}
+
+.oversight-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* Readonly Inspection View */
+.readonly-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.25rem 0.65rem;
+    border-radius: var(--radius-full);
+    font-size: 0.725rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background: #fffbeb;
+    color: #b45309;
+    border: 1px solid #fde68a;
+}
+
+@media (max-width: 1100px) {
+    .executive-tabs {
+        grid-template-columns: 1fr;
+    }
+
+    .executive-dashboard-charts {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 760px) {
+    .executive-dashboard-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .executive-dashboard-actions {
+        width: 100%;
+    }
+
+    .executive-dashboard-actions .btn {
+        flex: 1 1 180px;
+    }
+
+    .sekcab-summary-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 640px) {
+    .executive-dashboard-audit-header {
+        align-items: flex-start;
+    }
+
+    .sekcab-stage-row {
+        gap: 0.5rem;
+        font-size: 0.82rem;
+    }
+
+    .sekcab-document-actions .btn {
+        flex: 1 1 100%;
+        justify-content: center;
+    }
+}
+
+/* Print Optimization for Oversight */
+@media print {
+    .dashboard-sidebar,
+    .dashboard-header,
+    .dashboard-footer,
+    .header-actions,
+    .btn,
+    .executive-tabs {
+        display: none !important;
+    }
+
+    .dashboard-wrapper {
+        display: block;
+    }
+
+    .dashboard-content {
+        padding: 0 !important;
+    }
+
+    .card {
+        box-shadow: none !important;
+        border: 1px solid #ccc !important;
+    }
+}

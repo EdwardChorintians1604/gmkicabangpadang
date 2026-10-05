@@ -1,0 +1,13 @@
+User-agent: *
+Disallow: /admin/
+Disallow: /private/
+Disallow: /login
+Disallow: /ubah-password
+Allow: /
+Allow: /berita
+Allow: /profil
+Allow: /struktur-organisasi
+Allow: /kontak
+Allow: /assets/
+
+Sitemap: /sitemap.xml

@@ -1,0 +1,62 @@
+<?php
+
+return [
+    'roles' => [
+        'admin' => 'Administrator Cabang',
+        'pengawas' => 'Majelis Pengawas / Pertimbangan',
+        'operator' => 'Operator Data & Warta',
+    ],
+
+    // Matriks Hak Akses (Permissions Matrix)
+    'permissions' => [
+        'admin' => [
+            'dashboard.view',
+            'dashboard.pengawas',
+            'civitas.view',
+            'civitas.create',
+            'civitas.update',
+            'civitas.delete',
+            'civitas.import',
+            'civitas.export',
+            'news.view',
+            'news.create',
+            'news.update',
+            'news.delete',
+            'organization.view',
+            'organization.update',
+            'statistics.view',
+            'users.view',
+            'users.create',
+            'users.update',
+            'users.delete',
+            'security.audit_log',
+            'security.threats',
+            'backup.view',
+            'backup.create',
+            'backup.download',
+        ],
+        'pengawas' => [
+            'dashboard.pengawas',
+            'civitas.view',
+            'civitas.create',
+            'civitas.update',
+            'civitas.export',
+            'news.view',
+            'organization.view',
+            'statistics.view',
+            'security.audit_log',
+            'backup.view',
+        ],
+        'operator' => [
+            'dashboard.view',
+            'civitas.view',
+            'civitas.create',
+            'civitas.update',
+            'civitas.export',
+            'news.view',
+            'news.create',
+            'news.update',
+            'statistics.view',
+        ],
+    ],
+];

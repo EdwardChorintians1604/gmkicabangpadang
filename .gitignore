@@ -1,0 +1,42 @@
+# Lingkungan & Kredensial
+.env
+.env.backup
+.env.production
+
+# Composer
+/vendor/
+composer.phar
+
+# Penyimpanan Cadangan & Unggahan Pribadi
+/storage/private/foto-anggota/*
+!/storage/private/foto-anggota/.gitkeep
+/storage/private/kta/*
+!/storage/private/kta/.gitkeep
+/storage/backup/database/*
+!/storage/backup/database/.gitkeep
+/storage/backup/uploads/*
+!/storage/backup/uploads/.gitkeep
+!/storage/backup/uploads/manifest.csv
+/storage/logs/*
+!/storage/logs/.gitkeep
+/storage/temp/*
+!/storage/temp/.gitkeep
+
+# Unggahan Publik User
+/frontend/public/uploads/berita/*
+!/frontend/public/uploads/berita/.gitkeep
+/frontend/public/uploads/lampiran/*
+!/frontend/public/uploads/lampiran/.gitkeep
+/frontend/public/uploads/organisasi/*
+!/frontend/public/uploads/organisasi/.gitkeep
+
+# Binary lokal
+ngrok.exe
+
+# IDE & OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
+*.log

@@ -1,0 +1,6 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    # Forward all traffic to frontend/public/
+    RewriteCond %{REQUEST_URI} !^/frontend/public/
+    RewriteRule ^(.*)$ frontend/public/$1 [L,QSA]
+</IfModule>

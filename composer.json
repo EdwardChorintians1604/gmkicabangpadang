@@ -1,0 +1,45 @@
+{
+    "name": "gmki/cabang-padang",
+    "description": "Sistem Informasi & Manajemen Keanggotaan Terintegrasi - GMKI Cabang Padang",
+    "type": "project",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Badan Pengurus Cabang (BPC) GMKI Cabang Padang",
+            "email": "sekretariat@gmkicabangpadang.or.id",
+            "homepage": "https://gmkicabangpadang.or.id"
+        }
+    ],
+    "require": {
+        "php": ">=8.1",
+        "ext-pdo": "*",
+        "ext-pdo_mysql": "*",
+        "ext-mbstring": "*",
+        "ext-fileinfo": "*",
+        "ext-gd": "*",
+        "ext-zlib": "*",
+        "vlucas/phpdotenv": "^5.5",
+        "shuchkin/simplexlsx": "^1.0",
+        "dompdf/dompdf": "^2.0"
+    },
+    "require-dev": {},
+    "autoload": {
+        "psr-4": {
+            "App\\": "backend/"
+        },
+        "files": [
+            "backend/helpers/functions.php",
+            "backend/helpers/security.php",
+            "backend/helpers/upload.php"
+        ]
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true,
+        "allow-plugins": {}
+    },
+    "scripts": {
+        "serve": "php -S localhost:8000 -t frontend/public frontend/public/index.php"
+    }
+}
