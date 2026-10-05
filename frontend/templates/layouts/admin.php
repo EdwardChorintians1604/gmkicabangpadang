@@ -82,6 +82,12 @@
                     </a>
                 </li>
                 <li class="sidebar-nav-item">
+                    <a href="/admin/komisariat" class="sidebar-nav-link <?= active_nav('/admin/komisariat') ?>">
+                        <span class="sidebar-nav-icon"><?= svg_icon('organization', 18) ?></span>
+                        <span>Komisariat</span>
+                    </a>
+                </li>
+                <li class="sidebar-nav-item">
                     <a href="/admin/civitas/impor" class="sidebar-nav-link <?= active_nav('/admin/civitas/impor') ?>">
                         <span class="sidebar-nav-icon"><?= svg_icon('upload', 18) ?></span>
                         <span>Impor CSV Civitas</span>

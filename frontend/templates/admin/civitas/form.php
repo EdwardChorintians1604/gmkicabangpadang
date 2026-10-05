@@ -12,7 +12,7 @@
                 </h1>
                 <p class="text-muted" style="font-size: 0.875rem;">
                     <?= $isMaperca
-                        ? 'Isi data dasar anggota baru. Komisariat dan informasi kaderisasi dapat dilengkapi setelah penempatan.'
+                        ? 'Isi data dasar anggota baru. Komisariat ditentukan saat pelantikan menjadi anggota.'
                         : 'Pastikan informasi keanggotaan dan kaderisasi diisi dengan akurat.' ?>
                 </p>
             </div>
@@ -100,76 +100,59 @@
                 </div>
             </div>
 
-            <?php if ($isMaperca): ?>
+            <?php if (!$isMaperca): ?>
             <?php
-            $commissionValue = $isEdit
-                ? (string)($member['anggota_komisariat'] ?? (!empty($member['komisariat']) ? '1' : ''))
-                : (string)old('anggota_komisariat', '');
+            $isAnggotaKom = $isEdit
+                ? (isset($member['anggota_komisariat']) ? (int)$member['anggota_komisariat'] : (!empty($member['komisariat']) ? 1 : 0))
+                : (old('anggota_komisariat') !== null ? (int)old('anggota_komisariat') : 0);
+            $komCurrent = $isEdit ? ($member['komisariat'] ?? '') : old('komisariat', '');
             ?>
             <div class="grid grid-cols-2 gap-4">
                 <div class="form-group">
-                    <label class="form-label" for="anggota_komisariat">Apakah anggota komisariat?</label>
+                    <label class="form-label" for="anggota_komisariat">Apakah pernah menjadi anggota komisariat?</label>
                     <select id="anggota_komisariat" name="anggota_komisariat" class="form-control" required>
-                        <option value="">Pilih jawaban</option>
-                        <option value="1" <?= $commissionValue === '1' ? 'selected' : '' ?>>Ya, anggota komisariat</option>
-                        <option value="0" <?= $commissionValue === '0' ? 'selected' : '' ?>>Tidak</option>
+                        <option value="0" <?= $isAnggotaKom === 0 ? 'selected' : '' ?>>Tidak pernah sama sekali</option>
+                        <option value="1" <?= $isAnggotaKom === 1 ? 'selected' : '' ?>>Ya, anggota komisariat</option>
                     </select>
                 </div>
-                <div class="form-group" id="komisariat-field">
-                    <label class="form-label" for="komisariat">Nama Komisariat</label>
-                    <input type="text" id="komisariat" name="komisariat" class="form-control"
-                           placeholder="Contoh: Komisariat UNAND"
-                           value="<?= e($isEdit ? ($member['komisariat'] ?? '') : old('komisariat')) ?>">
+
+                <div class="form-group" id="komisariat-wrapper" style="<?= $isAnggotaKom === 1 ? '' : 'display:none;' ?>">
+                    <label class="form-label" for="komisariat">Pilih Komisariat</label>
+                    <select id="komisariat" name="komisariat" class="form-control">
+                        <option value="">-- Pilih Komisariat --</option>
+                        <?php foreach (($komisariatNames ?? []) as $kn): ?>
+                            <option value="<?= e($kn) ?>" <?= $komCurrent === $kn ? 'selected' : '' ?>><?= e($kn) ?></option>
+                        <?php endforeach; ?>
+                        <?php if ($komCurrent !== '' && !in_array($komCurrent, $komisariatNames ?? [], true)): ?>
+                            <option value="<?= e($komCurrent) ?>" selected><?= e($komCurrent) ?></option>
+                        <?php endif; ?>
+                    </select>
+                    <div class="form-help">Pilih komisariat yang ada.</div>
                 </div>
             </div>
-            <?php else: ?>
-            <div class="grid grid-cols-3 gap-4">
-                <div class="form-group">
-                    <label class="form-label" for="komisariat">Komisariat</label>
-                    <input type="text" id="komisariat" name="komisariat" class="form-control" 
-                           placeholder="Contoh: Komisariat UNAND" 
-                           value="<?= e($isEdit ? ($member['komisariat'] ?? '') : old('komisariat', 'Komisariat UNAND')) ?>" required>
-                </div>
 
+            <div class="grid grid-cols-2 gap-4">
                 <div class="form-group">
                     <label class="form-label" for="tahun_maperca">Tahun Maperca</label>
                     <input type="number" id="tahun_maperca" name="tahun_maperca" class="form-control" 
+                           placeholder="Contoh: 2024"
                            value="<?= e($isEdit ? ($member['tahun_maperca'] ?? '') : old('tahun_maperca', date('Y'))) ?>" required>
+                    <div class="form-help">Tahun saat pertama kali mengikuti Maperca.</div>
                 </div>
 
-                <div class="form-group">
-                    <label class="form-label" for="tingkat_kaderisasi">Jenjang Kaderisasi</label>
-                    <?php $tk = $isEdit ? $member['tingkat_kaderisasi'] : old('tingkat_kaderisasi', 'KTB'); ?>
-                    <select id="tingkat_kaderisasi" name="tingkat_kaderisasi" class="form-control">
-                        <option value="KTB" <?= ($tk === 'KTB') ? 'selected' : '' ?>>KTB</option>
-                        <option value="KK" <?= ($tk === 'KK') ? 'selected' : '' ?>>KK</option>
-                        <option value="Alumni" <?= ($tk === 'Alumni') ? 'selected' : '' ?>>Senior / Alumni</option>
-                    </select>
-                </div>
-            </div>
-            <?php endif; ?>
-
-            <?php if ($isMaperca && $isEdit): ?>
-            <div class="form-group">
-                <label class="form-label" for="tahun_maperca">Tahun Maperca (opsional saat pendaftaran)</label>
-                <input type="number" id="tahun_maperca" name="tahun_maperca" class="form-control"
-                       value="<?= e($member['tahun_maperca'] ?? '') ?>">
-            </div>
-            <?php endif; ?>
-
-            <?php if (!$isMaperca): ?>
-            <div class="grid grid-cols-1 gap-4">
                 <div class="form-group">
                     <label class="form-label" for="status_keanggotaan">Status Keanggotaan</label>
                     <?php $sk = $isEdit ? $member['status_keanggotaan'] : old('status_keanggotaan', 'Aktif'); ?>
-                    <select id="status_keanggotaan" name="status_keanggotaan" class="form-control">
-                        <option value="Aktif" <?= ($sk === 'Aktif') ? 'selected' : '' ?>>Aktif</option>
-                        <option value="Alumni/Senior" <?= ($sk === 'Alumni/Senior') ? 'selected' : '' ?>>Alumni / Senior</option>
-                        <option value="Pindah Cabang" <?= ($sk === 'Pindah Cabang') ? 'selected' : '' ?>>Pindah Cabang</option>
-                        <option value="Nonaktif" <?= ($sk === 'Nonaktif') ? 'selected' : '' ?>>Nonaktif</option>
+                    <select id="status_keanggotaan" name="status_keanggotaan" class="form-control" required>
+                        <option value="Aktif" <?= ($sk === 'Aktif') ? 'selected' : '' ?>>Aktif &mdash; Mahasiswa aktif berkegiatan</option>
+                        <option value="Pasif" <?= ($sk === 'Pasif' || $sk === 'Nonaktif') ? 'selected' : '' ?>>Pasif &mdash; Tercatat anggota, tetapi jarang/tidak aktif</option>
+                        <option value="Alumni/Senior" <?= ($sk === 'Alumni/Senior') ? 'selected' : '' ?>>Alumni / Senior &mdash; Sudah wisuda / tamat kuliah</option>
+                        <option value="Pindah Cabang" <?= ($sk === 'Pindah Cabang') ? 'selected' : '' ?>>Pindah Cabang &mdash; Mutasi ke cabang kota lain</option>
+                        <option value="Dicabut" <?= ($sk === 'Dicabut') ? 'selected' : '' ?>>Dicabut &mdash; Keanggotaan dicabut / diberhentikan</option>
                     </select>
                 </div>
             </div>
+            <input type="hidden" name="tingkat_kaderisasi" value="<?= e($isEdit ? ($member['tingkat_kaderisasi'] ?? 'KTB') : 'KTB') ?>">
             <?php else: ?>
                 <input type="hidden" name="status_keanggotaan" value="<?= e($isEdit ? $member['status_keanggotaan'] : old('status_keanggotaan', 'Aktif')) ?>">
             <?php endif; ?>
@@ -220,21 +203,31 @@
                 <a href="<?= e($basePath) ?>" class="btn btn-outline">Batal</a>
             </div>
         </form>
-        <?php if ($isMaperca): ?>
+
+        <?php if (!$isMaperca): ?>
         <script>
-            const anggotaKomisariat = document.getElementById('anggota_komisariat');
-            const komisariatField = document.getElementById('komisariat-field');
-            const namaKomisariat = document.getElementById('komisariat');
+            (function() {
+                const anggotaKomisariatSelect = document.getElementById('anggota_komisariat');
+                const komisariatWrapper = document.getElementById('komisariat-wrapper');
+                const komisariatSelect = document.getElementById('komisariat');
 
-            function updateKomisariatField() {
-                const isMember = anggotaKomisariat.value === '1';
-                komisariatField.hidden = !isMember;
-                namaKomisariat.disabled = !isMember;
-                namaKomisariat.required = isMember;
-            }
-
-            anggotaKomisariat.addEventListener('change', updateKomisariatField);
-            updateKomisariatField();
+                if (anggotaKomisariatSelect && komisariatWrapper) {
+                    function toggleKomisariat() {
+                        if (anggotaKomisariatSelect.value === '1') {
+                            komisariatWrapper.style.display = '';
+                            if (komisariatSelect) komisariatSelect.required = true;
+                        } else {
+                            komisariatWrapper.style.display = 'none';
+                            if (komisariatSelect) {
+                                komisariatSelect.required = false;
+                                komisariatSelect.value = '';
+                            }
+                        }
+                    }
+                    anggotaKomisariatSelect.addEventListener('change', toggleKomisariat);
+                    toggleKomisariat();
+                }
+            })();
         </script>
         <?php endif; ?>
     </div>

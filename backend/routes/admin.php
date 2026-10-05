@@ -50,6 +50,15 @@ $router->post('/admin/maperca/{id}', 'Admin\MapercaController@update', ['auth', 
 $router->post('/admin/maperca/{id}/lantik', 'Admin\MapercaController@lantik', ['auth', 'role:admin,operator,pengawas', 'csrf']);
 $router->post('/admin/maperca/{id}/delete', 'Admin\MapercaController@delete', ['auth', 'role:admin', 'csrf']);
 
+// 2c. Modul Komisariat (CRUD komisariat & anggotanya)
+$router->get('/admin/komisariat', 'Admin\KomisariatController@index', ['auth', 'role:admin,operator,pengawas']);
+$router->get('/admin/komisariat/create', 'Admin\KomisariatController@create', ['auth', 'role:admin,operator,pengawas']);
+$router->post('/admin/komisariat', 'Admin\KomisariatController@store', ['auth', 'role:admin,operator,pengawas', 'csrf']);
+$router->get('/admin/komisariat/{id}', 'Admin\KomisariatController@detail', ['auth', 'role:admin,operator,pengawas']);
+$router->get('/admin/komisariat/{id}/edit', 'Admin\KomisariatController@edit', ['auth', 'role:admin,operator,pengawas']);
+$router->post('/admin/komisariat/{id}', 'Admin\KomisariatController@update', ['auth', 'role:admin,operator,pengawas', 'csrf']);
+$router->post('/admin/komisariat/{id}/delete', 'Admin\KomisariatController@delete', ['auth', 'role:admin', 'csrf']);
+
 // 3. Modul Warta Berita & Publikasi
 $router->get('/admin/berita', 'Admin\NewsController@index', ['auth', 'role:admin,operator']);
 $router->get('/admin/berita/create', 'Admin\NewsController@create', ['auth', 'role:admin,operator']);

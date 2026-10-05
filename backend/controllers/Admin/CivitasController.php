@@ -19,6 +19,7 @@ use App\Core\Request;
 use App\Core\Response;
 use App\Core\Session;
 use App\Core\Validator;
+use App\Repositories\KomisariatRepository;
 use App\Services\CivitasService;
 
 class CivitasController
@@ -56,13 +57,18 @@ class CivitasController
         if ($this->kelompok === 'maperca') {
             $data['tingkat_kaderisasi'] = 'Maperca';
             $data['status_keanggotaan'] = $data['status_keanggotaan'] ?? 'Aktif';
-            $data['anggota_komisariat'] = (int)($data['anggota_komisariat'] ?? 0);
-            $data['komisariat'] = $data['anggota_komisariat'] === 1 && !empty($data['komisariat'])
-                ? trim($data['komisariat'])
-                : null;
-            $data['tahun_maperca'] = !empty($data['tahun_maperca']) ? (int)$data['tahun_maperca'] : null;
+            $data['anggota_komisariat'] = 0;
+            $data['komisariat'] = null;
+            $data['tahun_maperca'] = !empty($data['tahun_maperca']) ? (int) $data['tahun_maperca'] : null;
         } else {
-            $data['anggota_komisariat'] = 1;
+            $isAnggotaKom = isset($data['anggota_komisariat']) ? (int) $data['anggota_komisariat'] : 0;
+            if ($isAnggotaKom === 1 && !empty($data['komisariat']) && trim((string) $data['komisariat']) !== '') {
+                $data['anggota_komisariat'] = 1;
+                $data['komisariat'] = trim((string) $data['komisariat']);
+            } else {
+                $data['anggota_komisariat'] = 0;
+                $data['komisariat'] = null;
+            }
             $tk = $data['tingkat_kaderisasi'] ?? '';
             if (!in_array($tk, ['KTB', 'KK', 'Alumni'], true)) {
                 $data['tingkat_kaderisasi'] = 'KTB';
@@ -78,6 +84,7 @@ class CivitasController
             'basePath' => $this->basePath,
             'kelompok' => $this->kelompok,
             'labelSingular' => $this->kelompok === 'maperca' ? 'Kader Baru (Maperca)' : 'Anggota / Civitas',
+            'komisariatNames' => (new KomisariatRepository())->names(),
         ];
     }
 
@@ -88,7 +95,7 @@ class CivitasController
     {
         Authorization::authorize('civitas.view');
 
-        $page = (int)$request->query('page', 1);
+        $page = (int) $request->query('page', 1);
         $search = $request->query('q');
         $komisariat = $request->query('komisariat');
         $pt = $request->query('perguruan_tinggi');
@@ -157,13 +164,11 @@ class CivitasController
             'perguruan_tinggi' => 'required',
         ];
         if ($this->kelompok !== 'maperca') {
-            $rules['komisariat'] = 'required';
             $rules['tahun_maperca'] = 'required|numeric';
-        } else {
-            $rules['anggota_komisariat'] = 'required|in:1,0';
             if (($request->post()['anggota_komisariat'] ?? '') === '1') {
                 $rules['komisariat'] = 'required';
             }
+        } else {
             $rules['tahun_maperca'] = 'numeric';
         }
 
@@ -196,7 +201,7 @@ class CivitasController
     {
         Authorization::authorize('civitas.view');
 
-        $member = $this->civitasService->getById((int)$id);
+        $member = $this->civitasService->getById((int) $id);
         if (!$member) {
             Session::flash('error', 'Data tidak ditemukan.');
             redirect($this->basePath);
@@ -215,7 +220,7 @@ class CivitasController
     {
         Authorization::authorize('civitas.update');
 
-        $member = $this->civitasService->getById((int)$id);
+        $member = $this->civitasService->getById((int) $id);
         if (!$member) {
             Session::flash('error', 'Data tidak ditemukan.');
             redirect($this->basePath);
@@ -242,13 +247,11 @@ class CivitasController
             'perguruan_tinggi' => 'required',
         ];
         if ($this->kelompok !== 'maperca') {
-            $rules['komisariat'] = 'required';
             $rules['tahun_maperca'] = 'required|numeric';
-        } else {
-            $rules['anggota_komisariat'] = 'required|in:1,0';
             if (($request->post()['anggota_komisariat'] ?? '') === '1') {
                 $rules['komisariat'] = 'required';
             }
+        } else {
             $rules['tahun_maperca'] = 'numeric';
         }
 
@@ -260,7 +263,7 @@ class CivitasController
         }
 
         $foto = $request->file('foto_anggota');
-        $this->civitasService->update((int)$id, $this->normalizeData($request->post()), $foto);
+        $this->civitasService->update((int) $id, $this->normalizeData($request->post()), $foto);
 
         Session::flash('success', 'Perubahan data berhasil disimpan.');
         redirect("{$this->basePath}/{$id}");
@@ -273,27 +276,31 @@ class CivitasController
     {
         Authorization::authorize('civitas.update');
 
-        $member = $this->civitasService->getById((int)$id);
+        $member = $this->civitasService->getById((int) $id);
         if (!$member || $member['tingkat_kaderisasi'] !== 'Maperca') {
             Session::flash('error', 'Data kader baru tidak ditemukan.');
             redirect('/admin/maperca');
         }
 
-        if (
-            empty($member['tahun_maperca'])
-            || !isset($member['anggota_komisariat'])
-            || ((int)$member['anggota_komisariat'] === 1 && empty($member['komisariat']))
-        ) {
-            Session::flash('error', 'Tentukan status keanggotaan komisariat dan lengkapi tahun Maperca sebelum melantik anggota ini.');
-            redirect("/admin/maperca/{$id}/edit");
-        }
+        // Penempatan komisariat bersifat opsional (tidak semua anggota langsung masuk komisariat)
+        $komisariatInput = trim((string) ($request->post()['komisariat'] ?? ''));
+        $hasKomisariat = !empty($komisariatInput) && (new KomisariatRepository())->findByName($komisariatInput);
 
-        $this->civitasService->update((int)$id, [
+        $updateData = [
             'tingkat_kaderisasi' => 'KTB',
             'status_keanggotaan' => 'Aktif',
-        ]);
+            'komisariat' => $hasKomisariat ? $komisariatInput : null,
+            'anggota_komisariat' => $hasKomisariat ? 1 : 0,
+        ];
 
-        Session::flash('success', "{$member['nama_lengkap']} resmi menjadi anggota (KTB) dan dipindahkan ke Data Civitas.");
+        // Jika tahun maperca belum terisi, otomatis gunakan tahun berjalan
+        if (empty($member['tahun_maperca'])) {
+            $updateData['tahun_maperca'] = (int) date('Y');
+        }
+
+        $this->civitasService->update((int) $id, $updateData);
+
+        Session::flash('success', "{$member['nama_lengkap']} resmi dilantik menjadi anggota sah (KTB) dan dipindahkan ke Data Civitas.");
         redirect('/admin/maperca');
     }
 
@@ -304,7 +311,7 @@ class CivitasController
     {
         Authorization::authorize('civitas.delete');
 
-        $this->civitasService->delete((int)$id);
+        $this->civitasService->delete((int) $id);
         Session::flash('success', 'Data berhasil dihapus.');
         redirect($this->basePath);
     }

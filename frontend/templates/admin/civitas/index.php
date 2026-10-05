@@ -6,7 +6,7 @@
         </h1>
         <p class="text-muted" style="font-size: 0.875rem;">
             <?= $isMaperca
-                ? 'Data awal anggota baru. Komisariat dan tahun Maperca dapat dilengkapi kemudian sebelum pelantikan ke Data Civitas.'
+                ? 'Data awal anggota baru. Komisariat ditentukan saat pelantikan ke Data Civitas.'
                 : 'Daftar anggota resmi (KTB, KK) dan alumni GMKI Cabang Padang. Kader baru Maperca dikelola di menu terpisah.' ?>
         </p>
     </div>
@@ -27,9 +27,8 @@
     </div>
 </div>
 
-<!-- Filters Card -->
 <div class="card" style="margin-bottom: 1.5rem; padding: 1.25rem;">
-    <form action="<?= e($basePath) ?>" method="GET" class="grid grid-cols-4 gap-3">
+    <form action="<?= e($basePath) ?>" method="GET" class="grid grid-cols-5 gap-3">
         <div class="form-group" style="margin-bottom: 0;">
             <input type="text" name="q" class="form-control" placeholder="Cari nama, NIM, kampus..." value="<?= e($search ?? '') ?>">
         </div>
@@ -45,12 +44,25 @@
 
         <div class="form-group" style="margin-bottom: 0;">
             <select name="tahun_maperca" class="form-control">
-                <option value="">Semua Tahun Maperca</option>
+                <option value="">Semua Tahun</option>
                 <?php foreach ($tahunList as $th): ?>
                     <option value="<?= e($th) ?>" <?= ($selectedTahun == $th) ? 'selected' : '' ?>><?= e($th) ?></option>
                 <?php endforeach; ?>
             </select>
         </div>
+
+        <?php if (!$isMaperca): ?>
+        <div class="form-group" style="margin-bottom: 0;">
+            <select name="status" class="form-control">
+                <option value="">Semua Status</option>
+                <option value="Aktif" <?= ($selectedStatus === 'Aktif') ? 'selected' : '' ?>>Aktif</option>
+                <option value="Pasif" <?= ($selectedStatus === 'Pasif') ? 'selected' : '' ?>>Pasif (Jarang Aktif)</option>
+                <option value="Alumni/Senior" <?= ($selectedStatus === 'Alumni/Senior') ? 'selected' : '' ?>>Alumni / Senior</option>
+                <option value="Pindah Cabang" <?= ($selectedStatus === 'Pindah Cabang') ? 'selected' : '' ?>>Pindah Cabang</option>
+                <option value="Dicabut" <?= ($selectedStatus === 'Dicabut') ? 'selected' : '' ?>>Dicabut</option>
+            </select>
+        </div>
+        <?php endif; ?>
 
         <div class="flex gap-2">
             <button type="submit" class="btn btn-primary" style="flex-grow: 1;">Filter</button>
@@ -73,8 +85,7 @@
                     <th>Perguruan Tinggi</th>
                     <th>Komisariat</th>
                     <th><?= $isMaperca ? 'Tahun Maperca' : 'Maperca' ?></th>
-                    <th><?= $isMaperca ? 'Proses' : 'Kaderisasi' ?></th>
-                    <th>Status</th>
+                    <th>Status Keanggotaan</th>
                     <th>Aksi</th>
                 </tr>
             </thead>
@@ -91,21 +102,26 @@
                             <td><?= e($row['jenis_kelamin']) ?></td>
                             <td><?= e($row['perguruan_tinggi']) ?></td>
                             <td>
-                                <?php if (isset($row['anggota_komisariat']) && (int)$row['anggota_komisariat'] === 0): ?>
-                                    <span class="text-muted">Bukan anggota komisariat</span>
-                                <?php elseif (!empty($row['komisariat'])): ?>
+                                <?php if (!empty($row['komisariat'])): ?>
                                     <span class="badge badge-primary"><?= e($row['komisariat']) ?></span>
+                                <?php elseif ($isMaperca): ?>
+                                    <span class="text-muted">Kader Baru</span>
                                 <?php else: ?>
-                                    <span class="text-muted">Nama komisariat belum diisi</span>
+                                    <span class="text-muted">Tanpa Komisariat</span>
                                 <?php endif; ?>
                             </td>
                             <td><?= e($row['tahun_maperca'] ?? '-') ?></td>
-                            <td><span class="badge badge-neutral"><?= $isMaperca ? 'Pendaftaran' : e($row['tingkat_kaderisasi']) ?></span></td>
                             <td>
                                 <?php if ($row['status_keanggotaan'] === 'Aktif'): ?>
                                     <span class="badge badge-success">Aktif</span>
+                                <?php elseif ($row['status_keanggotaan'] === 'Pasif'): ?>
+                                    <span class="badge" style="background: #fef3c7; color: #92400e; border: 1px solid #fde68a;">Pasif</span>
                                 <?php elseif ($row['status_keanggotaan'] === 'Alumni/Senior'): ?>
-                                    <span class="badge badge-warning">Alumni</span>
+                                    <span class="badge badge-warning">Alumni / Senior</span>
+                                <?php elseif ($row['status_keanggotaan'] === 'Pindah Cabang'): ?>
+                                    <span class="badge badge-neutral">Pindah Cabang</span>
+                                <?php elseif ($row['status_keanggotaan'] === 'Dicabut'): ?>
+                                    <span class="badge badge-danger">Dicabut</span>
                                 <?php else: ?>
                                     <span class="badge badge-neutral"><?= e($row['status_keanggotaan']) ?></span>
                                 <?php endif; ?>

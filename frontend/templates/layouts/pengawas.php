@@ -84,6 +84,12 @@
                         <span>Tambah Kader Baru</span>
                     </a>
                 </li>
+                <li class="sidebar-nav-item">
+                    <a href="/admin/komisariat" class="sidebar-nav-link <?= active_nav('/admin/komisariat') ?>">
+                        <span class="sidebar-nav-icon"><?= svg_icon('organization', 18) ?></span>
+                        <span>Komisariat</span>
+                    </a>
+                </li>
 
                 <li class="nav-category">Pengawasan Data</li>
                 <li class="sidebar-nav-item">

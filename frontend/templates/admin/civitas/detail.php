@@ -19,7 +19,7 @@
             <?php if ($isMaperca && can('civitas.update')): ?>
                 <form action="/admin/maperca/<?= $member['id'] ?>/lantik" method="POST" style="display:inline;">
                     <?= csrf_field() ?>
-                    <button type="submit" class="btn btn-primary btn-sm" data-confirm="Lantik <?= e($member['nama_lengkap']) ?> menjadi anggota resmi (KTB)?">
+                    <button type="submit" class="btn btn-primary btn-sm" data-confirm="Lantik <?= e($member['nama_lengkap']) ?> menjadi anggota sah (KTB)?">
                         Lantik jadi Anggota
                     </button>
                 </form>
@@ -48,8 +48,14 @@
                             <span class="badge badge-warning">Kader Baru (Maperca)</span>
                         <?php elseif ($member['status_keanggotaan'] === 'Aktif'): ?>
                             <span class="badge badge-success">Anggota Aktif</span>
+                        <?php elseif ($member['status_keanggotaan'] === 'Pasif'): ?>
+                            <span class="badge" style="background: #fef3c7; color: #92400e; border: 1px solid #fde68a;">Pasif (Jarang Aktif)</span>
                         <?php elseif ($member['status_keanggotaan'] === 'Alumni/Senior'): ?>
                             <span class="badge badge-warning">Senior / Alumni</span>
+                        <?php elseif ($member['status_keanggotaan'] === 'Pindah Cabang'): ?>
+                            <span class="badge badge-neutral">Pindah Cabang</span>
+                        <?php elseif ($member['status_keanggotaan'] === 'Dicabut'): ?>
+                            <span class="badge badge-danger">Keanggotaan Dicabut</span>
                         <?php else: ?>
                             <span class="badge badge-neutral"><?= e($member['status_keanggotaan']) ?></span>
                         <?php endif; ?>
@@ -88,15 +94,35 @@
                             </tr>
                             <tr>
                                 <th style="background: none;">Komisariat</th>
-                                <td><?= isset($member['anggota_komisariat']) && (int)$member['anggota_komisariat'] === 0 ? 'Bukan anggota komisariat' : e($member['komisariat'] ?? 'Nama komisariat belum diisi') ?></td>
+                                <td>
+                                    <?php if (!empty($member['komisariat'])): ?>
+                                        <span class="badge badge-primary"><?= e($member['komisariat']) ?></span>
+                                    <?php else: ?>
+                                        <span class="text-muted"><?= $isMaperca ? 'Kader Baru' : 'Tidak pernah sama sekali' ?></span>
+                                    <?php endif; ?>
+                                </td>
                             </tr>
                             <tr>
                                 <th style="background: none;">Tahun Maperca</th>
                                 <td><?= e($member['tahun_maperca']) ?></td>
                             </tr>
                             <tr>
-                                <th style="background: none;">Tingkat Kaderisasi</th>
-                                <td><span class="badge badge-warning"><?= e($member['tingkat_kaderisasi']) ?></span></td>
+                                <th style="background: none;">Status Keanggotaan</th>
+                                <td>
+                                    <?php if ($member['status_keanggotaan'] === 'Aktif'): ?>
+                                        <span class="badge badge-success">Aktif (Mahasiswa aktif berkegiatan)</span>
+                                    <?php elseif ($member['status_keanggotaan'] === 'Pasif'): ?>
+                                        <span class="badge" style="background: #fef3c7; color: #92400e; border: 1px solid #fde68a;">Pasif (Tercatat, tetapi jarang/tidak aktif)</span>
+                                    <?php elseif ($member['status_keanggotaan'] === 'Alumni/Senior'): ?>
+                                        <span class="badge badge-warning">Alumni / Senior (Sudah wisuda/tamat)</span>
+                                    <?php elseif ($member['status_keanggotaan'] === 'Pindah Cabang'): ?>
+                                        <span class="badge badge-neutral">Pindah Cabang</span>
+                                    <?php elseif ($member['status_keanggotaan'] === 'Dicabut'): ?>
+                                        <span class="badge badge-danger">Keanggotaan Dicabut / Diberhentikan</span>
+                                    <?php else: ?>
+                                        <span class="badge badge-neutral"><?= e($member['status_keanggotaan']) ?></span>
+                                    <?php endif; ?>
+                                </td>
                             </tr>
                             <tr>
                                 <th style="background: none;">Telepon / WA</th>
