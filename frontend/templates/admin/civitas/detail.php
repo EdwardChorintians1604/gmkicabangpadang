@@ -19,7 +19,7 @@
             <?php if ($isMaperca && can('civitas.update')): ?>
                 <form action="/admin/maperca/<?= $member['id'] ?>/lantik" method="POST" style="display:inline;">
                     <?= csrf_field() ?>
-                    <button type="submit" class="btn btn-primary btn-sm" data-confirm="Lantik <?= e($member['nama_lengkap']) ?> menjadi anggota sah (KTB)?">
+                    <button type="submit" class="btn btn-primary btn-sm" data-confirm="Lantik <?= e($member['nama_lengkap']) ?> menjadi Anggota sah GMKI Cabang Padang?">
                         Lantik jadi Anggota
                     </button>
                 </form>

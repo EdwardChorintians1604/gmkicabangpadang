@@ -11,6 +11,11 @@
 
 declare(strict_types=1);
 
+if (!defined('GMKI_SECURE_ACCESS')) {
+    http_response_code(403);
+    exit('Akses langsung ditolak.');
+}
+
 use App\Core\Router;
 
 /** @var Router $router */
@@ -95,6 +100,7 @@ $router->post('/admin/users/{id}/delete', 'Admin\UserController@delete', ['auth'
 
 // 7. Modul Keamanan, Audit Log & Cadangan Data
 $router->get('/admin/keamanan/audit-log', 'Admin\SecurityController@auditLog', ['auth', 'role:admin']);
+$router->get('/admin/keamanan/akses-log', 'Admin\SecurityController@accessLog', ['auth', 'role:admin']);
 $router->get('/admin/keamanan/ancaman', 'Admin\SecurityController@threats', ['auth', 'role:admin']);
 $router->post('/admin/keamanan/ancaman/{id}/resolve', 'Admin\SecurityController@resolveAncaman', ['auth', 'role:admin']);
 $router->get('/admin/keamanan/ancaman/{id}/resolve', 'Admin\SecurityController@resolveAncaman', ['auth', 'role:admin']);

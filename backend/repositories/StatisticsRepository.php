@@ -17,6 +17,11 @@ class StatisticsRepository
         $totalBerita = (int)(Database::fetchOne("SELECT COUNT(*) as c FROM `berita` WHERE `status` = 'published'")['c'] ?? 0);
         $totalViews = (int)(Database::fetchOne("SELECT SUM(`views`) as c FROM `berita`")['c'] ?? 0);
 
+        $mapercaCount = $totalMaperca;
+        $anggotaCount = (int)(Database::fetchOne("SELECT COUNT(*) as c FROM `civitas` WHERE `tingkat_kaderisasi` = 'Anggota'")['c'] ?? 0);
+        $kkCount = (int)(Database::fetchOne("SELECT COUNT(*) as c FROM `civitas` WHERE `tingkat_kaderisasi` = 'KK'")['c'] ?? 0);
+        $alumniCount = (int)(Database::fetchOne("SELECT COUNT(*) as c FROM `civitas` WHERE `tingkat_kaderisasi` = 'Alumni' OR `status_keanggotaan` = 'Alumni/Senior'")['c'] ?? 0);
+
         return [
             'total_civitas' => $totalCivitas,
             'total_maperca' => $totalMaperca,
@@ -25,6 +30,11 @@ class StatisticsRepository
             'total_komisariat' => $totalKomisariat,
             'total_berita' => $totalBerita,
             'total_views' => $totalViews,
+            'maperca_count' => $mapercaCount,
+            'anggota_count' => $anggotaCount,
+            'ktb_count' => $anggotaCount, // Fallback alias
+            'kk_count' => $kkCount,
+            'alumni_count' => $alumniCount,
         ];
     }
 

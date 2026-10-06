@@ -108,7 +108,7 @@
                     <h3 class="text-lg font-bold text-slate-900">Pusat Sekretariat Cabang (Peta Interaktif Leaflet)</h3>
                 </div>
                 <p class="text-xs sm:text-sm text-slate-500 mt-1">
-                    Tarandam, Kec. Padang Timur, Kota Padang, Sumatera Barat
+                    Jl. Tanah Beroyo No.2c, Belakang Tangsi, Kec. Padang Bar., kodya padang, Sumatera Barat
                 </p>
             </div>
             <a href="/kontak" class="btn btn-primary btn-sm flex items-center gap-1">
@@ -125,12 +125,12 @@
 document.addEventListener('DOMContentLoaded', function() {
     if (typeof L === 'undefined') return;
 
-    const lat = -0.9471;
-    const lng = 100.3686;
+    const lat = -0.958567;
+    const lng = 100.357547;
 
     const mapProfil = L.map('mapProfil', {
         center: [lat, lng],
-        zoom: 15,
+        zoom: 17,
         scrollWheelZoom: false
     });
 
@@ -143,7 +143,7 @@ document.addEventListener('DOMContentLoaded', function() {
     marker.bindPopup(`
         <div style="text-align: center; font-family: sans-serif; padding: 4px;">
             <strong style="color: #0f3d64;">BPC GMKI Cabang Padang</strong><br>
-            <span style="font-size: 11px; color: #64748b;">Sekretariat Tarandam, Padang Timur</span>
+            <span style="font-size: 11px; color: #64748b;">Jl. Tanah Beroyo No.2c, Belakang Tangsi, Kec. Padang Bar., kodya padang, Sumatera Barat</span>
         </div>
     `).openPopup();
 });

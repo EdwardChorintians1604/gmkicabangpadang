@@ -30,7 +30,7 @@ INSERT INTO `profil_organisasi` (`id`, `nama_organisasi`, `slogan`, `tema_period
  '1. Menumbuhkan kesadaran iman, karakter Kristiani, dan integritas tinggi bagi mahasiswa Kristen di Padang.\n2. Melaksanakan kaderisasi yang berkelanjutan dan kontekstual.\n3. Berpartisipasi aktif dalam kegiatan sosial, kebangsaan, dan oikoumene di Sumatera Barat.',
  '1. Tinggi Iman\n2. Tinggi Ilmu\n3. Tinggi Pengabdian',
  '1. Berdoa / Beribadah\n2. Belajar\n3. Bersaksi\n4. Bersosialisasi\n5. Berjuang',
- 'Jl. Ksatria No. 12, Tarandam, Kec. Padang Timur, Kota Padang, Sumatera Barat 25127',
+ 'Jl. Tanah Beroyo No.2c, Belakang Tangsi, Kec. Padang Bar., kodya padang, Sumatera Barat',
  '+62 812-3456-7890',
  'sekretariat@gmkicabangpadang.or.id',
  '@gmkicabangpadang',
@@ -41,12 +41,12 @@ ON DUPLICATE KEY UPDATE `nama_organisasi` = VALUES(`nama_organisasi`);
 
 -- Struktur Kepengurusan BPC Awal
 INSERT INTO `struktur_organisasi` (`nama`, `jabatan`, `bidang`, `periode`, `urutan`, `telepon`, `status_aktif`) VALUES
-('Yeremia Pratama, S.T.', 'Ketua Cabang', 'Badan Pengurus Harian', '2024-2026', 1, '081234567891', 1),
-('Debora Silalahi, S.Ked.', 'Sekretaris Cabang', 'Badan Pengurus Harian', '2024-2026', 2, '081234567892', 1),
-('Samuel Tampubolon, S.E.', 'Bendahara Cabang', 'Badan Pengurus Harian', '2024-2026', 3, '081234567893', 1),
-('Grace Novita Hutapea', 'Ketua Bidang Organisasi', 'Bidang Organisasi', '2024-2026', 4, '081234567894', 1),
-('Daniel Kristianto', 'Ketua Bidang Kaderisasi & Kerohanian', 'Bidang Kaderisasi', '2024-2026', 5, '081234567895', 1),
-('Ruth Marbun', 'Ketua Bidang Aksi & Pelayanan (Akpel)', 'Bidang Akpel', '2024-2026', 6, '081234567896', 1);
+('Yeremia Pratama, S.T.', 'Ketua Cabang', 'BPC (Badan Pengurus Cabang)', '2024-2026', 1, '081234567891', 1),
+('Debora Silalahi, S.Ked.', 'Sekretaris Cabang', 'BPC (Badan Pengurus Cabang)', '2024-2026', 2, '081234567892', 1),
+('Samuel Tampubolon, S.E.', 'Bendahara Cabang', 'BPC (Badan Pengurus Cabang)', '2024-2026', 3, '081234567893', 1),
+('Grace Novita Hutapea', 'KABID OR', 'BPC (Badan Pengurus Cabang)', '2024-2026', 4, '081234567894', 1),
+('Daniel Kristianto', 'KABID PKK', 'BPC (Badan Pengurus Cabang)', '2024-2026', 5, '081234567895', 1),
+('Ruth Marbun', 'KABID AKSPEL', 'BPC (Badan Pengurus Cabang)', '2024-2026', 6, '081234567896', 1);
 
 -- Data Berita Awal
 INSERT INTO `berita` (`judul`, `slug`, `kategori`, `ringkasan`, `konten`, `penulis_nama`, `status`, `views`, `published_at`) VALUES

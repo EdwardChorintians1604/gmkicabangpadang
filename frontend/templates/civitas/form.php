@@ -109,11 +109,11 @@
 
                 <div class="form-group">
                     <label class="form-label" for="tingkat_kaderisasi">Jenjang Kaderisasi</label>
-                    <?php $tk = $isEdit ? $member['tingkat_kaderisasi'] : old('tingkat_kaderisasi', 'Maperca'); ?>
+                    <?php $tk = $isEdit ? $member['tingkat_kaderisasi'] : old('tingkat_kaderisasi', 'Anggota'); ?>
                     <select id="tingkat_kaderisasi" name="tingkat_kaderisasi" class="form-control">
-                        <option value="Maperca" <?= ($tk === 'Maperca') ? 'selected' : '' ?>>Maperca</option>
-                        <option value="KTB" <?= ($tk === 'KTB') ? 'selected' : '' ?>>KTB</option>
-                        <option value="KK" <?= ($tk === 'KK') ? 'selected' : '' ?>>KK</option>
+                        <option value="Anggota" <?= ($tk === 'Anggota') ? 'selected' : '' ?>>Anggota Biasa (Sah Dilantik)</option>
+                        <option value="Maperca" <?= ($tk === 'Maperca') ? 'selected' : '' ?>>Kader Baru (Maperca)</option>
+                        <option value="KK" <?= ($tk === 'KK') ? 'selected' : '' ?>>Kader Kasih (KK)</option>
                         <option value="Alumni" <?= ($tk === 'Alumni') ? 'selected' : '' ?>>Senior / Alumni</option>
                     </select>
                 </div>

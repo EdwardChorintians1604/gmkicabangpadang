@@ -38,8 +38,8 @@
                         <strong class="text-primary"><?= (int)($summary['maperca_count'] ?? 0) ?> Kader</strong>
                     </div>
                     <div class="sekcab-stage-row">
-                        <span>Kelompok Tumbuh Bersama (KTB)</span>
-                        <strong class="text-secondary"><?= (int)($summary['ktb_count'] ?? 0) ?> Kader</strong>
+                        <span>Anggota Biasa (Sah Dilantik)</span>
+                        <strong class="text-secondary"><?= (int)($summary['anggota_count'] ?? 0) ?> Anggota</strong>
                     </div>
                     <div class="sekcab-stage-row">
                         <span>Kursus Kepemimpinan (KK)</span>

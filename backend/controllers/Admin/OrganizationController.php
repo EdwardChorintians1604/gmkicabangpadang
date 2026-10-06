@@ -122,7 +122,7 @@ class OrganizationController
         $payload = [
             'nama' => $nama,
             'jabatan' => $jabatan,
-            'bidang' => $bidang ?: 'Badan Pengurus Harian',
+            'bidang' => $bidang ?: 'BPC (Badan Pengurus Cabang)',
             'periode' => $periode ?: '2024-2026',
             'urutan' => $urutan,
             'telepon' => $telepon,

@@ -251,6 +251,7 @@
 .table-responsive {
     width: 100%;
     overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 .data-table {
@@ -313,23 +314,121 @@
     color: #ffffff;
 }
 
-/* Responsive Sidebar Drawer */
+/* Sidebar Backdrop Overlay */
+.sidebar-backdrop {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(10, 38, 63, 0.65);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    z-index: 1040;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease-in-out;
+}
+
+.sidebar-backdrop.active {
+    display: block;
+    opacity: 1;
+    pointer-events: auto;
+}
+
+body.sidebar-open {
+    overflow: hidden;
+}
+
+/* Sidebar Close Button */
+.sidebar-close-btn {
+    display: none;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: #ffffff;
+    font-size: 1.15rem;
+    line-height: 1;
+    padding: 0.35rem 0.65rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.sidebar-close-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    color: #fde68a;
+}
+
+/* Responsive Sidebar Drawer & Screens */
 @media (max-width: 900px) {
     .dashboard-sidebar {
         position: fixed;
-        left: -260px;
+        left: -280px;
+        top: 0;
+        bottom: 0;
+        width: 280px;
         z-index: 1050;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+        transition: left 0.25s ease-in-out;
     }
 
     .dashboard-sidebar.show {
         left: 0;
     }
 
+    .sidebar-close-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
     .sidebar-toggle-btn {
-        display: block;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .dashboard-topbar {
+        padding: 0 1rem;
+        height: 64px;
     }
 
     .dashboard-content {
-        padding: 1.25rem;
+        padding: 1.25rem 1rem;
+    }
+}
+
+@media (max-width: 640px) {
+    .metrics-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.75rem;
+    }
+
+    .metric-card {
+        padding: 1rem;
+        border-radius: 12px;
+    }
+
+    .metric-value {
+        font-size: 1.5rem;
+    }
+
+    .metric-icon-wrap {
+        width: 40px;
+        height: 40px;
+        font-size: 1.25rem;
+    }
+
+    .dashboard-topbar {
+        height: 60px;
+    }
+}
+
+@media (max-width: 420px) {
+    .metrics-grid {
+        grid-template-columns: 1fr;
     }
 }

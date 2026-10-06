@@ -83,6 +83,7 @@ $router->post('/admin/users/{id}/delete', 'UserController@delete', ['auth', 'rol
 // RUTE KEAMANAN, AUDIT LOG, & BACKUP
 // =====================================================================
 $router->get('/admin/keamanan/audit-log', 'SecurityController@auditLog', ['auth', 'role:admin,pengawas']);
+$router->get('/admin/keamanan/akses-log', 'SecurityController@accessLog', ['auth', 'role:admin,pengawas']);
 $router->get('/admin/keamanan/ancaman', 'SecurityController@ancaman', ['auth', 'role:admin']);
 $router->post('/admin/keamanan/ancaman/{id}/resolve', 'SecurityController@resolveAncaman', ['auth', 'role:admin', 'csrf']);
 $router->get('/admin/keamanan/backup', 'BackupController@index', ['auth', 'role:admin,pengawas']);

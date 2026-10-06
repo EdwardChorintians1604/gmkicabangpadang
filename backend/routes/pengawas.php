@@ -12,6 +12,11 @@
 
 declare(strict_types=1);
 
+if (!defined('GMKI_SECURE_ACCESS')) {
+    http_response_code(403);
+    exit('Akses langsung ditolak.');
+}
+
 use App\Core\Router;
 
 /** @var Router $router */

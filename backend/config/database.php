@@ -1,5 +1,10 @@
 <?php
 
+if (!defined('GMKI_SECURE_ACCESS') && php_sapi_name() !== 'cli') {
+    http_response_code(403);
+    exit('Akses langsung ditolak.');
+}
+
 return [
     'host' => $_ENV['DB_HOST'] ?? '127.0.0.1',
     'port' => (int)($_ENV['DB_PORT'] ?? 3306),

@@ -158,7 +158,7 @@
                 <div>
                     <h5 class="footer-heading">Sekretariat Cabang</h5>
                     <p style="font-size: 0.875rem; line-height: 1.5; margin-bottom: 0.75rem;">
-                        Tarandam, Padang Timur, Kota Padang, Sumatera Barat.
+                        Jl. Tanah Beroyo No.2c, Belakang Tangsi, Kec. Padang Bar., kodya padang, Sumatera Barat.
                     </p>
                     <p style="font-size: 0.875rem; color: #cbd5e1; margin-bottom: 0.35rem;">
                         <strong>Email:</strong> sekretariat@gmkicabangpadang.or.id

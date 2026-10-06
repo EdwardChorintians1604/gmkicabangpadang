@@ -7,18 +7,41 @@
     <link rel="icon" type="image/png" href="<?= asset('images/favicon.png') ?>">
     <link rel="stylesheet" href="<?= asset('css/app.css') ?>">
     <link rel="stylesheet" href="<?= asset('css/dashboard.css') ?>">
+    <!-- Tailwind CSS with custom GMKI palette -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            corePlugins: { preflight: false },
+            theme: {
+                extend: {
+                    colors: {
+                        'gmki-blue': '#0f3d64',
+                        'gmki-light': '#1e5687',
+                        'gmki-dark': '#0a263f',
+                        'gmki-gold': '#d97706',
+                        'gmki-amber': '#f59e0b',
+                    }
+                }
+            }
+        }
+    </script>
 </head>
 <body>
 
     <div class="dashboard-wrapper">
         <!-- Sidebar -->
         <aside class="dashboard-sidebar">
-            <div class="sidebar-brand">
-                <img src="<?= asset('images/logo-gmki.png') ?>" alt="Logo GMKI" style="width: 36px; height: 36px;">
-                <div>
-                    <div class="sidebar-brand-title">GMKI Padang</div>
-                    <div class="sidebar-brand-sub">Sistem Manajemen Cabang</div>
+            <div class="sidebar-brand flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <img src="<?= asset('images/logo-gmki.png') ?>" alt="Logo GMKI" style="width: 36px; height: 36px; object-fit: contain;">
+                    <div>
+                        <div class="sidebar-brand-title">GMKI Padang</div>
+                        <div class="sidebar-brand-sub">Sistem Manajemen Cabang</div>
+                    </div>
                 </div>
+                <button type="button" class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="Tutup Menu">
+                    ✕
+                </button>
             </div>
 
             <ul class="sidebar-nav">
@@ -124,6 +147,12 @@
                             <span>Jejak Audit</span>
                         </a>
                     </li>
+                    <li class="sidebar-nav-item">
+                        <a href="/admin/keamanan/akses-log" class="sidebar-nav-link <?= (str_starts_with($_SERVER['REQUEST_URI'], '/admin/keamanan/akses-log')) ? 'active' : '' ?>">
+                            <span class="sidebar-nav-icon">🌐</span>
+                            <span>Audit Akses Web</span>
+                        </a>
+                    </li>
                 <?php endif; ?>
 
                 <?php if (can('security.threats')): ?>
@@ -158,35 +187,37 @@
             <!-- Topbar -->
             <header class="dashboard-topbar">
                 <div class="topbar-left">
-                    <button class="sidebar-toggle-btn" aria-label="Buka Menu Samping">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <button type="button" class="sidebar-toggle-btn p-1.5 rounded-lg border border-slate-200 text-slate-700 hover:text-primary hover:bg-slate-100 transition-colors cursor-pointer" aria-label="Buka Menu Samping">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <line x1="3" y1="12" x2="21" y2="12"></line>
                             <line x1="3" y1="6" x2="21" y2="6"></line>
                             <line x1="3" y1="18" x2="21" y2="18"></line>
                         </svg>
                     </button>
-                    <div class="topbar-title">GMKI Cabang Padang</div>
+                    <div class="topbar-title hidden sm:block">GMKI Cabang Padang</div>
                 </div>
 
                 <div class="topbar-right">
                     <div class="user-profile-badge">
                         <img src="<?= asset('images/default-profile.png') ?>" alt="Foto Pengguna" class="user-avatar-sm">
-                        <div>
-                            <div style="font-weight: 700; line-height: 1.2;"><?= e(auth()['nama_lengkap'] ?? auth()['username']) ?></div>
-                            <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: capitalize;">
-                                Role: <?= e(auth()['role'] ?? 'Pengguna') ?>
+                        <div class="hidden md:block">
+                            <div style="font-weight: 700; line-height: 1.2; max-width: 130px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                <?= e(auth()['nama_lengkap'] ?? auth()['username']) ?>
+                            </div>
+                            <div style="font-size: 0.72rem; color: var(--text-muted); text-transform: capitalize;">
+                                <?= e(auth()['role'] ?? 'Pengguna') ?>
                             </div>
                         </div>
                     </div>
 
-                    <a href="/ubah-password" class="btn btn-outline btn-sm" title="Ubah Kata Sandi">
-                        🔑 Sandi
+                    <a href="/ubah-password" class="btn btn-outline btn-sm px-2.5 sm:px-3" title="Ubah Kata Sandi">
+                        🔑 <span class="hidden sm:inline">Sandi</span>
                     </a>
 
-                    <form action="/logout" method="POST" style="display: inline;">
+                    <form action="/logout" method="POST" style="display: inline; margin: 0;">
                         <?= csrf_field() ?>
-                        <button type="submit" class="btn btn-danger btn-sm" data-confirm="Apakah Anda yakin ingin keluar dari sistem?">
-                            Keluar
+                        <button type="submit" class="btn btn-danger btn-sm px-2.5 sm:px-3" data-confirm="Apakah Anda yakin ingin keluar dari sistem?">
+                            <span>Keluar</span>
                         </button>
                     </form>
                 </div>
@@ -199,6 +230,9 @@
             </main>
         </div>
     </div>
+
+    <!-- Mobile Backdrop Overlay -->
+    <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
 
     <!-- Scripts -->
     <script src="<?= asset('vendor/chart.umd.min.js') ?>"></script>

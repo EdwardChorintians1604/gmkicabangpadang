@@ -17,6 +17,7 @@ use App\Core\Authorization;
 use App\Core\Request;
 use App\Core\Response;
 use App\Core\Session;
+use App\Services\AccessLogService;
 use App\Services\AuditLogService;
 use App\Services\SecurityService;
 
@@ -24,11 +25,13 @@ class SecurityController
 {
     protected AuditLogService $auditService;
     protected SecurityService $securityService;
+    protected AccessLogService $accessLogService;
 
     public function __construct()
     {
         $this->auditService = new AuditLogService();
         $this->securityService = new SecurityService();
+        $this->accessLogService = new AccessLogService();
     }
 
     /**
@@ -94,5 +97,42 @@ class SecurityController
         $this->securityService->resolveThreat((int)$id);
         Session::flash('success', 'Status ancaman telah diperbarui menjadi Terselesaikan.');
         redirect('/admin/keamanan/ancaman');
+    }
+
+    /**
+     * Tampilkan audit log akses pengunjung, IP, dan perangkat website
+     */
+    public function accessLog(Request $request): Response
+    {
+        Authorization::authorize('security.audit_log');
+
+        $page = (int)$request->query('page', 1);
+        $ip = $request->query('ip');
+        $username = $request->query('username');
+        $deviceType = $request->query('device_type');
+        $path = $request->query('path');
+
+        $filters = array_filter([
+            'ip' => $ip,
+            'username' => $username,
+            'device_type' => $deviceType,
+            'path' => $path,
+        ]);
+
+        $logData = $this->accessLogService->getLogs($filters, $page, 25);
+        $summary = $this->accessLogService->getSummaryStats();
+
+        return view('admin.keamanan.akses-log', [
+            'pageTitle' => 'Audit Akses & Perangkat Pengunjung - GMKI Cabang Padang',
+            'logs' => $logData['data'],
+            'total' => $logData['total'],
+            'currentPage' => $logData['current_page'],
+            'totalPages' => $logData['total_pages'],
+            'summary' => $summary,
+            'searchIp' => $ip,
+            'searchUsername' => $username,
+            'selectedDevice' => $deviceType,
+            'searchPath' => $path,
+        ], 'admin');
     }
 }

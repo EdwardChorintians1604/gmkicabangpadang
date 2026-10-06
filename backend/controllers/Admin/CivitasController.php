@@ -48,7 +48,7 @@ class CivitasController
     /**
      * Paksa jenjang kaderisasi sesuai kelompok modul:
      * - modul Maperca  : selalu 'Maperca'
-     * - modul Anggota  : tidak boleh 'Maperca' (default 'KTB')
+     * - modul Anggota  : tidak boleh 'Maperca' (default 'Anggota')
      */
     protected function normalizeData(array $data): array
     {
@@ -70,8 +70,8 @@ class CivitasController
                 $data['komisariat'] = null;
             }
             $tk = $data['tingkat_kaderisasi'] ?? '';
-            if (!in_array($tk, ['KTB', 'KK', 'Alumni'], true)) {
-                $data['tingkat_kaderisasi'] = 'KTB';
+            if (!in_array($tk, ['Anggota', 'KK', 'Alumni'], true)) {
+                $data['tingkat_kaderisasi'] = 'Anggota';
             }
         }
 
@@ -270,7 +270,7 @@ class CivitasController
     }
 
     /**
-     * Lantik kader baru (Maperca) menjadi anggota resmi (KTB)
+     * Lantik kader baru (Maperca) menjadi anggota resmi GMKI Cabang Padang
      */
     public function lantik(Request $request, string $id): Response
     {
@@ -287,7 +287,7 @@ class CivitasController
         $hasKomisariat = !empty($komisariatInput) && (new KomisariatRepository())->findByName($komisariatInput);
 
         $updateData = [
-            'tingkat_kaderisasi' => 'KTB',
+            'tingkat_kaderisasi' => 'Anggota',
             'status_keanggotaan' => 'Aktif',
             'komisariat' => $hasKomisariat ? $komisariatInput : null,
             'anggota_komisariat' => $hasKomisariat ? 1 : 0,
@@ -300,7 +300,7 @@ class CivitasController
 
         $this->civitasService->update((int) $id, $updateData);
 
-        Session::flash('success', "{$member['nama_lengkap']} resmi dilantik menjadi anggota sah (KTB) dan dipindahkan ke Data Civitas.");
+        Session::flash('success', "{$member['nama_lengkap']} resmi dilantik menjadi Anggota sah GMKI Cabang Padang dan dipindahkan ke Data Civitas.");
         redirect('/admin/maperca');
     }
 

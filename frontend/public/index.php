@@ -9,6 +9,11 @@
 
 declare(strict_types=1);
 
+// Konstanta pengaman agar file internal (config, routes, templates) tidak bisa diakses langsung
+if (!defined('GMKI_SECURE_ACCESS')) {
+    define('GMKI_SECURE_ACCESS', true);
+}
+
 // Jika dijalankan lewat PHP Built-in Server, sajikan berkas statis secara langsung
 if (php_sapi_name() === 'cli-server') {
     $filePath = __DIR__ . parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
@@ -76,6 +81,14 @@ try {
     // Eksekusi rute dan kirim respons
     $response = $router->dispatch($request);
     $response->send();
+
+    // 6. Audit Otomatis Akses Pengunjung, IP, & Perangkat Website
+    try {
+        $accessLogService = new \App\Services\AccessLogService();
+        $accessLogService->logCurrentRequest($response->getStatusCode());
+    } catch (\Throwable $e) {
+        // Silent fail agar performa respons pengunjung tidak terganggu
+    }
 } catch (\Throwable $e) {
     error_log("Critical System Error: " . $e->getMessage() . "\n" . $e->getTraceAsString());
 

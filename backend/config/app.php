@@ -1,5 +1,10 @@
 <?php
 
+if (!defined('GMKI_SECURE_ACCESS') && php_sapi_name() !== 'cli') {
+    http_response_code(403);
+    exit('Akses langsung ditolak.');
+}
+
 return [
     'name' => $_ENV['APP_NAME'] ?? 'GMKI Cabang Padang',
     'env' => $_ENV['APP_ENV'] ?? 'development',

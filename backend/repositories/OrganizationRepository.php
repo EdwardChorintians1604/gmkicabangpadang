@@ -24,7 +24,7 @@ class OrganizationRepository
                 'misi' => 'Mempersiapkan kader pemimpin yang berintegritas dan takut akan Tuhan.',
                 'tri_panji' => "1. Tinggi Iman\n2. Tinggi Ilmu\n3. Tinggi Pengabdian",
                 'panca_kegiatan' => "1. Berdoa/Beribadah\n2. Belajar\n3. Bersaksi\n4. Bersosialisasi\n5. Berjuang",
-                'alamat_sekretariat' => 'Jl. Ksatria No. 12, Tarandam, Kec. Padang Timur, Padang',
+                'alamat_sekretariat' => 'Jl. Tanah Beroyo No.2c, Belakang Tangsi, Kec. Padang Bar., kodya padang, Sumatera Barat',
                 'telepon' => '+62 812-3456-7890',
                 'email' => 'sekretariat@gmkicabangpadang.or.id',
                 'instagram' => '@gmkicabangpadang',
@@ -135,7 +135,7 @@ class OrganizationRepository
         Database::execute($sql, [
             ':nama' => $data['nama'],
             ':jabatan' => $data['jabatan'],
-            ':bidang' => $data['bidang'] ?? 'Badan Pengurus Harian',
+            ':bidang' => $data['bidang'] ?? 'BPC (Badan Pengurus Cabang)',
             ':periode' => $data['periode'] ?? '2024-2026',
             ':urutan' => (int)($data['urutan'] ?? 0),
             ':foto' => $data['foto'] ?? null,

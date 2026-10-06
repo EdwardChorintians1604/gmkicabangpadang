@@ -83,8 +83,9 @@
                                 <?php
                                 $badgeColor = match($c['tingkat_kaderisasi']) {
                                     'KK' => 'badge-success',
-                                    'KTB' => 'badge-secondary',
-                                    default => 'badge-primary'
+                                    'Anggota' => 'badge-primary',
+                                    'Alumni' => 'badge-neutral',
+                                    default => 'badge-secondary'
                                 };
                                 ?>
                                 <span class="badge <?= $badgeColor ?>"><?= e($c['tingkat_kaderisasi']) ?></span>

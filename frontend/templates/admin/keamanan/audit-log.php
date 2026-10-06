@@ -1,10 +1,23 @@
-<div class="flex justify-between items-center" style="margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
+<div class="flex justify-between items-center mb-6 flex-wrap gap-4">
     <div>
-        <h1 style="font-size: 1.75rem; font-weight: 800; color: var(--primary);">Jejak Audit Sistem (Audit Trail)</h1>
-        <p class="text-muted" style="font-size: 0.875rem;">
-            Rekaman kronologis seluruh aktivitas, perubahan data, dan akses oleh pengguna sistem.
+        <h1 class="text-xl sm:text-2xl lg:text-3xl font-extrabold text-[#0f3d64] m-0 mb-1 leading-tight">Jejak Audit Sistem (Audit Trail)</h1>
+        <p class="text-slate-500 text-xs sm:text-sm m-0">
+            Rekaman kronologis seluruh aktivitas, perubahan data, dan interaksi pengguna di dalam sistem.
         </p>
     </div>
+</div>
+
+<!-- Tab Navigasi Mode Audit -->
+<div class="flex items-center gap-2 mb-6 border-b border-slate-200 overflow-x-auto pb-1">
+    <a href="/admin/keamanan/audit-log" class="px-4 py-2.5 font-bold text-sm text-primary border-b-2 border-primary transition-colors flex items-center gap-2">
+        <?= svg_icon('shield', 16) ?>
+        <span>Jejak Audit Aktivitas Data</span>
+    </a>
+    <a href="/admin/keamanan/akses-log" class="px-4 py-2.5 font-bold text-sm text-slate-500 hover:text-primary transition-colors flex items-center gap-2 border-b-2 border-transparent">
+        <?= svg_icon('dashboard', 16) ?>
+        <span>Audit Akses & Perangkat Pengunjung</span>
+        <span class="bg-blue-100 text-blue-700 text-xs px-2 py-0.5 rounded-full font-bold">Baru</span>
+    </a>
 </div>
 
 <!-- Filter Bar -->

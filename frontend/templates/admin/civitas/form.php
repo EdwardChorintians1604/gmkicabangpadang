@@ -152,7 +152,7 @@
                     </select>
                 </div>
             </div>
-            <input type="hidden" name="tingkat_kaderisasi" value="<?= e($isEdit ? ($member['tingkat_kaderisasi'] ?? 'KTB') : 'KTB') ?>">
+            <input type="hidden" name="tingkat_kaderisasi" value="<?= e($isEdit ? ($member['tingkat_kaderisasi'] ?? 'Anggota') : 'Anggota') ?>">
             <?php else: ?>
                 <input type="hidden" name="status_keanggotaan" value="<?= e($isEdit ? $member['status_keanggotaan'] : old('status_keanggotaan', 'Aktif')) ?>">
             <?php endif; ?>

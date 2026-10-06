@@ -36,13 +36,18 @@
     <div class="dashboard-wrapper">
         <!-- Sidebar Administrator -->
         <aside class="dashboard-sidebar">
-            <div class="sidebar-brand">
-                <img src="<?= asset('images/GMKI-Logos.png') ?>" alt="Logo GMKI" class="brand-logo"
-                    style="width: 38px; height: 38px; object-fit: contain;">
-                <div>
-                    <div class="sidebar-brand-title">GMKI Padang</div>
-                    <div class="sidebar-brand-sub">Panel Administrator</div>
+            <div class="sidebar-brand flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <img src="<?= asset('images/GMKI-Logos.png') ?>" alt="Logo GMKI" class="brand-logo"
+                        style="width: 36px; height: 36px; object-fit: contain;">
+                    <div>
+                        <div class="sidebar-brand-title">GMKI Padang</div>
+                        <div class="sidebar-brand-sub">Panel Administrator</div>
+                    </div>
                 </div>
+                <button type="button" class="sidebar-close-btn" id="adminSidebarCloseBtn" aria-label="Tutup Menu">
+                    ✕
+                </button>
             </div>
 
             <ul class="sidebar-nav">
@@ -137,6 +142,13 @@
                     </a>
                 </li>
                 <li class="sidebar-nav-item">
+                    <a href="/admin/keamanan/akses-log"
+                        class="sidebar-nav-link <?= active_nav('/admin/keamanan/akses-log') ?>">
+                        <span class="sidebar-nav-icon"><?= svg_icon('dashboard', 18) ?></span>
+                        <span>Audit Akses Web</span>
+                    </a>
+                </li>
+                <li class="sidebar-nav-item">
                     <a href="/admin/keamanan/ancaman"
                         class="sidebar-nav-link <?= active_nav('/admin/keamanan/ancaman') ?>">
                         <span class="sidebar-nav-icon"><?= svg_icon('alert', 18) ?></span>
@@ -168,35 +180,35 @@
         <!-- Main Content Area -->
         <div class="dashboard-main">
             <!-- Top Navbar -->
-            <header class="dashboard-header flex items-center justify-between">
-                <div class="flex items-center gap-3">
-                    <button class="sidebar-mobile-toggle" aria-label="Toggle Menu">
-                        <?= svg_icon('dashboard', 20) ?>
+            <header class="dashboard-header flex items-center justify-between gap-2 px-3 sm:px-6">
+                <div class="flex items-center gap-2 sm:gap-3 min-w-0">
+                    <button type="button" class="sidebar-mobile-toggle p-1.5 rounded-lg border border-slate-200 text-slate-700 hover:text-primary hover:bg-slate-100 transition-colors cursor-pointer" aria-label="Toggle Menu">
+                        <?= svg_icon('dashboard', 22) ?>
                     </button>
-                    <div class="header-breadcrumb flex items-center gap-2 text-sm text-slate-500">
-                        <span class="font-medium text-slate-400">GMKI Padang</span>
-                        <span class="text-slate-300">/</span>
-                        <strong class="text-slate-800 font-bold"><?= e(explode(' - ', $pageTitle ?? 'Panel Admin')[0]) ?></strong>
+                    <div class="header-breadcrumb flex items-center gap-1.5 text-xs sm:text-sm text-slate-500 overflow-hidden text-ellipsis whitespace-nowrap">
+                        <span class="font-medium text-slate-400 hidden sm:inline">GMKI Padang</span>
+                        <span class="text-slate-300 hidden sm:inline">/</span>
+                        <strong class="text-slate-800 font-bold overflow-hidden text-ellipsis whitespace-nowrap"><?= e(explode(' - ', $pageTitle ?? 'Panel Admin')[0]) ?></strong>
                     </div>
                 </div>
 
-                <div class="header-actions flex items-center gap-3">
-                    <a href="/" target="_blank" class="btn btn-outline btn-sm flex items-center gap-1"
+                <div class="header-actions flex items-center gap-1.5 sm:gap-3 flex-shrink-0">
+                    <a href="/" target="_blank" class="btn btn-outline btn-sm flex items-center gap-1 px-2 sm:px-3"
                         title="Lihat Portal Pengunjung">
                         <?= svg_icon('external', 14) ?>
-                        <span>Lihat Web</span>
+                        <span class="hidden sm:inline">Lihat Web</span>
                     </a>
 
                     <?php if (is_admin()): ?>
-                        <a href="/pengawas/dashboard" class="btn btn-secondary btn-sm flex items-center gap-1"
+                        <a href="/pengawas/dashboard" class="btn btn-secondary btn-sm flex items-center gap-1 px-2 sm:px-3"
                             title="Buka Mode Pantauan Pengawas">
                             <?= svg_icon('eye', 14) ?>
-                            <span>Mode Pengawas</span>
+                            <span class="hidden md:inline">Mode Pengawas</span>
                         </a>
                     <?php endif; ?>
 
                     <div class="user-dropdown">
-                        <a href="/ubah-password" class="btn btn-outline btn-sm" title="Ubah Password">
+                        <a href="/ubah-password" class="btn btn-outline btn-sm px-2 sm:px-2.5" title="Ubah Password">
                             <?= svg_icon('lock', 14) ?>
                         </a>
                     </div>
@@ -204,9 +216,9 @@
                     <form action="/logout" method="POST" style="margin: 0;"
                         onsubmit="return confirm('Apakah Anda yakin ingin keluar dari sistem?');">
                         <?= csrf_field() ?>
-                        <button type="submit" class="btn btn-danger btn-sm flex items-center gap-1">
+                        <button type="submit" class="btn btn-danger btn-sm flex items-center gap-1 px-2 sm:px-3">
                             <?= svg_icon('logout', 14) ?>
-                            <span>Keluar</span>
+                            <span class="hidden sm:inline">Keluar</span>
                         </button>
                     </form>
                 </div>
@@ -228,6 +240,9 @@
             </footer>
         </div>
     </div>
+
+    <!-- Mobile Backdrop Overlay -->
+    <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
 
     <!-- Scripts -->
     <script src="<?= asset('vendor/chart.umd.min.js') ?>"></script>

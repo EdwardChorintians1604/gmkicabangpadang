@@ -7,24 +7,9 @@
  */
 
 document.addEventListener('DOMContentLoaded', function () {
-    // 1. Mobile Sidebar Toggle
-    const mobileToggle = document.querySelector('.sidebar-mobile-toggle');
-    const sidebar = document.querySelector('.dashboard-sidebar');
-
-    if (mobileToggle && sidebar) {
-        mobileToggle.addEventListener('click', function (e) {
-            e.stopPropagation();
-            sidebar.classList.toggle('show');
-        });
-
-        // Close sidebar when clicking outside on small screens
-        document.addEventListener('click', function (e) {
-            if (window.innerWidth <= 900 && sidebar.classList.contains('show')) {
-                if (!sidebar.contains(e.target) && !mobileToggle.contains(e.target)) {
-                    sidebar.classList.remove('show');
-                }
-            }
-        });
+    // 1. Mobile Sidebar Drawer Logic (Inisialisasi via fungsi bersama)
+    if (typeof window.initSidebarDrawer === 'function') {
+        window.initSidebarDrawer();
     }
 
     // 2. Executive Tabs Switcher (Pengawas Dashboard Tabs: Ketcab, Sekcab, Bencab)

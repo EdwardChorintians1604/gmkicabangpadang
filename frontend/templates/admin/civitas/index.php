@@ -6,8 +6,8 @@
         </h1>
         <p class="text-muted" style="font-size: 0.875rem;">
             <?= $isMaperca
-                ? 'Data awal anggota baru. Komisariat ditentukan saat pelantikan ke Data Civitas.'
-                : 'Daftar anggota resmi (KTB, KK) dan alumni GMKI Cabang Padang. Kader baru Maperca dikelola di menu terpisah.' ?>
+                ? 'Data calon kader baru Maperca. Sah menjadi anggota resmi setelah dilantik ke Data Civitas.'
+                : 'Daftar anggota sah (Anggota, KK) dan alumni GMKI Cabang Padang. Kader baru Maperca dikelola di menu terpisah.' ?>
         </p>
     </div>
     <div class="flex gap-2">
@@ -139,8 +139,8 @@
                                     <?php if ($isMaperca && can('civitas.update')): ?>
                                         <form action="/admin/maperca/<?= $row['id'] ?>/lantik" method="POST" style="display:inline;">
                                             <?= csrf_field() ?>
-                                            <button type="submit" class="btn btn-primary btn-sm" data-confirm="Lantik <?= e($row['nama_lengkap']) ?> menjadi anggota resmi (KTB)?">
-                                                Lantik
+                                            <button type="submit" class="btn btn-primary btn-sm" data-confirm="Lantik <?= e($row['nama_lengkap']) ?> menjadi Anggota sah GMKI Cabang Padang?">
+                                                Lantik Jadi Anggota
                                             </button>
                                         </form>
                                     <?php endif; ?>

@@ -4,6 +4,11 @@
  * Meneruskan akses langsung ke frontend/public/index.php
  */
 
+// Konstanta pengaman agar file internal tidak dapat diakses secara langsung
+if (!defined('GMKI_SECURE_ACCESS')) {
+    define('GMKI_SECURE_ACCESS', true);
+}
+
 $publicIndex = __DIR__ . '/frontend/public/index.php';
 
 if (file_exists($publicIndex)) {

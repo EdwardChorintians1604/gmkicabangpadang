@@ -13,6 +13,11 @@ declare(strict_types=1);
 
 namespace App\Core;
 
+if (!defined('GMKI_SECURE_ACCESS') && php_sapi_name() !== 'cli') {
+    http_response_code(403);
+    exit('Akses langsung ditolak.');
+}
+
 class Autoloader
 {
     protected static string $baseDir;
