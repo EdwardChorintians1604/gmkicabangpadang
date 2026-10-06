@@ -323,44 +323,71 @@ class CivitasController
     }
 
     /**
-     * Tampilkan formulir impor massal CSV
+     * Tampilkan formulir impor massal CSV / Excel (XLSX)
      */
     public function imporForm(Request $request): Response
     {
         Authorization::authorize('civitas.import');
 
-        return view('admin.civitas.impor', [
-            'pageTitle' => 'Impor Data Civitas via Berkas CSV',
-        ], 'admin');
+        $isMaperca = ($this->kelompok === 'maperca');
+        $title = $isMaperca
+            ? 'Impor Data Calon Kader Baru (Maperca) via CSV / Excel'
+            : 'Impor Data Civitas via CSV / Excel';
+
+        return view('admin.civitas.impor', $this->viewData([
+            'pageTitle' => $title,
+            'isMaperca' => $isMaperca,
+        ]), $this->layout());
     }
 
     /**
-     * Proses impor massal CSV
+     * Proses impor massal berkas CSV / Excel (XLSX)
      */
     public function imporProcess(Request $request): Response
     {
         Authorization::authorize('civitas.import');
 
-        $file = $request->file('file_csv');
+        $file = $request->file('file_impor') ?? $request->file('file_csv');
         if (!$file || empty($file['tmp_name'])) {
-            Session::flash('error', 'Silakan pilih berkas CSV untuk diimpor.');
-            redirect('/admin/civitas/impor');
+            Session::flash('error', 'Silakan pilih berkas CSV atau Excel (.xlsx) untuk diimpor.');
+            redirect($this->basePath . '/impor');
         }
 
-        $result = $this->civitasService->importCsv($file['tmp_name']);
+        $originalName = $file['name'] ?? '';
+        $ext = strtolower(pathinfo($originalName, PATHINFO_EXTENSION));
+
+        if (!in_array($ext, ['csv', 'xlsx', 'xls'], true)) {
+            Session::flash('error', 'Format berkas tidak didukung. Harap unggah berkas .csv atau .xlsx (Excel).');
+            redirect($this->basePath . '/impor');
+        }
+
+        $result = $this->civitasService->importFile($file['tmp_name'], $originalName, $this->kelompok);
 
         if (!$result['success']) {
             Session::flash('error', $result['message']);
-            redirect('/admin/civitas/impor');
+            redirect($this->basePath . '/impor');
         }
 
-        $msg = "Impor selesai: {$result['imported']} data berhasil diproses.";
+        $msg = "Impor selesai: {$result['imported']} data berhasil diproses ke " . ($this->kelompok === 'maperca' ? 'Kader Baru (Maperca)' : 'Civitas') . ".";
         if ($result['failed'] > 0) {
-            $msg .= " ({$result['failed']} baris gagal/dilewati).";
+            $msg .= " ({$result['failed']} baris dilewati karena format tidak lengkap).";
         }
 
         Session::flash('success', $msg);
-        redirect('/admin/civitas');
+        redirect($this->basePath);
+    }
+
+    /**
+     * Unduh contoh template berkas impor (CSV atau Excel XLSX)
+     */
+    public function downloadTemplate(Request $request): void
+    {
+        Authorization::authorize('civitas.import');
+
+        $format = strtolower((string)$request->query('format', 'xlsx'));
+        $format = in_array($format, ['csv', 'xlsx'], true) ? $format : 'xlsx';
+
+        $this->civitasService->generateTemplate($this->kelompok, $format);
     }
 
     /**

@@ -14,9 +14,9 @@
         <a href="<?= e($basePath) ?>/export<?= !empty($_SERVER['QUERY_STRING']) ? '?' . $_SERVER['QUERY_STRING'] : '' ?>" class="btn btn-outline btn-sm">
             📥 Unduh CSV
         </a>
-        <?php if (!$isMaperca && can('civitas.import')): ?>
-            <a href="/admin/civitas/impor" class="btn btn-outline btn-sm">
-                📂 Impor Data
+        <?php if (can('civitas.import')): ?>
+            <a href="<?= e($basePath) ?>/impor" class="btn btn-outline btn-sm">
+                📂 Impor CSV / Excel
             </a>
         <?php endif; ?>
         <?php if (can('civitas.create')): ?>

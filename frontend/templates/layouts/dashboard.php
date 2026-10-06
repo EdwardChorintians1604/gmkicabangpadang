@@ -89,7 +89,7 @@
                     <li class="sidebar-nav-item">
                         <a href="/admin/civitas/impor" class="sidebar-nav-link <?= (str_starts_with($_SERVER['REQUEST_URI'], '/admin/civitas/impor')) ? 'active' : '' ?>">
                             <span class="sidebar-nav-icon">📥</span>
-                            <span>Impor Data (CSV)</span>
+                            <span>Impor Data (CSV/Excel)</span>
                         </a>
                     </li>
                 <?php endif; ?>

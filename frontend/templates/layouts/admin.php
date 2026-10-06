@@ -95,7 +95,7 @@
                 <li class="sidebar-nav-item">
                     <a href="/admin/civitas/impor" class="sidebar-nav-link <?= active_nav('/admin/civitas/impor') ?>">
                         <span class="sidebar-nav-icon"><?= svg_icon('upload', 18) ?></span>
-                        <span>Impor CSV Civitas</span>
+                        <span>Impor Civitas (CSV/Excel)</span>
                     </a>
                 </li>
 

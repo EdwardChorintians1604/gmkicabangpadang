@@ -30,6 +30,21 @@ class Autoloader
         self::$baseDir = dirname(__DIR__);
 
         spl_autoload_register(function (string $class) {
+            if ($class === 'Shuchkin\\SimpleXLSX') {
+                $file = self::$baseDir . '/packages/SimpleXLSX.php';
+                if (file_exists($file)) {
+                    require_once $file;
+                    return;
+                }
+            }
+            if ($class === 'Shuchkin\\SimpleXLSXGen') {
+                $file = self::$baseDir . '/packages/SimpleXLSXGen.php';
+                if (file_exists($file)) {
+                    require_once $file;
+                    return;
+                }
+            }
+
             $prefix = 'App\\';
 
             $len = strlen($prefix);

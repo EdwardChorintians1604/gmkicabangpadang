@@ -36,8 +36,9 @@ $router->get('/admin/dashboard', 'Admin\DashboardController@index', ['auth', 'ro
 $router->get('/admin/civitas', 'Admin\CivitasController@index', ['auth', 'role:admin,operator,pengawas']);
 $router->get('/admin/civitas/create', 'Admin\CivitasController@create', ['auth', 'role:admin,operator,pengawas']);
 $router->post('/admin/civitas', 'Admin\CivitasController@store', ['auth', 'role:admin,operator,pengawas', 'csrf']);
-$router->get('/admin/civitas/impor', 'Admin\CivitasController@imporForm', ['auth', 'role:admin']);
-$router->post('/admin/civitas/impor', 'Admin\CivitasController@imporProcess', ['auth', 'role:admin', 'csrf']);
+$router->get('/admin/civitas/impor', 'Admin\CivitasController@imporForm', ['auth', 'role:admin,operator,pengawas']);
+$router->post('/admin/civitas/impor', 'Admin\CivitasController@imporProcess', ['auth', 'role:admin,operator,pengawas', 'csrf']);
+$router->get('/admin/civitas/template', 'Admin\CivitasController@downloadTemplate', ['auth', 'role:admin,operator,pengawas']);
 $router->get('/admin/civitas/export', 'Admin\CivitasController@export', ['auth', 'role:admin,operator,pengawas']);
 $router->get('/admin/civitas/{id}', 'Admin\CivitasController@detail', ['auth', 'role:admin,operator,pengawas']);
 $router->get('/admin/civitas/{id}/edit', 'Admin\CivitasController@edit', ['auth', 'role:admin,operator,pengawas']);
@@ -48,6 +49,9 @@ $router->post('/admin/civitas/{id}/delete', 'Admin\CivitasController@delete', ['
 $router->get('/admin/maperca', 'Admin\MapercaController@index', ['auth', 'role:admin,operator,pengawas']);
 $router->get('/admin/maperca/create', 'Admin\MapercaController@create', ['auth', 'role:admin,operator,pengawas']);
 $router->post('/admin/maperca', 'Admin\MapercaController@store', ['auth', 'role:admin,operator,pengawas', 'csrf']);
+$router->get('/admin/maperca/impor', 'Admin\MapercaController@imporForm', ['auth', 'role:admin,operator,pengawas']);
+$router->post('/admin/maperca/impor', 'Admin\MapercaController@imporProcess', ['auth', 'role:admin,operator,pengawas', 'csrf']);
+$router->get('/admin/maperca/template', 'Admin\MapercaController@downloadTemplate', ['auth', 'role:admin,operator,pengawas']);
 $router->get('/admin/maperca/export', 'Admin\MapercaController@export', ['auth', 'role:admin,operator,pengawas']);
 $router->get('/admin/maperca/{id}', 'Admin\MapercaController@detail', ['auth', 'role:admin,operator,pengawas']);
 $router->get('/admin/maperca/{id}/edit', 'Admin\MapercaController@edit', ['auth', 'role:admin,operator,pengawas']);
