@@ -3,28 +3,28 @@
 namespace App\Repositories;
 
 use App\Core\Database;
+use App\Models\User;
 
 class UserRepository
 {
     public function findById(int $id): ?array
     {
-        $sql = "SELECT `id`, `username`, `email`, `password`, `nama_lengkap`, `role`, `status`, `remember_token`, `last_login_at`, `last_login_ip`, `created_at`, `updated_at`
-                FROM `users` WHERE `id` = :id LIMIT 1";
-        return Database::fetchOne($sql, [':id' => $id]);
+        return User::find($id);
     }
 
     public function findByUsername(string $username): ?array
     {
-        $sql = "SELECT `id`, `username`, `email`, `password`, `nama_lengkap`, `role`, `status`, `remember_token`, `last_login_at`, `last_login_ip`, `created_at`, `updated_at`
-                FROM `users` WHERE `username` = :username LIMIT 1";
-        return Database::fetchOne($sql, [':username' => $username]);
+        return User::findByUsername($username);
     }
 
     public function findByEmail(string $email): ?array
     {
-        $sql = "SELECT `id`, `username`, `email`, `password`, `nama_lengkap`, `role`, `status`, `remember_token`, `last_login_at`, `last_login_ip`, `created_at`, `updated_at`
-                FROM `users` WHERE `email` = :email LIMIT 1";
-        return Database::fetchOne($sql, [':email' => $email]);
+        return User::findByEmail($email);
+    }
+
+    public function findForAuthentication(string $identifier): ?array
+    {
+        return User::findForAuthentication($identifier);
     }
 
     public function getAll(int $limit = 100, int $offset = 0): array

@@ -39,11 +39,8 @@ class AuthService
             ];
         }
 
-        // 2. Cari pengguna berdasarkan username atau email
-        $user = $this->userRepo->findByUsername($username);
-        if (!$user) {
-            $user = $this->userRepo->findByEmail($username);
-        }
+        // 2. Cari pengguna berdasarkan username atau email via ORM / QueryBuilder
+        $user = $this->userRepo->findForAuthentication($username);
 
         // 3. Verifikasi pengguna dan kata sandi
         if (!$user || !Hash::check($password, $user['password'])) {
