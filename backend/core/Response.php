@@ -66,6 +66,10 @@ class Response
         finfo_close($finfo);
 
         $downloadName = $filename ?: basename($filePath);
+        
+        while (ob_get_level()) {
+            ob_end_clean();
+        }
 
         header("Content-Type: {$mimeType}");
         header("Content-Disposition: {$disposition}; filename=\"{$downloadName}\"");

@@ -26,11 +26,13 @@ class Request
         $this->uri = $_SERVER['REQUEST_URI'] ?? '/';
         $pathOnly = parse_url($this->uri, PHP_URL_PATH) ?? '/';
 
-        // Normalize base path if project running inside subfolder
+        // Normalize base path if project running inside subfolder (e.g. Apache subdirectory)
         $scriptName = str_replace('\\', '/', $_SERVER['SCRIPT_NAME'] ?? '');
-        $scriptDir = dirname($scriptName);
-        if ($scriptDir !== '/' && strpos($pathOnly, $scriptDir) === 0) {
-            $pathOnly = substr($pathOnly, strlen($scriptDir));
+        if (php_sapi_name() !== 'cli-server' && basename($scriptName) === 'index.php') {
+            $scriptDir = dirname($scriptName);
+            if ($scriptDir !== '/' && $scriptDir !== '.' && $scriptDir !== '\\' && strpos($pathOnly, $scriptDir) === 0) {
+                $pathOnly = substr($pathOnly, strlen($scriptDir));
+            }
         }
 
         $this->path = '/' . trim($pathOnly, '/');

@@ -27,6 +27,8 @@ $router->get('/berita/{slug}', 'PublicController@detailBerita');
 $router->get('/kontak', 'PublicController@kontak');
 $router->post('/kontak', 'PublicController@kirimKontak', ['csrf']);
 
-// Penanganan Berkas Privat Terotentikasi
-$router->get('/file/civitas/foto/{id}', 'FileController@fotoCivitas', ['auth']);
-$router->get('/file/civitas/kta/{id}', 'FileController@ktaCivitas', ['auth']);
+// Penanganan Berkas Privat Terotentikasi (Foto Anggota & KTA)
+$router->get('/private/foto-anggota/{filename}', 'FileController@streamFoto', ['auth']);
+$router->get('/private/kta/{filename}', 'FileController@streamKta', ['auth']);
+$router->get('/file/civitas/foto/{filename}', 'FileController@streamFoto', ['auth']);
+$router->get('/file/civitas/kta/{filename}', 'FileController@streamKta', ['auth']);

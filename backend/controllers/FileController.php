@@ -25,6 +25,15 @@ class FileController
         }
 
         $filePath = $this->storageService->getPrivatePath('foto_anggota', $filename);
+        if (!file_exists($filePath) || !is_readable($filePath)) {
+            $defaultPath = dirname(__DIR__, 2) . '/frontend/public/assets/images/default-profile.png';
+            if (file_exists($defaultPath)) {
+                $response = new Response();
+                $response->file($defaultPath, 'default-profile.png', 'inline');
+                return;
+            }
+        }
+
         $response = new Response();
         $response->file($filePath, $filename, 'inline');
     }

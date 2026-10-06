@@ -38,7 +38,7 @@
                 <div style="text-align: center; flex-shrink: 0; width: 160px;">
                     <div style="width: 150px; height: 180px; border-radius: var(--radius-md); overflow: hidden; background: var(--bg-subtle); border: 2px solid var(--border-color); margin-bottom: 0.75rem;">
                         <?php if (!empty($member['foto_anggota'])): ?>
-                            <img src="/private/foto-anggota/<?= e($member['foto_anggota']) ?>" alt="<?= e($member['nama_lengkap']) ?>" style="width: 100%; height: 100%; object-fit: cover;">
+                            <img src="/private/foto-anggota/<?= e($member['foto_anggota']) ?>" alt="<?= e($member['nama_lengkap']) ?>" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.onerror=null;this.src='<?= asset('images/default-profile.png') ?>';">
                         <?php else: ?>
                             <img src="<?= asset('images/default-profile.png') ?>" alt="Default" style="width: 100%; height: 100%; object-fit: cover;">
                         <?php endif; ?>

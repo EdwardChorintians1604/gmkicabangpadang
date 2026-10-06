@@ -8,6 +8,11 @@ class Router
     protected array $namedRoutes = [];
     protected array $groupStack = [];
 
+    public function getRoutes(): array
+    {
+        return $this->routes;
+    }
+
     public function get(string $path, array|string|\Closure $handler, array $middleware = []): self
     {
         return $this->addRoute('GET', $path, $handler, $middleware);
