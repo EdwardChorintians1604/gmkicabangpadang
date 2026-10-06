@@ -47,7 +47,7 @@ CREATE TABLE IF NOT EXISTS `civitas` (
     `komisariat` VARCHAR(100) NULL,
     `anggota_komisariat` TINYINT(1) NOT NULL DEFAULT 1,
     `tahun_maperca` YEAR NULL,
-    `tingkat_kaderisasi` ENUM('Maperca', 'KTB', 'KK', 'Alumni') NOT NULL DEFAULT 'Maperca',
+    `tingkat_kaderisasi` ENUM('Maperca', 'Anggota', 'KK', 'Alumni') NOT NULL DEFAULT 'Anggota',
     `status_keanggotaan` ENUM('Aktif', 'Alumni/Senior', 'Pindah Cabang', 'Nonaktif') NOT NULL DEFAULT 'Aktif',
     `alamat_padang` TEXT NULL,
     `alamat_asal` TEXT NULL,
@@ -245,7 +245,7 @@ INSERT INTO `berita` (`id`, `judul`, `slug`, `kategori`, `ringkasan`, `konten`, 
 ON DUPLICATE KEY UPDATE `id` = `id`;
 
 INSERT INTO `civitas` (`id`, `nim`, `nama_lengkap`, `jenis_kelamin`, `tempat_lahir`, `tanggal_lahir`, `telepon`, `email`, `perguruan_tinggi`, `fakultas`, `jurusan`, `komisariat`, `tahun_maperca`, `tingkat_kaderisasi`, `status_keanggotaan`, `alamat_padang`) VALUES
-(1, '2110532001', 'Josua Manik', 'L', 'Medan', '2003-05-14', '082199887766', 'josua.manik@student.unand.ac.id', 'Universitas Andalas', 'Ekonomi dan Bisnis', 'Manajemen', 'Komisariat UNAND', 2022, 'KTB', 'Aktif', 'Limau Manis, Kec. Pauh, Padang'),
+(1, '2110532001', 'Josua Manik', 'L', 'Medan', '2003-05-14', '082199887766', 'josua.manik@student.unand.ac.id', 'Universitas Andalas', 'Ekonomi dan Bisnis', 'Manajemen', 'Komisariat UNAND', 2022, 'Anggota', 'Aktif', 'Limau Manis, Kec. Pauh, Padang'),
 (2, '22076045', 'Christin Natalia Simanjuntak', 'P', 'Pematangsiantar', '2004-12-25', '081377665544', 'christin.natalia@student.unp.ac.id', 'Universitas Negeri Padang', 'Bahasa dan Seni', 'Pendidikan Bahasa Inggris', 'Komisariat UNP', 2023, 'Maperca', 'Aktif', 'Air Tawar Barat, Padang Utara'),
 (3, '201001321', 'Andreas Sibarani', 'L', 'Sibolga', '2002-08-19', '085211223344', 'andreas.sibarani@bunghatta.ac.id', 'Universitas Bung Hatta', 'Teknik Sipil dan Perencanaan', 'Teknik Sipil', 'Komisariat UBH', 2021, 'KK', 'Aktif', 'Ulak Karang Selatan, Padang')
 ON DUPLICATE KEY UPDATE `id` = `id`;

@@ -67,8 +67,11 @@
                     <table class="data-table" style="border: none;">
                         <tbody>
                             <tr>
-                                <th style="width: 180px; background: none;">NIM</th>
-                                <td><code style="font-size: 1rem;"><?= e($member['nim']) ?></code></td>
+                                <th style="width: 180px; background: none;">ID / NIM</th>
+                                <td>
+                                    <span class="badge badge-neutral" style="font-weight: 700; font-size: 0.85rem; margin-right: 6px;">#<?= (int)$member['id'] ?></span>
+                                    <code style="font-size: 1rem;"><?= e($member['nim']) ?></code>
+                                </td>
                             </tr>
                             <tr>
                                 <th style="background: none;">Nama Lengkap</th>

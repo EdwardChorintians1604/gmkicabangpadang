@@ -108,3 +108,5 @@ $router->get('/admin/keamanan/backup', 'Admin\BackupController@index', ['auth', 
 $router->post('/admin/keamanan/backup/database', 'Admin\BackupController@backupDatabase', ['auth', 'role:admin', 'csrf']);
 $router->post('/admin/keamanan/backup/manifest', 'Admin\BackupController@generateManifest', ['auth', 'role:admin', 'csrf']);
 $router->get('/admin/keamanan/backup/download', 'Admin\BackupController@download', ['auth', 'role:admin']);
+$router->get('/admin/keamanan/backup/unduh-sekarang', 'Admin\BackupController@createAndDownload', ['auth', 'role:admin']);
+$router->get('/admin/keamanan/backup/database/{filename}', 'Admin\BackupController@download', ['auth', 'role:admin']);

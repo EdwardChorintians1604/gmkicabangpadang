@@ -182,8 +182,8 @@
             <!-- Top Navbar -->
             <header class="dashboard-header flex items-center justify-between gap-2 px-3 sm:px-6">
                 <div class="flex items-center gap-2 sm:gap-3 min-w-0">
-                    <button type="button" class="sidebar-mobile-toggle p-1.5 rounded-lg border border-slate-200 text-slate-700 hover:text-primary hover:bg-slate-100 transition-colors cursor-pointer" aria-label="Toggle Menu">
-                        <?= svg_icon('dashboard', 22) ?>
+                    <button type="button" class="navbar-sidebar-toggle sidebar-toggle-btn" id="navbarSidebarToggle" aria-label="Buka / Tutup Sidebar" title="Buka / Tutup Sidebar (Ctrl+B)">
+                        <?= svg_icon('menu', 20) ?>
                     </button>
                     <div class="header-breadcrumb flex items-center gap-1.5 text-xs sm:text-sm text-slate-500 overflow-hidden text-ellipsis whitespace-nowrap">
                         <span class="font-medium text-slate-400 hidden sm:inline">GMKI Padang</span>

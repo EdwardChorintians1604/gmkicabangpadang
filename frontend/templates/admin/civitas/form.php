@@ -24,10 +24,16 @@
 
             <div class="grid grid-cols-2 gap-4">
                 <div class="form-group">
-                    <label class="form-label" for="nim">Nomor Induk Mahasiswa (NIM)</label>
+                    <label class="form-label" for="nim">
+                        ID Anggota / NIM
+                        <span style="font-weight: normal; font-size: 0.78rem; color: var(--text-muted);">(Bisa ID angka berapapun atau NIM)</span>
+                    </label>
                     <input type="text" id="nim" name="nim" class="form-control" 
-                           placeholder="Contoh: 2110532001" 
-                           value="<?= e($isEdit ? $member['nim'] : old('nim')) ?>" required>
+                           placeholder="Berapapun angka ID atau NIM (contoh: 1, 12, 100)" 
+                           value="<?= e($isEdit ? ($member['nim'] ?? $member['id']) : old('nim')) ?>">
+                    <div class="form-help" style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">
+                        Boleh diisi angka ID berapapun, NIM, atau kosongkan untuk otomatis generate ID.
+                    </div>
                 </div>
 
                 <div class="form-group">

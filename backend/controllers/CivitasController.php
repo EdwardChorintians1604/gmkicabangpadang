@@ -71,14 +71,18 @@ class CivitasController
     {
         Authorization::authorize('civitas.create');
 
-        $validator = Validator::make($request->post(), [
-            'nim' => 'required|unique:civitas,nim',
+        $rules = [
             'nama_lengkap' => 'required|min:3',
             'jenis_kelamin' => 'required|in:L,P',
             'perguruan_tinggi' => 'required',
             'komisariat' => 'required',
             'tahun_maperca' => 'required|numeric',
-        ]);
+        ];
+        $postData = $request->post();
+        if (!empty($postData['nim']) && trim((string)$postData['nim']) !== '') {
+            $rules['nim'] = 'unique:civitas,nim';
+        }
+        $validator = Validator::make($postData, $rules);
 
         if ($validator->fails()) {
             Session::flash('error', $validator->first());
@@ -137,14 +141,18 @@ class CivitasController
     {
         Authorization::authorize('civitas.update');
 
-        $validator = Validator::make($request->post(), [
-            'nim' => "required|unique:civitas,nim,{$id}",
+        $rules = [
             'nama_lengkap' => 'required|min:3',
             'jenis_kelamin' => 'required|in:L,P',
             'perguruan_tinggi' => 'required',
             'komisariat' => 'required',
             'tahun_maperca' => 'required|numeric',
-        ]);
+        ];
+        $postData = $request->post();
+        if (!empty($postData['nim']) && trim((string)$postData['nim']) !== '') {
+            $rules['nim'] = "unique:civitas,nim,{$id}";
+        }
+        $validator = Validator::make($postData, $rules);
 
         if ($validator->fails()) {
             Session::flash('error', $validator->first());

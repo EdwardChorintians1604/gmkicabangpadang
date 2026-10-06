@@ -15,7 +15,7 @@
                         Memastikan kesinambungan perarakan di tiga medan layan: <strong>Gereja, Perguruan Tinggi, dan Masyarakat</strong> melalui kaderisasi yang berakar pada iman Kristiani dan berwawasan kebangsaan.
                     </p>
                 </div>
-                <div class="text-right">
+                <div class="text-left sm:text-right mt-2 sm:mt-0">
                     <div style="font-size: 0.75rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em;">Status Kepengurusan BPC</div>
                     <div style="font-size: 1.25rem; font-weight: 800; color: #38bdf8;">Periode <?= e($profile['tema_periode'] ?? '2024-2026') ?></div>
                 </div>
@@ -23,7 +23,7 @@
         </div>
     </div>
 
-    <div class="grid grid-cols-3 gap-6" style="margin-bottom: 1.5rem;">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6" style="margin-bottom: 1.5rem;">
         <div class="card" style="border-top: 4px solid var(--primary);">
             <div class="card-body">
                 <div class="flex items-center gap-2" style="margin-bottom: 0.75rem;">
@@ -77,7 +77,7 @@
                         <th>Urutan</th>
                         <th>Nama Pengurus</th>
                         <th>Jabatan</th>
-                        <th>Bidang</th>
+                        <th>Periode</th>
                         <th>Kontak</th>
                         <th>Status</th>
                     </tr>
@@ -89,7 +89,7 @@
                                 <td><strong>#<?= (int)$p['urutan'] ?></strong></td>
                                 <td><strong><?= e($p['nama']) ?></strong></td>
                                 <td><span class="badge badge-primary"><?= e($p['jabatan']) ?></span></td>
-                                <td class="text-muted"><?= e($p['bidang']) ?></td>
+                                <td class="text-muted"><?= e($p['periode'] ?? '-') ?></td>
                                 <td><code><?= e($p['telepon'] ?? '-') ?></code></td>
                                 <td><span class="badge badge-success">Aktif</span></td>
                             </tr>

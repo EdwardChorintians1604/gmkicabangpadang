@@ -45,3 +45,5 @@ $router->get('/pengawas/pemantauan/audit-log', 'Pengawas\MonitoringController@au
 $router->get('/pengawas/pemantauan/keamanan', 'Pengawas\MonitoringController@threats', ['auth', 'role:admin,pengawas']);
 $router->get('/pengawas/pemantauan/ancaman', 'Pengawas\MonitoringController@threats', ['auth', 'role:admin,pengawas']);
 $router->get('/pengawas/pemantauan/backup', 'Pengawas\MonitoringController@backup', ['auth', 'role:admin,pengawas']);
+$router->get('/pengawas/pemantauan/backup/download', 'Pengawas\MonitoringController@download', ['auth', 'role:admin,pengawas']);
+$router->get('/pengawas/pemantauan/backup/database/{filename}', 'Pengawas\MonitoringController@download', ['auth', 'role:admin,pengawas']);

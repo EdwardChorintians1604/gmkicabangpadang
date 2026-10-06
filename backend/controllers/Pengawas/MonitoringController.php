@@ -102,4 +102,39 @@ class MonitoringController
             'manifestEntries' => $manifestEntries,
         ], 'pengawas');
     }
+
+    /**
+     * Unduh berkas cadangan database (Khusus Pengawas / BENCAB / MPPC)
+     */
+    public function download(Request $request): void
+    {
+        Authorization::authorize('backup.download');
+
+        $filename = basename($request->query('file', $request->param('filename', '')));
+
+        if (empty($filename) || !str_ends_with($filename, '.sql.gz') || !preg_match('/^[a-zA-Z0-9_\-\.]+\.sql\.gz$/', $filename)) {
+            \App\Core\Session::flash('error', 'Format nama berkas cadangan tidak valid.');
+            redirect('/pengawas/pemantauan/backup');
+            return;
+        }
+
+        $storageService = new \App\Services\StorageService();
+        $backupDir = realpath($storageService->getBackupDir('database'));
+        $targetPath = realpath($storageService->getBackupDir('database') . DIRECTORY_SEPARATOR . $filename);
+
+        if (!$backupDir || !$targetPath || !str_starts_with($targetPath, $backupDir) || !is_file($targetPath)) {
+            \App\Core\Session::flash('error', 'Berkas cadangan tidak ditemukan di direktori penyimpanan.');
+            redirect('/pengawas/pemantauan/backup');
+            return;
+        }
+
+        $this->auditService->log('DOWNLOAD_BACKUP_PENGAWAS', 'system', $filename, [
+            'filename' => $filename,
+            'size' => filesize($targetPath),
+            'sha256' => hash_file('sha256', $targetPath),
+        ]);
+
+        $response = new Response();
+        $response->file($targetPath, $filename, 'attachment');
+    }
 }

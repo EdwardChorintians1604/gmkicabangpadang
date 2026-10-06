@@ -119,10 +119,14 @@ class OrganizationController
             redirect('/admin/organisasi/struktur');
         }
 
+        if (empty($bidang)) {
+            $bidang = 'BPC (Badan Pengurus Cabang)';
+        }
+
         $payload = [
             'nama' => $nama,
             'jabatan' => $jabatan,
-            'bidang' => $bidang ?: 'BPC (Badan Pengurus Cabang)',
+            'bidang' => $bidang,
             'periode' => $periode ?: '2024-2026',
             'urutan' => $urutan,
             'telepon' => $telepon,

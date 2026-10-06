@@ -30,7 +30,7 @@
 <div class="card" style="margin-bottom: 1.5rem; padding: 1.25rem;">
     <form action="<?= e($basePath) ?>" method="GET" class="grid grid-cols-5 gap-3">
         <div class="form-group" style="margin-bottom: 0;">
-            <input type="text" name="q" class="form-control" placeholder="Cari nama, NIM, kampus..." value="<?= e($search ?? '') ?>">
+            <input type="text" name="q" class="form-control" placeholder="Cari ID (#1), nama, NIM, kampus..." value="<?= e($search ?? '') ?>">
         </div>
 
         <div class="form-group" style="margin-bottom: 0;">
@@ -79,7 +79,7 @@
         <table class="data-table">
             <thead>
                 <tr>
-                    <th>NIM</th>
+                    <th style="min-width: 90px;">ID / NIM</th>
                     <th>Nama Lengkap</th>
                     <th>L/P</th>
                     <th>Perguruan Tinggi</th>
@@ -93,7 +93,14 @@
                 <?php if (!empty($civitas)): ?>
                     <?php foreach ($civitas as $row): ?>
                         <tr>
-                            <td><code><?= e($row['nim']) ?></code></td>
+                            <td>
+                                <div class="flex items-center gap-1.5">
+                                    <span class="badge badge-neutral" style="font-weight: 700; font-size: 0.75rem;">#<?= (int)$row['id'] ?></span>
+                                    <?php if (!empty($row['nim']) && (string)$row['nim'] !== (string)$row['id']): ?>
+                                        <code style="font-size: 0.78rem;"><?= e($row['nim']) ?></code>
+                                    <?php endif; ?>
+                                </div>
+                            </td>
                             <td>
                                 <a href="<?= e($basePath) ?>/<?= $row['id'] ?>" style="font-weight: 700; color: var(--primary);">
                                     <?= e($row['nama_lengkap']) ?>

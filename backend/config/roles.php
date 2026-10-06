@@ -46,6 +46,7 @@ return [
             'statistics.view',
             'security.audit_log',
             'backup.view',
+            'backup.download',
         ],
         'operator' => [
             'dashboard.view',

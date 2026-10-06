@@ -1,15 +1,15 @@
-<div class="flex justify-between items-center" style="margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
     <div>
-        <div class="flex items-center gap-2" style="margin-bottom: 0.35rem;">
-            <h1 style="font-size: 1.75rem; font-weight: 800; color: var(--primary); margin: 0;">Pemantauan Integritas Cadangan Data</h1>
-            <span class="badge badge-warning">BACA-SAJA</span>
+        <div class="flex items-center gap-2 mb-1">
+            <h1 class="text-xl sm:text-2xl font-extrabold text-slate-800 m-0">Pemantauan Integritas Cadangan Data</h1>
+            <span class="badge badge-warning text-xs">BACA-SAJA</span>
         </div>
-        <p class="text-muted" style="margin: 0; font-size: 0.875rem;">
+        <p class="text-slate-500 text-xs sm:text-sm m-0">
             Pemeriksaan integritas arsip database terkompresi (.sql.gz) dan manifest verifikasi hash SHA-256 berkas unggahan cabang.
         </p>
     </div>
-    <div class="flex gap-2">
-        <span class="badge badge-success" style="padding: 8px 12px; font-size: 0.85rem;">
+    <div class="flex gap-2 flex-shrink-0">
+        <span class="badge badge-success p-2 text-xs sm:text-sm">
             Retensi Backup: <strong>3 Cadangan Terbaru</strong>
         </span>
     </div>
@@ -32,7 +32,9 @@
                     <th>Nama Berkas Cadangan</th>
                     <th>Ukuran Terkompresi</th>
                     <th>Waktu Pembuatan (WIB)</th>
-                    <th>Status Integritas</th>
+                    <th>Integritas SHA-256</th>
+                    <th>Status</th>
+                    <th class="text-right">Aksi</th>
                 </tr>
             </thead>
             <tbody>
@@ -42,14 +44,23 @@
                             <td>
                                 <code><?= e($b['filename']) ?></code>
                             </td>
-                            <td><?= e($b['size_formatted']) ?></td>
+                            <td><strong><?= e($b['size_formatted']) ?></strong></td>
                             <td class="text-muted"><?= format_date($b['created_at'], 'd M Y H:i:s') ?></td>
-                            <td><span class="badge badge-success">GZIP Archive Valid</span></td>
+                            <td>
+                                <code class="text-xs" title="<?= e($b['sha256']) ?>"><?= e($b['sha256_short'] ?? substr($b['sha256'], 0, 16) . '...') ?></code>
+                            </td>
+                            <td><span class="badge badge-success">GZIP Valid</span></td>
+                            <td class="text-right">
+                                <a href="/pengawas/pemantauan/backup/download?file=<?= urlencode($b['filename']) ?>" class="btn btn-outline btn-sm flex items-center gap-1" style="display: inline-flex;" title="Unduh arsip cadangan basis data">
+                                    <?= svg_icon('download', 14) ?>
+                                    <span>Unduh .sql.gz</span>
+                                </a>
+                            </td>
                         </tr>
                     <?php endforeach; ?>
                 <?php else: ?>
                     <tr>
-                        <td colspan="4" class="text-center text-muted" style="padding: 3rem;">
+                        <td colspan="6" class="text-center text-muted" style="padding: 3rem;">
                             Belum ada berkas cadangan database yang tercatat di folder storage.
                         </td>
                     </tr>

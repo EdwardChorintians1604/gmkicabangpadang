@@ -1,22 +1,26 @@
-<div class="flex justify-between items-center" style="margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
     <div>
-        <h1 style="font-size: 1.75rem; font-weight: 800; color: var(--primary);">Pencadangan Data & Berkas</h1>
-        <p class="text-muted" style="font-size: 0.875rem;">
-            Cadangan database otomatis (.sql.gz) dan verifikasi integritas berkas upload dengan checksum SHA-256.
+        <h1 class="text-xl sm:text-2xl font-extrabold text-slate-800 m-0">Pencadangan Data & Berkas</h1>
+        <p class="text-slate-500 text-xs sm:text-sm m-0">
+            Cadangan database otomatis (.sql.gz) streaming native PDO, isolasi konsisten ACID, dan verifikasi checksum SHA-256.
         </p>
     </div>
-    <div class="flex gap-2">
+    <div class="flex flex-wrap gap-2 flex-shrink-0">
         <?php if (can('backup.create')): ?>
-            <form action="/admin/keamanan/backup/database" method="POST" style="display:inline;">
+            <a href="/admin/keamanan/backup/unduh-sekarang" class="btn btn-secondary btn-sm flex items-center justify-center gap-1 shadow-sm w-full sm:w-auto" title="Buat cadangan database terbaru lalu unduh langsung ke perangkat">
+                <?= svg_icon('download', 15) ?>
+                <span>⚡ Buat & Unduh Langsung (.sql.gz)</span>
+            </a>
+            <form action="/admin/keamanan/backup/database" method="POST" style="display:inline; margin: 0;">
                 <?= csrf_field() ?>
-                <button type="submit" class="btn btn-primary btn-sm">
-                    💾 Buat Backup Database Baru (.sql.gz)
+                <button type="submit" class="btn btn-primary btn-sm flex items-center justify-center gap-1 w-full sm:w-auto">
+                    <span>💾 Buat Arsip Baru</span>
                 </button>
             </form>
-            <form action="/admin/keamanan/backup/manifest" method="POST" style="display:inline;">
+            <form action="/admin/keamanan/backup/manifest" method="POST" style="display:inline; margin: 0;">
                 <?= csrf_field() ?>
-                <button type="submit" class="btn btn-secondary btn-sm">
-                    📜 Perbarui Manifest SHA-256
+                <button type="submit" class="btn btn-outline btn-sm flex items-center justify-center gap-1 w-full sm:w-auto">
+                    <span>📜 Perbarui Manifest SHA-256</span>
                 </button>
             </form>
         <?php endif; ?>
@@ -27,9 +31,9 @@
 <div class="table-card" style="margin-bottom: 2.5rem;">
     <div class="table-header">
         <div>
-            <div class="table-title">Cadangan Database MySQL (Dump .sql.gz)</div>
+            <div class="table-title">Cadangan Database MySQL (Dump .sql.gz Terkompresi)</div>
             <div class="text-muted" style="font-size: 0.75rem; margin-top: 0.25rem;">
-                Sistem secara otomatis mempertahankan 3 berkas cadangan terkompresi paling mutakhir di folder <code>storage/backup/database/</code>.
+                Sistem mempertahankan 5 arsip cadangan terkompresi mutakhir di folder terproteksi <code>storage/backup/database/</code> dengan validasi integritas hash SHA-256.
             </div>
         </div>
     </div>
@@ -40,8 +44,9 @@
                     <th>Nama Berkas</th>
                     <th>Ukuran Terkompresi</th>
                     <th>Waktu Pembuatan</th>
+                    <th>Integritas SHA-256</th>
                     <th>Status</th>
-                    <th>Aksi</th>
+                    <th class="text-right">Aksi</th>
                 </tr>
             </thead>
             <tbody>
@@ -51,20 +56,24 @@
                             <td>
                                 <code><?= e($b['filename']) ?></code>
                             </td>
-                            <td><?= e($b['size_formatted']) ?></td>
+                            <td><strong><?= e($b['size_formatted']) ?></strong></td>
                             <td class="text-muted"><?= format_date($b['created_at'], 'd M Y H:i:s') ?></td>
-                            <td><span class="badge badge-success">GZIP Valid</span></td>
                             <td>
-                                <a href="/admin/keamanan/backup/database/<?= urlencode($b['filename']) ?>" class="btn btn-outline btn-sm">
-                                    ⬇️ Unduh Berkas .sql.gz
+                                <code class="text-xs" title="<?= e($b['sha256']) ?>"><?= e($b['sha256_short'] ?? substr($b['sha256'], 0, 16) . '...') ?></code>
+                            </td>
+                            <td><span class="badge badge-success">GZIP Valid</span></td>
+                            <td class="text-right">
+                                <a href="/admin/keamanan/backup/download?file=<?= urlencode($b['filename']) ?>" class="btn btn-outline btn-sm flex items-center gap-1" style="display: inline-flex;" title="Unduh berkas cadangan ini ke komputer lokal">
+                                    <?= svg_icon('download', 14) ?>
+                                    <span>Unduh .sql.gz</span>
                                 </a>
                             </td>
                         </tr>
                     <?php endforeach; ?>
                 <?php else: ?>
                     <tr>
-                        <td colspan="5" class="text-center text-muted" style="padding: 2.5rem;">
-                            Belum ada berkas cadangan database. Klik tombol "Buat Backup Database Baru" di atas untuk membuat cadangan pertama Anda.
+                        <td colspan="6" class="text-center text-muted" style="padding: 2.5rem;">
+                            Belum ada berkas cadangan database. Klik tombol "Buat Arsip Baru" atau "Buat & Unduh Langsung" di atas untuk membuat cadangan pertama Anda.
                         </td>
                     </tr>
                 <?php endif; ?>

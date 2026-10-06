@@ -158,14 +158,17 @@ class CivitasController
         Authorization::authorize('civitas.create');
 
         $rules = [
-            'nim' => 'required|unique:civitas,nim',
             'nama_lengkap' => 'required|min:3',
             'jenis_kelamin' => 'required|in:L,P',
             'perguruan_tinggi' => 'required',
         ];
+        $postData = $request->post();
+        if (!empty($postData['nim']) && trim((string)$postData['nim']) !== '') {
+            $rules['nim'] = 'unique:civitas,nim';
+        }
         if ($this->kelompok !== 'maperca') {
             $rules['tahun_maperca'] = 'required|numeric';
-            if (($request->post()['anggota_komisariat'] ?? '') === '1') {
+            if (($postData['anggota_komisariat'] ?? '') === '1') {
                 $rules['komisariat'] = 'required';
             }
         } else {
@@ -241,14 +244,17 @@ class CivitasController
         Authorization::authorize('civitas.update');
 
         $rules = [
-            'nim' => "required|unique:civitas,nim,{$id}",
             'nama_lengkap' => 'required|min:3',
             'jenis_kelamin' => 'required|in:L,P',
             'perguruan_tinggi' => 'required',
         ];
+        $postData = $request->post();
+        if (!empty($postData['nim']) && trim((string)$postData['nim']) !== '') {
+            $rules['nim'] = "unique:civitas,nim,{$id}";
+        }
         if ($this->kelompok !== 'maperca') {
             $rules['tahun_maperca'] = 'required|numeric';
-            if (($request->post()['anggota_komisariat'] ?? '') === '1') {
+            if (($postData['anggota_komisariat'] ?? '') === '1') {
                 $rules['komisariat'] = 'required';
             }
         } else {

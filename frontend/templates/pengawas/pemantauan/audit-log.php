@@ -1,28 +1,28 @@
-<div class="flex justify-between items-center" style="margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
     <div>
-        <div class="flex items-center gap-2" style="margin-bottom: 0.35rem;">
-            <h1 style="font-size: 1.75rem; font-weight: 800; color: var(--primary); margin: 0;">Pengawasan Jejak Audit Aktivitas</h1>
-            <span class="badge badge-warning">BACA-SAJA</span>
+        <div class="flex items-center gap-2 mb-1">
+            <h1 class="text-xl sm:text-2xl font-extrabold text-slate-800 m-0">Pengawasan Jejak Audit Aktivitas</h1>
+            <span class="badge badge-warning text-xs">BACA-SAJA</span>
         </div>
-        <p class="text-muted" style="margin: 0; font-size: 0.875rem;">
+        <p class="text-slate-500 text-xs sm:text-sm m-0">
             Pemantauan transparansi seluruh aktivitas, perubahan data anggota, otentikasi akun, dan aksi operasional pengurus.
         </p>
     </div>
-    <div class="flex gap-2">
-        <span class="badge badge-info" style="padding: 8px 12px; font-size: 0.85rem;">
+    <div class="flex gap-2 flex-shrink-0">
+        <span class="badge badge-info p-2 text-xs sm:text-sm">
             Total: <strong><?= number_format($total) ?></strong> Log Aktivitas
         </span>
     </div>
 </div>
 
 <!-- Filter Bar -->
-<div class="card" style="margin-bottom: 1.5rem; padding: 1.25rem;">
-    <form action="/pengawas/pemantauan/audit-log" method="GET" class="grid grid-cols-4 gap-3">
-        <div class="form-group" style="margin-bottom: 0;">
+<div class="card mb-6 p-4 sm:p-5">
+    <form action="/pengawas/pemantauan/audit-log" method="GET" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+        <div class="form-group mb-0">
             <input type="text" name="username" class="form-control" placeholder="Cari nama pengguna..." value="<?= e($searchUsername ?? '') ?>">
         </div>
 
-        <div class="form-group" style="margin-bottom: 0;">
+        <div class="form-group mb-0">
             <select name="action" class="form-control">
                 <option value="">Semua Tindakan / Aksi</option>
                 <option value="LOGIN" <?= ($selectedAction === 'LOGIN') ? 'selected' : '' ?>>LOGIN</option>
@@ -37,7 +37,7 @@
             </select>
         </div>
 
-        <div class="form-group" style="margin-bottom: 0;">
+        <div class="form-group mb-0">
             <select name="entity" class="form-control">
                 <option value="">Semua Modul / Entitas</option>
                 <option value="auth" <?= ($selectedEntity === 'auth') ? 'selected' : '' ?>>Otentikasi (auth)</option>
@@ -50,10 +50,10 @@
             </select>
         </div>
 
-        <div class="flex gap-2">
-            <button type="submit" class="btn btn-primary" style="flex-grow: 1;">Filter Log</button>
+        <div class="flex gap-2 col-span-1 sm:col-span-2 lg:col-span-1">
+            <button type="submit" class="btn btn-primary flex-1 justify-center">Filter Log</button>
             <?php if (!empty($selectedAction) || !empty($selectedEntity) || !empty($searchUsername)): ?>
-                <a href="/pengawas/pemantauan/audit-log" class="btn btn-outline">Reset</a>
+                <a href="/pengawas/pemantauan/audit-log" class="btn btn-outline justify-center">Reset</a>
             <?php endif; ?>
         </div>
     </form>

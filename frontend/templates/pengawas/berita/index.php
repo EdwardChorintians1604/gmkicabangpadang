@@ -1,28 +1,28 @@
-<div class="flex justify-between items-center" style="margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
     <div>
-        <div class="flex items-center gap-2" style="margin-bottom: 0.35rem;">
-            <h1 style="font-size: 1.75rem; font-weight: 800; color: var(--primary); margin: 0;">Pantauan Warta & Publikasi Cabang</h1>
-            <span class="badge badge-warning">BACA-SAJA</span>
+        <div class="flex items-center gap-2 mb-1">
+            <h1 class="text-xl sm:text-2xl font-extrabold text-slate-800 m-0">Pantauan Warta & Publikasi Cabang</h1>
+            <span class="badge badge-warning text-xs">BACA-SAJA</span>
         </div>
-        <p class="text-muted" style="margin: 0; font-size: 0.875rem;">
+        <p class="text-slate-500 text-xs sm:text-sm m-0">
             Pemantauan artikel berita, press release organisasi, dan publikasi resmi GMKI Cabang Padang.
         </p>
     </div>
-    <div class="flex gap-2">
-        <span class="badge badge-info" style="padding: 8px 12px; font-size: 0.85rem;">
+    <div class="flex gap-2 flex-shrink-0">
+        <span class="badge badge-info p-2 text-xs sm:text-sm">
             Total: <strong><?= number_format($total) ?></strong> Artikel
         </span>
     </div>
 </div>
 
 <!-- Filter Bar -->
-<div class="card" style="margin-bottom: 1.5rem; padding: 1.25rem;">
-    <form action="/pengawas/berita" method="GET" class="flex items-center justify-between gap-4" style="flex-wrap: wrap;">
-        <div class="flex items-center gap-3" style="flex-grow: 1; min-width: 250px;">
-            <input type="text" name="q" class="form-control" placeholder="Cari judul warta atau artikel..." value="<?= e($search ?? '') ?>">
+<div class="card mb-6 p-4 sm:p-5">
+    <form action="/pengawas/berita" method="GET" class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+        <div class="flex-grow min-w-0">
+            <input type="text" name="q" class="form-control w-full" placeholder="Cari judul warta atau artikel..." value="<?= e($search ?? '') ?>">
         </div>
-        <div class="flex items-center gap-2">
-            <select name="status" class="form-control" style="width: auto;">
+        <div class="flex items-center gap-2 flex-shrink-0">
+            <select name="status" class="form-control flex-1 sm:w-auto">
                 <option value="">Semua Status Publikasi</option>
                 <option value="published" <?= ($status === 'published') ? 'selected' : '' ?>>Diterbitkan</option>
                 <option value="draft" <?= ($status === 'draft') ? 'selected' : '' ?>>Draft Pengurus</option>

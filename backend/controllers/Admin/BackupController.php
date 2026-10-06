@@ -67,24 +67,77 @@ class BackupController
     }
 
     /**
-     * Unduh berkas backup database
+     * Unduh berkas backup database dengan proteksi ketat Path Traversal
      */
     public function download(Request $request): void
     {
         Authorization::authorize('backup.download');
 
-        $filename = $request->query('file', '');
-        $safeFilename = basename($filename);
-        $backupDir = $this->storageService->getBackupDir('database');
-        $fullPath = $backupDir . DIRECTORY_SEPARATOR . $safeFilename;
+        $filename = basename($request->query('file', $request->param('filename', '')));
 
-        if (!file_exists($fullPath)) {
-            Session::flash('error', 'Berkas backup tidak ditemukan.');
+        if (empty($filename) || !str_ends_with($filename, '.sql.gz') || !preg_match('/^[a-zA-Z0-9_\-\.]+\.sql\.gz$/', $filename)) {
+            Session::flash('error', 'Format nama berkas cadangan tidak valid atau mengandung karakter terlarang.');
             redirect('/admin/keamanan/backup');
+            return;
         }
 
+        $backupDir = realpath($this->storageService->getBackupDir('database'));
+        $targetPath = realpath($this->storageService->getBackupDir('database') . DIRECTORY_SEPARATOR . $filename);
+
+        if (!$backupDir || !$targetPath || !str_starts_with($targetPath, $backupDir) || !is_file($targetPath)) {
+            Session::flash('error', 'Berkas backup tidak ditemukan di direktori penyimpanan aman.');
+            redirect('/admin/keamanan/backup');
+            return;
+        }
+
+        // Catat jejak audit pengunduhan
+        $auditService = new \App\Services\AuditLogService();
+        $auditService->log('DOWNLOAD_BACKUP_DATABASE', 'system', $filename, [
+            'filename' => $filename,
+            'size' => filesize($targetPath),
+            'sha256' => hash_file('sha256', $targetPath),
+        ]);
+
         $response = new Response();
-        $response->file($fullPath, $safeFilename, 'attachment');
+        $response->file($targetPath, $filename, 'attachment');
+    }
+
+    /**
+     * Buat cadangan terbaru lalu langsung unduh dalam satu langkah
+     */
+    public function createAndDownload(Request $request): void
+    {
+        Authorization::authorize('backup.create');
+        Authorization::authorize('backup.download');
+
+        $result = $this->backupService->createDatabaseBackup();
+
+        if (!$result['success']) {
+            Session::flash('error', 'Gagal membuat cadangan database: ' . ($result['message'] ?? ''));
+            redirect('/admin/keamanan/backup');
+            return;
+        }
+
+        $filename = $result['filename'];
+        $backupDir = realpath($this->storageService->getBackupDir('database'));
+        $targetPath = realpath($backupDir . DIRECTORY_SEPARATOR . $filename);
+
+        if (!$backupDir || !$targetPath || !str_starts_with($targetPath, $backupDir) || !is_file($targetPath)) {
+            Session::flash('error', 'Berkas backup gagal dipersiapkan untuk pengunduhan.');
+            redirect('/admin/keamanan/backup');
+            return;
+        }
+
+        // Catat jejak audit
+        $auditService = new \App\Services\AuditLogService();
+        $auditService->log('INSTANT_BACKUP_AND_DOWNLOAD', 'system', $filename, [
+            'filename' => $filename,
+            'size' => filesize($targetPath),
+            'sha256' => $result['sha256'] ?? '',
+        ]);
+
+        $response = new Response();
+        $response->file($targetPath, $filename, 'attachment');
     }
 
     /**

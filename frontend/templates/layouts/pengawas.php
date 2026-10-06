@@ -34,12 +34,17 @@
     <div class="dashboard-wrapper">
         <!-- Sidebar Pengawas (Oversight & Monitoring) -->
         <aside class="dashboard-sidebar pengawas-sidebar">
-            <div class="sidebar-brand">
-                <img src="<?= asset('images/GMKI-Logos.png') ?>" alt="Logo GMKI" class="brand-logo" style="width: 38px; height: 38px; object-fit: contain;">
-                <div>
-                    <div class="sidebar-brand-title">GMKI Padang</div>
-                    <div class="sidebar-brand-sub" style="color: var(--secondary); font-weight: 700;">PANEL PENGAWAS BPC</div>
+            <div class="sidebar-brand flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <img src="<?= asset('images/GMKI-Logos.png') ?>" alt="Logo GMKI" class="brand-logo" style="width: 36px; height: 36px; object-fit: contain;">
+                    <div>
+                        <div class="sidebar-brand-title">GMKI Padang</div>
+                        <div class="sidebar-brand-sub" style="color: var(--secondary); font-weight: 700;">PANEL PENGAWAS BPC</div>
+                    </div>
                 </div>
+                <button type="button" class="sidebar-close-btn" id="pengawasSidebarCloseBtn" aria-label="Tutup Menu">
+                    ✕
+                </button>
             </div>
 
             <!-- Read Only Notice Badge -->
@@ -162,44 +167,44 @@
         <!-- Main Content Area -->
         <div class="dashboard-main">
             <!-- Top Navbar -->
-            <header class="dashboard-header flex items-center justify-between">
-                <div class="flex items-center gap-3">
-                    <button class="sidebar-mobile-toggle" aria-label="Toggle Menu">
-                        <?= svg_icon('dashboard', 20) ?>
+            <header class="dashboard-header flex items-center justify-between gap-2 px-3 sm:px-6">
+                <div class="flex items-center gap-2 sm:gap-3 min-w-0">
+                    <button type="button" class="navbar-sidebar-toggle sidebar-toggle-btn" id="navbarSidebarToggle" aria-label="Buka / Tutup Sidebar" title="Buka / Tutup Sidebar (Ctrl+B)">
+                        <?= svg_icon('menu', 20) ?>
                     </button>
-                    <div class="header-breadcrumb flex items-center gap-2 text-sm text-slate-500">
-                        <span class="font-medium text-slate-400">GMKI Padang</span>
-                        <span class="text-slate-300">/</span>
-                        <span class="badge badge-warning text-xs">Pengawas MPPC / BPC</span>
-                        <span class="text-slate-300">/</span>
-                        <strong class="text-slate-800 font-bold"><?= e(explode(' - ', $pageTitle ?? 'Panel Pengawas')[0]) ?></strong>
+                    <div class="header-breadcrumb flex items-center gap-1.5 text-xs sm:text-sm text-slate-500 overflow-hidden text-ellipsis whitespace-nowrap">
+                        <span class="font-medium text-slate-400 hidden sm:inline">GMKI Padang</span>
+                        <span class="text-slate-300 hidden sm:inline">/</span>
+                        <span class="badge badge-warning text-[10px] sm:text-xs hidden md:inline">Pengawas BPC</span>
+                        <span class="text-slate-300 hidden md:inline">/</span>
+                        <strong class="text-slate-800 font-bold overflow-hidden text-ellipsis whitespace-nowrap"><?= e(explode(' - ', $pageTitle ?? 'Panel Pengawas')[0]) ?></strong>
                     </div>
                 </div>
 
-                <div class="header-actions flex items-center gap-3">
-                    <a href="/" target="_blank" class="btn btn-outline btn-sm flex items-center gap-1" title="Lihat Portal Pengunjung">
+                <div class="header-actions flex items-center gap-1.5 sm:gap-3 flex-shrink-0">
+                    <a href="/" target="_blank" class="btn btn-outline btn-sm flex items-center gap-1 px-2 sm:px-3" title="Lihat Portal Pengunjung">
                         <?= svg_icon('external', 14) ?>
-                        <span>Portal Web</span>
+                        <span class="hidden sm:inline">Portal Web</span>
                     </a>
 
                     <?php if (is_admin()): ?>
-                        <a href="/admin/dashboard" class="btn btn-primary btn-sm flex items-center gap-1" title="Kembali ke Panel Pengelolaan Penuh">
+                        <a href="/admin/dashboard" class="btn btn-primary btn-sm flex items-center gap-1 px-2 sm:px-3" title="Kembali ke Panel Pengelolaan Penuh">
                             <?= svg_icon('settings', 14) ?>
-                            <span>Panel Admin</span>
+                            <span class="hidden md:inline">Panel Admin</span>
                         </a>
                     <?php endif; ?>
 
                     <div class="user-dropdown">
-                        <a href="/ubah-password" class="btn btn-outline btn-sm" title="Ubah Password">
+                        <a href="/ubah-password" class="btn btn-outline btn-sm px-2 sm:px-2.5" title="Ubah Password">
                             <?= svg_icon('lock', 14) ?>
                         </a>
                     </div>
 
                     <form action="/logout" method="POST" style="margin: 0;" onsubmit="return confirm('Apakah Anda yakin ingin keluar dari sistem?');">
                         <?= csrf_field() ?>
-                        <button type="submit" class="btn btn-danger btn-sm flex items-center gap-1">
+                        <button type="submit" class="btn btn-danger btn-sm flex items-center gap-1 px-2 sm:px-3">
                             <?= svg_icon('logout', 14) ?>
-                            <span>Keluar</span>
+                            <span class="hidden sm:inline">Keluar</span>
                         </button>
                     </form>
                 </div>
@@ -221,6 +226,9 @@
             </footer>
         </div>
     </div>
+
+    <!-- Mobile Backdrop Overlay -->
+    <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
 
     <!-- Scripts -->
     <script src="<?= asset('vendor/chart.umd.min.js') ?>"></script>

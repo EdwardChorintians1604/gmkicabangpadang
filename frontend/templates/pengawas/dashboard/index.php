@@ -8,11 +8,11 @@
         </p>
     </div>
     <div class="executive-dashboard-actions">
-        <a href="/pengawas/civitas/export" class="btn btn-secondary btn-sm flex items-center gap-1 shadow-sm hover:shadow transition-all">
+        <a href="/pengawas/civitas/export" class="btn btn-secondary btn-sm flex items-center justify-center gap-1 shadow-sm hover:shadow transition-all w-full sm:w-auto">
             <?= svg_icon('download', 16) ?>
             <span>Ekspor Laporan Civitas</span>
         </a>
-        <a href="/pengawas/statistik" class="btn btn-outline btn-sm flex items-center gap-1 shadow-sm hover:shadow transition-all">
+        <a href="/pengawas/statistik" class="btn btn-outline btn-sm flex items-center justify-center gap-1 shadow-sm hover:shadow transition-all w-full sm:w-auto">
             <?= svg_icon('chart', 16) ?>
             <span>Analisis Grafik</span>
         </a>
@@ -80,7 +80,7 @@
         </a>
     </nav>
 
-    <div class="card-body p-6">
+    <div class="card-body p-4 sm:p-6">
         <?php
         if ($activeTab === 'sekcab') {
             require __DIR__ . '/_sekcab.php';
@@ -123,7 +123,7 @@
             <h3 class="executive-dashboard-audit-title">Pengawasan Jejak Audit Terakhir</h3>
             <p class="executive-dashboard-audit-description">Pantauan transparansi dan integritas aktivitas pengguna sistem</p>
         </div>
-        <a href="/pengawas/pemantauan/audit-log" class="btn btn-outline btn-sm flex items-center gap-1 rounded-xl">
+        <a href="/pengawas/pemantauan/audit-log" class="btn btn-outline btn-sm flex items-center justify-center gap-1 rounded-xl w-full sm:w-auto">
             <span>Seluruh Catatan Audit</span>
             <?= svg_icon('chevron-right', 14) ?>
         </a>

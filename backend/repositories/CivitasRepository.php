@@ -44,8 +44,15 @@ class CivitasRepository
         $params = [];
 
         if (!empty($filters['search'])) {
-            $clauses[] = "(`nama_lengkap` LIKE :search1 OR `nim` LIKE :search2 OR `perguruan_tinggi` LIKE :search3)";
             $term = '%' . $filters['search'] . '%';
+            $rawSearch = trim((string)$filters['search']);
+            $idSearch = ltrim($rawSearch, '#');
+            if (is_numeric($idSearch)) {
+                $clauses[] = "(`id` = :search_id OR `nim` LIKE :search2 OR `nama_lengkap` LIKE :search1 OR `perguruan_tinggi` LIKE :search3)";
+                $params[':search_id'] = (int)$idSearch;
+            } else {
+                $clauses[] = "(`nama_lengkap` LIKE :search1 OR `nim` LIKE :search2 OR `perguruan_tinggi` LIKE :search3)";
+            }
             $params[':search1'] = $term;
             $params[':search2'] = $term;
             $params[':search3'] = $term;
@@ -101,6 +108,77 @@ class CivitasRepository
 
     public function create(array $data): int
     {
+        // Jika NIM kosong, gunakan nomor ID berikutnya atau custom ID
+        if (empty($data['nim']) || trim((string)$data['nim']) === '') {
+            if (!empty($data['id']) && is_numeric($data['id'])) {
+                $data['nim'] = (string)$data['id'];
+            } else {
+                $nextRow = Database::fetchOne("SELECT COALESCE(MAX(id), 0) + 1 AS next_id FROM `civitas`");
+                $data['nim'] = (string)($nextRow['next_id'] ?? 1);
+            }
+        }
+
+        // Cek jika ID khusus diberikan
+        $hasCustomId = false;
+        $customId = null;
+        if (!empty($data['id']) && is_numeric($data['id'])) {
+            $customId = (int)$data['id'];
+            $exists = Database::fetchOne("SELECT `id` FROM `civitas` WHERE `id` = :id LIMIT 1", [':id' => $customId]);
+            if (!$exists) {
+                $hasCustomId = true;
+            }
+        } elseif (is_numeric($data['nim'])) {
+            $potentialId = (int)$data['nim'];
+            if ($potentialId > 0) {
+                $exists = Database::fetchOne("SELECT `id` FROM `civitas` WHERE `id` = :id LIMIT 1", [':id' => $potentialId]);
+                if (!$exists) {
+                    $hasCustomId = true;
+                    $customId = $potentialId;
+                }
+            }
+        }
+
+        if ($hasCustomId && $customId !== null) {
+            $sql = "INSERT INTO `civitas` (
+                        `id`, `nim`, `nama_lengkap`, `jenis_kelamin`, `tempat_lahir`, `tanggal_lahir`,
+                        `telepon`, `email`, `perguruan_tinggi`, `fakultas`, `jurusan`,
+                        `komisariat`, `anggota_komisariat`, `tahun_maperca`, `tingkat_kaderisasi`, `status_keanggotaan`,
+                        `alamat_padang`, `alamat_asal`, `foto_anggota`, `file_kta`, `catatan`,
+                        `created_by`, `created_at`
+                    ) VALUES (
+                        :id, :nim, :nama_lengkap, :jenis_kelamin, :tempat_lahir, :tanggal_lahir,
+                        :telepon, :email, :perguruan_tinggi, :fakultas, :jurusan,
+                        :komisariat, :anggota_komisariat, :tahun_maperca, :tingkat_kaderisasi, :status_keanggotaan,
+                        :alamat_padang, :alamat_asal, :foto_anggota, :file_kta, :catatan,
+                        :created_by, NOW()
+                    )";
+            Database::execute($sql, [
+                ':id' => $customId,
+                ':nim' => $data['nim'],
+                ':nama_lengkap' => $data['nama_lengkap'],
+                ':jenis_kelamin' => $data['jenis_kelamin'],
+                ':tempat_lahir' => $data['tempat_lahir'] ?? null,
+                ':tanggal_lahir' => !empty($data['tanggal_lahir']) ? $data['tanggal_lahir'] : null,
+                ':telepon' => $data['telepon'] ?? null,
+                ':email' => $data['email'] ?? null,
+                ':perguruan_tinggi' => $data['perguruan_tinggi'],
+                ':fakultas' => $data['fakultas'] ?? null,
+                ':jurusan' => $data['jurusan'] ?? null,
+                ':komisariat' => $data['komisariat'] ?? null,
+                ':anggota_komisariat' => $data['anggota_komisariat'] ?? 1,
+                ':tahun_maperca' => $data['tahun_maperca'] ?? null,
+                ':tingkat_kaderisasi' => $data['tingkat_kaderisasi'] ?? 'Maperca',
+                ':status_keanggotaan' => $data['status_keanggotaan'] ?? 'Aktif',
+                ':alamat_padang' => $data['alamat_padang'] ?? null,
+                ':alamat_asal' => $data['alamat_asal'] ?? null,
+                ':foto_anggota' => $data['foto_anggota'] ?? null,
+                ':file_kta' => $data['file_kta'] ?? null,
+                ':catatan' => $data['catatan'] ?? null,
+                ':created_by' => $data['created_by'] ?? null,
+            ]);
+            return $customId;
+        }
+
         $sql = "INSERT INTO `civitas` (
                     `nim`, `nama_lengkap`, `jenis_kelamin`, `tempat_lahir`, `tanggal_lahir`,
                     `telepon`, `email`, `perguruan_tinggi`, `fakultas`, `jurusan`,

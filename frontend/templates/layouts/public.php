@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description"
         content="Sistem Informasi & Portal Resmi Gerakan Mahasiswa Kristen Indonesia (GMKI) Cabang Padang. Ut Omnes Unum Sint.">
-    <title><?= isset($pageTitle) ? e($pageTitle) : 'GMKI Cabang Padang' ?></title>
+    <title>Selamat datang di Platform Digital GMKI Cabang Padang - Organisasi Mahasiswa Kristen</title>
     <link rel="icon" type="image/png" href="<?= asset('images/GMKI-Logos.png') ?>">
     <link rel="shortcut icon" href="/favicon.ico">
     <link rel="stylesheet" href="<?= asset('vendor/animate.min.css') ?>">
@@ -74,11 +74,11 @@
                             class="nav-link <?= (str_starts_with($_SERVER['REQUEST_URI'], '/kontak')) ? 'active' : '' ?>">Kontak</a>
                     </li>
 
-                    <?php 
-                        $currentUser = auth();
-                        $isLoggedIn = !empty($currentUser['id']);
-                        $dashboardRoute = ($currentUser['role'] ?? '') === 'pengawas' ? '/pengawas/dashboard' : '/admin/dashboard';
-                        $dashboardLabel = ($currentUser['role'] ?? '') === 'pengawas' ? 'Panel Pengawas' : 'Panel Kendali';
+                    <?php
+                    $currentUser = auth();
+                    $isLoggedIn = !empty($currentUser['id']);
+                    $dashboardRoute = ($currentUser['role'] ?? '') === 'pengawas' ? '/pengawas/dashboard' : '/admin/dashboard';
+                    $dashboardLabel = ($currentUser['role'] ?? '') === 'pengawas' ? 'Panel Pengawas' : 'Panel Kendali';
                     ?>
                     <?php if ($isLoggedIn): ?>
                         <li class="flex items-center gap-2">
@@ -86,9 +86,11 @@
                                 <?= svg_icon('dashboard', 14) ?>
                                 <span><?= e($dashboardLabel) ?></span>
                             </a>
-                            <form action="/logout" method="POST" style="margin: 0; display: inline;" onsubmit="return confirm('Apakah Anda yakin ingin keluar dari sesi akun ini?');">
+                            <form action="/logout" method="POST" style="margin: 0; display: inline;"
+                                onsubmit="return confirm('Apakah Anda yakin ingin keluar dari sesi akun ini?');">
                                 <?= csrf_field() ?>
-                                <button type="submit" class="btn btn-outline btn-sm flex items-center justify-center" title="Keluar / Logout Aman" style="padding: 6px 10px; line-height: 1;">
+                                <button type="submit" class="btn btn-outline btn-sm flex items-center justify-center"
+                                    title="Keluar / Logout Aman" style="padding: 6px 10px; line-height: 1;">
                                     <?= svg_icon('logout', 14) ?>
                                 </button>
                             </form>

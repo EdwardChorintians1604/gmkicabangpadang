@@ -1,23 +1,23 @@
-<div class="flex justify-between items-center" style="margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
     <div>
-        <div class="flex items-center gap-2" style="margin-bottom: 0.35rem;">
-            <h1 style="font-size: 1.75rem; font-weight: 800; color: var(--primary); margin: 0;">Pemantauan Keamanan Sistem & Integritas Data</h1>
-            <span class="badge badge-warning">BACA-SAJA</span>
+        <div class="flex items-center gap-2 mb-1">
+            <h1 class="text-xl sm:text-2xl font-extrabold text-slate-800 m-0">Pemantauan Keamanan Sistem & Integritas Data</h1>
+            <span class="badge badge-warning text-xs">BACA-SAJA</span>
         </div>
-        <p class="text-muted" style="margin: 0; font-size: 0.875rem;">
+        <p class="text-slate-500 text-xs sm:text-sm m-0">
             Pengawasan parameter keamanan siber, status enkripsi, proteksi CSRF, serta deteksi serangan brute-force dan SQL injection.
         </p>
     </div>
-    <div class="flex gap-2">
-        <span class="badge badge-success" style="padding: 8px 12px; font-size: 0.85rem;">
-            Perlindungan WAF & Rate Limiting: <strong>AKTIF</strong>
+    <div class="flex gap-2 flex-shrink-0">
+        <span class="badge badge-success p-2 text-xs sm:text-sm">
+            Perlindungan WAF: <strong>AKTIF</strong>
         </span>
     </div>
 </div>
 
 <!-- Security Health Status -->
 <h3 style="font-size: 1.15rem; margin-bottom: 1rem; color: var(--primary);">Kondisi Kesehatan Keamanan Sistem</h3>
-<div class="grid grid-cols-3 gap-4" style="margin-bottom: 2.5rem;">
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4" style="margin-bottom: 2.5rem;">
     <?php foreach ($healthChecks as $check): ?>
         <div class="card" style="padding: 1.25rem;">
             <div class="flex items-center justify-between" style="margin-bottom: 0.5rem;">

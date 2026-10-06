@@ -25,7 +25,7 @@
     </div>
 
     <!-- Tiga Pilar Akuntabilitas -->
-    <div class="grid grid-cols-3 gap-6" style="margin-bottom: 1.5rem;">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6" style="margin-bottom: 1.5rem;">
         <div class="card">
             <div class="card-body text-center" style="padding: 1.5rem;">
                 <div style="width: 48px; height: 48px; border-radius: 50%; background: rgba(16, 185, 129, 0.1); color: #10b981; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem;">

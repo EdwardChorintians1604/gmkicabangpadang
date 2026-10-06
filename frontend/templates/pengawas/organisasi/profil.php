@@ -1,23 +1,23 @@
 <div style="max-width: 900px; margin: 0 auto;">
     <!-- Header -->
-    <div class="flex justify-between items-center" style="margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
-            <div class="flex items-center gap-2" style="margin-bottom: 0.35rem;">
-                <h1 style="font-size: 1.75rem; font-weight: 800; color: var(--primary); margin: 0;">
+            <div class="flex items-center gap-2 mb-1">
+                <h1 class="text-xl sm:text-2xl font-extrabold text-slate-800 m-0">
                     Profil & Amanat Pelayanan Cabang
                 </h1>
-                <span class="badge badge-warning">BACA-SAJA</span>
+                <span class="badge badge-warning text-xs">BACA-SAJA</span>
             </div>
-            <p class="text-muted" style="margin: 0; font-size: 0.875rem;">
+            <p class="text-slate-500 text-xs sm:text-sm m-0">
                 Dokumen identitas organisasi, Tri Panji, visi-misi, dan legalitas GMKI Cabang Padang.
             </p>
         </div>
         <div class="flex gap-2">
-            <a href="/profil" target="_blank" class="btn btn-outline btn-sm flex items-center gap-1">
+            <a href="/profil" target="_blank" class="btn btn-outline btn-sm flex items-center justify-center gap-1 w-full sm:w-auto">
                 <?= svg_icon('external', 14) ?>
                 <span>Lihat Profil Publik</span>
             </a>
-            <button onclick="window.print()" class="btn btn-secondary btn-sm flex items-center gap-1">
+            <button onclick="window.print()" class="btn btn-secondary btn-sm flex items-center justify-center gap-1 w-full sm:w-auto">
                 <?= svg_icon('printer', 14) ?>
                 <span>Cetak Profil</span>
             </button>
@@ -25,35 +25,35 @@
     </div>
 
     <!-- Main Profile Overview -->
-    <div class="card" style="margin-bottom: 2rem;">
-        <div class="card-body" style="padding: 2.5rem;">
-            <div class="flex items-center gap-4" style="margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border-color);">
-                <img src="<?= asset('images/logo-gmki.png') ?>" alt="Logo GMKI" style="width: 72px; height: 72px;">
+    <div class="card mb-6">
+        <div class="card-body p-4 sm:p-6 md:p-8">
+            <div class="flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left gap-4 mb-6 pb-6 border-b border-slate-200">
+                <img src="<?= asset('images/logo-gmki.png') ?>" alt="Logo GMKI" style="width: 72px; height: 72px; object-fit: contain;">
                 <div>
-                    <h2 style="font-size: 1.6rem; font-weight: 800; color: var(--primary); margin: 0;">
+                    <h2 style="font-size: 1.5rem; font-weight: 800; color: var(--primary); margin: 0;">
                         <?= e($profile['nama_organisasi'] ?? 'GMKI Cabang Padang') ?>
                     </h2>
-                    <div style="color: var(--secondary); font-weight: 700; font-size: 1.05rem; margin-top: 0.25rem;">
+                    <div style="color: var(--secondary); font-weight: 700; font-size: 1rem; margin-top: 0.25rem;">
                         <?= e($profile['slogan'] ?? 'Ut Omnes Unum Sint - Syalom!') ?>
                     </div>
                 </div>
             </div>
 
             <!-- Tema & Sub-tema -->
-            <div class="card" style="background: linear-gradient(135deg, #f8fafc 0%, #eff6ff 100%); border-left: 4px solid var(--primary); margin-bottom: 2rem; padding: 1.5rem;">
+            <div class="card" style="background: linear-gradient(135deg, #f8fafc 0%, #eff6ff 100%); border-left: 4px solid var(--primary); margin-bottom: 2rem; padding: 1.25rem;">
                 <div style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 700; color: var(--primary); margin-bottom: 0.25rem;">
                     Tema Kepengurusan Periode Aktif
                 </div>
-                <h3 style="font-size: 1.25rem; font-weight: 800; color: var(--text-main); margin-bottom: 0.5rem;">
+                <h3 style="font-size: 1.15rem; font-weight: 800; color: var(--text-main); margin-bottom: 0.5rem;">
                     "<?= e($profile['tema_periode'] ?? 'Bangkitlah, Menjadi Teranglah!') ?>"
                 </h3>
-                <p style="margin: 0; color: var(--text-muted); font-size: 0.95rem;">
+                <p style="margin: 0; color: var(--text-muted); font-size: 0.9rem;">
                     <strong>Sub-Tema:</strong> <?= e($profile['sub_tema'] ?? 'Mewujudkan Kader GMKI yang Berintegritas, Inklusif, dan Berdampak di Tengah Medan Pelayanan.') ?>
                 </p>
             </div>
 
             <!-- Visi & Misi -->
-            <div class="grid grid-cols-2 gap-4" style="margin-bottom: 2rem;">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                 <div class="card" style="border: 1px solid var(--border-color); padding: 1.5rem;">
                     <h3 style="font-size: 1.1rem; font-weight: 700; color: var(--primary); margin-bottom: 0.75rem;">
                         Visi Cabang
@@ -77,7 +77,7 @@
                 <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--primary); margin-bottom: 0.75rem;">
                     Tri Panji GMKI
                 </h3>
-                <div class="grid grid-cols-3 gap-3">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     <div class="card text-center" style="background: var(--bg-subtle); padding: 1.25rem;">
                         <div style="font-size: 1.5rem; margin-bottom: 0.25rem;">✝️</div>
                         <strong style="color: var(--primary);">TINGGI IMAN</strong>
@@ -114,7 +114,7 @@
             <h3 class="card-title" style="font-size: 1rem;">Sekretariat & Komunikasi Resmi</h3>
         </div>
         <div class="card-body">
-            <div class="grid grid-cols-3 gap-4">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
                     <div class="text-muted" style="font-size: 0.8rem; margin-bottom: 0.25rem;">ALAMAT SEKRETARIAT</div>
                     <p style="margin: 0; font-weight: 600;"><?= e($profile['alamat_sekretariat'] ?? 'Jl. Gereja No. 1, Kota Padang') ?></p>

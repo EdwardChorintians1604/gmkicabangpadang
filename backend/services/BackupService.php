@@ -22,58 +22,14 @@ class BackupService
             $pdo = Database::getConnection();
             $dbName = $_ENV['DB_DATABASE'] ?? 'gmki_padang';
 
-            // Ambil daftar semua tabel
+            // Ambil daftar semua tabel basis data yang sah
             $tables = [];
             $stmt = $pdo->query("SHOW FULL TABLES WHERE Table_Type = 'BASE TABLE'");
             while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
                 $tables[] = $row[0];
             }
 
-            $sqlDump = "-- ==========================================================\n";
-            $sqlDump .= "-- GMKI CABANG PADANG - AUTOMATED DATABASE BACKUP\n";
-            $sqlDump .= "-- Database: {$dbName}\n";
-            $sqlDump .= "-- Tanggal: " . date('Y-m-d H:i:s') . "\n";
-            $sqlDump .= "-- ==========================================================\n\n";
-            $sqlDump .= "SET FOREIGN_KEY_CHECKS=0;\nSET SQL_MODE = \"NO_AUTO_VALUE_ON_ZERO\";\nSTART TRANSACTION;\n\n";
-
-            foreach ($tables as $table) {
-                // Struktur tabel
-                $createStmt = $pdo->query("SHOW CREATE TABLE `{$table}`");
-                $createRow = $createStmt->fetch(PDO::FETCH_NUM);
-                $sqlDump .= "\n-- Struktur untuk tabel `{$table}`\n";
-                $sqlDump .= "DROP TABLE IF EXISTS `{$table}`;\n";
-                $sqlDump .= $createRow[1] . ";\n\n";
-
-                // Isi data tabel
-                $dataStmt = $pdo->query("SELECT * FROM `{$table}`");
-                $rows = $dataStmt->fetchAll(PDO::FETCH_ASSOC);
-
-                if (!empty($rows)) {
-                    $sqlDump .= "-- Data untuk tabel `{$table}`\n";
-                    $columns = array_keys($rows[0]);
-                    $colNames = implode('`, `', $columns);
-
-                    foreach ($rows as $r) {
-                        $values = [];
-                        foreach ($r as $val) {
-                            if ($val === null) {
-                                $values[] = 'NULL';
-                            } else {
-                                $values[] = $pdo->quote($val);
-                            }
-                        }
-                        $sqlDump .= "INSERT INTO `{$table}` (`{$colNames}`) VALUES (" . implode(', ', $values) . ");\n";
-                    }
-                    $sqlDump .= "\n";
-                }
-            }
-
-            $sqlDump .= "SET FOREIGN_KEY_CHECKS=1;\nCOMMIT;\n";
-
-            // Kompresi dengan GZIP
-            $gzData = gzencode($sqlDump, 9);
             $backupDir = $this->storageService->getBackupDir('database');
-
             if (!is_dir($backupDir)) {
                 mkdir($backupDir, 0755, true);
             }
@@ -81,21 +37,128 @@ class BackupService
             $filename = 'backup_gmki_padang_' . date('Ymd_His') . '.sql.gz';
             $filePath = $backupDir . DIRECTORY_SEPARATOR . $filename;
 
-            file_put_contents($filePath, $gzData);
+            // Buka stream berkas gzip terkompresi langsung (Level 9 - Maksimum)
+            $gz = gzopen($filePath, 'wb9');
+            if (!$gz) {
+                throw new \RuntimeException("Gagal membuat stream arsip kompresi gzip pada direktori backup.");
+            }
 
-            // Rotasi cadangan: simpan hanya 3 berkas terbaru
-            $this->rotateDatabaseBackups(3);
+            // Isolasi Transaksional: Mencegah inkonsistensi saat ada operasi baca-tulis
+            try {
+                $pdo->exec("SET TRANSACTION ISOLATION LEVEL REPEATABLE READ");
+                $pdo->exec("START TRANSACTION WITH CONSISTENT SNAPSHOT");
+            } catch (\Throwable) {
+                $pdo->exec("START TRANSACTION");
+            }
+
+            $header = "-- ==========================================================\n"
+                . "-- GMKI CABANG PADANG - SISTEM INFORMASI & MANAJEMEN\n"
+                . "-- PENCADANGAN BASIS DATA OTOMATIS & AMAN (STREAMING DUMP)\n"
+                . "-- Engine: PHP " . PHP_VERSION . " (Native PDO Streaming)\n"
+                . "-- Target Database: `{$dbName}`\n"
+                . "-- Cap Waktu Pembuatan: " . date('Y-m-d H:i:s') . "\n"
+                . "-- Total Tabel: " . count($tables) . "\n"
+                . "-- ==========================================================\n\n"
+                . "/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;\n"
+                . "/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;\n"
+                . "/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;\n"
+                . "/*!40101 SET NAMES utf8mb4 */;\n"
+                . "/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;\n"
+                . "/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;\n"
+                . "/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;\n"
+                . "/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;\n\n";
+
+            gzwrite($gz, $header);
+
+            foreach ($tables as $table) {
+                gzwrite($gz, "\n-- ----------------------------------------------------------\n");
+                gzwrite($gz, "-- Struktur Skema untuk Tabel: `{$table}`\n");
+                gzwrite($gz, "-- ----------------------------------------------------------\n");
+                gzwrite($gz, "DROP TABLE IF EXISTS `{$table}`;\n");
+
+                $createStmt = $pdo->query("SHOW CREATE TABLE `{$table}`");
+                $createRow = $createStmt->fetch(PDO::FETCH_NUM);
+                gzwrite($gz, $createRow[1] . ";\n\n");
+
+                // Stream baris per baris tanpa membebani memori RAM server
+                $dataStmt = $pdo->query("SELECT * FROM `{$table}`");
+                $firstRow = $dataStmt->fetch(PDO::FETCH_ASSOC);
+
+                if ($firstRow !== false) {
+                    gzwrite($gz, "-- Dumping Data Terverifikasi: `{$table}`\n");
+                    $columns = array_keys($firstRow);
+                    $quotedCols = '`' . implode('`, `', $columns) . '`';
+                    $insertPrefix = "INSERT INTO `{$table}` ({$quotedCols}) VALUES\n";
+
+                    $batch = [];
+                    $batchCount = 0;
+                    $currentRow = $firstRow;
+
+                    while ($currentRow !== false) {
+                        $values = [];
+                        foreach ($currentRow as $val) {
+                            if ($val === null) {
+                                $values[] = 'NULL';
+                            } else {
+                                $values[] = $pdo->quote((string)$val);
+                            }
+                        }
+                        $batch[] = '(' . implode(', ', $values) . ')';
+                        $batchCount++;
+
+                        // Tulis per 50 baris sekaligus (Extended Multi-Row Inserts)
+                        if ($batchCount >= 50) {
+                            gzwrite($gz, $insertPrefix . implode(",\n", $batch) . ";\n");
+                            $batch = [];
+                            $batchCount = 0;
+                        }
+
+                        $currentRow = $dataStmt->fetch(PDO::FETCH_ASSOC);
+                    }
+
+                    if (!empty($batch)) {
+                        gzwrite($gz, $insertPrefix . implode(",\n", $batch) . ";\n");
+                    }
+                    gzwrite($gz, "\n");
+                }
+            }
+
+            $footer = "/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;\n"
+                . "/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;\n"
+                . "/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;\n"
+                . "/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;\n"
+                . "/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;\n"
+                . "/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;\n"
+                . "/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;\n"
+                . "COMMIT;\n"
+                . "-- Cadangan selesai dibuat pada " . date('Y-m-d H:i:s') . "\n";
+
+            gzwrite($gz, $footer);
+            gzclose($gz);
+
+            try {
+                $pdo->exec("COMMIT");
+            } catch (\Throwable) {}
+
+            // Hasilkan Checksum Kriptografis SHA-256 untuk memverifikasi keaslian berkas
+            $sha256 = hash_file('sha256', $filePath);
+            file_put_contents($filePath . '.sha256', $sha256);
+
+            // Rotasi cadangan: simpan 5 berkas terbaru secara aman
+            $this->rotateDatabaseBackups(5);
 
             $this->auditLogService->log('BACKUP_DATABASE', 'system', $filename, [
                 'filename' => $filename,
                 'size' => filesize($filePath),
+                'sha256' => $sha256,
             ]);
 
             return [
                 'success' => true,
                 'filename' => $filename,
                 'size' => filesize($filePath),
-                'message' => 'Cadangan database berhasil dibuat (.sql.gz).',
+                'sha256' => $sha256,
+                'message' => 'Cadangan database lengkap berhasil dibuat (.sql.gz) dengan verifikasi SHA-256.',
             ];
         } catch (\Throwable $e) {
             error_log("Backup DB error: " . $e->getMessage());
@@ -117,11 +180,16 @@ class BackupService
         $backups = [];
 
         foreach ($files as $f) {
+            $shaFile = $f . '.sha256';
+            $sha256 = file_exists($shaFile) ? trim(file_get_contents($shaFile)) : hash_file('sha256', $f);
+
             $backups[] = [
                 'filename' => basename($f),
                 'filepath' => $f,
                 'size' => filesize($f),
                 'size_formatted' => round(filesize($f) / 1024, 2) . ' KB',
+                'sha256' => $sha256,
+                'sha256_short' => substr($sha256, 0, 16) . '...',
                 'created_at' => date('Y-m-d H:i:s', filemtime($f)),
             ];
         }
@@ -134,7 +202,7 @@ class BackupService
         return $backups;
     }
 
-    public function rotateDatabaseBackups(int $keepCount = 3): void
+    public function rotateDatabaseBackups(int $keepCount = 5): void
     {
         $backups = $this->getDatabaseBackups();
         if (count($backups) > $keepCount) {
@@ -142,6 +210,9 @@ class BackupService
             foreach ($toDelete as $item) {
                 if (file_exists($item['filepath'])) {
                     @unlink($item['filepath']);
+                }
+                if (file_exists($item['filepath'] . '.sha256')) {
+                    @unlink($item['filepath'] . '.sha256');
                 }
             }
         }

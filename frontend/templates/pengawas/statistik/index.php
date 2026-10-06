@@ -1,19 +1,19 @@
-<div class="flex justify-between items-center" style="margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
     <div>
-        <div class="flex items-center gap-2" style="margin-bottom: 0.35rem;">
-            <h1 style="font-size: 1.75rem; font-weight: 800; color: var(--primary); margin: 0;">Analitik & Statistik Civitas</h1>
-            <span class="badge badge-warning">BACA-SAJA</span>
+        <div class="flex items-center gap-2 mb-1">
+            <h1 class="text-xl sm:text-2xl font-extrabold text-slate-800 m-0">Analitik & Statistik Civitas</h1>
+            <span class="badge badge-warning text-xs">BACA-SAJA</span>
         </div>
-        <p class="text-muted" style="margin: 0; font-size: 0.875rem;">
+        <p class="text-slate-500 text-xs sm:text-sm m-0">
             Pemantauan visual demografi kader, sebaran kampus perguruan tinggi, komposisi gender, dan tren kaderisasi GMKI Cabang Padang.
         </p>
     </div>
-    <div class="flex gap-2">
-        <a href="/pengawas/civitas/export" class="btn btn-secondary btn-sm flex items-center gap-1">
+    <div class="flex gap-2 flex-shrink-0">
+        <a href="/pengawas/civitas/export" class="btn btn-secondary btn-sm flex items-center justify-center gap-1 w-full sm:w-auto">
             <?= svg_icon('download', 14) ?>
             <span>Unduh Laporan Lengkap (CSV)</span>
         </a>
-        <button onclick="window.print()" class="btn btn-outline btn-sm flex items-center gap-1">
+        <button onclick="window.print()" class="btn btn-outline btn-sm flex items-center justify-center gap-1 w-full sm:w-auto">
             <?= svg_icon('printer', 14) ?>
             <span>Cetak Grafik</span>
         </button>
