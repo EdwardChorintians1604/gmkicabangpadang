@@ -47,7 +47,7 @@ $role = $user['role'] ?? '';
             <?php if (can('finance.view') || can('reports.view')): ?><a class="btn btn-outline" href="/bencab/laporan">Laporan keuangan</a><?php endif; ?>
             <?php if (can('strategy.view')): ?><a class="btn btn-outline" href="/ketcab/strategi">Strategi organisasi</a><?php endif; ?>
             <?php if (can('coordination.view')): ?>
-                <?php $coordinationPath = in_array($role, ['ketcab', 'admin'], true) ? '/ketcab/koordinasi' : '/ruang-kerja/koordinasi'; ?>
+                <?php $coordinationPath = $role === 'admin' ? '/admin/koordinasi' : ($role === 'ketcab' ? '/ketcab/koordinasi' : '/ruang-kerja/koordinasi'); ?>
                 <a class="btn btn-primary" href="<?= e($coordinationPath) ?>">Koordinasi &amp; request</a>
             <?php endif; ?>
         </div>

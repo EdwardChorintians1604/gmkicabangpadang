@@ -1,0 +1,523 @@
+.coordination-chat {
+    display: grid;
+    grid-template-columns: minmax(270px, 330px) minmax(0, 1fr);
+    height: min(76vh, 780px);
+    min-height: 540px;
+    overflow: hidden;
+    border: 1px solid #d8e0e4;
+    border-radius: 16px;
+    background: #fff;
+    box-shadow: 0 12px 38px rgba(15, 61, 100, .1);
+}
+
+.coordination-chat-list {
+    min-width: 0;
+    overflow-y: auto;
+    border-right: 1px solid #e4e9ec;
+    background: #fff;
+}
+
+.coordination-list-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 66px;
+    padding: 12px 20px;
+    color: #172b32;
+    background: #f0f2f5;
+}
+
+.coordination-list-header > div {
+    display: grid;
+    gap: 3px;
+}
+
+.coordination-list-header strong {
+    font-size: 1.2rem;
+    font-weight: 750;
+}
+
+.coordination-list-header span:not(.coordination-compose-icon) {
+    color: #667781;
+    font-size: .78rem;
+}
+
+.coordination-compose-icon {
+    display: grid;
+    width: 34px;
+    height: 34px;
+    place-items: center;
+    border-radius: 50%;
+    color: #54656f;
+    background: #e1e7ea;
+    font-size: 1.25rem;
+}
+
+.coordination-search {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 10px 12px;
+    padding: 9px 14px;
+    border-radius: 8px;
+    color: #667781;
+    background: #f0f2f5;
+    font-size: .82rem;
+}
+
+.coordination-search span:first-child {
+    font-size: 1.15rem;
+}
+
+.coordination-contacts-heading {
+    padding: 14px 18px 8px;
+    color: #667781;
+    font-size: .7rem;
+    font-weight: 750;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+.coordination-contact {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 82px;
+    padding: 13px 16px;
+    color: #263238;
+    text-decoration: none;
+    border-bottom: 1px solid #edf0f2;
+}
+
+.coordination-contact.active,
+.coordination-contact:hover {
+    background: #f0f2f5;
+}
+
+.coordination-group-avatar {
+    position: relative;
+    display: inline-grid;
+    width: 48px;
+    height: 48px;
+    flex: 0 0 48px;
+    place-items: center;
+    border-radius: 50%;
+    color: #fff;
+    background: #00a884;
+    font-size: 1.2rem;
+    font-weight: 800;
+}
+
+.coordination-group-avatar i {
+    position: absolute;
+    right: -2px;
+    bottom: -1px;
+    display: grid;
+    width: 18px;
+    height: 18px;
+    place-items: center;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    color: #fff;
+    background: #54656f;
+    font-size: .45rem;
+    font-style: normal;
+}
+
+.coordination-contact-copy {
+    display: grid;
+    flex: 1;
+    gap: 6px;
+    min-width: 0;
+}
+
+.coordination-contact-copy strong {
+    overflow: hidden;
+    color: #111b21;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: .9rem;
+    font-weight: 650;
+}
+
+.coordination-contact-copy small {
+    overflow: hidden;
+    color: #667781;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: .77rem;
+}
+
+.coordination-contact > time {
+    align-self: flex-start;
+    padding-top: 4px;
+    color: #667781;
+    font-size: .68rem;
+}
+
+.coordination-list-note {
+    margin: 18px 14px;
+    padding: 14px;
+    border: 1px solid #e8edef;
+    border-radius: 10px;
+    background: #f8fafb;
+}
+
+.coordination-list-note strong {
+    color: #41525b;
+    font-size: .8rem;
+}
+
+.coordination-list-note p {
+    margin: 5px 0 0;
+    color: #667781;
+    font-size: .75rem;
+    line-height: 1.5;
+}
+
+.coordination-member-list {
+    display: grid;
+    gap: 2px;
+    padding: 0 14px 16px;
+}
+
+.coordination-member-list > span {
+    padding: 8px 4px;
+    color: #8696a0;
+    font-size: .65rem;
+    font-weight: 750;
+    letter-spacing: .08em;
+}
+
+.coordination-member {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 7px 4px;
+}
+
+.coordination-avatar {
+    display: inline-grid;
+    width: 34px;
+    height: 34px;
+    flex: 0 0 34px;
+    place-items: center;
+    border-radius: 50%;
+    color: #fff;
+    background: #128c7e;
+    font-size: .82rem;
+    font-weight: 750;
+}
+
+.coordination-member > span:last-child {
+    display: grid;
+    gap: 2px;
+}
+
+.coordination-member strong {
+    color: #3b4a54;
+    font-size: .75rem;
+    font-weight: 650;
+}
+
+.coordination-member small {
+    color: #8696a0;
+    font-size: .68rem;
+}
+
+.coordination-conversation {
+    display: flex;
+    min-width: 0;
+    min-height: 0;
+    flex-direction: column;
+    background-color: #efeae2;
+    background-image:
+        radial-gradient(circle at 20% 30%, rgba(255,255,255,.3) 0 1px, transparent 1.5px),
+        radial-gradient(circle at 70% 75%, rgba(255,255,255,.23) 0 1px, transparent 1.5px);
+    background-size: 28px 28px, 37px 37px;
+}
+
+.coordination-conversation-header {
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 68px;
+    padding: 10px 18px;
+    background: #f0f2f5;
+    border-bottom: 1px solid #e2e8eb;
+}
+
+.coordination-header-avatar {
+    width: 44px;
+    height: 44px;
+    flex-basis: 44px;
+}
+
+.coordination-conversation-header > div {
+    display: grid;
+    gap: 4px;
+    min-width: 0;
+}
+
+.coordination-conversation-header strong {
+    overflow: hidden;
+    color: #172b32;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: .94rem;
+}
+
+.coordination-conversation-header small {
+    overflow: hidden;
+    color: #667781;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: .72rem;
+}
+
+.coordination-live {
+    margin-left: auto;
+    color: #008f72;
+    font-size: .72rem;
+    white-space: nowrap;
+}
+
+.coordination-live.offline {
+    color: #b45309;
+}
+
+.coordination-messages {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+    flex-direction: column;
+    gap: 8px;
+    overflow: auto;
+    padding: 20px clamp(14px, 4vw, 52px);
+    scroll-behavior: smooth;
+    scrollbar-color: rgba(84, 101, 111, .35) transparent;
+}
+
+.coordination-message {
+    position: relative;
+    max-width: min(78%, 650px);
+    padding: 8px 10px 6px;
+    border-radius: 8px;
+    box-shadow: 0 1px 1px rgba(0,0,0,.12);
+    overflow-wrap: anywhere;
+}
+
+.coordination-message.incoming {
+    align-self: flex-start;
+    background: #fff;
+    border-top-left-radius: 2px;
+}
+
+.coordination-message.outgoing {
+    align-self: flex-end;
+    background: #d9fdd3;
+    border-top-right-radius: 2px;
+}
+
+.coordination-message p {
+    margin: 0;
+    color: #182229;
+    white-space: pre-wrap;
+    line-height: 1.45;
+    font-size: .88rem;
+}
+
+.coordination-message time {
+    display: block;
+    margin-top: 4px;
+    color: #667781;
+    text-align: right;
+    font-size: .63rem;
+}
+
+.coordination-sender {
+    display: block;
+    margin: 0 0 4px;
+    color: #128c7e;
+    font-size: .7rem;
+    font-weight: 700;
+}
+
+.coordination-sender span {
+    color: #8696a0;
+    font-weight: 500;
+}
+
+.coordination-welcome {
+    display: grid;
+    justify-items: center;
+    gap: 8px;
+    max-width: 360px;
+    margin: auto;
+    padding: 24px;
+    border: 1px solid rgba(255,255,255,.65);
+    border-radius: 14px;
+    color: #54656f;
+    background: rgba(255,255,255,.84);
+    text-align: center;
+    box-shadow: 0 3px 12px rgba(0,0,0,.05);
+}
+
+.coordination-welcome-icon {
+    display: grid;
+    width: 46px;
+    height: 46px;
+    place-items: center;
+    border-radius: 50%;
+    color: #fff;
+    background: #00a884;
+    font-size: 1.2rem;
+    font-weight: 800;
+}
+
+.coordination-welcome strong {
+    color: #263238;
+    font-size: .95rem;
+}
+
+.coordination-welcome p,
+.coordination-welcome small {
+    margin: 0;
+    color: #667781;
+    font-size: .78rem;
+    line-height: 1.5;
+}
+
+.coordination-load-older {
+    align-self: center;
+    padding: 7px 13px;
+    border: 1px solid #d7e0e5;
+    border-radius: 18px;
+    color: #54656f;
+    background: rgba(255,255,255,.94);
+    font: inherit;
+    font-size: .72rem;
+    cursor: pointer;
+}
+
+.coordination-load-older:hover {
+    background: #fff;
+}
+
+.coordination-composer {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+    padding: 10px 16px;
+    background: #f0f2f5;
+    border-top: 1px solid #e1e7ea;
+}
+
+.coordination-composer textarea {
+    flex: 1;
+    min-height: 44px;
+    max-height: 120px;
+    resize: none;
+    padding: 12px 16px;
+    border: 0;
+    border-radius: 22px;
+    outline: 0;
+    background: #fff;
+    color: #263238;
+    font: inherit;
+    font-size: .88rem;
+}
+
+.coordination-composer textarea:focus {
+    box-shadow: 0 0 0 2px rgba(0,168,132,.16);
+}
+
+.coordination-composer button {
+    display: grid;
+    width: 44px;
+    height: 44px;
+    flex: 0 0 44px;
+    place-items: center;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    color: #fff;
+    background: #00a884;
+    cursor: pointer;
+    transition: background .15s ease, transform .15s ease;
+}
+
+.coordination-composer button:hover {
+    transform: translateY(-1px);
+    background: #008f72;
+}
+
+.coordination-composer button:disabled {
+    opacity: .65;
+    cursor: wait;
+}
+
+.coordination-composer button svg {
+    width: 19px;
+    height: 19px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.coordination-error {
+    position: absolute;
+    left: 18px;
+    bottom: 62px;
+    margin: 0;
+    padding: 7px 10px;
+    border-radius: 7px;
+    color: #b91c1c;
+    background: #fff;
+    font-size: .78rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,.1);
+}
+
+@media (max-width: 760px) {
+    .coordination-chat {
+        grid-template-columns: minmax(0, 1fr);
+        height: min(76vh, 760px);
+        min-height: 480px;
+    }
+
+    .coordination-chat-list {
+        display: none;
+    }
+
+    .coordination-conversation-header {
+        min-height: 62px;
+        padding: 8px 12px;
+    }
+
+    .coordination-messages {
+        padding: 14px 10px;
+    }
+
+    .coordination-message {
+        max-width: 88%;
+    }
+
+    .coordination-composer {
+        gap: 8px;
+        padding: 8px;
+    }
+
+    .coordination-composer textarea {
+        min-height: 42px;
+    }
+
+    .coordination-composer button {
+        width: 42px;
+        height: 42px;
+        flex-basis: 42px;
+    }
+}

@@ -22,11 +22,10 @@ use App\Core\Router;
 
 // Fallback jika user mengakses /dashboard umum
 $router->get('/dashboard', function () {
-    if (is_admin()) {
-        redirect('/admin/dashboard');
-    } else {
-        redirect('/pengawas/dashboard');
+    if (\App\Core\Auth::role() === 'ketcab') {
+        redirect('/ketcab/dashboard');
     }
+    redirect(is_admin() ? '/admin/dashboard' : '/ruang-kerja');
 }, ['auth']);
 
 // 1. Dashboard Utama Admin

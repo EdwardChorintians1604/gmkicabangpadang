@@ -6,7 +6,7 @@ echo          TUNNEL ONLINE NGROK - GMKI CABANG PADANG
 echo =======================================================================
 echo.
 echo  [INFO] Meneruskan port lokal 8000 ke internet publik (HTTPS).
-echo  Pastikan MoWeS dan server lokal (jalankan.bat) SUDAH BERJALAN!
+echo  Pastikan MoWeS dan Apache lokal (jalankan.bat) SUDAH BERJALAN!
 echo.
 echo  Panel Status Ngrok : http://127.0.0.1:4040
 echo.
@@ -15,11 +15,11 @@ echo =======================================================================
 echo.
 
 if exist "%~dp0ngrok.exe" (
-    "%~dp0ngrok.exe" http 8000
+    "%~dp0ngrok.exe" http http://127.0.0.1:8000
 ) else if exist "%~dp0..\ngrok.exe" (
-    "%~dp0..\ngrok.exe" http 8000
+    "%~dp0..\ngrok.exe" http http://127.0.0.1:8000
 ) else (
-    ngrok http 8000
+    ngrok http http://127.0.0.1:8000
 )
 
 pause

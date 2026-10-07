@@ -59,6 +59,13 @@ class AuthService
             ];
         }
 
+        if ($user['role'] === 'pengawas') {
+            return [
+                'success' => false,
+                'message' => 'Mode Pengawas sudah tidak digunakan pada sistem ini.',
+            ];
+        }
+
         // 5. Login berhasil: perbarui catatan sesi & bersihkan rate limit
         $this->securityRepo->recordLoginAttempt($ip, $username, true, $userAgent);
         $this->securityRepo->clearLoginAttempts($ip);

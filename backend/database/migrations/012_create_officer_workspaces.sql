@@ -23,8 +23,8 @@ CREATE TABLE IF NOT EXISTS `inventory_items` (
     `item_condition` VARCHAR(40) NOT NULL DEFAULT 'Baik',
     `notes` TEXT NULL,
     `created_by` INT UNSIGNED NOT NULL,
-    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `created_at` DATETIME NOT NULL DEFAULT '2000-01-01 00:00:00',
     INDEX `idx_inventory_name` (`name`),
     CONSTRAINT `fk_inventory_created_by` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -40,8 +40,8 @@ CREATE TABLE IF NOT EXISTS `office_documents` (
     `original_name` VARCHAR(255) NOT NULL,
     `mime_type` VARCHAR(120) NOT NULL,
     `created_by` INT UNSIGNED NOT NULL,
-    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `created_at` DATETIME NOT NULL DEFAULT '2000-01-01 00:00:00',
     INDEX `idx_documents_type_owner` (`document_type`, `created_by`),
     CONSTRAINT `fk_documents_created_by` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -53,8 +53,8 @@ CREATE TABLE IF NOT EXISTS `organization_strategies` (
     `status` ENUM('Rencana', 'Berjalan', 'Selesai') NOT NULL DEFAULT 'Rencana',
     `target_date` DATE NULL,
     `created_by` INT UNSIGNED NOT NULL,
-    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `created_at` DATETIME NOT NULL DEFAULT '2000-01-01 00:00:00',
     INDEX `idx_strategy_status_date` (`status`, `target_date`),
     CONSTRAINT `fk_strategy_created_by` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -67,7 +67,7 @@ CREATE TABLE IF NOT EXISTS `coordination_messages` (
     `recipient_role` VARCHAR(40) NOT NULL,
     `subject` VARCHAR(180) NOT NULL,
     `body` TEXT NOT NULL,
-    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     INDEX `idx_messages_recipient_date` (`recipient_role`, `created_at`),
     INDEX `idx_messages_sender_date` (`sender_id`, `created_at`),
     CONSTRAINT `fk_messages_sender` FOREIGN KEY (`sender_id`) REFERENCES `users` (`id`),

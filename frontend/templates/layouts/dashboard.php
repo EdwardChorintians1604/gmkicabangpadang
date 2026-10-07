@@ -7,10 +7,14 @@
     <link rel="icon" type="image/png" href="<?= asset('images/favicon.png') ?>">
     <link rel="stylesheet" href="<?= asset('css/app.css') ?>">
     <link rel="stylesheet" href="<?= asset('css/dashboard.css') ?>">
+    <?php if (($section ?? '') === 'coordination'): ?>
+        <link rel="stylesheet" href="<?= asset('css/coordination.css') ?>?v=3">
+    <?php endif; ?>
     <!-- Tailwind CSS with custom GMKI palette -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.tailwindcss.com"></script>
     <script>
-        tailwind.config = {
+        window.tailwind = window.tailwind || {};
+        window.tailwind.config = {
             corePlugins: { preflight: false },
             theme: {
                 extend: {
@@ -29,6 +33,9 @@
 <body>
 
     <div class="dashboard-wrapper">
+        <?php if (in_array(auth()['role'] ?? '', ['ketcab', 'sekcab', 'bencab', 'sekfung_medko'], true)): ?>
+            <?= partial('layouts.partials.officer-sidebar') ?>
+        <?php else: ?>
         <!-- Sidebar -->
         <aside class="dashboard-sidebar">
             <div class="sidebar-brand flex items-center justify-between">
@@ -56,7 +63,7 @@
                     </li>
                 <?php endif; ?>
 
-                <?php if (can('dashboard.pengawas')): ?>
+                <?php if (can('dashboard.pengawas') && !in_array(auth()['role'] ?? '', ['admin', 'sekfung_medko'], true)): ?>
                     <li class="sidebar-nav-item">
                         <a href="/ketcab/dashboard" class="sidebar-nav-link <?= (str_starts_with($_SERVER['REQUEST_URI'], '/ketcab/dashboard')) ? 'active' : '' ?>">
                             <span class="sidebar-nav-icon">👁️</span>
@@ -80,7 +87,7 @@
                         <li class="sidebar-nav-item"><a href="/ketcab/strategi" class="sidebar-nav-link"><span class="sidebar-nav-icon">🧭</span><span>Strategi Organisasi</span></a></li>
                     <?php endif; ?>
                     <?php if (can('coordination.view')): ?>
-                        <?php $coordinationPath = in_array(auth()['role'] ?? '', ['ketcab', 'admin'], true) ? '/ketcab/koordinasi' : '/ruang-kerja/koordinasi'; ?>
+                        <?php $coordinationPath = (auth()['role'] ?? '') === 'admin' ? '/admin/koordinasi' : ((auth()['role'] ?? '') === 'ketcab' ? '/ketcab/koordinasi' : '/ruang-kerja/koordinasi'); ?>
                         <li class="sidebar-nav-item"><a href="<?= e($coordinationPath) ?>" class="sidebar-nav-link"><span class="sidebar-nav-icon">💬</span><span>Koordinasi & Request</span></a></li>
                     <?php endif; ?>
                 <?php endif; ?>
@@ -204,6 +211,7 @@
                 </li>
             </ul>
         </aside>
+        <?php endif; ?>
 
         <!-- Main Dashboard Column -->
         <div class="dashboard-main">
@@ -262,5 +270,8 @@
     <script src="<?= asset('js/app.js') ?>"></script>
     <script src="<?= asset('js/validation.js') ?>"></script>
     <script src="<?= asset('js/statistik.js') ?>"></script>
+    <?php if (($section ?? '') === 'coordination'): ?>
+        <script src="<?= asset('js/coordination.js') ?>?v=3"></script>
+    <?php endif; ?>
 </body>
 </html>

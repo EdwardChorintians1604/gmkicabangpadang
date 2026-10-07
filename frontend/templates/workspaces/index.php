@@ -7,11 +7,16 @@ $titles = [
     'strategies' => 'Strategi Organisasi',
     'coordination' => 'Ruang Koordinasi BPC',
 ];
-$backPath = in_array($role, ['ketcab', 'pengawas'], true) ? '/ketcab/dashboard' : '/ruang-kerja';
+$backPath = match ($role) {
+    'admin' => '/admin/dashboard',
+    'ketcab' => '/ketcab/dashboard',
+    default => '/ruang-kerja',
+};
+$backLabel = $role === 'admin' ? 'Dashboard Admin' : 'Ruang kerja';
 ?>
 <header class="flex justify-between items-center" style="margin-bottom:1.25rem;flex-wrap:wrap;gap:1rem;">
     <div>
-        <p class="text-muted" style="margin:0;"><a href="<?= e($backPath) ?>">Ruang kerja</a> / <?= e($titles[$section] ?? '') ?></p>
+        <p class="text-muted" style="margin:0;"><a href="<?= e($backPath) ?>"><?= e($backLabel) ?></a> / <?= e($titles[$section] ?? '') ?></p>
         <h1 style="font-size:1.75rem;font-weight:800;color:var(--primary);margin:.25rem 0;"><?= e($titles[$section] ?? '') ?></h1>
     </div>
 </header>
@@ -61,6 +66,7 @@ $backPath = in_array($role, ['ketcab', 'pengawas'], true) ? '/ketcab/dashboard' 
         <?php endforeach; ?>
         <?php if (!$items): ?><div class="card"><div class="card-body text-muted">Belum ada inventaris yang dicatat.</div></div><?php endif; ?>
     </div>
+    <?= partial('partials.pagination', $pagination) ?>
 
 <?php elseif ($section === 'archive'): ?>
     <?php if (can('archive.manage')): ?>
@@ -90,8 +96,18 @@ $backPath = in_array($role, ['ketcab', 'pengawas'], true) ? '/ketcab/dashboard' 
         </div></article><?php endforeach; ?>
         <?php if (!$documents): ?><div class="card"><div class="card-body text-center text-muted">Arsip masih kosong.</div></div><?php endif; ?>
     </div>
+    <?= partial('partials.pagination', $pagination) ?>
 
 <?php elseif ($section === 'finance'): ?>
+    <section class="card" style="margin-bottom:1.25rem;"><div class="card-body flex justify-between items-center" style="gap:1rem;flex-wrap:wrap;">
+        <div><strong>Ekspor laporan untuk rekap</strong><p class="text-muted" style="margin:.25rem 0 0;">Pembuatan CSV berjalan di background agar tidak menahan halaman.</p></div>
+        <div class="flex items-center gap-2">
+            <a class="btn btn-outline" href="/ruang-kerja/antrian">Lihat antrean</a>
+            <form method="post" action="/ruang-kerja/antrian/laporan-keuangan" style="margin:0;">
+                <?= csrf_field() ?><button class="btn btn-primary" type="submit">Buat ekspor CSV</button>
+            </form>
+        </div>
+    </div></section>
     <?php if ($role === 'bencab'): ?>
         <section class="card" style="margin-bottom:1.25rem;"><div class="card-body">
             <h2 style="font-size:1.1rem;font-weight:700;margin:0 0 1rem;">Tambah laporan keuangan</h2>
@@ -134,6 +150,7 @@ $backPath = in_array($role, ['ketcab', 'pengawas'], true) ? '/ketcab/dashboard' 
         </div></article><?php endforeach; ?>
         <?php if (!$documents): ?><div class="card"><div class="card-body text-muted">Belum ada laporan keuangan yang diterbitkan.</div></div><?php endif; ?>
     </div>
+    <?= partial('partials.pagination', $pagination) ?>
 
 <?php elseif ($section === 'strategies'): ?>
     <?php if (can('strategy.manage')): ?>
@@ -169,34 +186,86 @@ $backPath = in_array($role, ['ketcab', 'pengawas'], true) ? '/ketcab/dashboard' 
         </div></article><?php endforeach; ?>
         <?php if (!$strategies): ?><div class="card"><div class="card-body text-muted">Belum ada strategi yang dicatat.</div></div><?php endif; ?>
     </div>
+    <?= partial('partials.pagination', $pagination) ?>
 
 <?php elseif ($section === 'coordination'): ?>
-    <section class="card" style="margin-bottom:1.25rem;"><div class="card-body">
-        <h2 style="font-size:1.1rem;font-weight:700;margin:0 0 1rem;"><?= in_array($role, ['ketcab', 'admin'], true) ? 'Kirim komunikasi atau request' : 'Kirim pesan kepada Ketcab' ?></h2>
-        <form method="post" action="<?= in_array($role, ['ketcab', 'admin'], true) ? '/ketcab/koordinasi' : '/ruang-kerja/koordinasi' ?>" class="grid grid-cols-2 gap-4">
-            <?= csrf_field() ?>
-            <?php if (in_array($role, ['ketcab', 'admin'], true)): ?>
-                <label>Penerima<select class="form-control" name="recipient_role" required><option value="">Pilih peran</option><option value="sekcab">Sekcab</option><option value="bencab">Bencab</option><option value="sekfung_medko">Sekfung Medko</option></select></label>
-            <?php endif; ?>
-            <label>Subjek<input class="form-control" name="subject" maxlength="180" required></label>
-            <label style="grid-column:1/-1;">Pesan<textarea class="form-control" name="body" rows="3" required></textarea></label>
-            <div><button class="btn btn-primary" type="submit">Kirim pesan</button></div>
-        </form>
-    </div></section>
-    <div class="grid grid-cols-2 gap-4">
-        <?php foreach ($messages as $message): ?><article class="card"><div class="card-body">
-            <div class="flex justify-between items-center" style="gap:.75rem;flex-wrap:wrap;"><strong><?= e($message['subject']) ?></strong><span class="badge badge-neutral"><?= e($message['sender_role']) ?> → <?= e($message['recipient_role']) ?></span></div>
-            <p class="text-muted" style="font-size:.85rem;">Dari <?= e($message['sender_name']) ?> · <?= e($message['created_at']) ?><?= $message['parent_id'] ? ' · balasan' : '' ?></p>
-            <div><?= nl2br(e($message['body'])) ?></div>
-            <details style="margin-top:1rem;"><summary style="cursor:pointer;font-weight:650;">Balas / tindak lanjuti</summary>
-                <form method="post" action="<?= in_array($role, ['ketcab', 'admin'], true) ? '/ketcab/koordinasi' : '/ruang-kerja/koordinasi' ?>" style="margin-top:.75rem;">
-                    <?= csrf_field() ?><input type="hidden" name="parent_id" value="<?= (int)$message['id'] ?>">
-                    <label>Subjek<input class="form-control" name="subject" maxlength="180" value="Re: <?= e($message['subject']) ?>" required></label>
-                    <label style="display:block;margin-top:.5rem;">Balasan<textarea class="form-control" name="body" rows="3" required></textarea></label>
-                    <button class="btn btn-outline btn-sm" style="margin-top:.5rem;" type="submit">Kirim balasan</button>
-                </form>
-            </details>
-        </div></article><?php endforeach; ?>
-        <?php if (!$messages): ?><div class="card"><div class="card-body text-muted">Belum ada percakapan. Gunakan formulir di atas untuk memulai.</div></div><?php endif; ?>
-    </div>
+    <?php
+    $senderRoleNames = $participants;
+    $senderRoleNames['admin'] = 'Sekfung Medko';
+    $currentParticipantRole = $role === 'admin' ? 'sekfung_medko' : $role;
+    $lastMessage = $messages ? end($messages) : null;
+    ?>
+    <section class="coordination-chat"
+        data-messages-url="<?= e($messagesUrl) ?>"
+        data-latest-id="<?= $messages ? (int)end($messages)['id'] : 0 ?>"
+        data-oldest-id="<?= $messages ? (int)$messages[0]['id'] : 0 ?>"
+        data-has-older="<?= $hasOlderMessages ? 'true' : 'false' ?>">
+        <aside class="coordination-chat-list" aria-label="Daftar chat">
+            <div class="coordination-list-header">
+                <div><strong>Chat</strong><span>GMKI Cabang Padang</span></div>
+                <span class="coordination-compose-icon" aria-hidden="true">✎</span>
+            </div>
+            <div class="coordination-search">
+                <span aria-hidden="true">⌕</span>
+                <span>Cari percakapan</span>
+            </div>
+            <div class="coordination-contacts-heading">Percakapan</div>
+            <div class="coordination-contact active" aria-current="page">
+                <span class="coordination-group-avatar" aria-hidden="true"><span>G</span><i>●</i></span>
+                <span class="coordination-contact-copy">
+                    <strong>Koordinasi Pengurus BPC</strong>
+                    <small><?= $lastMessage ? e($lastMessage['sender_name'] . ': ' . mb_strimwidth((string)$lastMessage['body'], 0, 52, '…')) : 'Ketcab, Sekcab, Bencab, dan Medko' ?></small>
+                </span>
+                <time><?= $lastMessage ? e(date('H:i', strtotime($lastMessage['created_at']))) : '' ?></time>
+            </div>
+            <div class="coordination-list-note">
+                <strong>Grup bersama</strong>
+                <p>Semua pesan koordinasi tampil di percakapan yang sama untuk seluruh pengurus.</p>
+            </div>
+            <div class="coordination-member-list" aria-label="Anggota grup">
+                <span>ANGGOTA GRUP</span>
+            <?php foreach ($participants as $participantRole => $participantName): ?>
+                <?php $isCurrentUser = $participantRole === $currentParticipantRole; ?>
+                <?php $initial = strtoupper(mb_substr($participantName, 0, 1)); ?>
+                <div class="coordination-member">
+                    <span class="coordination-avatar"><?= e($initial) ?></span>
+                    <span><strong><?= e($participantName) ?></strong><small><?= $isCurrentUser ? 'Anda' : 'Anggota' ?></small></span>
+                </div>
+            <?php endforeach; ?>
+            </div>
+        </aside>
+        <div class="coordination-conversation">
+            <header class="coordination-conversation-header">
+                <span class="coordination-group-avatar coordination-header-avatar" aria-hidden="true"><span>G</span><i>●</i></span>
+                <div><strong>Koordinasi Pengurus BPC</strong><small><?= count($participants) ?> pengurus · Ketcab, Sekcab, Bencab, Medko</small></div>
+                <span class="coordination-live" aria-live="polite">Terhubung</span>
+            </header>
+            <div class="coordination-messages" id="coordinationMessages" aria-live="polite" aria-label="Pesan percakapan">
+                <button type="button" class="coordination-load-older" id="coordinationLoadOlder" <?= $hasOlderMessages ? '' : 'hidden' ?>>Muat pesan sebelumnya</button>
+                <?php foreach ($messages as $message): ?>
+                    <?php $ownMessage = (int)$message['sender_id'] === (int)$currentUserId; ?>
+                    <article class="coordination-message <?= $ownMessage ? 'outgoing' : 'incoming' ?>" data-message-id="<?= (int)$message['id'] ?>">
+                        <?php if (!$ownMessage): ?><strong class="coordination-sender"><?= e($message['sender_name']) ?> <span>· <?= e($senderRoleNames[$message['sender_role']] ?? $message['sender_role']) ?></span></strong><?php endif; ?>
+                        <p><?= nl2br(e($message['body'])) ?></p>
+                        <time datetime="<?= e($message['created_at']) ?>"><?= e(date('H:i', strtotime($message['created_at']))) ?></time>
+                    </article>
+                <?php endforeach; ?>
+                <?php if (!$messages): ?>
+                    <div class="coordination-welcome" id="coordinationEmpty">
+                        <span class="coordination-welcome-icon" aria-hidden="true">G</span>
+                        <strong>Koordinasi Pengurus BPC</strong>
+                        <p>Ruang bersama untuk Ketcab, Sekcab, Bencab, dan Sekfung Medko.</p>
+                        <small>Mulai percakapan dengan mengirim pesan di bawah.</small>
+                    </div>
+                <?php endif; ?>
+            </div>
+            <form class="coordination-composer" id="coordinationForm" method="post" data-user-id="<?= (int)$currentUserId ?>" action="<?= e($role === 'admin' ? '/admin/koordinasi' : ($role === 'ketcab' ? '/ketcab/koordinasi' : '/ruang-kerja/koordinasi')) ?>">
+                <?= csrf_field() ?>
+                <label class="sr-only" for="coordinationBody">Tulis pesan</label>
+                <textarea id="coordinationBody" name="body" rows="1" maxlength="5000" placeholder="Ketik pesan" required></textarea>
+                <button type="submit" aria-label="Kirim pesan"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m22 2-7 20-4-9-9-4 20-7Z"/><path d="M22 2 11 13"/></svg></button>
+                <p class="coordination-error" id="coordinationError" role="alert" hidden></p>
+            </form>
+        </div>
+    </section>
 <?php endif; ?>

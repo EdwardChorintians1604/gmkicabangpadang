@@ -7,7 +7,6 @@ return [
         'sekcab' => 'Sekretaris Cabang',
         'bencab' => 'Bendahara Cabang',
         'sekfung_medko' => 'Sekretaris Fungsi Media dan Komunikasi',
-        'pengawas' => 'Majelis Pengawas / Pertimbangan',
         'operator' => 'Operator Data & Warta',
     ],
 
@@ -38,17 +37,8 @@ return [
             'backup.view',
             'backup.create',
             'backup.download',
-        ],
-        'pengawas' => [
-            'dashboard.pengawas',
-            'civitas.view',
-            'civitas.export',
-            'news.view',
-            'organization.view',
-            'statistics.view',
-            'security.audit_log',
-            'backup.view',
-            'backup.download',
+            'coordination.view',
+            'coordination.manage',
         ],
         'operator' => [
             'dashboard.view',

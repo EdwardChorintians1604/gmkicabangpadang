@@ -13,7 +13,7 @@ class Guest implements Middleware
         if (CoreAuth::check()) {
             $response = new Response();
             $role = CoreAuth::role();
-            if (in_array($role, ['ketcab', 'pengawas'], true)) {
+            if ($role === 'ketcab') {
                 $response->redirect('/ketcab/dashboard');
             } elseif (in_array($role, ['sekcab', 'bencab', 'sekfung_medko', 'operator'], true)) {
                 $response->redirect('/ruang-kerja');

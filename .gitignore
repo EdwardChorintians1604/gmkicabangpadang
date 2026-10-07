@@ -19,6 +19,8 @@ composer.phar
 !/storage/backup/uploads/manifest.csv
 /storage/logs/*
 !/storage/logs/.gitkeep
+/storage/sessions/*
+!/storage/sessions/.gitkeep
 /storage/temp/*
 !/storage/temp/.gitkeep
 

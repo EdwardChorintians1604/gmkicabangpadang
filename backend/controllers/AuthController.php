@@ -59,7 +59,7 @@ class AuthController
 
         Session::flash('success', 'Selamat datang kembali di Sistem GMKI Cabang Padang.');
 
-        if (in_array($result['user']['role'], ['ketcab', 'pengawas'], true)) {
+        if ($result['user']['role'] === 'ketcab') {
             redirect('/ketcab/dashboard');
         } elseif (in_array($result['user']['role'], ['sekcab', 'bencab', 'sekfung_medko', 'operator'], true)) {
             redirect('/ruang-kerja');
@@ -77,7 +77,7 @@ class AuthController
 
     public function showChangePassword(Request $request): Response
     {
-        $layout = in_array(Auth::role(), ['ketcab', 'pengawas'], true) ? 'pengawas' : 'dashboard';
+        $layout = 'dashboard';
 
         return view('auth.ubah-password', [
             'pageTitle' => 'Ubah Kata Sandi - GMKI Cabang Padang',
@@ -113,7 +113,7 @@ class AuthController
         }
 
         Session::flash('success', $result['message']);
-        if (in_array(Auth::role(), ['ketcab', 'pengawas'], true)) {
+        if (Auth::role() === 'ketcab') {
             redirect('/ketcab/dashboard');
         }
         redirect('/ruang-kerja');

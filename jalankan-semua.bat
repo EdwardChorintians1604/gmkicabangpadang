@@ -18,7 +18,7 @@ start "Ngrok Tunnel GMKI" cmd /c "%~dp0jalankan-ngrok.bat"
 echo.
 echo  =======================================================================
 echo  Keduanya sedang berjalan di jendela Command Prompt masing-masing.
-echo  - Server Lokal  : http://localhost:8000
+echo  - Apache Lokal  : http://localhost:8000
 echo  - Status Ngrok  : http://127.0.0.1:4040
 echo  =======================================================================
 echo.

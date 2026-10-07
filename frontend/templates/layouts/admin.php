@@ -12,9 +12,10 @@
     <link rel="stylesheet" href="<?= asset('css/app.css') ?>">
     <link rel="stylesheet" href="<?= asset('css/admin.css') ?>">
     <!-- Tailwind CSS with custom GMKI palette -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.tailwindcss.com"></script>
     <script>
-        tailwind.config = {
+        window.tailwind = window.tailwind || {};
+        window.tailwind.config = {
             corePlugins: { preflight: false },
             theme: {
                 extend: {
@@ -34,6 +35,9 @@
 <body class="admin-body">
 
     <div class="dashboard-wrapper">
+        <?php if (in_array(auth()['role'] ?? '', ['ketcab', 'sekcab', 'bencab', 'sekfung_medko'], true)): ?>
+            <?= partial('layouts.partials.officer-sidebar') ?>
+        <?php else: ?>
         <!-- Sidebar Administrator -->
         <aside class="dashboard-sidebar">
             <div class="sidebar-brand flex items-center justify-between">
@@ -56,6 +60,12 @@
                     <a href="/admin/dashboard" class="sidebar-nav-link <?= active_nav('/admin/dashboard') ?>">
                         <span class="sidebar-nav-icon"><?= svg_icon('dashboard', 18) ?></span>
                         <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="sidebar-nav-item">
+                    <a href="/admin/koordinasi" class="sidebar-nav-link <?= active_nav('/admin/koordinasi') ?>">
+                        <span class="sidebar-nav-icon"><?= svg_icon('users', 18) ?></span>
+                        <span>Chat Koordinasi BPC</span>
                     </a>
                 </li>
 
@@ -176,6 +186,7 @@
                 </div>
             </div>
         </aside>
+        <?php endif; ?>
 
         <!-- Main Content Area -->
         <div class="dashboard-main">
@@ -198,14 +209,6 @@
                         <?= svg_icon('external', 14) ?>
                         <span class="hidden sm:inline">Lihat Web</span>
                     </a>
-
-                    <?php if (is_admin()): ?>
-                        <a href="/pengawas/dashboard" class="btn btn-secondary btn-sm flex items-center gap-1 px-2 sm:px-3"
-                            title="Buka Mode Pantauan Pengawas">
-                            <?= svg_icon('eye', 14) ?>
-                            <span class="hidden md:inline">Mode Pengawas</span>
-                        </a>
-                    <?php endif; ?>
 
                     <div class="user-dropdown">
                         <a href="/ubah-password" class="btn btn-outline btn-sm px-2 sm:px-2.5" title="Ubah Password">

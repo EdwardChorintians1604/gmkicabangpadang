@@ -15,6 +15,20 @@ class Session
 
         $lifetime = 7200;
         if (session_status() === PHP_SESSION_NONE) {
+            if (session_save_path() === '') {
+                $sessionPath = dirname(__DIR__, 2)
+                    . DIRECTORY_SEPARATOR . 'storage'
+                    . DIRECTORY_SEPARATOR . 'sessions';
+
+                if (!is_dir($sessionPath) || !is_writable($sessionPath)) {
+                    throw new \RuntimeException('Session storage must exist and be writable: ' . $sessionPath);
+                }
+
+                if (session_save_path($sessionPath) === false) {
+                    throw new \RuntimeException('Unable to configure session storage: ' . $sessionPath);
+                }
+            }
+
             ini_set('session.use_only_cookies', '1');
             ini_set('session.use_strict_mode', '1');
 

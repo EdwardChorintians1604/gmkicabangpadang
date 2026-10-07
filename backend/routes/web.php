@@ -29,14 +29,11 @@ $router->post('/ubah-password', 'AuthController@updatePassword', ['auth', 'csrf'
 // =====================================================================
 $router->get('/dashboard', function () {
     $role = \App\Core\Auth::role();
-    if (in_array($role, ['ketcab', 'pengawas'], true)) {
+    if ($role === 'ketcab') {
         redirect('/ketcab/dashboard');
     }
     redirect('/ruang-kerja');
 }, ['auth']);
-$router->get('/dashboard/pengawas', function () {
-    redirect('/ketcab/dashboard');
-}, ['auth', 'role:admin,ketcab,pengawas']);
 
 // =====================================================================
 // RUTE ORGANISASI (BPC GMKI Padang)

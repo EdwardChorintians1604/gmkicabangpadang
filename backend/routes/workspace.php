@@ -30,7 +30,16 @@ $router->get('/ketcab/strategi', 'WorkspaceController@strategies', ['auth', 'rol
 $router->post('/ketcab/strategi', 'WorkspaceController@saveStrategy', ['auth', 'role:admin,ketcab', 'csrf']);
 $router->post('/ketcab/strategi/{id}/delete', 'WorkspaceController@deleteStrategy', ['auth', 'role:admin,ketcab', 'csrf']);
 
-$router->get('/ketcab/koordinasi', 'WorkspaceController@coordination', ['auth', 'role:admin,ketcab']);
-$router->get('/ruang-kerja/koordinasi', 'WorkspaceController@coordination', ['auth', 'role:admin,sekcab,bencab,sekfung_medko']);
-$router->post('/ketcab/koordinasi', 'WorkspaceController@sendMessage', ['auth', 'role:admin,ketcab', 'csrf']);
-$router->post('/ruang-kerja/koordinasi', 'WorkspaceController@sendMessage', ['auth', 'role:admin,sekcab,bencab,sekfung_medko', 'csrf']);
+$router->get('/ketcab/koordinasi', 'WorkspaceController@coordination', ['auth', 'role:ketcab']);
+$router->get('/ruang-kerja/koordinasi', 'WorkspaceController@coordination', ['auth', 'role:sekcab,bencab,sekfung_medko']);
+$router->get('/admin/koordinasi', 'WorkspaceController@coordination', ['auth', 'role:admin']);
+$router->get('/ketcab/koordinasi/pesan', 'WorkspaceController@coordinationMessages', ['auth', 'role:ketcab']);
+$router->get('/ruang-kerja/koordinasi/pesan', 'WorkspaceController@coordinationMessages', ['auth', 'role:sekcab,bencab,sekfung_medko']);
+$router->get('/admin/koordinasi/pesan', 'WorkspaceController@coordinationMessages', ['auth', 'role:admin']);
+$router->post('/ketcab/koordinasi', 'WorkspaceController@sendMessage', ['auth', 'role:ketcab', 'csrf']);
+$router->post('/ruang-kerja/koordinasi', 'WorkspaceController@sendMessage', ['auth', 'role:sekcab,bencab,sekfung_medko', 'csrf']);
+$router->post('/admin/koordinasi', 'WorkspaceController@sendMessage', ['auth', 'role:admin', 'csrf']);
+
+$router->get('/ruang-kerja/antrian', 'QueueController@index', ['auth', 'role:admin,ketcab,bencab']);
+$router->post('/ruang-kerja/antrian/laporan-keuangan', 'QueueController@enqueueFinanceExport', ['auth', 'role:admin,ketcab,bencab', 'csrf']);
+$router->get('/ruang-kerja/antrian/{id}/unduh', 'QueueController@download', ['auth', 'role:admin,ketcab,bencab']);

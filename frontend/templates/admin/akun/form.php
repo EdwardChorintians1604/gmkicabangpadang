@@ -50,7 +50,6 @@
                         <option value="bencab" <?= ($currRole === 'bencab') ? 'selected' : '' ?>>Bendahara Cabang (Laporan Keuangan)</option>
                         <option value="sekfung_medko" <?= ($currRole === 'sekfung_medko') ? 'selected' : '' ?>>Sekfung Medko (Teknologi &amp; Media)</option>
                         <option value="operator" <?= ($currRole === 'operator') ? 'selected' : '' ?>>Operator Data & Warta</option>
-                        <option value="pengawas" <?= ($currRole === 'pengawas') ? 'selected' : '' ?>>Majelis Pengawas (MPPC)</option>
                         <option value="admin" <?= ($currRole === 'admin') ? 'selected' : '' ?>>Administrator Penuh</option>
                     </select>
                 </div>

@@ -11,9 +11,10 @@
     <link rel="stylesheet" href="<?= asset('css/app.css') ?>">
     <link rel="stylesheet" href="<?= asset('css/pengawas.css') ?>">
     <!-- Tailwind CSS with custom GMKI palette -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.tailwindcss.com"></script>
     <script>
-        tailwind.config = {
+        window.tailwind = window.tailwind || {};
+        window.tailwind.config = {
             corePlugins: { preflight: false },
             theme: {
                 extend: {
@@ -32,6 +33,9 @@
 <body class="pengawas-body">
 
     <div class="dashboard-wrapper">
+        <?php if (in_array(auth()['role'] ?? '', ['ketcab', 'sekcab', 'bencab', 'sekfung_medko'], true)): ?>
+            <?= partial('layouts.partials.officer-sidebar') ?>
+        <?php else: ?>
         <!-- Sidebar Pengawas (Oversight & Monitoring) -->
         <aside class="dashboard-sidebar pengawas-sidebar">
             <div class="sidebar-brand flex items-center justify-between">
@@ -176,6 +180,7 @@
                 </div>
             </div>
         </aside>
+        <?php endif; ?>
 
         <!-- Main Content Area -->
         <div class="dashboard-main">

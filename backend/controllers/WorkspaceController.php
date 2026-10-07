@@ -13,6 +13,9 @@ use App\Core\Session;
 
 class WorkspaceController
 {
+    /** Kanal bersama untuk seluruh pengurus BPC. */
+    private const COORDINATION_GROUP = 'bpc_group';
+
     private const DOCUMENT_EXTENSIONS = [
         'pdf' => ['application/pdf'],
         'doc' => ['application/msword', 'application/octet-stream'],
@@ -28,22 +31,34 @@ class WorkspaceController
     public function dashboard(Request $request): Response
     {
         $role = Auth::role();
-        $counts = [
-            'members' => (int)(Database::fetchOne('SELECT COUNT(*) AS total FROM civitas')['total'] ?? 0),
-            'inventory' => (int)(Database::fetchOne('SELECT COUNT(*) AS total FROM inventory_items')['total'] ?? 0),
-            'archive' => (int)(Database::fetchOne("SELECT COUNT(*) AS total FROM office_documents WHERE document_type = 'archive'")['total'] ?? 0),
-            'finance' => (int)(Database::fetchOne(
-                ($role === 'bencab'
+        $counts = ['members' => 0, 'inventory' => 0, 'archive' => 0, 'finance' => 0, 'messages' => 0, 'strategies' => 0];
+        $queries = [
+            'members' => ['civitas.view', 'SELECT COUNT(*) AS total FROM civitas', []],
+            'inventory' => ['inventory.view', 'SELECT COUNT(*) AS total FROM inventory_items', []],
+            'archive' => ['archive.view', "SELECT COUNT(*) AS total FROM office_documents WHERE document_type = 'archive'", []],
+            'finance' => [
+                can('reports.view') ? 'reports.view' : 'finance.view',
+                $role === 'bencab'
                     ? "SELECT COUNT(*) AS total FROM office_documents WHERE document_type = 'finance' AND created_by = ?"
-                    : "SELECT COUNT(*) AS total FROM office_documents WHERE document_type = 'finance'"),
-                $role === 'bencab' ? [Auth::id()] : []
-            )['total'] ?? 0),
-            'messages' => (int)(Database::fetchOne(
-                'SELECT COUNT(*) AS total FROM coordination_messages WHERE recipient_role = ?',
-                [$role]
-            )['total'] ?? 0),
-            'strategies' => (int)(Database::fetchOne('SELECT COUNT(*) AS total FROM organization_strategies')['total'] ?? 0),
+                    : "SELECT COUNT(*) AS total FROM office_documents WHERE document_type = 'finance'",
+                $role === 'bencab' ? [Auth::id()] : [],
+            ],
+            'messages' => [
+                'coordination.view',
+                "SELECT COUNT(*) AS total FROM coordination_messages
+                 WHERE recipient_role = ? OR (
+                    sender_role IN ('ketcab', 'sekcab', 'bencab', 'sekfung_medko', 'admin')
+                    AND recipient_role IN ('ketcab', 'sekcab', 'bencab', 'sekfung_medko', 'admin')
+                 )",
+                [self::COORDINATION_GROUP],
+            ],
+            'strategies' => ['strategy.view', 'SELECT COUNT(*) AS total FROM organization_strategies', []],
         ];
+        foreach ($queries as $key => [$permission, $sql, $params]) {
+            if (can($permission)) {
+                $counts[$key] = (int)(Database::fetchOne($sql, $params)['total'] ?? 0);
+            }
+        }
 
         return view('workspaces.dashboard', [
             'pageTitle' => 'Ruang Kerja BPC - GMKI Cabang Padang',
@@ -55,8 +70,11 @@ class WorkspaceController
     public function inventory(Request $request): Response
     {
         Authorization::authorize('inventory.view');
-        $items = Database::fetchAll('SELECT * FROM inventory_items ORDER BY updated_at DESC, id DESC');
-        return $this->page('Inventaris GMKI', 'inventory', ['items' => $items]);
+        $pagination = $this->pagination($request, 'SELECT COUNT(*) AS total FROM inventory_items');
+        $items = Database::fetchAll(
+            'SELECT * FROM inventory_items ORDER BY updated_at DESC, id DESC LIMIT ' . $pagination['perPage'] . ' OFFSET ' . $pagination['offset']
+        );
+        return $this->page('Inventaris GMKI', 'inventory', ['items' => $items, 'pagination' => $pagination]);
     }
 
     public function saveInventory(Request $request): Response
@@ -96,7 +114,7 @@ class WorkspaceController
             $message = 'Data inventaris berhasil diperbarui.';
         } else {
             Database::execute(
-                'INSERT INTO inventory_items (name, category, quantity, unit, location, item_condition, notes, created_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+                'INSERT INTO inventory_items (name, category, quantity, unit, location, item_condition, notes, created_by, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW())',
                 [$name, $category, (float)$quantity, $unit, $location ?: null, $condition, $notes ?: null, Auth::id()]
             );
             $message = 'Inventaris berhasil ditambahkan.';
@@ -109,6 +127,9 @@ class WorkspaceController
     public function deleteInventory(Request $request, string $id): Response
     {
         Authorization::authorize('inventory.manage');
+        if (!Database::fetchOne('SELECT id FROM inventory_items WHERE id = ?', [(int)$id])) {
+            return $this->fail('/sekcab/inventaris', 'Data inventaris tidak ditemukan.');
+        }
         Database::execute('DELETE FROM inventory_items WHERE id = ?', [(int)$id]);
         Session::flash('success', 'Data inventaris berhasil dihapus.');
         redirect('/sekcab/inventaris');
@@ -117,10 +138,13 @@ class WorkspaceController
     public function archives(Request $request): Response
     {
         Authorization::authorize('archive.view');
+        $pagination = $this->pagination($request, "SELECT COUNT(*) AS total FROM office_documents WHERE document_type = 'archive'");
         $documents = Database::fetchAll(
-            "SELECT d.*, u.nama_lengkap FROM office_documents d JOIN users u ON u.id = d.created_by WHERE d.document_type = 'archive' ORDER BY d.created_at DESC"
+            "SELECT d.*, u.nama_lengkap FROM office_documents d JOIN users u ON u.id = d.created_by
+             WHERE d.document_type = 'archive' ORDER BY d.created_at DESC, d.id DESC
+             LIMIT " . $pagination['perPage'] . ' OFFSET ' . $pagination['offset']
         );
-        return $this->page('Arsip Surat', 'archive', ['documents' => $documents]);
+        return $this->page('Arsip Surat', 'archive', ['documents' => $documents, 'pagination' => $pagination]);
     }
 
     public function saveArchive(Request $request): Response
@@ -169,7 +193,7 @@ class WorkspaceController
                 return $this->fail('/sekcab/arsip', 'Pilih berkas dokumen yang akan diunggah.');
             }
             Database::execute(
-                "INSERT INTO office_documents (document_type, title, description, stored_name, original_name, mime_type, created_by) VALUES ('archive', ?, ?, ?, ?, ?, ?)",
+                "INSERT INTO office_documents (document_type, title, description, stored_name, original_name, mime_type, created_by, created_at) VALUES ('archive', ?, ?, ?, ?, ?, ?, NOW())",
                 [$title, $description ?: null, $file['stored_name'], $file['original_name'], $file['mime_type'], Auth::id()]
             );
             $message = 'Dokumen berhasil disimpan ke arsip privat.';
@@ -187,15 +211,18 @@ class WorkspaceController
         }
         $user = Auth::user();
         $isBendahara = ($user['role'] ?? '') === 'bencab';
-        $sql = "SELECT d.*, u.nama_lengkap FROM office_documents d JOIN users u ON u.id = d.created_by WHERE d.document_type = 'finance'";
+        $listSql = "SELECT d.*, u.nama_lengkap FROM office_documents d JOIN users u ON u.id = d.created_by WHERE d.document_type = 'finance'";
+        $countSql = "SELECT COUNT(*) AS total FROM office_documents WHERE document_type = 'finance'";
         $params = [];
         if ($isBendahara) {
-            $sql .= ' AND d.created_by = ?';
+            $listSql .= ' AND d.created_by = ?';
+            $countSql .= ' AND created_by = ?';
             $params[] = Auth::id();
         }
-        $sql .= ' ORDER BY d.created_at DESC';
-        $documents = Database::fetchAll($sql, $params);
-        return $this->page('Laporan Keuangan', 'finance', ['documents' => $documents]);
+        $pagination = $this->pagination($request, $countSql, $params);
+        $listSql .= ' ORDER BY d.created_at DESC, d.id DESC LIMIT ' . $pagination['perPage'] . ' OFFSET ' . $pagination['offset'];
+        $documents = Database::fetchAll($listSql, $params);
+        return $this->page('Laporan Keuangan', 'finance', ['documents' => $documents, 'pagination' => $pagination]);
     }
 
     public function saveFinance(Request $request): Response
@@ -250,7 +277,7 @@ class WorkspaceController
             $message = 'Laporan keuangan berhasil diperbarui.';
         } else {
             Database::execute(
-                "INSERT INTO office_documents (document_type, title, description, period, amount, stored_name, original_name, mime_type, created_by) VALUES ('finance', ?, ?, ?, ?, ?, ?, ?, ?)",
+                "INSERT INTO office_documents (document_type, title, description, period, amount, stored_name, original_name, mime_type, created_by, created_at) VALUES ('finance', ?, ?, ?, ?, ?, ?, ?, ?, NOW())",
                 [$title, $description ?: null, $period, (float)$amount, $file['stored_name'], $file['original_name'], $file['mime_type'], Auth::id()]
             );
             $message = 'Laporan keuangan berhasil disimpan.';
@@ -322,8 +349,12 @@ class WorkspaceController
     public function strategies(Request $request): Response
     {
         Authorization::authorize('strategy.view');
-        $strategies = Database::fetchAll('SELECT * FROM organization_strategies ORDER BY target_date IS NULL, target_date, id DESC');
-        return $this->page('Strategi Organisasi', 'strategies', ['strategies' => $strategies]);
+        $pagination = $this->pagination($request, 'SELECT COUNT(*) AS total FROM organization_strategies');
+        $strategies = Database::fetchAll(
+            'SELECT * FROM organization_strategies ORDER BY target_date IS NULL, target_date, id DESC
+             LIMIT ' . $pagination['perPage'] . ' OFFSET ' . $pagination['offset']
+        );
+        return $this->page('Strategi Organisasi', 'strategies', ['strategies' => $strategies, 'pagination' => $pagination]);
     }
 
     public function saveStrategy(Request $request): Response
@@ -345,13 +376,17 @@ class WorkspaceController
         }
 
         if ($id > 0) {
+            $exists = Database::fetchOne('SELECT id FROM organization_strategies WHERE id = ?', [$id]);
+            if (!$exists) {
+                return $this->fail('/ketcab/strategi', 'Catatan strategi tidak ditemukan.');
+            }
             Database::execute(
                 'UPDATE organization_strategies SET title = ?, objective = ?, status = ?, target_date = ? WHERE id = ?',
                 [$title, $objective, $status, $targetDate ?: null, $id]
             );
         } else {
             Database::execute(
-                'INSERT INTO organization_strategies (title, objective, status, target_date, created_by) VALUES (?, ?, ?, ?, ?)',
+                'INSERT INTO organization_strategies (title, objective, status, target_date, created_by, created_at) VALUES (?, ?, ?, ?, ?, NOW())',
                 [$title, $objective, $status, $targetDate ?: null, Auth::id()]
             );
         }
@@ -362,6 +397,9 @@ class WorkspaceController
     public function deleteStrategy(Request $request, string $id): Response
     {
         Authorization::authorize('strategy.manage');
+        if (!Database::fetchOne('SELECT id FROM organization_strategies WHERE id = ?', [(int)$id])) {
+            return $this->fail('/ketcab/strategi', 'Catatan strategi tidak ditemukan.');
+        }
         Database::execute('DELETE FROM organization_strategies WHERE id = ?', [(int)$id]);
         Session::flash('success', 'Catatan strategi berhasil dihapus.');
         redirect('/ketcab/strategi');
@@ -370,49 +408,112 @@ class WorkspaceController
     public function coordination(Request $request): Response
     {
         Authorization::authorize('coordination.view');
-        $role = Auth::role();
         $messages = Database::fetchAll(
-            'SELECT m.*, u.nama_lengkap AS sender_name FROM coordination_messages m JOIN users u ON u.id = m.sender_id WHERE m.recipient_role = ? OR m.sender_id = ? ORDER BY m.created_at DESC LIMIT 200',
-            [$role, Auth::id()]
+            'SELECT m.*, u.nama_lengkap AS sender_name FROM coordination_messages m JOIN users u ON u.id = m.sender_id
+             WHERE m.recipient_role = ? OR (
+                m.sender_role IN (\'ketcab\', \'sekcab\', \'bencab\', \'sekfung_medko\', \'admin\')
+                AND m.recipient_role IN (\'ketcab\', \'sekcab\', \'bencab\', \'sekfung_medko\', \'admin\')
+             )
+             ORDER BY m.id DESC LIMIT 101',
+            [self::COORDINATION_GROUP]
         );
-        return $this->page('Ruang Koordinasi BPC', 'coordination', ['messages' => $messages]);
+        $hasOlderMessages = count($messages) > 100;
+        if ($hasOlderMessages) {
+            array_pop($messages);
+        }
+        $messages = array_reverse($messages);
+
+        return $this->page('Ruang Koordinasi BPC', 'coordination', [
+            'messages' => $messages,
+            'participants' => $this->coordinationParticipants(),
+            'currentUserId' => Auth::id(),
+            'messagesUrl' => $this->coordinationMessagesPath(),
+            'hasOlderMessages' => $hasOlderMessages,
+        ]);
+    }
+
+    public function coordinationMessages(Request $request): Response
+    {
+        Authorization::authorize('coordination.view');
+        $beforeValue = $request->query('before');
+        $afterId = filter_var($request->query('after', 0), FILTER_VALIDATE_INT);
+        $beforeId = $beforeValue === null || $beforeValue === '' ? null : filter_var($beforeValue, FILTER_VALIDATE_INT);
+        if (
+            $afterId === false || $afterId < 0
+            || ($beforeValue !== null && $beforeValue !== '' && ($beforeId === false || $beforeId < 1))
+        ) {
+            return (new Response())->json(['error' => 'Percakapan tidak valid.'], 400);
+        }
+
+        if ($beforeId !== null) {
+            $messages = Database::fetchAll(
+                'SELECT m.id, m.sender_id, m.sender_role, m.subject, m.body, m.created_at, u.nama_lengkap AS sender_name
+                 FROM coordination_messages m JOIN users u ON u.id = m.sender_id
+                 WHERE m.id < ? AND (m.recipient_role = ? OR (
+                    m.sender_role IN (\'ketcab\', \'sekcab\', \'bencab\', \'sekfung_medko\', \'admin\')
+                    AND m.recipient_role IN (\'ketcab\', \'sekcab\', \'bencab\', \'sekfung_medko\', \'admin\')
+                 ))
+                 ORDER BY m.id DESC LIMIT 101',
+                [$beforeId, self::COORDINATION_GROUP]
+            );
+            $hasMore = count($messages) > 100;
+            if ($hasMore) {
+                array_pop($messages);
+            }
+            return (new Response())->json(['messages' => array_reverse($messages), 'has_more' => $hasMore]);
+        }
+
+        $messages = Database::fetchAll(
+            'SELECT m.id, m.sender_id, m.sender_role, m.subject, m.body, m.created_at, u.nama_lengkap AS sender_name
+             FROM coordination_messages m JOIN users u ON u.id = m.sender_id
+             WHERE m.id > ? AND (m.recipient_role = ? OR (
+                m.sender_role IN (\'ketcab\', \'sekcab\', \'bencab\', \'sekfung_medko\', \'admin\')
+                AND m.recipient_role IN (\'ketcab\', \'sekcab\', \'bencab\', \'sekfung_medko\', \'admin\')
+             ))
+             ORDER BY m.id ASC LIMIT 100',
+            [$afterId, self::COORDINATION_GROUP]
+        );
+
+        return (new Response())->json(['messages' => $messages, 'has_more' => false]);
     }
 
     public function sendMessage(Request $request): Response
     {
         Authorization::authorize('coordination.manage');
-        $role = Auth::role();
-        $subject = trim((string)$request->post('subject'));
+        $role = (string)Auth::role();
+        $subject = trim((string)$request->post('subject', 'Koordinasi BPC'));
         $body = trim((string)$request->post('body'));
         $parentId = (int)$request->post('parent_id', 0);
-        if ($subject === '' || mb_strlen($subject) > 180 || $body === '') {
-            return $this->fail($this->coordinationPath(), 'Subjek dan isi pesan wajib diisi.');
+        if ($subject === '' || mb_strlen($subject) > 180 || $body === '' || mb_strlen($body) > 5000) {
+            return $this->coordinationFailure($request, 'Isi pesan wajib diisi dan tidak boleh lebih dari 5.000 karakter.');
         }
 
-        $recipientRole = (string)$request->post('recipient_role');
         if ($parentId > 0) {
             $parent = Database::fetchOne(
-                'SELECT * FROM coordination_messages WHERE id = ? AND (recipient_role = ? OR sender_id = ?)',
-                [$parentId, $role, Auth::id()]
+                'SELECT id FROM coordination_messages WHERE id = ?
+                 AND (recipient_role = ? OR (
+                    sender_role IN (\'ketcab\', \'sekcab\', \'bencab\', \'sekfung_medko\', \'admin\')
+                    AND recipient_role IN (\'ketcab\', \'sekcab\', \'bencab\', \'sekfung_medko\', \'admin\')
+                 ))',
+                [$parentId, self::COORDINATION_GROUP]
             );
             if (!$parent) {
-                return $this->fail($this->coordinationPath(), 'Pesan yang ingin dibalas tidak ditemukan.');
+                return $this->coordinationFailure($request, 'Pesan yang ingin dibalas tidak ditemukan.');
             }
-            $recipientRole = (int)$parent['sender_id'] === Auth::id()
-                ? $parent['recipient_role']
-                : $parent['sender_role'];
-        } elseif ($role === 'ketcab' || $role === 'admin') {
-            if (!in_array($recipientRole, ['sekcab', 'bencab', 'sekfung_medko'], true)) {
-                return $this->fail($this->coordinationPath(), 'Pilih penerima BPC yang valid.');
-            }
-        } else {
-            $recipientRole = 'ketcab';
         }
 
         Database::execute(
             'INSERT INTO coordination_messages (parent_id, sender_id, sender_role, recipient_role, subject, body) VALUES (?, ?, ?, ?, ?, ?)',
-            [$parentId ?: null, Auth::id(), $role, $recipientRole, $subject, $body]
+            [$parentId ?: null, Auth::id(), $role, self::COORDINATION_GROUP, $subject, $body]
         );
+        if ($request->isAjax()) {
+            $message = Database::fetchOne(
+                'SELECT m.id, m.sender_id, m.sender_role, m.subject, m.body, m.created_at, u.nama_lengkap AS sender_name
+                 FROM coordination_messages m JOIN users u ON u.id = m.sender_id WHERE m.id = ?',
+                [(int)Database::lastInsertId()]
+            );
+            return (new Response())->json(['message' => $message], 201);
+        }
         Session::flash('success', 'Pesan koordinasi berhasil dikirim.');
         redirect($this->coordinationPath());
     }
@@ -426,6 +527,22 @@ class WorkspaceController
         ], $data), 'dashboard');
     }
 
+    private function pagination(Request $request, string $countSql, array $params = []): array
+    {
+        $total = (int)(Database::fetchOne($countSql, $params)['total'] ?? 0);
+        $perPage = 25;
+        $totalPages = max(1, (int)ceil($total / $perPage));
+        $currentPage = max(1, min($totalPages, (int)$request->query('page', 1)));
+
+        return [
+            'currentPage' => $currentPage,
+            'totalPages' => $totalPages,
+            'total' => $total,
+            'perPage' => $perPage,
+            'offset' => ($currentPage - 1) * $perPage,
+        ];
+    }
+
     private function fail(string $path, string $message): Response
     {
         Session::flash('error', $message);
@@ -435,9 +552,41 @@ class WorkspaceController
 
     private function coordinationPath(): string
     {
-        return Auth::role() === 'ketcab' || Auth::role() === 'admin'
-            ? '/ketcab/koordinasi'
-            : '/ruang-kerja/koordinasi';
+        return match (Auth::role()) {
+            'admin' => '/admin/koordinasi',
+            'ketcab' => '/ketcab/koordinasi',
+            default => '/ruang-kerja/koordinasi',
+        };
+    }
+
+    private function coordinationMessagesPath(): string
+    {
+        return match (Auth::role()) {
+            'admin' => '/admin/koordinasi/pesan',
+            'ketcab' => '/ketcab/koordinasi/pesan',
+            default => '/ruang-kerja/koordinasi/pesan',
+        };
+    }
+
+    private function coordinationParticipants(): array
+    {
+        return [
+            'ketcab' => 'Ketua Cabang',
+            'sekcab' => 'Sekretaris Cabang',
+            'bencab' => 'Bendahara Cabang',
+            'sekfung_medko' => 'Sekfung Medko',
+        ];
+    }
+
+    private function coordinationFailure(Request $request, string $message): Response
+    {
+        if ($request->isAjax()) {
+            return (new Response())->json(['error' => $message], 422);
+        }
+
+        Session::flash('error', $message);
+        redirect($this->coordinationPath());
+        return new Response();
     }
 
     private function storeDocument(Request $request, string $field): array

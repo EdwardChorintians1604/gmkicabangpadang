@@ -18,6 +18,9 @@ if (!defined('GMKI_SECURE_ACCESS')) {
 if (php_sapi_name() === 'cli-server') {
     $filePath = __DIR__ . parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
     if (is_file($filePath)) {
+        if (str_starts_with((string)parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/assets/')) {
+            header('Cache-Control: public, max-age=3600');
+        }
         return false;
     }
 }
@@ -74,7 +77,7 @@ try {
     require_once $rootDir . '/backend/routes/public.php';
     require_once $rootDir . '/backend/routes/auth.php';
     require_once $rootDir . '/backend/routes/admin.php';
-    require_once $rootDir . '/backend/routes/pengawas.php';
+    // Mode Pengawas telah dihentikan. Rute panel khusus ini sengaja tidak dimuat.
     require_once $rootDir . '/backend/routes/workspace.php';
 
 

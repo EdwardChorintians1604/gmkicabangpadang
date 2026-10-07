@@ -77,10 +77,10 @@
                     <?php
                     $currentUser = auth();
                     $isLoggedIn = !empty($currentUser['id']);
-                    $dashboardRoute = in_array(($currentUser['role'] ?? ''), ['ketcab', 'pengawas'], true)
+                    $dashboardRoute = ($currentUser['role'] ?? '') === 'ketcab'
                         ? '/ketcab/dashboard'
                         : '/ruang-kerja';
-                    $dashboardLabel = ($currentUser['role'] ?? '') === 'pengawas' ? 'Panel Pengawas' : 'Panel Kendali';
+                    $dashboardLabel = 'Panel Kendali';
                     ?>
                     <?php if ($isLoggedIn): ?>
                         <li class="flex items-center gap-2">
