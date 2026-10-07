@@ -28,11 +28,12 @@
 </div>
 
 <div class="card" style="margin-bottom: 1.5rem; padding: 1.25rem;">
-    <form action="<?= e($basePath) ?>" method="GET" class="grid grid-cols-5 gap-3">
+    <form action="<?= e($basePath) ?>" method="GET" class="grid <?= $isMaperca ? 'grid-cols-3' : 'grid-cols-5' ?> gap-3">
         <div class="form-group" style="margin-bottom: 0;">
             <input type="text" name="q" class="form-control" placeholder="Cari ID (#1), nama, NIM, kampus..." value="<?= e($search ?? '') ?>">
         </div>
 
+        <?php if (!$isMaperca): ?>
         <div class="form-group" style="margin-bottom: 0;">
             <select name="komisariat" class="form-control">
                 <option value="">Semua Komisariat</option>
@@ -41,6 +42,7 @@
                 <?php endforeach; ?>
             </select>
         </div>
+        <?php endif; ?>
 
         <div class="form-group" style="margin-bottom: 0;">
             <select name="tahun_maperca" class="form-control">
@@ -66,7 +68,7 @@
 
         <div class="flex gap-2">
             <button type="submit" class="btn btn-primary" style="flex-grow: 1;">Filter</button>
-            <?php if (!empty($search) || !empty($selectedKomisariat) || !empty($selectedTahun) || !empty($selectedStatus)): ?>
+            <?php if (!empty($search) || (!empty($selectedKomisariat) && !$isMaperca) || !empty($selectedTahun) || !empty($selectedStatus)): ?>
                 <a href="<?= e($basePath) ?>" class="btn btn-outline">Reset</a>
             <?php endif; ?>
         </div>
@@ -83,7 +85,9 @@
                     <th>Nama Lengkap</th>
                     <th>L/P</th>
                     <th>Perguruan Tinggi</th>
+                    <?php if (!$isMaperca): ?>
                     <th>Komisariat</th>
+                    <?php endif; ?>
                     <th><?= $isMaperca ? 'Tahun Maperca' : 'Maperca' ?></th>
                     <th>Status Keanggotaan</th>
                     <th>Aksi</th>
@@ -108,15 +112,15 @@
                             </td>
                             <td><?= e($row['jenis_kelamin']) ?></td>
                             <td><?= e($row['perguruan_tinggi']) ?></td>
+                            <?php if (!$isMaperca): ?>
                             <td>
                                 <?php if (!empty($row['komisariat'])): ?>
                                     <span class="badge badge-primary"><?= e($row['komisariat']) ?></span>
-                                <?php elseif ($isMaperca): ?>
-                                    <span class="text-muted">Kader Baru</span>
                                 <?php else: ?>
                                     <span class="text-muted">Tanpa Komisariat</span>
                                 <?php endif; ?>
                             </td>
+                            <?php endif; ?>
                             <td><?= e($row['tahun_maperca'] ?? '-') ?></td>
                             <td>
                                 <?php if ($row['status_keanggotaan'] === 'Aktif'): ?>

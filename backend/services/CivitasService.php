@@ -395,43 +395,79 @@ class CivitasService
 
     public function generateTemplate(string $kelompok = 'anggota', string $format = 'xlsx'): void
     {
-        $headers = [
-            'ID / NIM',
-            'Nama Lengkap',
-            'Jenis Kelamin (L/P)',
-            'Tempat Lahir',
-            'Tanggal Lahir (YYYY-MM-DD)',
-            'Telepon / WA',
-            'Email',
-            'Perguruan Tinggi',
-            'Fakultas',
-            'Jurusan',
-            'Komisariat',
-            'Tahun Maperca',
-            'Tingkat Kaderisasi',
-            'Status Keanggotaan',
-            'Alamat Padang',
-            'Alamat Asal'
-        ];
+        if ($kelompok === 'maperca') {
+            $headers = [
+                'ID / NIM',
+                'Nama Lengkap',
+                'Jenis Kelamin (L/P)',
+                'Tempat Lahir',
+                'Tanggal Lahir (YYYY-MM-DD)',
+                'Telepon / WA',
+                'Email',
+                'Perguruan Tinggi',
+                'Fakultas',
+                'Jurusan',
+                'Tahun Maperca',
+                'Status Keanggotaan',
+                'Alamat Padang',
+                'Alamat Asal'
+            ];
 
-        $sampleRow = [
-            '101',
-            'Yohanes Christian',
-            'L',
-            'Padang',
-            '2004-05-12',
-            '081234567890',
-            'yohanes@example.com',
-            'Universitas Andalas',
-            'Teknik',
-            'Teknik Elektro',
-            $kelompok === 'maperca' ? '-' : 'Komisariat Unand',
-            date('Y'),
-            $kelompok === 'maperca' ? 'Maperca' : 'Anggota',
-            'Aktif',
-            'Jl. Belimbing No. 12, Padang',
-            'Tapanuli Tengah'
-        ];
+            $sampleRow = [
+                '101',
+                'Yohanes Christian',
+                'L',
+                'Padang',
+                '2004-05-12',
+                '081234567890',
+                'yohanes@example.com',
+                'Universitas Andalas',
+                'Teknik',
+                'Teknik Elektro',
+                date('Y'),
+                'Aktif',
+                'Jl. Belimbing No. 12, Padang',
+                'Tapanuli Tengah'
+            ];
+        } else {
+            $headers = [
+                'ID / NIM',
+                'Nama Lengkap',
+                'Jenis Kelamin (L/P)',
+                'Tempat Lahir',
+                'Tanggal Lahir (YYYY-MM-DD)',
+                'Telepon / WA',
+                'Email',
+                'Perguruan Tinggi',
+                'Fakultas',
+                'Jurusan',
+                'Komisariat',
+                'Tahun Maperca',
+                'Tingkat Kaderisasi',
+                'Status Keanggotaan',
+                'Alamat Padang',
+                'Alamat Asal'
+            ];
+
+            $sampleRow = [
+                '101',
+                'Yohanes Christian',
+                'L',
+                'Padang',
+                '2004-05-12',
+                '081234567890',
+                'yohanes@example.com',
+                'Universitas Andalas',
+                'Teknik',
+                'Teknik Elektro',
+                'Komisariat Unand',
+                date('Y'),
+                'Anggota',
+                'Aktif',
+                'Jl. Belimbing No. 12, Padang',
+                'Tapanuli Tengah'
+            ];
+        }
 
         $filename = 'format_impor_' . ($kelompok === 'maperca' ? 'kader_baru_maperca' : 'civitas') . '_' . date('Ymd');
 

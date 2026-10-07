@@ -66,7 +66,11 @@ $deskripsi = $isMaperca
                     Baris pertama berkas Excel atau CSV harus berupa judul kolom (case-insensitive):
                 </p>
                 <div style="background:#ffffff; padding:0.75rem; border-radius:var(--radius-sm); font-size:0.75rem; overflow-x:auto; border: 1px solid #e2e8f0; font-family: monospace; color: #334155;">
+                    <?php if ($isMaperca): ?>
+                    ID / NIM, Nama Lengkap, Jenis Kelamin, Tempat Lahir, Tanggal Lahir, Telepon / WA, Email, Perguruan Tinggi, Fakultas, Jurusan, Tahun Maperca, Status Keanggotaan, Alamat Padang, Alamat Asal
+                    <?php else: ?>
                     ID / NIM, Nama Lengkap, Jenis Kelamin, Tempat Lahir, Tanggal Lahir, Telepon / WA, Email, Perguruan Tinggi, Fakultas, Jurusan, Komisariat, Tahun Maperca, Tingkat Kaderisasi, Status Keanggotaan, Alamat Padang, Alamat Asal
+                    <?php endif; ?>
                 </div>
                 <ul style="font-size: 0.8125rem; margin-top: 0.75rem; padding-left: 1.25rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 0;">
                     <li><strong>Nama Lengkap:</strong> Wajib diisi pada setiap baris.</li>
@@ -74,7 +78,7 @@ $deskripsi = $isMaperca
                     <li><strong>Jenis Kelamin:</strong> Diisi <code>L</code> (Laki-laki / Pria) atau <code>P</code> (Perempuan / Wanita).</li>
                     <li><strong>Tanggal Lahir:</strong> Format teks tanggal standar (<code>YYYY-MM-DD</code> atau <code>DD/MM/YYYY</code>) maupun format cell tanggal Excel bawaan didukung otomatis.</li>
                     <?php if ($isMaperca): ?>
-                        <li><strong>Khusus Kader Baru (Maperca):</strong> Kolom tingkat kaderisasi otomatis diatur menjadi <code>Maperca</code> dan belum terafiliasi komisariat tetap hingga resmi dilantik.</li>
+                        <li><strong>Khusus Calon Kader Baru (Maperca):</strong> Pendaftar kader baru belum terafiliasi dengan komisariat tertentu sampai mereka resmi dilantik, sehingga kolom Komisariat dan Tingkat Kaderisasi tidak perlu diisi (otomatis diatur sebagai kader baru).</li>
                     <?php else: ?>
                         <li><strong>Tingkat Kaderisasi:</strong> Pilihan: <code>Anggota</code>, <code>KK</code>, atau <code>Alumni</code> (default <code>Anggota</code>).</li>
                     <?php endif; ?>

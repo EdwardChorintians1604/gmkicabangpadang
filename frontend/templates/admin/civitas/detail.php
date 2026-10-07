@@ -95,16 +95,18 @@
                                 <th style="background: none;">Fakultas / Jurusan</th>
                                 <td><?= e($member['fakultas'] ?? '-') ?> / <?= e($member['jurusan'] ?? '-') ?></td>
                             </tr>
+                            <?php if (!$isMaperca): ?>
                             <tr>
                                 <th style="background: none;">Komisariat</th>
                                 <td>
                                     <?php if (!empty($member['komisariat'])): ?>
                                         <span class="badge badge-primary"><?= e($member['komisariat']) ?></span>
                                     <?php else: ?>
-                                        <span class="text-muted"><?= $isMaperca ? 'Kader Baru' : 'Tidak pernah sama sekali' ?></span>
+                                        <span class="text-muted">Tidak pernah sama sekali</span>
                                     <?php endif; ?>
                                 </td>
                             </tr>
+                            <?php endif; ?>
                             <tr>
                                 <th style="background: none;">Tahun Maperca</th>
                                 <td><?= e($member['tahun_maperca']) ?></td>

@@ -79,7 +79,13 @@
                             </tr>
                             <tr>
                                 <th style="background: none;">Komisariat</th>
-                                <td><span class="badge badge-info"><?= e($member['komisariat']) ?></span></td>
+                                <td>
+                                    <?php if (!empty($member['komisariat'])): ?>
+                                        <span class="badge badge-info"><?= e($member['komisariat']) ?></span>
+                                    <?php else: ?>
+                                        <span class="text-muted">Tanpa Komisariat / Kader Baru</span>
+                                    <?php endif; ?>
+                                </td>
                             </tr>
                             <tr>
                                 <th style="background: none;">Tahun Maperca</th>
