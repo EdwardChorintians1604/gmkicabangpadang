@@ -54,7 +54,7 @@ class UserController
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:8',
             'nama_lengkap' => 'required|min:3',
-            'role' => 'required|in:admin,pengawas,operator',
+            'role' => 'required|in:admin,ketcab,sekcab,bencab,sekfung_medko,pengawas,operator',
         ]);
 
         if ($validator->fails()) {
@@ -93,7 +93,7 @@ class UserController
         $rules = [
             'nama_lengkap' => 'required|min:3',
             'email' => "required|email|unique:users,email,{$id}",
-            'role' => 'required|in:admin,pengawas,operator',
+            'role' => 'required|in:admin,ketcab,sekcab,bencab,sekfung_medko,pengawas,operator',
             'status' => 'required|in:aktif,nonaktif',
         ];
 

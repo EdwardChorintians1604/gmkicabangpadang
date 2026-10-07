@@ -166,7 +166,7 @@ if (!function_exists('is_pengawas')) {
     function is_pengawas(): bool
     {
         $user = Auth::user();
-        return $user && in_array($user['role'] ?? '', ['admin', 'pengawas'], true);
+        return $user && in_array($user['role'] ?? '', ['admin', 'ketcab', 'pengawas'], true);
     }
 }
 

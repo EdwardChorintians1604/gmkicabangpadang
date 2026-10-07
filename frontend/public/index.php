@@ -75,6 +75,7 @@ try {
     require_once $rootDir . '/backend/routes/auth.php';
     require_once $rootDir . '/backend/routes/admin.php';
     require_once $rootDir . '/backend/routes/pengawas.php';
+    require_once $rootDir . '/backend/routes/workspace.php';
 
 
 

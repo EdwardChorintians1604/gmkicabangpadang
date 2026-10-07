@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS `users` (
     `email` VARCHAR(100) NOT NULL UNIQUE,
     `password` VARCHAR(255) NOT NULL,
     `nama_lengkap` VARCHAR(150) NOT NULL,
-    `role` ENUM('admin', 'pengawas', 'operator') NOT NULL DEFAULT 'operator',
+    `role` ENUM('admin', 'ketcab', 'sekcab', 'bencab', 'sekfung_medko', 'pengawas', 'operator') NOT NULL DEFAULT 'operator',
     `status` ENUM('aktif', 'nonaktif') NOT NULL DEFAULT 'aktif',
     `remember_token` VARCHAR(100) NULL,
     `last_login_at` DATETIME NULL,

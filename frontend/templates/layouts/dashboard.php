@@ -58,11 +58,31 @@
 
                 <?php if (can('dashboard.pengawas')): ?>
                     <li class="sidebar-nav-item">
-                        <a href="/dashboard/pengawas" class="sidebar-nav-link <?= (str_starts_with($_SERVER['REQUEST_URI'], '/dashboard/pengawas')) ? 'active' : '' ?>">
+                        <a href="/ketcab/dashboard" class="sidebar-nav-link <?= (str_starts_with($_SERVER['REQUEST_URI'], '/ketcab/dashboard')) ? 'active' : '' ?>">
                             <span class="sidebar-nav-icon">👁️</span>
-                            <span>Panel Pengawas</span>
+                            <span>Panel Ketcab</span>
                         </a>
                     </li>
+                <?php endif; ?>
+
+                <?php if (can('inventory.view') || can('archive.view') || can('finance.view') || can('reports.view') || can('strategy.view') || can('coordination.view')): ?>
+                    <li class="nav-category">Ruang Kerja BPC</li>
+                    <?php if (can('inventory.view')): ?>
+                        <li class="sidebar-nav-item"><a href="/sekcab/inventaris" class="sidebar-nav-link"><span class="sidebar-nav-icon">📦</span><span>Inventaris</span></a></li>
+                    <?php endif; ?>
+                    <?php if (can('archive.view')): ?>
+                        <li class="sidebar-nav-item"><a href="/sekcab/arsip" class="sidebar-nav-link"><span class="sidebar-nav-icon">🗂️</span><span>Arsip Surat</span></a></li>
+                    <?php endif; ?>
+                    <?php if (can('finance.view') || can('reports.view')): ?>
+                        <li class="sidebar-nav-item"><a href="/bencab/laporan" class="sidebar-nav-link"><span class="sidebar-nav-icon">💰</span><span>Laporan Keuangan</span></a></li>
+                    <?php endif; ?>
+                    <?php if (can('strategy.view')): ?>
+                        <li class="sidebar-nav-item"><a href="/ketcab/strategi" class="sidebar-nav-link"><span class="sidebar-nav-icon">🧭</span><span>Strategi Organisasi</span></a></li>
+                    <?php endif; ?>
+                    <?php if (can('coordination.view')): ?>
+                        <?php $coordinationPath = in_array(auth()['role'] ?? '', ['ketcab', 'admin'], true) ? '/ketcab/koordinasi' : '/ruang-kerja/koordinasi'; ?>
+                        <li class="sidebar-nav-item"><a href="<?= e($coordinationPath) ?>" class="sidebar-nav-link"><span class="sidebar-nav-icon">💬</span><span>Koordinasi & Request</span></a></li>
+                    <?php endif; ?>
                 <?php endif; ?>
 
                 <li class="nav-category">Database & Kaderisasi</li>
@@ -107,7 +127,8 @@
 
                 <?php if (can('news.view')): ?>
                     <li class="sidebar-nav-item">
-                        <a href="/admin/berita" class="sidebar-nav-link <?= (str_starts_with($_SERVER['REQUEST_URI'], '/admin/berita')) ? 'active' : '' ?>">
+                        <?php $newsPath = (auth()['role'] ?? '') === 'ketcab' ? '/pengawas/berita' : '/admin/berita'; ?>
+                        <a href="<?= e($newsPath) ?>" class="sidebar-nav-link <?= (str_starts_with($_SERVER['REQUEST_URI'], '/admin/berita') || str_starts_with($_SERVER['REQUEST_URI'], '/pengawas/berita')) ? 'active' : '' ?>">
                             <span class="sidebar-nav-icon">📰</span>
                             <span>Warta & Berita</span>
                         </a>
@@ -116,13 +137,15 @@
 
                 <?php if (can('organization.view')): ?>
                     <li class="sidebar-nav-item">
-                        <a href="/admin/organisasi/profil" class="sidebar-nav-link <?= (str_starts_with($_SERVER['REQUEST_URI'], '/admin/organisasi/profil')) ? 'active' : '' ?>">
+                        <?php $organizationPath = (auth()['role'] ?? '') === 'ketcab' ? '/pengawas/organisasi/profil' : '/admin/organisasi/profil'; ?>
+                        <a href="<?= e($organizationPath) ?>" class="sidebar-nav-link <?= (str_starts_with($_SERVER['REQUEST_URI'], '/admin/organisasi/profil') || str_starts_with($_SERVER['REQUEST_URI'], '/pengawas/organisasi/profil')) ? 'active' : '' ?>">
                             <span class="sidebar-nav-icon">🏛️</span>
                             <span>Profil Cabang</span>
                         </a>
                     </li>
                     <li class="sidebar-nav-item">
-                        <a href="/admin/organisasi/struktur" class="sidebar-nav-link <?= (str_starts_with($_SERVER['REQUEST_URI'], '/admin/organisasi/struktur')) ? 'active' : '' ?>">
+                        <?php $structurePath = (auth()['role'] ?? '') === 'ketcab' ? '/pengawas/organisasi/struktur' : '/admin/organisasi/struktur'; ?>
+                        <a href="<?= e($structurePath) ?>" class="sidebar-nav-link <?= (str_starts_with($_SERVER['REQUEST_URI'], '/admin/organisasi/struktur') || str_starts_with($_SERVER['REQUEST_URI'], '/pengawas/organisasi/struktur')) ? 'active' : '' ?>">
                             <span class="sidebar-nav-icon">🪪</span>
                             <span>Struktur BPC</span>
                         </a>

@@ -51,11 +51,23 @@
             <div class="readonly-badge-container">
                 <div class="badge badge-warning flex items-center justify-center gap-1" style="width: 100%; padding: 6px; font-size: 0.72rem; letter-spacing: 0.04em;">
                     <?= svg_icon('eye', 13) ?>
-                    <span>PANTAUAN + PENCATATAN ANGGOTA</span>
+                    <span>PENGAWASAN &amp; KOORDINASI</span>
                 </div>
             </div>
 
             <ul class="sidebar-nav">
+                <?php if ((auth()['role'] ?? '') === 'ketcab'): ?>
+                    <li class="nav-category">Pusat Komando</li>
+                    <li class="sidebar-nav-item"><a href="/ketcab/dashboard" class="sidebar-nav-link <?= active_nav('/ketcab/dashboard') ?>"><span class="sidebar-nav-icon"><?= svg_icon('dashboard', 18) ?></span><span>Dashboard Ketcab</span></a></li>
+                    <li class="sidebar-nav-item"><a href="/ketcab/strategi" class="sidebar-nav-link <?= active_nav('/ketcab/strategi') ?>"><span class="sidebar-nav-icon"><?= svg_icon('chart', 18) ?></span><span>Strategi Organisasi</span></a></li>
+                    <li class="sidebar-nav-item"><a href="/bencab/laporan" class="sidebar-nav-link <?= active_nav('/bencab/laporan') ?>"><span class="sidebar-nav-icon"><?= svg_icon('download', 18) ?></span><span>Laporan Keuangan</span></a></li>
+                    <li class="sidebar-nav-item"><a href="/ketcab/koordinasi" class="sidebar-nav-link <?= active_nav('/ketcab/koordinasi') ?>"><span class="sidebar-nav-icon"><?= svg_icon('users', 18) ?></span><span>Koordinasi &amp; Request</span></a></li>
+                    <li class="nav-category">Pemantauan</li>
+                    <li class="sidebar-nav-item"><a href="/pengawas/civitas" class="sidebar-nav-link <?= active_nav('/pengawas/civitas') ?>"><span class="sidebar-nav-icon"><?= svg_icon('users', 18) ?></span><span>Pantauan Anggota</span></a></li>
+                    <li class="sidebar-nav-item"><a href="/pengawas/berita" class="sidebar-nav-link <?= active_nav('/pengawas/berita') ?>"><span class="sidebar-nav-icon"><?= svg_icon('news', 18) ?></span><span>Pantauan Konten</span></a></li>
+                    <li class="sidebar-nav-item"><a href="/pengawas/statistik" class="sidebar-nav-link <?= active_nav('/pengawas/statistik') ?>"><span class="sidebar-nav-icon"><?= svg_icon('chart', 18) ?></span><span>Analitik Statistik</span></a></li>
+                    <li class="sidebar-nav-item"><a href="/pengawas/pemantauan/audit-log" class="sidebar-nav-link <?= active_nav('/pengawas/pemantauan/audit-log') ?>"><span class="sidebar-nav-icon"><?= svg_icon('shield', 18) ?></span><span>Jejak Audit</span></a></li>
+                <?php else: ?>
                 <li class="nav-category">Pusat Komando BPC</li>
                 <li class="sidebar-nav-item">
                     <a href="/pengawas/dashboard" class="sidebar-nav-link <?= active_nav('/pengawas/dashboard') ?>">
@@ -149,6 +161,7 @@
                         <span>Integritas Cadangan Data</span>
                     </a>
                 </li>
+                <?php endif; ?>
             </ul>
 
             <div class="sidebar-footer">

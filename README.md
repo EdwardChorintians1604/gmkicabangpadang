@@ -3,7 +3,7 @@
 
 Sistem Informasi dan Manajemen Keanggotaan Terintegrasi GMKI Cabang Padang dirancang khusus untuk memfasilitasi pendataan civitas, jenjang kaderisasi, publikasi warta cabang, pengelolaan kepengurusan BPC, serta pemantauan eksekutif dan audit keamanan secara masif dan aman.
 
-Aplikasi ini dibangun menggunakan arsitektur **Clean MVC Native PHP (PSR-4)** tanpa ketergantungan framework berat, mematuhi standar keamanan modern, serta dilengkapi dengan pemisahan peran yang tegas antara pengelola administratif (**Admin**) dan pimpinan peninjau (**Pengawas / KETCAB, SEKCAB, BENCAB, MPPC**).
+Aplikasi ini dibangun menggunakan arsitektur **Clean MVC Native PHP (PSR-4)** tanpa ketergantungan framework berat. Hak akses BPC dipisahkan berdasarkan tugas: Ketcab untuk pengawasan dan koordinasi, Sekcab untuk administrasi, Bencab untuk laporan keuangan miliknya, serta Sekfung Medko untuk konten. Administrator sistem tetap terpisah dari peran Ketcab.
 
 ---
 
@@ -96,7 +96,8 @@ gmki-padang/
 │   │   ├── public.php                Rute portal umum pengunjung (/, /profil, /berita, dll.)
 │   │   ├── auth.php                  Rute autentikasi (/login, /logout, /ubah-password)
 │   │   ├── admin.php                 Rute operasional CRUD (/admin/*) dengan proteksi peran
-│   │   └── pengawas.php              Rute pemantauan baca-saja (/pengawas/*)
+│   │   ├── pengawas.php              Rute pemantauan baca-saja (/pengawas/*)
+│   │   └── workspace.php             Rute ruang kerja anggota BPC
 │   ├── core/                         Fondasi Arsitektur Sistem
 │   │   ├── Autoloader.php            Pemuat otomatis kelas (PSR-4 Autoloader) multi-platform
 │   │   ├── Router.php                Pemeriksa URL HTTP dan dispatching controller & middleware
@@ -123,6 +124,7 @@ gmki-padang/
 │   ├── controllers/                  Pengendali Alur Logika
 │   │   ├── PublicController.php      Pengendali rute portal publik dan formulir kontak
 │   │   ├── AuthController.php        Pengendali login, logout, dan penggantian kata sandi mandiri
+│   │   ├── WorkspaceController.php  Pengendali inventaris, arsip, laporan, strategi, koordinasi
 │   │   ├── FileController.php        Pengendali akses berkas privat (foto anggota & KTA terenkripsi)
 │   │   ├── Admin/                    Pengendali Operasional Penuh (CRUD & Mutasi Data)
 │   │   │   ├── DashboardController.php   Metrik admin, ringkasan aktivitas, & kesehatan sistem
@@ -210,6 +212,23 @@ Sistem menggunakan model otorisasi berbasis peran (Role-Based Access Control) ya
 
 ---
 
+## Ruang Kerja BPC dan Penerapan Role
+
+- **Ketcab (`ketcab`)**: pantau anggota, konten, statistik, dan laporan; unduh laporan keuangan; catat strategi; kirim koordinasi/request. Role ini bukan administrator sistem.
+- **Sekcab (`sekcab`)**: CRUD data anggota, inventaris, dan arsip surat privat.
+- **Bencab (`bencab`)**: CRUD laporan dan lampiran keuangan milik akunnya sendiri. Ketcab mendapat akses baca/unduh.
+- **Sekfung Medko (`sekfung_medko`)**: kelola konten berita dan gunakan ruang koordinasi.
+- Arsip dan laporan disimpan di `storage/private/documents`, bukan direktori publik. Unggahan maksimal 10 MB, diperiksa MIME, dan hanya dapat diunduh setelah autentikasi serta pemeriksaan role/kepemilikan.
+- Ruang koordinasi: `/ketcab/koordinasi` untuk Ketcab dan `/ruang-kerja/koordinasi` bagi anggota BPC lain.
+
+### Aktivasi database
+
+Untuk basis data yang sudah ada, buat backup terlebih dahulu lalu jalankan **sekali** `backend/database/migrations/012_create_officer_workspaces.sql`. Migrasi ini menambahkan role dan tabel modul, serta memetakan username Ketua dan Sekretaris Cabang yang sudah ada. Untuk instalasi baru, impor skema dan seed, lalu jalankan migrasi 012 sebelum membuka modul.
+
+Bencab dapat dibuat administrator melalui `/admin/akun/create` dengan role **Bendahara Cabang** setelah migrasi. Kredensial awal diberikan secara privat dan tidak disimpan dalam source code atau dokumentasi.
+
+---
+
 ## 📊 Integrasi Grafik Visual: Chart.js
 
 Sistem telah dilengkapi dengan pustaka **Chart.js** versi UMD (`frontend/public/assets/vendor/chart.umd.min.js`) yang berjalan secara **offline** tanpa memerlukan koneksi internet.
@@ -234,25 +253,13 @@ Proyek ini telah dikonfigurasi pada `composer.json` dengan pustaka-pustaka pilih
 
 ---
 
-## 🔑 Akun Bawaan (Default Credentials)
-
-Setelah basis data diimpor, gunakan akun berikut untuk masuk:
-
-| Peran | Username | Kata Sandi Bawaan | Alamat Masuk |
-|---|---|---|---|
-| **Administrator BPC** | `admin` | `Admin@GMKI2026!` | `http://localhost:8000/login` |
-| **Pengawas Eksekutif** | `pengawas` | `Pengawas@2026!` | `http://localhost:8000/login` |
-| **Operator Data** | `operator` | `Operator@2026!` | `http://localhost:8000/login` |
-
-> ⚠️ **Penting:** Segera ganti kata sandi bawaan melalui menu profil **Ubah Kata Sandi** (`/ubah-password`) saat sistem telah aktif di lingkungan produksi.
-
 ---
 
 ## ⚡ Panduan Menjalankan Sistem Secara Lokal
 
 ### Menggunakan MoWeS Portable + PHP 8.2 (Direkomendasikan)
 1. Aktifkan **MoWeS Portable** (`E:\WebProgBPNama\mowes.exe`) untuk menjalankan layanan basis data MySQL di port `3306`.
-2. Jika database proyek sudah pernah dibuat, impor berurutan `backend/database/migrations/006_allow_unassigned_new_members.sql` lalu `backend/database/migrations/007_add_commissariat_membership_status.sql` melalui phpMyAdmin. Database baru dari `backend/database/gmki_padang.sql` sudah mencakup perubahan ini.
+2. Jika database proyek sudah pernah dibuat, pastikan migrasi anggota sebelumnya telah diterapkan, lalu backup dan jalankan `backend/database/migrations/012_create_officer_workspaces.sql` melalui phpMyAdmin. Skema baru juga harus menjalankan migrasi 012 setelah skema dan seed diimpor.
 3. Klik dua kali berkas **`jalankan.bat`** pada direktori utama proyek (`e:\WebProgBPNama\www\gmkicabangpadang\jalankan.bat`).
 4. Browser akan membuka alamat:
    - Portal Utama: **`http://localhost:8000`**

@@ -12,12 +12,10 @@ Membuat kode hash acak Bcrypt 60 karakter yang valid untuk kata sandi apa pun.
 
 **Cara Penggunaan:**
 ```bash
-# Menampilkan hash untuk daftar password bawaan:
-E:\WebProgBPNama\php8\php.exe tools/generate_hash.php
-
-# Atau membuat hash untuk kata sandi khusus:
+# Membuat hash untuk kata sandi khusus:
 E:\WebProgBPNama\php8\php.exe tools/generate_hash.php KataSandiRahasia123
 ```
+Jangan gunakan kata sandi aktual pada argumen perintah di lingkungan bersama; argumen dapat tersimpan pada riwayat terminal atau terlihat di daftar proses.
 
 ---
 
@@ -31,14 +29,10 @@ E:\WebProgBPNama\php8\php.exe tools/check_users.php
 
 ---
 
-## 3. Perbarui Kata Sandi Langsung (`update_user_password.php`)
-Mengganti kata sandi pengguna langsung dari terminal tanpa perlu membuka phpMyAdmin atau kalkulator hash manual. Kata sandi otomatis di-hash Bcrypt sebelum disimpan.
+## 3. Perbarui Kata Sandi (`update_user_password.php`)
+Utilitas CLI lama ini menerima kata sandi sebagai argumen, sehingga nilai tersebut dapat terlihat pada riwayat perintah atau daftar proses. Untuk akun aktif, utamakan fitur **Ubah Kata Sandi** saat login atau pengelolaan akun administrator, dan jangan menaruh kata sandi aktual dalam dokumentasi maupun skrip.
 
 **Cara Penggunaan:**
 ```bash
 E:\WebProgBPNama\php8\php.exe tools/update_user_password.php <username> <password_baru>
-```
-**Contoh:**
-```bash
-E:\WebProgBPNama\php8\php.exe tools/update_user_password.php MacTavish0987 mactavish00
 ```

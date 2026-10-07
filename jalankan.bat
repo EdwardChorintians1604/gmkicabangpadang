@@ -10,9 +10,7 @@ echo.
 echo  Server Web Aktif di  : http://localhost:8000
 echo  Halaman Login Admin  : http://localhost:8000/login
 echo.
-echo  Default Login:
-echo    Username : admin
-echo    Password : Admin@GMKI2026!
+echo  Gunakan kredensial yang disiapkan administrator sistem.
 echo.
 echo  (Tekan CTRL + C untuk mematikan server)
 echo =======================================================================

@@ -15,20 +15,8 @@ class Hash
             return true;
         }
 
-        // Fallback check for known seed hashes or SHA-256 compatibility
+        // Allow one login with legacy SHA-256 hashes so successful authentication can upgrade them to bcrypt.
         if (hash_equals(hash('sha256', $password), $hash)) {
-            return true;
-        }
-
-        // Standard Laravel/default bcrypt test hash '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi' corresponds to 'password' or default seed passwords
-        if ($hash === '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi') {
-            if ($password === 'mactavish00' || $password === 'dani_mnk1598' || $password === 'rlynpnjit76' || $password === 'password') {
-                return true;
-            }
-        }
-
-        // Fallback jika admin mengubah langsung di phpMyAdmin / basis data secara teks polos (plain text)
-        if (hash_equals($password, $hash)) {
             return true;
         }
 

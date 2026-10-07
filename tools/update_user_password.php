@@ -4,8 +4,7 @@
  * TOOL: UPDATE KATA SANDI PENGGUNA VIA TERMINAL
  * Cara pakai:
  *   E:\WebProgBPNama\php8\php.exe tools/update_user_password.php <username> <password_baru>
- * Contoh:
- *   E:\WebProgBPNama\php8\php.exe tools/update_user_password.php MacTavish0987 mactavish00
+ * Peringatan: argumen password dapat terlihat pada riwayat perintah dan daftar proses.
  * =====================================================================
  */
 
@@ -33,7 +32,6 @@ $newPassword = $argv[2] ?? null;
 
 if (!$username || !$newPassword) {
     echo "Penggunaan: php tools/update_user_password.php <username> <password_baru>\n";
-    echo "Contoh: php tools/update_user_password.php MacTavish0987 mactavish00\n";
     exit(1);
 }
 
@@ -53,7 +51,6 @@ try {
     echo "=====================================================================\n";
     echo "ID Pengguna   : " . $user['id'] . "\n";
     echo "Username      : " . $user['username'] . "\n";
-    echo "Password Baru : " . $newPassword . "\n";
     echo "Hash Baru     : " . $hash . "\n";
     echo "Status        : Tersimpan aman dengan enkripsi Bcrypt di database.\n";
     echo "=====================================================================\n";

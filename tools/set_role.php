@@ -2,7 +2,8 @@
 /**
  * TOOL: UBAH ROLE / NAMA LENGKAP PENGGUNA
  * Cara pakai:
- *   php tools/set_role.php <username> <role: admin|pengawas|operator> ["Nama Lengkap"]
+ *   php tools/set_role.php <username> <role> ["Nama Lengkap"]
+ *   Role: admin, ketcab, sekcab, bencab, sekfung_medko, pengawas, operator
  */
 
 $rootDir = dirname(__DIR__);
@@ -21,8 +22,8 @@ require_once $rootDir . '/backend/core/Autoloader.php';
 \App\Core\Autoloader::register();
 
 [$script, $username, $role, $nama] = array_pad($argv, 4, null);
-if (!$username || !in_array($role, ['admin', 'pengawas', 'operator'], true)) {
-    echo "Penggunaan: php tools/set_role.php <username> <admin|pengawas|operator> [\"Nama Lengkap\"]\n";
+if (!$username || !in_array($role, ['admin', 'ketcab', 'sekcab', 'bencab', 'sekfung_medko', 'pengawas', 'operator'], true)) {
+    echo "Penggunaan: php tools/set_role.php <username> <admin|ketcab|sekcab|bencab|sekfung_medko|pengawas|operator> [\"Nama Lengkap\"]\n";
     exit(1);
 }
 

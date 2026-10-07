@@ -3,15 +3,12 @@
 -- Akun Awal, Profil Organisasi, & Data Awal GMKI Cabang Padang
 -- =====================================================================
 
--- Akun Default Administrator & Pengawas
--- Password admin: Admin@GMKI2026! (Hash bcrypt & SHA-256 kompatibel)
--- Password pengawas: Pengawas@2026!
--- Password operator: Operator@2026!
+-- Akun awal tersimpan dengan hash bcrypt. Hindari menyimpan kata sandi mentah di seed.
 
 INSERT INTO `users` (`id`, `username`, `email`, `password`, `nama_lengkap`, `role`, `status`, `created_at`) VALUES
 (1, 'MacTavish0987', 'MacTavish1604@gmail.com', '$2y$10$B9Z2qPig2p54gMm/hpvx9uU0b9AjfPnDfqcAol/t9czJO6O3dG3NC', 'Administrator BPC GMKI Padang', 'admin', 'aktif', NOW()),
-(2, 'Dani_Manik1945', 'pengawas@gmkicabangpadang.or.id', '$2y$10$y6U9qyb8xH64ePwxvC4OA.LQhwqK4G2Xt5C8RQ.CzQk8nwAQy8otq', 'Ketua Cabang', 'pengawas', 'aktif', NOW()),
-(3, 'Dan_PP12', 'operator@gmkicabangpadang.or.id', '$2y$10$Sjm0.sP8sPbarxdXqXP4Vu4ILvxSqGZobKECyEMqUKsbJ4hVXMx/2', 'Sekretaris Cabang', 'pengawas', 'aktif', NOW())
+(2, 'Dani_Manik1945', 'pengawas@gmkicabangpadang.or.id', '$2y$10$y6U9qyb8xH64ePwxvC4OA.LQhwqK4G2Xt5C8RQ.CzQk8nwAQy8otq', 'Ketua Cabang', 'ketcab', 'aktif', NOW()),
+(3, 'Dan_PP12', 'operator@gmkicabangpadang.or.id', '$2y$10$Sjm0.sP8sPbarxdXqXP4Vu4ILvxSqGZobKECyEMqUKsbJ4hVXMx/2', 'Sekretaris Cabang', 'sekcab', 'aktif', NOW())
 ON DUPLICATE KEY UPDATE 
     `username` = VALUES(`username`),
     `email` = VALUES(`email`),

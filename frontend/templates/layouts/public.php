@@ -77,7 +77,9 @@
                     <?php
                     $currentUser = auth();
                     $isLoggedIn = !empty($currentUser['id']);
-                    $dashboardRoute = ($currentUser['role'] ?? '') === 'pengawas' ? '/pengawas/dashboard' : '/admin/dashboard';
+                    $dashboardRoute = in_array(($currentUser['role'] ?? ''), ['ketcab', 'pengawas'], true)
+                        ? '/ketcab/dashboard'
+                        : '/ruang-kerja';
                     $dashboardLabel = ($currentUser['role'] ?? '') === 'pengawas' ? 'Panel Pengawas' : 'Panel Kendali';
                     ?>
                     <?php if ($isLoggedIn): ?>

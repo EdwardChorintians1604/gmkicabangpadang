@@ -45,6 +45,10 @@
                     <label class="form-label" for="role">Hak Akses (Role)</label>
                     <?php $currRole = $isEdit ? $user['role'] : old('role', 'operator'); ?>
                     <select id="role" name="role" class="form-control" required>
+                        <option value="ketcab" <?= ($currRole === 'ketcab') ? 'selected' : '' ?>>Ketua Cabang (Pengawasan &amp; Koordinasi)</option>
+                        <option value="sekcab" <?= ($currRole === 'sekcab') ? 'selected' : '' ?>>Sekretaris Cabang (Administrasi)</option>
+                        <option value="bencab" <?= ($currRole === 'bencab') ? 'selected' : '' ?>>Bendahara Cabang (Laporan Keuangan)</option>
+                        <option value="sekfung_medko" <?= ($currRole === 'sekfung_medko') ? 'selected' : '' ?>>Sekfung Medko (Teknologi &amp; Media)</option>
                         <option value="operator" <?= ($currRole === 'operator') ? 'selected' : '' ?>>Operator Data & Warta</option>
                         <option value="pengawas" <?= ($currRole === 'pengawas') ? 'selected' : '' ?>>Majelis Pengawas (MPPC)</option>
                         <option value="admin" <?= ($currRole === 'admin') ? 'selected' : '' ?>>Administrator Penuh</option>

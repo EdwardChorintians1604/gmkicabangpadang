@@ -38,16 +38,6 @@ echo "       DATA PENGGUNA TERDAFTAR DI DATABASE (Tabel: users)             \n";
 echo "=====================================================================\n";
 echo "Total Akun: " . count($users) . "\n\n";
 
-$knownPasswords = [
-    'Admin@GMKI2026!',
-    'Pengawas@2026!',
-    'Operator@2026!',
-    'mactavish00',
-    'dani_mnk1598',
-    'rlynpnjit76',
-    'password'
-];
-
 foreach ($users as $u) {
     echo "ID            : " . $u['id'] . "\n";
     echo "Username      : " . $u['username'] . "\n";
@@ -58,17 +48,6 @@ foreach ($users as $u) {
     echo "Last Login    : " . ($u['last_login_at'] ?? 'Belum pernah') . "\n";
     echo "Password Hash : " . substr($u['password'], 0, 16) . "... (" . strlen($u['password']) . " karakter)\n";
     
-    // Cek kecocokan password
-    $matched = false;
-    foreach ($knownPasswords as $candidate) {
-        if (\App\Core\Hash::check($candidate, $u['password'])) {
-            echo "-> Password Cocok: '" . $candidate . "' [OK]\n";
-            $matched = true;
-            break;
-        }
-    }
-    if (!$matched) {
-        echo "-> Password Cocok: [Custom / Tidak Termasuk di Daftar Bawaan]\n";
-    }
+    echo "Hash Type     : " . (str_starts_with($u['password'], '$2y$') ? "bcrypt" : "Legacy / Perlu rotasi") . "\n";
     echo "---------------------------------------------------------------------\n";
 }
