@@ -520,11 +520,12 @@ class WorkspaceController
 
     private function page(string $title, string $section, array $data): Response
     {
+        $layout = Auth::role() === 'admin' ? 'admin' : 'dashboard';
         return view('workspaces.index', array_merge([
             'pageTitle' => $title . ' - GMKI Cabang Padang',
             'section' => $section,
             'user' => Auth::user(),
-        ], $data), 'dashboard');
+        ], $data), $layout);
     }
 
     private function pagination(Request $request, string $countSql, array $params = []): array

@@ -11,6 +11,9 @@
     <link rel="stylesheet" href="<?= asset('vendor/leaflet/leaflet.css') ?>">
     <link rel="stylesheet" href="<?= asset('css/app.css') ?>">
     <link rel="stylesheet" href="<?= asset('css/admin.css') ?>">
+    <?php if (($section ?? '') === 'coordination'): ?>
+        <link rel="stylesheet" href="<?= asset('css/coordination.css') ?>?v=4">
+    <?php endif; ?>
     <!-- Tailwind CSS with custom GMKI palette -->
     <script defer src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -217,7 +220,7 @@
                     </div>
 
                     <form action="/logout" method="POST" style="margin: 0;"
-                        onsubmit="return confirm('Apakah Anda yakin ingin keluar dari sistem?');">
+                        onsubmit="sessionStorage.clear(); return confirm('Apakah Anda yakin ingin keluar dari sistem?');">
                         <?= csrf_field() ?>
                         <button type="submit" class="btn btn-danger btn-sm flex items-center gap-1 px-2 sm:px-3">
                             <?= svg_icon('logout', 14) ?>
@@ -254,6 +257,13 @@
     <script src="<?= asset('js/validation.js') ?>"></script>
     <script src="<?= asset('js/admin.js') ?>"></script>
     <script src="<?= asset('js/statistik.js') ?>"></script>
+    <?php if (($section ?? '') === 'coordination'): ?>
+        <script src="<?= asset('js/coordination.js') ?>?v=4"></script>
+    <?php endif; ?>
+    <script>
+        window.__AUTH_USER_ID__ = <?= !empty(auth()['id']) ? (int)auth()['id'] : 'null' ?>;
+    </script>
+    <script src="<?= asset('js/session-guard.js') ?>?v=1"></script>
 </body>
 
 </html>

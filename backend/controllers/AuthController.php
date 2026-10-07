@@ -75,6 +75,22 @@ class AuthController
         redirect('/login');
     }
 
+    public function logoutDirect(Request $request): Response
+    {
+        $this->authService->logout();
+        Session::flash('info', 'Sesi telah ditutup. Anda telah keluar dari sistem.');
+        redirect('/login');
+    }
+
+    public function autoLogout(Request $request): Response
+    {
+        $this->authService->logout();
+        return (new Response())->json([
+            'success' => true,
+            'message' => 'Sesi kedaluwarsa atau browser ditutup. Sistem telah direset otomatis demi keamanan.',
+        ]);
+    }
+
     public function showChangePassword(Request $request): Response
     {
         $layout = 'dashboard';

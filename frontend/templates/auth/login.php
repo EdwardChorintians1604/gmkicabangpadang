@@ -86,7 +86,7 @@
 
             <?php require dirname(__DIR__) . '/layouts/flash-message.php'; ?>
 
-            <form action="/login" method="POST" data-validate>
+            <form action="/login" method="POST" data-validate onsubmit="sessionStorage.setItem('gmki_just_logged_in', '1');">
                 <?= csrf_field() ?>
 
                 <div class="form-group">

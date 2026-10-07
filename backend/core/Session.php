@@ -8,8 +8,7 @@ class Session
 
     public static function start(): void
     {
-        if (self::$started || session_status() === PHP_SESSION_ACTIVE) {
-            self::$started = true;
+        if (self::$started) {
             return;
         }
 
@@ -54,8 +53,7 @@ class Session
         $lastActivity = (int)($_SESSION['_last_activity'] ?? $now);
         if (($now - $lastActivity) > $idleTimeout || ($now - $createdAt) > $absoluteTimeout) {
             $_SESSION = [];
-            session_destroy();
-            session_id('');
+            self::destroy();
             session_start();
             $createdAt = $now;
         }

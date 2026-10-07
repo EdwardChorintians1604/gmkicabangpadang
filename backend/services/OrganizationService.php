@@ -46,14 +46,22 @@ class OrganizationService
 
     public function createStructure(array $data, ?array $fotoFile = null): array
     {
-        if ($fotoFile && !empty($fotoFile['tmp_name'])) {
-            $allowedImages = ['image/jpeg', 'image/png', 'image/webp'];
-            $destDir = $this->storageService->getPublicUploadDir('organisasi');
-            $upload = upload_file($fotoFile, $destDir, $allowedImages, 4 * 1024 * 1024);
-            if (!$upload['success']) {
-                throw new \RuntimeException($upload['error'] ?? 'Foto pengurus gagal diunggah.');
+        if ($fotoFile && !empty($fotoFile['name'])) {
+            if (isset($fotoFile['error']) && $fotoFile['error'] !== UPLOAD_ERR_OK && $fotoFile['error'] !== UPLOAD_ERR_NO_FILE) {
+                if ($fotoFile['error'] === UPLOAD_ERR_INI_SIZE || $fotoFile['error'] === UPLOAD_ERR_FORM_SIZE) {
+                    throw new \RuntimeException('Ukuran berkas foto terlalu besar (maksimal 10MB).');
+                }
+                throw new \RuntimeException('Gagal mengunggah foto pengurus (Kode error: #' . $fotoFile['error'] . ').');
             }
-            $data['foto'] = $upload['filename'];
+            if (!empty($fotoFile['tmp_name']) && is_uploaded_file($fotoFile['tmp_name'])) {
+                $allowedImages = ['image/jpeg', 'image/png', 'image/webp'];
+                $destDir = $this->storageService->getPublicUploadDir('organisasi');
+                $upload = upload_file($fotoFile, $destDir, $allowedImages, 10 * 1024 * 1024);
+                if (!$upload['success']) {
+                    throw new \RuntimeException($upload['error'] ?? 'Foto pengurus gagal diunggah.');
+                }
+                $data['foto'] = $upload['filename'];
+            }
         }
 
         $newId = $this->orgRepo->createStructureMember($data);
@@ -73,15 +81,29 @@ class OrganizationService
             return ['success' => false, 'message' => 'Pengurus tidak ditemukan.'];
         }
 
-        if ($fotoFile && !empty($fotoFile['tmp_name'])) {
-            $allowedImages = ['image/jpeg', 'image/png', 'image/webp'];
-            $destDir = $this->storageService->getPublicUploadDir('organisasi');
-            $upload = upload_file($fotoFile, $destDir, $allowedImages, 4 * 1024 * 1024);
-            if (!$upload['success']) {
-                throw new \RuntimeException($upload['error'] ?? 'Foto pengurus gagal diunggah.');
-            }
+        if (!empty($data['hapus_foto'])) {
             $this->storageService->deletePublicFile('organisasi', $existing['foto'] ?? null);
-            $data['foto'] = $upload['filename'];
+            $data['foto'] = null;
+            unset($data['hapus_foto']);
+        }
+
+        if ($fotoFile && !empty($fotoFile['name'])) {
+            if (isset($fotoFile['error']) && $fotoFile['error'] !== UPLOAD_ERR_OK && $fotoFile['error'] !== UPLOAD_ERR_NO_FILE) {
+                if ($fotoFile['error'] === UPLOAD_ERR_INI_SIZE || $fotoFile['error'] === UPLOAD_ERR_FORM_SIZE) {
+                    throw new \RuntimeException('Ukuran berkas foto terlalu besar (maksimal 10MB).');
+                }
+                throw new \RuntimeException('Gagal mengunggah foto pengurus (Kode error: #' . $fotoFile['error'] . ').');
+            }
+            if (!empty($fotoFile['tmp_name']) && is_uploaded_file($fotoFile['tmp_name'])) {
+                $allowedImages = ['image/jpeg', 'image/png', 'image/webp'];
+                $destDir = $this->storageService->getPublicUploadDir('organisasi');
+                $upload = upload_file($fotoFile, $destDir, $allowedImages, 10 * 1024 * 1024);
+                if (!$upload['success']) {
+                    throw new \RuntimeException($upload['error'] ?? 'Foto pengurus gagal diunggah.');
+                }
+                $this->storageService->deletePublicFile('organisasi', $existing['foto'] ?? null);
+                $data['foto'] = $upload['filename'];
+            }
         }
 
         $this->orgRepo->updateStructureMember($id, $data);

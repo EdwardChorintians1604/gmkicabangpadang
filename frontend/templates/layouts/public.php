@@ -77,9 +77,11 @@
                     <?php
                     $currentUser = auth();
                     $isLoggedIn = !empty($currentUser['id']);
-                    $dashboardRoute = ($currentUser['role'] ?? '') === 'ketcab'
-                        ? '/ketcab/dashboard'
-                        : '/ruang-kerja';
+                    $dashboardRoute = match ($currentUser['role'] ?? '') {
+                        'admin' => '/admin/dashboard',
+                        'ketcab' => '/ketcab/dashboard',
+                        default => '/ruang-kerja',
+                    };
                     $dashboardLabel = 'Panel Kendali';
                     ?>
                     <?php if ($isLoggedIn): ?>
@@ -89,7 +91,7 @@
                                 <span><?= e($dashboardLabel) ?></span>
                             </a>
                             <form action="/logout" method="POST" style="margin: 0; display: inline;"
-                                onsubmit="return confirm('Apakah Anda yakin ingin keluar dari sesi akun ini?');">
+                                onsubmit="sessionStorage.clear(); return confirm('Apakah Anda yakin ingin keluar dari sesi akun ini?');">
                                 <?= csrf_field() ?>
                                 <button type="submit" class="btn btn-outline btn-sm flex items-center justify-center"
                                     title="Keluar / Logout Aman" style="padding: 6px 10px; line-height: 1;">
@@ -187,6 +189,10 @@
     <script src="<?= asset('js/app.js') ?>"></script>
     <script src="<?= asset('js/validation.js') ?>"></script>
     <script src="<?= asset('js/statistik.js') ?>"></script>
+    <script>
+        window.__AUTH_USER_ID__ = <?= !empty($currentUser['id']) ? (int)$currentUser['id'] : 'null' ?>;
+    </script>
+    <script src="<?= asset('js/session-guard.js') ?>?v=1"></script>
 </body>
 
 </html>

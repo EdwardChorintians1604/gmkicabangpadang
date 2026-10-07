@@ -133,6 +133,11 @@ class OrganizationController
             'status_aktif' => $statusAktif,
         ];
 
+        $hapusFoto = $request->post('hapus_foto');
+        if (!empty($hapusFoto)) {
+            $payload['hapus_foto'] = true;
+        }
+
         $fotoFile = $request->file('foto');
 
         try {
@@ -146,7 +151,7 @@ class OrganizationController
                 $this->orgService->createStructure($payload, $fotoFile);
                 Session::flash('success', 'Pengurus baru berhasil ditambahkan.');
             }
-        } catch (\RuntimeException $exception) {
+        } catch (\Throwable $exception) {
             Session::flash('error', $exception->getMessage());
         }
 

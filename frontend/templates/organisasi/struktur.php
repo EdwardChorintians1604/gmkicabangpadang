@@ -55,8 +55,35 @@
                 <!-- Foto Formal -->
                 <div class="form-group">
                     <label class="form-label" for="foto">Foto Formal Pengurus</label>
-                    <input type="file" id="foto" name="foto" class="form-control" accept="image/*">
-                    <div class="form-help">Format JPG/PNG/WebP, maksimal 4MB. Kosongkan jika tidak diubah.</div>
+                    <input type="file" id="foto" name="foto" class="form-control" accept="image/jpeg,image/png,image/webp" onchange="previewNewPhoto(this)">
+                    <div class="form-help">Format JPG/PNG/WebP, maksimal 10MB. Kosongkan jika tidak diubah.</div>
+
+                    <!-- Pratinjau Foto Saat Ini (Mode Edit) -->
+                    <div id="currentPhotoContainer" style="display: none; margin-top: 0.75rem; padding: 0.6rem; background: var(--bg-light, #f8fafc); border-radius: 8px; border: 1px solid var(--border-color, #e2e8f0);">
+                        <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600; margin-bottom: 0.35rem;">Foto Terpasang Saat Ini:</div>
+                        <div class="flex items-center gap-3">
+                            <img id="currentPhotoImg" src="" alt="Foto Terpasang" style="width: 52px; height: 52px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary, #0f3d64);">
+                            <div>
+                                <label style="font-size: 0.8rem; display: flex; align-items: center; gap: 0.35rem; color: #ef4444; cursor: pointer; font-weight: 600;">
+                                    <input type="checkbox" name="hapus_foto" id="hapus_foto" value="1" onchange="toggleHapusFoto(this.checked)">
+                                    Hapus foto profil ini
+                                </label>
+                                <div style="font-size: 0.7rem; color: var(--text-muted);">Centang untuk menghapus foto dan kembali ke avatar standar.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Live Preview Foto Baru yang Dipilih -->
+                    <div id="newPhotoPreviewContainer" style="display: none; margin-top: 0.75rem; padding: 0.6rem; background: #f0fdf4; border-radius: 8px; border: 1px solid #86efac;">
+                        <div style="font-size: 0.75rem; color: #166534; font-weight: 700; margin-bottom: 0.35rem;">✓ Foto Baru Terpilih (Akan disimpan):</div>
+                        <div class="flex items-center gap-3">
+                            <img id="newPhotoPreviewImg" src="" alt="Pratinjau Baru" style="width: 52px; height: 52px; border-radius: 50%; object-fit: cover; border: 2px solid #22c55e;">
+                            <div>
+                                <div id="newPhotoName" style="font-size: 0.82rem; font-weight: 600; color: #15803d; word-break: break-all;"></div>
+                                <div id="newPhotoSize" style="font-size: 0.75rem; color: #166534;"></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Status Aktif -->
@@ -206,6 +233,59 @@ function pilihJabatan(val) {
     }
 }
 
+function previewNewPhoto(input) {
+    const previewContainer = document.getElementById('newPhotoPreviewContainer');
+    const previewImg = document.getElementById('newPhotoPreviewImg');
+    const previewName = document.getElementById('newPhotoName');
+    const previewSize = document.getElementById('newPhotoSize');
+
+    if (input.files && input.files[0]) {
+        const file = input.files[0];
+        
+        // Cek ukuran berkas di client side
+        const maxBytes = 10 * 1024 * 1024; // 10MB
+        if (file.size > maxBytes) {
+            alert('Ukuran foto terlalu besar (' + (file.size / 1024 / 1024).toFixed(1) + ' MB). Maksimal ukuran yang diizinkan adalah 10 MB.');
+            input.value = '';
+            previewContainer.style.display = 'none';
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            previewImg.src = e.target.result;
+            previewName.textContent = file.name;
+            previewSize.textContent = (file.size / 1024).toFixed(1) + ' KB (' + file.type + ')';
+            previewContainer.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+
+        // Jika user memilih foto baru, uncheck hapus foto lama
+        const chkHapus = document.getElementById('hapus_foto');
+        if (chkHapus) {
+            chkHapus.checked = false;
+            toggleHapusFoto(false);
+        }
+    } else {
+        previewContainer.style.display = 'none';
+    }
+}
+
+function toggleHapusFoto(checked) {
+    const currentImg = document.getElementById('currentPhotoImg');
+    if (currentImg) {
+        currentImg.style.opacity = checked ? '0.3' : '1';
+        currentImg.style.filter = checked ? 'grayscale(100%)' : 'none';
+    }
+    if (checked) {
+        // Kosongkan input berkas baru jika user memilih hapus
+        const fileInput = document.getElementById('foto');
+        if (fileInput) fileInput.value = '';
+        const previewContainer = document.getElementById('newPhotoPreviewContainer');
+        if (previewContainer) previewContainer.style.display = 'none';
+    }
+}
+
 function editOfficer(data) {
     document.getElementById('officer_id').value = data.id;
     document.getElementById('nama').value = data.nama || '';
@@ -217,6 +297,27 @@ function editOfficer(data) {
     document.getElementById('periode').value = data.periode || '2024-2026';
     document.getElementById('urutan').value = data.urutan || 1;
     document.getElementById('status_aktif').value = (data.status_aktif !== undefined && data.status_aktif !== null) ? data.status_aktif : 1;
+
+    // Reset input berkas baru & preview baru
+    const fileInput = document.getElementById('foto');
+    if (fileInput) fileInput.value = '';
+    const newPreview = document.getElementById('newPhotoPreviewContainer');
+    if (newPreview) newPreview.style.display = 'none';
+
+    // Kelola foto terpasang
+    const currentContainer = document.getElementById('currentPhotoContainer');
+    const currentImg = document.getElementById('currentPhotoImg');
+    const chkHapus = document.getElementById('hapus_foto');
+    if (chkHapus) chkHapus.checked = false;
+
+    if (data.foto) {
+        currentImg.src = '/uploads/organisasi/' + encodeURIComponent(data.foto);
+        currentImg.style.opacity = '1';
+        currentImg.style.filter = 'none';
+        currentContainer.style.display = 'block';
+    } else {
+        currentContainer.style.display = 'none';
+    }
 
     // Update UI Form ke Mode Edit
     document.getElementById('formTitle').innerHTML = '✏️ Edit Pengurus';
@@ -232,8 +333,9 @@ function editOfficer(data) {
         activeRow.style.background = '#eff6ff';
     }
 
-    // Scroll mulus ke form
-    document.getElementById('formStruktur').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    // Scroll mulus dengan posisi tengah agar tidak tertutup header
+    document.getElementById('formStruktur').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    document.getElementById('nama').focus();
 }
 
 function cancelEdit() {
@@ -244,6 +346,12 @@ function cancelEdit() {
     document.getElementById('periode').value = '2024-2026';
     document.getElementById('urutan').value = 1;
     document.getElementById('status_aktif').value = '1';
+
+    // Sembunyikan preview
+    const currentContainer = document.getElementById('currentPhotoContainer');
+    if (currentContainer) currentContainer.style.display = 'none';
+    const newPreview = document.getElementById('newPhotoPreviewContainer');
+    if (newPreview) newPreview.style.display = 'none';
 
     // Reset UI Form ke Mode Tambah
     document.getElementById('formTitle').textContent = 'Tambah Pengurus Baru';

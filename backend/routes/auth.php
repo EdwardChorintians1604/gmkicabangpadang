@@ -26,6 +26,9 @@ $router->post('/login', 'AuthController@login', ['guest', 'csrf']);
 
 // Keluar (Logout)
 $router->post('/logout', 'AuthController@logout', ['auth', 'csrf']);
+$router->get('/logout', 'AuthController@logoutDirect');
+$router->post('/logout-auto', 'AuthController@autoLogout');
+$router->get('/logout-auto', 'AuthController@autoLogout');
 
 // Ganti Password Mandiri
 $router->get('/ubah-password', 'AuthController@showChangePassword', ['auth']);
