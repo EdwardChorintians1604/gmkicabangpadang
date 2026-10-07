@@ -13,7 +13,9 @@ class Session
             return;
         }
 
-        $lifetime = 7200;
+        $security = require dirname(__DIR__) . '/config/security.php';
+        $idleTimeout = max(60, (int)($security['session_idle_timeout'] ?? 900));
+        $absoluteTimeout = max($idleTimeout, (int)($security['session_absolute_timeout'] ?? 28800));
         if (session_status() === PHP_SESSION_NONE) {
             if (session_save_path() === '') {
                 $sessionPath = dirname(__DIR__, 2)
@@ -33,7 +35,8 @@ class Session
             ini_set('session.use_strict_mode', '1');
 
             session_set_cookie_params([
-                'lifetime' => $lifetime,
+                // Session cookie: hapus saat browser ditutup, jangan simpan kredensial di disk.
+                'lifetime' => 0,
                 'path' => '/',
                 'domain' => '',
                 'secure' => isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on',
@@ -43,6 +46,21 @@ class Session
 
             session_start();
         }
+
+        // Pertahanan server-side: cookie yang dicuri atau dipulihkan browser tetap
+        // kehilangan otorisasi setelah idle/masa hidup maksimum tercapai.
+        $now = time();
+        $createdAt = (int)($_SESSION['_session_created_at'] ?? $now);
+        $lastActivity = (int)($_SESSION['_last_activity'] ?? $now);
+        if (($now - $lastActivity) > $idleTimeout || ($now - $createdAt) > $absoluteTimeout) {
+            $_SESSION = [];
+            session_destroy();
+            session_id('');
+            session_start();
+            $createdAt = $now;
+        }
+        $_SESSION['_session_created_at'] = $createdAt;
+        $_SESSION['_last_activity'] = $now;
 
         self::$started = true;
 

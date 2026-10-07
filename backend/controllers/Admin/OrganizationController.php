@@ -135,12 +135,19 @@ class OrganizationController
 
         $fotoFile = $request->file('foto');
 
-        if (!empty($id)) {
-            $this->orgService->updateStructure((int)$id, $payload, $fotoFile);
-            Session::flash('success', 'Data pengurus berhasil diperbarui.');
-        } else {
-            $this->orgService->createStructure($payload, $fotoFile);
-            Session::flash('success', 'Pengurus baru berhasil ditambahkan.');
+        try {
+            if (!empty($id)) {
+                $result = $this->orgService->updateStructure((int)$id, $payload, $fotoFile);
+                if (!$result['success']) {
+                    throw new \RuntimeException($result['message'] ?? 'Data pengurus tidak ditemukan.');
+                }
+                Session::flash('success', 'Data pengurus berhasil diperbarui.');
+            } else {
+                $this->orgService->createStructure($payload, $fotoFile);
+                Session::flash('success', 'Pengurus baru berhasil ditambahkan.');
+            }
+        } catch (\RuntimeException $exception) {
+            Session::flash('error', $exception->getMessage());
         }
 
         redirect('/admin/organisasi/struktur');

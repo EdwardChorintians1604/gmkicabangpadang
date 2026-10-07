@@ -50,9 +50,10 @@ class OrganizationService
             $allowedImages = ['image/jpeg', 'image/png', 'image/webp'];
             $destDir = $this->storageService->getPublicUploadDir('organisasi');
             $upload = upload_file($fotoFile, $destDir, $allowedImages, 4 * 1024 * 1024);
-            if ($upload['success']) {
-                $data['foto'] = $upload['filename'];
+            if (!$upload['success']) {
+                throw new \RuntimeException($upload['error'] ?? 'Foto pengurus gagal diunggah.');
             }
+            $data['foto'] = $upload['filename'];
         }
 
         $newId = $this->orgRepo->createStructureMember($data);
@@ -76,10 +77,11 @@ class OrganizationService
             $allowedImages = ['image/jpeg', 'image/png', 'image/webp'];
             $destDir = $this->storageService->getPublicUploadDir('organisasi');
             $upload = upload_file($fotoFile, $destDir, $allowedImages, 4 * 1024 * 1024);
-            if ($upload['success']) {
-                $this->storageService->deletePublicFile('organisasi', $existing['foto'] ?? null);
-                $data['foto'] = $upload['filename'];
+            if (!$upload['success']) {
+                throw new \RuntimeException($upload['error'] ?? 'Foto pengurus gagal diunggah.');
             }
+            $this->storageService->deletePublicFile('organisasi', $existing['foto'] ?? null);
+            $data['foto'] = $upload['filename'];
         }
 
         $this->orgRepo->updateStructureMember($id, $data);

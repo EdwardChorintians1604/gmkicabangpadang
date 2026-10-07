@@ -2,6 +2,8 @@
 
 return [
     'session_lifetime' => (int)($_ENV['SESSION_LIFETIME'] ?? 7200), // 2 hours
+    'session_idle_timeout' => (int)($_ENV['SESSION_IDLE_TIMEOUT'] ?? 900), // 15 minutes
+    'session_absolute_timeout' => (int)($_ENV['SESSION_ABSOLUTE_TIMEOUT'] ?? 28800), // 8 hours
     'csrf_lifetime' => (int)($_ENV['CSRF_LIFETIME'] ?? 3600),       // 1 hour
     'rate_limit' => [
         'login_max_attempts' => (int)($_ENV['RATE_LIMIT_LOGIN_MAX'] ?? 5),
