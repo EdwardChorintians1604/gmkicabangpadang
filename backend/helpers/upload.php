@@ -83,13 +83,29 @@ if (!function_exists('upload_file')) {
             return ['success' => false, 'error' => 'Gagal memindahkan berkas ke folder tujuan.'];
         }
 
+        // Optimasi & Kompresi Otomatis jika berkas adalah gambar (Foto Berita, Pengurus, Civitas, dll)
+        $finalSize = $file['size'];
+        $isImage = in_array($extension, ['jpg', 'jpeg', 'png', 'webp'], true) || str_starts_with($mimeType, 'image/');
+        if ($isImage && file_exists(dirname(__DIR__) . '/photo_compression/ImageCompressor.php')) {
+            try {
+                require_once dirname(__DIR__) . '/photo_compression/ImageCompressor.php';
+                $compressor = new \App\PhotoCompression\ImageCompressor();
+                $compResult = $compressor->compressFile($targetPath);
+                if (!empty($compResult['compressedSize'])) {
+                    $finalSize = $compResult['compressedSize'];
+                }
+            } catch (\Throwable $e) {
+                // Abaikan jika kompresi gagal agar berkas asli tetap aman tersimpan
+            }
+        }
+
         return [
-            'success' => true,
+            'success'  => true,
             'filename' => $newFilename,
-            'path' => $targetPath,
-            'mime' => $mimeType,
-            'size' => $file['size'],
-            'error' => null,
+            'path'     => $targetPath,
+            'mime'     => $mimeType,
+            'size'     => $finalSize,
+            'error'    => null,
         ];
     }
 }

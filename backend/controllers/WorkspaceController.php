@@ -74,7 +74,27 @@ class WorkspaceController
         $items = Database::fetchAll(
             'SELECT * FROM inventory_items ORDER BY updated_at DESC, id DESC LIMIT ' . $pagination['perPage'] . ' OFFSET ' . $pagination['offset']
         );
-        return $this->page('Inventaris GMKI', 'inventory', ['items' => $items, 'pagination' => $pagination]);
+        $summary = Database::fetchOne(
+            "SELECT 
+                COUNT(*) as total_items,
+                COALESCE(SUM(quantity), 0) as total_qty,
+                COALESCE(SUM(CASE WHEN item_condition = 'Baik' THEN 1 ELSE 0 END), 0) as total_baik,
+                COALESCE(SUM(CASE WHEN item_condition = 'Perlu Perbaikan' THEN 1 ELSE 0 END), 0) as total_perbaikan,
+                COALESCE(SUM(CASE WHEN item_condition = 'Rusak' THEN 1 ELSE 0 END), 0) as total_rusak
+             FROM inventory_items"
+        ) ?: [
+            'total_items' => 0,
+            'total_qty' => 0,
+            'total_baik' => 0,
+            'total_perbaikan' => 0,
+            'total_rusak' => 0,
+        ];
+
+        return $this->page('Inventaris GMKI', 'inventory', [
+            'items' => $items,
+            'pagination' => $pagination,
+            'summary' => $summary,
+        ]);
     }
 
     public function saveInventory(Request $request): Response
