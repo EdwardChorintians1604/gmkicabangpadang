@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="<?= asset('vendor/animate.min.css') ?>">
     <link rel="stylesheet" href="<?= asset('vendor/leaflet/leaflet.css') ?>">
     <link rel="stylesheet" href="<?= asset('css/app.css') ?>">
-    <link rel="stylesheet" href="<?= asset('css/public.css') ?>">
+    <link rel="stylesheet" href="<?= asset('css/public.css') ?>?v=5">
     <!-- Tailwind CSS with custom GMKI palette -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -49,7 +49,7 @@
                     </div>
                 </a>
 
-                <button class="nav-toggle" aria-label="Buka Menu Navigasi">
+                <button class="nav-toggle" aria-label="Buka Menu Navigasi" id="navToggleBtn">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <line x1="3" y1="12" x2="21" y2="12"></line>
                         <line x1="3" y1="6" x2="21" y2="6"></line>
@@ -57,36 +57,29 @@
                     </svg>
                 </button>
 
-                <ul class="nav-menu">
-                    <li><a href="/"
-                            class="nav-link <?= ($_SERVER['REQUEST_URI'] === '/' || $_SERVER['REQUEST_URI'] === '') ? 'active' : '' ?>">Beranda</a>
-                    </li>
-                    <li><a href="/profil"
-                            class="nav-link <?= (str_starts_with($_SERVER['REQUEST_URI'], '/profil')) ? 'active' : '' ?>">Profil</a>
-                    </li>
-                    <li><a href="/struktur-organisasi"
-                            class="nav-link <?= (str_starts_with($_SERVER['REQUEST_URI'], '/struktur-organisasi')) ? 'active' : '' ?>">Struktur
-                            BPC</a></li>
-                    <li><a href="/berita"
-                            class="nav-link <?= (str_starts_with($_SERVER['REQUEST_URI'], '/berita')) ? 'active' : '' ?>">Warta
-                            & Berita</a></li>
-                    <li><a href="/kontak"
-                            class="nav-link <?= (str_starts_with($_SERVER['REQUEST_URI'], '/kontak')) ? 'active' : '' ?>">Kontak</a>
-                    </li>
+                <?php
+                $currentUser = auth();
+                $isLoggedIn = !empty($currentUser['id']);
+                $dashboardRoute = match ($currentUser['role'] ?? '') {
+                    'admin' => '/admin/dashboard',
+                    'ketcab' => '/ketcab/dashboard',
+                    default => '/ruang-kerja',
+                };
+                $dashboardLabel = 'Panel Kendali';
+                $requestUri = $_SERVER['REQUEST_URI'] ?? '/';
+                ?>
 
-                    <?php
-                    $currentUser = auth();
-                    $isLoggedIn = !empty($currentUser['id']);
-                    $dashboardRoute = match ($currentUser['role'] ?? '') {
-                        'admin' => '/admin/dashboard',
-                        'ketcab' => '/ketcab/dashboard',
-                        default => '/ruang-kerja',
-                    };
-                    $dashboardLabel = 'Panel Kendali';
-                    ?>
+                <ul class="nav-menu" id="publicNavMenu">
+                    <li><a href="/" class="nav-link <?= ($requestUri === '/' || $requestUri === '') ? 'active' : '' ?>">Beranda</a></li>
+                    <li><a href="/profil" class="nav-link <?= (str_starts_with($requestUri, '/profil')) ? 'active' : '' ?>">Profil</a></li>
+                    <li><a href="/struktur-organisasi" class="nav-link <?= (str_starts_with($requestUri, '/struktur-organisasi')) ? 'active' : '' ?>">Struktur BPC</a></li>
+                    <li><a href="/ad-art" class="nav-link <?= (str_starts_with($requestUri, '/ad-art')) ? 'active' : '' ?>">AD / ART</a></li>
+                    <li><a href="/berita" class="nav-link <?= (str_starts_with($requestUri, '/berita')) ? 'active' : '' ?>">Warta & Berita</a></li>
+                    <li><a href="/kontak" class="nav-link <?= (str_starts_with($requestUri, '/kontak')) ? 'active' : '' ?>">Kontak</a></li>
+
                     <?php if ($isLoggedIn): ?>
-                        <li class="flex items-center gap-2">
-                            <a href="<?= e($dashboardRoute) ?>" class="btn btn-primary btn-sm flex items-center gap-1">
+                        <li class="nav-auth-item flex items-center gap-2">
+                            <a href="<?= e($dashboardRoute) ?>" class="btn btn-primary btn-sm flex items-center gap-1 whitespace-nowrap">
                                 <?= svg_icon('dashboard', 14) ?>
                                 <span><?= e($dashboardLabel) ?></span>
                             </a>
@@ -100,8 +93,8 @@
                             </form>
                         </li>
                     <?php else: ?>
-                        <li>
-                            <a href="/login" class="btn btn-outline btn-sm flex items-center gap-1">
+                        <li class="nav-auth-item">
+                            <a href="/login" class="btn btn-outline btn-sm flex items-center gap-1 whitespace-nowrap">
                                 <?= svg_icon('lock', 13) ?>
                                 <span>Masuk Sistem</span>
                             </a>
@@ -147,6 +140,7 @@
                         <li><a href="/">Beranda</a></li>
                         <li><a href="/profil">Profil & Sejarah</a></li>
                         <li><a href="/struktur-organisasi">Struktur BPC</a></li>
+                        <li><a href="/ad-art">AD / ART Organisasi</a></li>
                         <li><a href="/berita">Warta & Kegiatan</a></li>
                         <li><a href="/kontak">Hubungi Sekretariat</a></li>
                     </ul>

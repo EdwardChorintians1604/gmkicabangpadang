@@ -60,6 +60,16 @@ class PublicController
         ], 'public');
     }
 
+    public function adArt(Request $request): Response
+    {
+        $profile = $this->orgService->getProfile();
+
+        return view('public.ad-art', [
+            'pageTitle' => 'Anggaran Dasar & Anggaran Rumah Tangga (AD/ART) - GMKI Cabang Padang',
+            'profile' => $profile,
+        ], 'public');
+    }
+
     public function berita(Request $request): Response
     {
         $page = (int)$request->query('page', 1);

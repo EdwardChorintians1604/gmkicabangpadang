@@ -2,7 +2,7 @@
 $role = $user['role'] ?? '';
 $titles = [
     'inventory' => 'Inventaris GMKI',
-    'archive' => 'Arsip Surat Penting',
+    'archive' => 'Buku Agenda & Arsip Persuratan Sekcab',
     'finance' => 'Laporan Keuangan Cabang',
     'strategies' => 'Strategi Organisasi',
     'coordination' => 'Ruang Koordinasi BPC',
@@ -413,34 +413,515 @@ $backLabel = $role === 'admin' ? 'Dashboard Admin' : 'Ruang kerja';
     </script>
 
 <?php elseif ($section === 'archive'): ?>
-    <?php if (can('archive.manage')): ?>
-        <section class="card" style="margin-bottom:1.25rem;"><div class="card-body">
-            <h2 style="font-size:1.1rem;font-weight:700;margin:0 0 1rem;">Simpan surat atau dokumen</h2>
-            <p class="text-muted">Berkas bersifat privat, maksimal 10 MB. Format: PDF, Word, Excel, ODT, JPG, PNG.</p>
-            <form method="post" action="/sekcab/arsip" enctype="multipart/form-data" class="grid grid-cols-2 gap-4">
-                <?= csrf_field() ?>
-                <label>Judul dokumen<input class="form-control" name="title" maxlength="180" required></label>
-                <label>Berkas<input class="form-control" type="file" name="document" accept=".pdf,.doc,.docx,.xls,.xlsx,.odt,.jpg,.jpeg,.png" required></label>
-                <label style="grid-column:1/-1;">Keterangan<textarea class="form-control" name="description" rows="2"></textarea></label>
-                <div><button class="btn btn-primary" type="submit">Unggah ke arsip</button></div>
-            </form>
-        </div></section>
-    <?php endif; ?>
-    <div class="grid grid-cols-2 gap-4">
-        <?php foreach ($documents as $document): ?><article class="card"><div class="card-body">
-            <form method="post" action="/sekcab/arsip" enctype="multipart/form-data">
-                <?= csrf_field() ?><input type="hidden" name="id" value="<?= (int)$document['id'] ?>">
-                <label>Judul dokumen<input class="form-control" name="title" maxlength="180" value="<?= e($document['title']) ?>" required></label>
-                <label style="display:block;margin-top:.5rem;">Keterangan<textarea class="form-control" name="description" rows="2"><?= e($document['description'] ?? '') ?></textarea></label>
-                <label style="display:block;margin-top:.5rem;">Ganti berkas (opsional)<input class="form-control" type="file" name="document" accept=".pdf,.doc,.docx,.xls,.xlsx,.odt,.jpg,.jpeg,.png"></label>
-                <p class="text-muted"><?= e($document['original_name']) ?> · <?= e($document['nama_lengkap']) ?> · <?= e($document['created_at']) ?></p>
-                <div class="flex gap-2"><button class="btn btn-primary btn-sm" type="submit">Simpan perubahan</button><a class="btn btn-outline btn-sm" href="/dokumen/<?= (int)$document['id'] ?>/unduh">Unduh</a></div>
-            </form>
-            <form method="post" action="/sekcab/arsip/<?= (int)$document['id'] ?>/delete" data-confirm="Hapus dokumen ini?" style="margin-top:.5rem;"><?= csrf_field() ?><button class="btn btn-danger btn-sm" type="submit">Hapus arsip</button></form>
-        </div></article><?php endforeach; ?>
-        <?php if (!$documents): ?><div class="card"><div class="card-body text-center text-muted">Arsip masih kosong.</div></div><?php endif; ?>
+    <!-- Ringkasan Metrik Arsip Persuratan -->
+    <div class="metrics-grid" style="margin-bottom: 1.5rem;">
+        <div class="metric-card">
+            <div class="metric-info">
+                <span class="metric-label">Total Arsip Terdaftar</span>
+                <span class="metric-value"><?= number_format((int)($summary['total_arsip'] ?? count($documents))) ?></span>
+                <span class="text-muted" style="font-size: 0.8rem; margin-top: 0.25rem;">
+                    Seluruh dokumen resmi di repositori
+                </span>
+            </div>
+            <div class="metric-icon-wrap metric-icon-primary">
+                📁
+            </div>
+        </div>
+
+        <div class="metric-card">
+            <div class="metric-info">
+                <span class="metric-label">Surat Masuk</span>
+                <span class="metric-value" style="color: #0284c7;"><?= number_format((int)($summary['total_masuk'] ?? 0)) ?></span>
+                <span class="text-muted" style="font-size: 0.8rem; margin-top: 0.25rem;">Dari mitra, kampus, gereja & PP</span>
+            </div>
+            <div class="metric-icon-wrap" style="background:#e0f2fe; color:#0284c7;">
+                📥
+            </div>
+        </div>
+
+        <div class="metric-card">
+            <div class="metric-info">
+                <span class="metric-label">Surat Keluar</span>
+                <span class="metric-value" style="color: #10b981;"><?= number_format((int)($summary['total_keluar'] ?? 0)) ?></span>
+                <span class="text-muted" style="font-size: 0.8rem; margin-top: 0.25rem;">Diterbitkan BPC Cabang Padang</span>
+            </div>
+            <div class="metric-icon-wrap metric-icon-success">
+                📤
+            </div>
+        </div>
+
+        <div class="metric-card">
+            <div class="metric-info">
+                <span class="metric-label">SK & Surat Tugas</span>
+                <span class="metric-value" style="color: #8b5cf6;"><?= number_format((int)($summary['total_sk_mandat'] ?? 0)) ?></span>
+                <span class="text-muted" style="font-size: 0.8rem; margin-top: 0.25rem;">Ketetapan, mandat & delegasi</span>
+            </div>
+            <div class="metric-icon-wrap" style="background:#f3e8ff; color:#8b5cf6;">
+                📜
+            </div>
+        </div>
     </div>
-    <?= partial('partials.pagination', $pagination) ?>
+
+    <!-- Area Konten Utama Persuratan: Form Registrasi + Buku Agenda -->
+    <div class="grid grid-cols-1 <?= can('archive.manage') ? 'lg:grid-cols-3' : '' ?> gap-6" style="align-items: start;">
+        <?php if (can('archive.manage')): ?>
+            <!-- Kolom Form Registrasi / Edit Arsip (Kiri) -->
+            <div class="card" id="formArchiveCard" style="position: sticky; top: 88px; z-index: 10;">
+                <div class="card-body">
+                    <div class="flex items-center justify-between" style="margin-bottom: 1rem;">
+                        <div>
+                            <h2 id="arcFormTitle" style="font-size: 1.15rem; font-weight: 700; color: var(--primary); margin: 0;">Registrasi Arsip Surat</h2>
+                            <p id="arcFormSubtitle" class="text-muted" style="font-size: 0.8rem; margin: 0.2rem 0 0;">Catat surat masuk, keluar, SK & dokumen BPC</p>
+                        </div>
+                        <span id="arcModeBadge" class="badge badge-primary" style="font-size: 0.75rem;">Mode Baru</span>
+                    </div>
+
+                    <form id="archiveForm" method="post" action="/sekcab/arsip" enctype="multipart/form-data" data-validate>
+                        <?= csrf_field() ?>
+                        <input type="hidden" name="id" id="arc_id" value="">
+
+                        <!-- Kategori / Jenis Surat -->
+                        <div class="form-group" style="margin-bottom: 0.85rem;">
+                            <label class="form-label" for="arc_category" style="font-size: 0.85rem; font-weight: 600;">Jenis / Kategori Surat <span style="color:#ef4444;">*</span></label>
+                            <select id="arc_category" name="letter_category" class="form-control" required style="font-size: 0.875rem;">
+                                <option value="Surat Masuk">📥 Surat Masuk (Eksternal / Mitra / PP)</option>
+                                <option value="Surat Keluar">📤 Surat Keluar (Resmi BPC Cabang)</option>
+                                <option value="Surat Keputusan (SK)">📜 Surat Keputusan (SK Cabang)</option>
+                                <option value="Surat Mandat / Tugas">📋 Surat Mandat / Tugas Delegasi</option>
+                                <option value="Notula & Berita Acara">📝 Notula Rapat & Berita Acara</option>
+                                <option value="Dokumen Organisasi">📁 Dokumen & LPJ Organisasi</option>
+                            </select>
+                        </div>
+
+                        <!-- Nomor Surat -->
+                        <div class="form-group" style="margin-bottom: 0.85rem;">
+                            <label class="form-label" for="arc_letter_number" style="font-size: 0.85rem; font-weight: 600;">Nomor Surat</label>
+                            <input class="form-control" id="arc_letter_number" name="letter_number" maxlength="120" placeholder="Contoh: 04/B/SC/GMKI-PDG/X/2026 atau 015/BEM-UNAND/IX/2026">
+                        </div>
+
+                        <!-- Perihal / Judul Surat -->
+                        <div class="form-group" style="margin-bottom: 0.85rem;">
+                            <label class="form-label" for="arc_title" style="font-size: 0.85rem; font-weight: 600;">Perihal / Judul Dokumen <span style="color:#ef4444;">*</span></label>
+                            <input class="form-control" id="arc_title" name="title" maxlength="180" placeholder="Contoh: Permohonan Audiensi Program ke Kapolda Sumbar" required>
+                        </div>
+
+                        <!-- Pengirim & Penerima -->
+                        <div class="grid grid-cols-2 gap-3" style="margin-bottom: 0.85rem;">
+                            <div class="form-group">
+                                <label class="form-label" for="arc_sender" style="font-size: 0.85rem; font-weight: 600;">Asal / Pengirim</label>
+                                <input class="form-control" id="arc_sender" name="sender" maxlength="180" placeholder="Contoh: BEM KM UNAND / PP GMKI">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="arc_recipient" style="font-size: 0.85rem; font-weight: 600;">Tujuan / Penerima</label>
+                                <input class="form-control" id="arc_recipient" name="recipient" maxlength="180" placeholder="Contoh: BPC GMKI Padang / Rektor UNP">
+                            </div>
+                        </div>
+
+                        <!-- Tanggal Surat & Tanggal Diterima/Agenda -->
+                        <div class="grid grid-cols-2 gap-3" style="margin-bottom: 0.85rem;">
+                            <div class="form-group">
+                                <label class="form-label" for="arc_letter_date" style="font-size: 0.85rem; font-weight: 600;">Tanggal Surat</label>
+                                <input class="form-control" id="arc_letter_date" name="letter_date" type="date">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="arc_received_or_sent_date" style="font-size: 0.85rem; font-weight: 600;">Tanggal Agenda / Diterima</label>
+                                <input class="form-control" id="arc_received_or_sent_date" name="received_or_sent_date" type="date">
+                            </div>
+                        </div>
+
+                        <!-- Sifat Surat & Status Penanganan -->
+                        <div class="grid grid-cols-2 gap-3" style="margin-bottom: 0.85rem;">
+                            <div class="form-group">
+                                <label class="form-label" for="arc_nature" style="font-size: 0.85rem; font-weight: 600;">Sifat Surat</label>
+                                <select class="form-control" id="arc_nature" name="letter_nature">
+                                    <option value="Biasa">Biasa</option>
+                                    <option value="Penting">Penting</option>
+                                    <option value="Segera">Segera</option>
+                                    <option value="Sangat Segera">Sangat Segera</option>
+                                    <option value="Rahasia">Rahasia</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="arc_status" style="font-size: 0.85rem; font-weight: 600;">Status Tindak Lanjut</label>
+                                <select class="form-control" id="arc_status" name="status">
+                                    <option value="Diarsipkan">Diarsipkan</option>
+                                    <option value="Menunggu Tindak Lanjut">Menunggu Tindak Lanjut</option>
+                                    <option value="Didisposisi">Didisposisi</option>
+                                    <option value="Selesai">Selesai</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Berkas Lampiran Digital -->
+                        <div class="form-group" style="margin-bottom: 0.85rem;">
+                            <label class="form-label" for="arc_document" style="font-size: 0.85rem; font-weight: 600;">
+                                Berkas Digital <span id="arc_file_required_marker" style="color:#ef4444;">*</span>
+                            </label>
+                            <input class="form-control" type="file" id="arc_document" name="document" accept=".pdf,.doc,.docx,.xls,.xlsx,.odt,.jpg,.jpeg,.png" required style="padding: 0.4rem;">
+                            <p id="arc_file_help" class="text-muted" style="font-size: 0.775rem; margin: 0.3rem 0 0;">Format: PDF, Word, Excel, JPG, PNG (Maksimal 10 MB)</p>
+                        </div>
+
+                        <!-- Ringkasan / Disposisi -->
+                        <div class="form-group" style="margin-bottom: 1.15rem;">
+                            <label class="form-label" for="arc_description" style="font-size: 0.85rem; font-weight: 600;">Ringkasan / Catatan Disposisi Sekcab</label>
+                            <textarea class="form-control" id="arc_description" name="description" rows="2" placeholder="Catatan perihal, instruksi Ketcab/Sekcab, atau disposisi ke bidang..."></textarea>
+                        </div>
+
+                        <!-- Tombol Aksi -->
+                        <div class="flex gap-2">
+                            <button id="btnSubmitArc" class="btn btn-primary" type="submit" style="flex: 1; justify-content: center;">
+                                💾 Simpan Arsip Surat
+                            </button>
+                            <button id="btnCancelEditArc" class="btn btn-secondary" type="button" onclick="batalEditArc()" style="display: none;">
+                                ✖ Batal
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        <?php endif; ?>
+
+        <!-- Kolom Tabel Buku Agenda & Arsip (Kanan) -->
+        <div class="<?= can('archive.manage') ? 'lg:col-span-2' : 'col-span-1' ?>">
+            <div class="table-card" style="margin-bottom: 1.5rem;">
+                <div class="table-header flex items-center justify-between" style="gap: 1rem; flex-wrap: wrap;">
+                    <div>
+                        <h2 class="table-title" style="margin: 0; font-size: 1.15rem; color: var(--primary);">Buku Agenda Persuratan Cabang</h2>
+                        <span class="text-muted" style="font-size: 0.8rem;">Daftar seluruh surat masuk, keluar, SK, dan berkas administrasi GMKI Padang</span>
+                    </div>
+
+                    <!-- Toolbar Pencarian & Filter Cepat -->
+                    <div class="flex items-center gap-2" style="flex-wrap: wrap;">
+                        <div style="position: relative; min-width: 200px;">
+                            <input type="text" id="arcSearchInput" onkeyup="filterArchiveTable()" placeholder="Cari nomor, perihal, pengirim..." class="form-control" style="font-size: 0.85rem; padding-left: 2rem; height: 38px;">
+                            <span style="position: absolute; left: 0.65rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.85rem;">🔍</span>
+                        </div>
+                        <select id="arcCategoryFilter" onchange="filterArchiveTable()" class="form-control" style="font-size: 0.85rem; height: 38px; width: auto;">
+                            <option value="">Semua Kategori</option>
+                            <option value="Surat Masuk">Surat Masuk</option>
+                            <option value="Surat Keluar">Surat Keluar</option>
+                            <option value="Surat Keputusan (SK)">Surat Keputusan (SK)</option>
+                            <option value="Surat Mandat / Tugas">Surat Mandat / Tugas</option>
+                            <option value="Notula & Berita Acara">Notula & Berita Acara</option>
+                            <option value="Dokumen Organisasi">Dokumen Organisasi</option>
+                        </select>
+                        <select id="arcStatusFilter" onchange="filterArchiveTable()" class="form-control" style="font-size: 0.85rem; height: 38px; width: auto;">
+                            <option value="">Semua Status</option>
+                            <option value="Diarsipkan">Diarsipkan</option>
+                            <option value="Menunggu Tindak Lanjut">Menunggu Tindak Lanjut</option>
+                            <option value="Didisposisi">Didisposisi</option>
+                            <option value="Selesai">Selesai</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="data-table" id="archiveTable">
+                        <thead>
+                            <tr>
+                                <th style="width: 45px; text-align: center;">No</th>
+                                <th style="min-width: 170px;">Nomor & Jenis Surat</th>
+                                <th style="min-width: 200px;">Perihal & Ringkasan</th>
+                                <th style="min-width: 170px;">Pengirim / Penerima</th>
+                                <th style="min-width: 120px; text-align: center;">Tanggal & Sifat</th>
+                                <th style="min-width: 130px; text-align: center;">Berkas</th>
+                                <th style="min-width: 110px; text-align: center;">Status</th>
+                                <th style="width: 110px; text-align: center;">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php if (!empty($documents)): ?>
+                                <?php $no = 1; foreach ($documents as $doc): ?>
+                                    <?php
+                                        $category = $doc['letter_category'] ?? 'Surat Masuk';
+                                        $catBadge = match ($category) {
+                                            'Surat Masuk' => 'badge-primary',
+                                            'Surat Keluar' => 'badge-success',
+                                            'Surat Keputusan (SK)' => 'badge-warning',
+                                            'Surat Mandat / Tugas' => 'badge-info',
+                                            'Notula & Berita Acara' => 'badge-neutral',
+                                            default => 'badge-secondary',
+                                        };
+                                        $nature = $doc['letter_nature'] ?? 'Biasa';
+                                        $natureBadge = match ($nature) {
+                                            'Penting' => 'badge-warning',
+                                            'Segera' => 'badge-primary',
+                                            'Sangat Segera', 'Rahasia' => 'badge-danger',
+                                            default => 'badge-neutral',
+                                        };
+                                        $status = $doc['status'] ?? 'Diarsipkan';
+                                        $statusBadge = match ($status) {
+                                            'Diarsipkan' => 'badge-success',
+                                            'Menunggu Tindak Lanjut' => 'badge-warning',
+                                            'Didisposisi' => 'badge-primary',
+                                            'Selesai' => 'badge-neutral',
+                                            default => 'badge-secondary',
+                                        };
+                                        $ext = strtolower(pathinfo($doc['original_name'] ?? '', PATHINFO_EXTENSION));
+                                        $fileIcon = match ($ext) {
+                                            'pdf' => '📄',
+                                            'doc', 'docx' => '📝',
+                                            'xls', 'xlsx' => '📊',
+                                            'jpg', 'jpeg', 'png' => '🖼️',
+                                            default => '📎',
+                                        };
+                                    ?>
+                                    <tr class="arc-row" 
+                                        data-id="<?= (int)$doc['id'] ?>"
+                                        data-title="<?= e($doc['title']) ?>"
+                                        data-letter-number="<?= e($doc['letter_number'] ?? '') ?>"
+                                        data-category="<?= e($category) ?>"
+                                        data-sender="<?= e($doc['sender'] ?? '') ?>"
+                                        data-recipient="<?= e($doc['recipient'] ?? '') ?>"
+                                        data-letter-date="<?= e($doc['letter_date'] ?? '') ?>"
+                                        data-received-date="<?= e($doc['received_or_sent_date'] ?? '') ?>"
+                                        data-nature="<?= e($nature) ?>"
+                                        data-status="<?= e($status) ?>"
+                                        data-description="<?= e($doc['description'] ?? '') ?>"
+                                        data-filename="<?= e($doc['original_name']) ?>">
+                                        <td style="text-align: center; color: var(--text-muted); font-weight: 600;">
+                                            <?= $no++ ?>
+                                        </td>
+                                        <td>
+                                            <span class="badge <?= $catBadge ?>" style="font-size: 0.725rem; font-weight: 600; margin-bottom: 0.25rem;">
+                                                <?= e($category) ?>
+                                            </span>
+                                            <div style="font-weight: 700; color: var(--text-main); font-size: 0.9rem; font-family: monospace; letter-spacing: -0.3px;">
+                                                <?= !empty($doc['letter_number']) ? e($doc['letter_number']) : '<span class="text-muted" style="font-style:italic;font-family:inherit;">Tanpa nomor</span>' ?>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div style="font-weight: 700; color: var(--text-main); font-size: 0.925rem; margin-bottom: 0.2rem; line-height: 1.35;">
+                                                <?= e($doc['title']) ?>
+                                            </div>
+                                            <?php if (!empty($doc['description'])): ?>
+                                                <div style="font-size: 0.8rem; color: var(--text-muted); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;" title="<?= e($doc['description']) ?>">
+                                                    <?= e($doc['description']) ?>
+                                                </div>
+                                            <?php endif; ?>
+                                        </td>
+                                        <td>
+                                            <?php if (!empty($doc['sender']) || !empty($doc['recipient'])): ?>
+                                                <?php if (!empty($doc['sender'])): ?>
+                                                    <div style="font-size: 0.825rem; color: var(--text-main);">
+                                                        <span class="text-muted">Dari:</span> <strong><?= e($doc['sender']) ?></strong>
+                                                    </div>
+                                                <?php endif; ?>
+                                                <?php if (!empty($doc['recipient'])): ?>
+                                                    <div style="font-size: 0.825rem; color: var(--text-muted); margin-top: 0.15rem;">
+                                                        <span>Kepada:</span> <?= e($doc['recipient']) ?>
+                                                    </div>
+                                                <?php endif; ?>
+                                            <?php else: ?>
+                                                <span class="text-muted" style="font-size: 0.8rem; font-style: italic;">Tidak dicatat</span>
+                                            <?php endif; ?>
+                                        </td>
+                                        <td style="text-align: center;">
+                                            <?php if (!empty($doc['letter_date'])): ?>
+                                                <div style="font-size: 0.825rem; font-weight: 600; color: var(--text-main);">
+                                                    📅 <?= date('d M Y', strtotime($doc['letter_date'])) ?>
+                                                </div>
+                                            <?php else: ?>
+                                                <div style="font-size: 0.8rem; color: var(--text-muted);">
+                                                    <?= date('d M Y', strtotime($doc['created_at'])) ?>
+                                                </div>
+                                            <?php endif; ?>
+                                            <span class="badge <?= $natureBadge ?>" style="font-size: 0.725rem; margin-top: 0.25rem;">
+                                                <?= e($nature) ?>
+                                            </span>
+                                        </td>
+                                        <td style="text-align: center;">
+                                            <div style="display: flex; flex-direction: column; align-items: center; gap: 0.25rem;">
+                                                <a href="/dokumen/<?= (int)$doc['id'] ?>/unduh" 
+                                                   class="btn btn-outline btn-sm" 
+                                                   style="padding: 0.25rem 0.5rem; font-size: 0.775rem; gap: 0.3rem;"
+                                                   title="Unduh berkas: <?= e($doc['original_name']) ?>">
+                                                    <?= $fileIcon ?> Unduh
+                                                </a>
+                                                <span class="text-muted" style="font-size: 0.725rem; max-width: 120px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="<?= e($doc['original_name']) ?>">
+                                                    <?= e($doc['original_name']) ?>
+                                                </span>
+                                            </div>
+                                        </td>
+                                        <td style="text-align: center;">
+                                            <span class="badge <?= $statusBadge ?>" style="font-size: 0.775rem;">
+                                                <?= e($status) ?>
+                                            </span>
+                                        </td>
+                                        <td style="text-align: center;">
+                                            <div class="flex items-center justify-center gap-1">
+                                                <?php if (can('archive.manage')): ?>
+                                                    <button type="button" 
+                                                            class="btn btn-secondary btn-sm" 
+                                                            style="padding: 0.25rem 0.5rem; font-size: 0.8rem;"
+                                                            title="Edit arsip surat ini"
+                                                            onclick='editArcFromRow(this)'>
+                                                        ✏️
+                                                    </button>
+                                                    <form method="post" action="/sekcab/arsip/<?= (int)$doc['id'] ?>/delete" data-confirm="Hapus arsip surat '<?= e($doc['title']) ?>'?" style="margin: 0; display: inline;">
+                                                        <?= csrf_field() ?>
+                                                        <button class="btn btn-danger btn-sm" style="padding: 0.25rem 0.5rem; font-size: 0.8rem;" type="submit" title="Hapus arsip ini">
+                                                            🗑️
+                                                        </button>
+                                                    </form>
+                                                <?php else: ?>
+                                                    <a href="/dokumen/<?= (int)$doc['id'] ?>/unduh" class="btn btn-outline btn-sm" style="padding: 0.25rem 0.5rem; font-size: 0.8rem;" title="Unduh">
+                                                        ⬇️
+                                                    </a>
+                                                <?php endif; ?>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <tr id="noDataArcRow">
+                                    <td colspan="8" style="text-align: center; padding: 3rem 1.5rem;">
+                                        <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🗂️</div>
+                                        <div style="font-weight: 700; color: var(--text-main); margin-bottom: 0.25rem;">Belum ada arsip surat yang tersimpan</div>
+                                        <div class="text-muted" style="font-size: 0.875rem;">Gunakan form di samping untuk mulai meregistrasi surat masuk, keluar, atau dokumen BPC.</div>
+                                    </td>
+                                </tr>
+                            <?php endif; ?>
+                            <tr id="noMatchArcRow" style="display: none;">
+                                <td colspan="8" style="text-align: center; padding: 2rem 1.5rem;">
+                                    <div class="text-muted" style="font-size: 0.9rem;">Tidak ditemukan arsip persuratan yang sesuai dengan filter pencarian.</div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <?php if (!empty($pagination)): ?>
+                    <div style="padding: 0.75rem 1rem; border-top: 1px solid var(--border-color);">
+                        <?= partial('partials.pagination', $pagination) ?>
+                    </div>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script Interaktif untuk Pencarian, Filter, dan Edit Form Arsip -->
+    <script>
+    function editArcFromRow(btn) {
+        const row = btn.closest('.arc-row');
+        if (!row) return;
+
+        const id = row.getAttribute('data-id');
+        const title = row.getAttribute('data-title');
+        const letterNumber = row.getAttribute('data-letter-number');
+        const category = row.getAttribute('data-category');
+        const sender = row.getAttribute('data-sender');
+        const recipient = row.getAttribute('data-recipient');
+        const letterDate = row.getAttribute('data-letter-date');
+        const receivedDate = row.getAttribute('data-received-date');
+        const nature = row.getAttribute('data-nature');
+        const status = row.getAttribute('data-status');
+        const description = row.getAttribute('data-description');
+        const filename = row.getAttribute('data-filename');
+
+        document.getElementById('arc_id').value = id;
+        document.getElementById('arc_title').value = title;
+        document.getElementById('arc_letter_number').value = letterNumber;
+        document.getElementById('arc_category').value = category;
+        document.getElementById('arc_sender').value = sender;
+        document.getElementById('arc_recipient').value = recipient;
+        document.getElementById('arc_letter_date').value = letterDate;
+        document.getElementById('arc_received_or_sent_date').value = receivedDate;
+        document.getElementById('arc_nature').value = nature;
+        document.getElementById('arc_status').value = status;
+        document.getElementById('arc_description').value = description;
+
+        // Tampilan Mode Edit
+        document.getElementById('arcFormTitle').innerText = 'Edit Arsip Surat';
+        document.getElementById('arcFormSubtitle').innerText = 'Perbarui informasi dokumen atau ganti berkas lampiran';
+        
+        const modeBadge = document.getElementById('arcModeBadge');
+        modeBadge.className = 'badge badge-warning';
+        modeBadge.innerText = 'Mode Edit #' + id;
+
+        // Berkas bersifat opsional saat edit
+        const docInput = document.getElementById('arc_document');
+        docInput.removeAttribute('required');
+        const reqMarker = document.getElementById('arc_file_required_marker');
+        if (reqMarker) reqMarker.style.display = 'none';
+
+        const fileHelp = document.getElementById('arc_file_help');
+        if (fileHelp) {
+            fileHelp.innerHTML = 'Berkas saat ini: <strong>' + (filename || '-') + '</strong> (Kosongkan jika tidak mengganti berkas).';
+        }
+
+        document.getElementById('btnSubmitArc').innerHTML = '💾 Perbarui Arsip';
+        document.getElementById('btnCancelEditArc').style.display = 'inline-flex';
+
+        // Scroll halus ke form jika di perangkat mobile
+        const formCard = document.getElementById('formArchiveCard');
+        if (formCard) {
+            formCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    }
+
+    function batalEditArc() {
+        const form = document.getElementById('archiveForm');
+        if (form) form.reset();
+
+        document.getElementById('arc_id').value = '';
+        document.getElementById('arcFormTitle').innerText = 'Registrasi Arsip Surat';
+        document.getElementById('arcFormSubtitle').innerText = 'Catat surat masuk, keluar, SK & dokumen BPC';
+
+        const modeBadge = document.getElementById('arcModeBadge');
+        modeBadge.className = 'badge badge-primary';
+        modeBadge.innerText = 'Mode Baru';
+
+        const docInput = document.getElementById('arc_document');
+        docInput.setAttribute('required', 'required');
+        const reqMarker = document.getElementById('arc_file_required_marker');
+        if (reqMarker) reqMarker.style.display = 'inline';
+
+        const fileHelp = document.getElementById('arc_file_help');
+        if (fileHelp) {
+            fileHelp.innerHTML = 'Format: PDF, Word, Excel, JPG, PNG (Maksimal 10 MB)';
+        }
+
+        document.getElementById('btnSubmitArc').innerHTML = '💾 Simpan Arsip Surat';
+        document.getElementById('btnCancelEditArc').style.display = 'none';
+    }
+
+    function filterArchiveTable() {
+        const query = (document.getElementById('arcSearchInput')?.value || '').toLowerCase().trim();
+        const catFilter = (document.getElementById('arcCategoryFilter')?.value || '').trim();
+        const statFilter = (document.getElementById('arcStatusFilter')?.value || '').trim();
+
+        const rows = document.querySelectorAll('.arc-row');
+        let visibleCount = 0;
+
+        rows.forEach(row => {
+            const number = (row.getAttribute('data-letter-number') || '').toLowerCase();
+            const title = (row.getAttribute('data-title') || '').toLowerCase();
+            const sender = (row.getAttribute('data-sender') || '').toLowerCase();
+            const recipient = (row.getAttribute('data-recipient') || '').toLowerCase();
+            const desc = (row.getAttribute('data-description') || '').toLowerCase();
+            const rowCat = row.getAttribute('data-category') || '';
+            const rowStat = row.getAttribute('data-status') || '';
+
+            const matchQuery = !query || number.includes(query) || title.includes(query) || sender.includes(query) || recipient.includes(query) || desc.includes(query);
+            const matchCategory = !catFilter || rowCat === catFilter;
+            const matchStatus = !statFilter || rowStat === statFilter;
+
+            if (matchQuery && matchCategory && matchStatus) {
+                row.style.display = '';
+                visibleCount++;
+            } else {
+                row.style.display = 'none';
+            }
+        });
+
+        const noMatchRow = document.getElementById('noMatchArcRow');
+        if (noMatchRow) {
+            noMatchRow.style.display = (visibleCount === 0 && rows.length > 0) ? '' : 'none';
+        }
+    }
+    </script>
+
 
 <?php elseif ($section === 'finance'): ?>
     <section class="card" style="margin-bottom:1.25rem;"><div class="card-body flex justify-between items-center" style="gap:1rem;flex-wrap:wrap;">

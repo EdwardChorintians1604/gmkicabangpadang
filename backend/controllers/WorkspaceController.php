@@ -158,13 +158,34 @@ class WorkspaceController
     public function archives(Request $request): Response
     {
         Authorization::authorize('archive.view');
+
+        $summary = Database::fetchOne(
+            "SELECT 
+                COUNT(*) as total_arsip,
+                COALESCE(SUM(CASE WHEN letter_category = 'Surat Masuk' THEN 1 ELSE 0 END), 0) as total_masuk,
+                COALESCE(SUM(CASE WHEN letter_category = 'Surat Keluar' THEN 1 ELSE 0 END), 0) as total_keluar,
+                COALESCE(SUM(CASE WHEN letter_category LIKE '%SK%' OR letter_category LIKE '%Keputusan%' OR letter_category LIKE '%Tugas%' OR letter_category LIKE '%Mandat%' THEN 1 ELSE 0 END), 0) as total_sk_mandat,
+                COALESCE(SUM(CASE WHEN letter_category NOT IN ('Surat Masuk', 'Surat Keluar') AND letter_category NOT LIKE '%SK%' AND letter_category NOT LIKE '%Keputusan%' AND letter_category NOT LIKE '%Tugas%' AND letter_category NOT LIKE '%Mandat%' THEN 1 ELSE 0 END), 0) as total_notula
+             FROM office_documents WHERE document_type = 'archive'"
+        ) ?: [
+            'total_arsip' => 0,
+            'total_masuk' => 0,
+            'total_keluar' => 0,
+            'total_sk_mandat' => 0,
+            'total_notula' => 0,
+        ];
+
         $pagination = $this->pagination($request, "SELECT COUNT(*) AS total FROM office_documents WHERE document_type = 'archive'");
         $documents = Database::fetchAll(
             "SELECT d.*, u.nama_lengkap FROM office_documents d JOIN users u ON u.id = d.created_by
-             WHERE d.document_type = 'archive' ORDER BY d.created_at DESC, d.id DESC
+             WHERE d.document_type = 'archive' ORDER BY COALESCE(d.letter_date, d.created_at) DESC, d.id DESC
              LIMIT " . $pagination['perPage'] . ' OFFSET ' . $pagination['offset']
         );
-        return $this->page('Arsip Surat', 'archive', ['documents' => $documents, 'pagination' => $pagination]);
+        return $this->page('Arsip Persuratan & Dokumen Cabang', 'archive', [
+            'documents' => $documents,
+            'pagination' => $pagination,
+            'summary' => $summary,
+        ]);
     }
 
     public function saveArchive(Request $request): Response
@@ -172,9 +193,39 @@ class WorkspaceController
         Authorization::authorize('archive.manage');
         $id = (int) $request->post('id', 0);
         $title = trim((string) $request->post('title'));
-        $description = trim((string) $request->post('description'));
+        $letterNumber = trim((string) $request->post('letter_number', ''));
+        $letterCategory = trim((string) $request->post('letter_category', 'Surat Masuk'));
+        $sender = trim((string) $request->post('sender', ''));
+        $recipient = trim((string) $request->post('recipient', ''));
+        $letterDate = $request->post('letter_date') ?: null;
+        $receivedOrSentDate = $request->post('received_or_sent_date') ?: null;
+        $letterNature = trim((string) $request->post('letter_nature', 'Biasa'));
+        $status = trim((string) $request->post('status', 'Diarsipkan'));
+        $description = trim((string) $request->post('description', ''));
+
         if ($title === '' || mb_strlen($title) > 180) {
-            return $this->fail('/sekcab/arsip', 'Judul dokumen wajib diisi.');
+            return $this->fail('/sekcab/arsip', 'Perihal atau judul surat wajib diisi (maksimal 180 karakter).');
+        }
+
+        if ($letterCategory === '') {
+            $letterCategory = 'Surat Masuk';
+        }
+
+        $validNatures = ['Biasa', 'Penting', 'Segera', 'Sangat Segera', 'Rahasia'];
+        if (!in_array($letterNature, $validNatures, true)) {
+            $letterNature = 'Biasa';
+        }
+
+        $validStatuses = ['Diarsipkan', 'Menunggu Tindak Lanjut', 'Didisposisi', 'Selesai'];
+        if (!in_array($status, $validStatuses, true)) {
+            $status = 'Diarsipkan';
+        }
+
+        if ($letterDate && !preg_match('/^\d{4}-\d{2}-\d{2}$/', (string)$letterDate)) {
+            $letterDate = null;
+        }
+        if ($receivedOrSentDate && !preg_match('/^\d{4}-\d{2}-\d{2}$/', (string)$receivedOrSentDate)) {
+            $receivedOrSentDate = null;
         }
 
         $existing = null;
@@ -195,8 +246,19 @@ class WorkspaceController
         }
 
         if ($existing) {
-            $fields = [$title, $description ?: null];
-            $sql = 'UPDATE office_documents SET title = ?, description = ?';
+            $fields = [
+                $title,
+                $letterNumber ?: null,
+                $letterCategory,
+                $sender ?: null,
+                $recipient ?: null,
+                $letterDate,
+                $receivedOrSentDate,
+                $letterNature,
+                $status,
+                $description ?: null,
+            ];
+            $sql = 'UPDATE office_documents SET title = ?, letter_number = ?, letter_category = ?, sender = ?, recipient = ?, letter_date = ?, received_or_sent_date = ?, letter_nature = ?, status = ?, description = ?';
             if ($file) {
                 $sql .= ', stored_name = ?, original_name = ?, mime_type = ?';
                 array_push($fields, $file['stored_name'], $file['original_name'], $file['mime_type']);
@@ -207,16 +269,39 @@ class WorkspaceController
             if ($file) {
                 $this->removeDocumentFile($existing['stored_name']);
             }
-            $message = 'Dokumen arsip berhasil diperbarui.';
+            $message = 'Data arsip surat berhasil diperbarui.';
         } else {
             if (!$file) {
-                return $this->fail('/sekcab/arsip', 'Pilih berkas dokumen yang akan diunggah.');
+                return $this->fail('/sekcab/arsip', 'Pilih berkas dokumen/surat yang akan diunggah.');
             }
             Database::execute(
-                "INSERT INTO office_documents (document_type, title, description, stored_name, original_name, mime_type, created_by, created_at) VALUES ('archive', ?, ?, ?, ?, ?, ?, NOW())",
-                [$title, $description ?: null, $file['stored_name'], $file['original_name'], $file['mime_type'], Auth::id()]
+                "INSERT INTO office_documents (
+                    document_type, letter_number, letter_category, title, sender, recipient,
+                    letter_date, received_or_sent_date, letter_nature, status, description,
+                    stored_name, original_name, mime_type, created_by, created_at
+                ) VALUES (
+                    'archive', ?, ?, ?, ?, ?,
+                    ?, ?, ?, ?, ?,
+                    ?, ?, ?, ?, NOW()
+                )",
+                [
+                    $letterNumber ?: null,
+                    $letterCategory,
+                    $title,
+                    $sender ?: null,
+                    $recipient ?: null,
+                    $letterDate,
+                    $receivedOrSentDate,
+                    $letterNature,
+                    $status,
+                    $description ?: null,
+                    $file['stored_name'],
+                    $file['original_name'],
+                    $file['mime_type'],
+                    Auth::id()
+                ]
             );
-            $message = 'Dokumen berhasil disimpan ke arsip privat.';
+            $message = 'Arsip surat berhasil dicatat dan disimpan ke repositori kesekretariatan.';
         }
         Session::flash('success', $message);
         redirect('/sekcab/arsip');
@@ -778,7 +863,10 @@ class WorkspaceController
         }
         $storedName = bin2hex(random_bytes(16)) . '.' . $extension;
         if (!move_uploaded_file($upload['tmp_name'], $directory . DIRECTORY_SEPARATOR . $storedName)) {
-            throw new \RuntimeException('Berkas gagal dipindahkan ke penyimpanan privat.');
+            if (!copy($upload['tmp_name'], $directory . DIRECTORY_SEPARATOR . $storedName)) {
+                throw new \RuntimeException('Berkas gagal dipindahkan ke penyimpanan privat.');
+            }
+            @unlink($upload['tmp_name']);
         }
 
         $originalName = trim(str_replace(["\0", "\r", "\n"], '', basename((string) $upload['name'])));

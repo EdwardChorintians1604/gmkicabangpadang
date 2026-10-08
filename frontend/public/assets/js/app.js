@@ -124,8 +124,16 @@ document.addEventListener('DOMContentLoaded', function () {
     const navToggle = document.querySelector('.nav-toggle');
     const navMenu = document.querySelector('.nav-menu');
     if (navToggle && navMenu) {
-        navToggle.addEventListener('click', function () {
+        navToggle.addEventListener('click', function (e) {
+            e.stopPropagation();
             navMenu.classList.toggle('open');
+        });
+
+        // Close menu when clicking outside on mobile
+        document.addEventListener('click', function (e) {
+            if (navMenu.classList.contains('open') && !navMenu.contains(e.target) && !navToggle.contains(e.target)) {
+                navMenu.classList.remove('open');
+            }
         });
     }
 

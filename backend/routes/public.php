@@ -23,6 +23,7 @@ use App\Core\Router;
 $router->get('/', 'PublicController@home');
 $router->get('/profil', 'PublicController@profil');
 $router->get('/struktur-organisasi', 'PublicController@strukturOrganisasi');
+$router->get('/ad-art', 'PublicController@adArt');
 
 // Warta Berita & Kegiatan
 $router->get('/berita', 'PublicController@berita');
