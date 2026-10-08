@@ -83,7 +83,7 @@
                     <?php if (can('finance.view') || can('reports.view')): ?>
                         <li class="sidebar-nav-item"><a href="/bencab/laporan" class="sidebar-nav-link"><span class="sidebar-nav-icon">💰</span><span>Laporan Keuangan</span></a></li>
                     <?php endif; ?>
-                    <?php if (can('finance.view') || can('reports.view') || can('archive.view')): ?>
+                    <?php if (in_array(auth()['role'] ?? '', ['bencab', 'sekfung_medko', 'admin'], true)): ?>
                         <li class="sidebar-nav-item"><a href="/ruang-kerja/berkas" class="sidebar-nav-link <?= active_nav('/ruang-kerja/berkas') ?>"><span class="sidebar-nav-icon">🔍</span><span>Direktori Berkas Laporan</span></a></li>
                     <?php endif; ?>
                     <?php if (can('strategy.view')): ?>

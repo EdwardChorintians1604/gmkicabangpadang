@@ -251,14 +251,12 @@ class WorkspaceController
         $id = (int) $request->post('id', 0);
         $title = trim((string) $request->post('title'));
         $period = trim((string) $request->post('period'));
-        $amount = $request->post('amount');
         $description = trim((string) $request->post('description'));
         if (
             $title === '' || mb_strlen($title) > 180
             || $period === '' || mb_strlen($period) > 40
-            || !is_numeric($amount) || (float) $amount < 0 || (float) $amount > 9999999999999.99
         ) {
-            return $this->fail('/bencab/laporan', 'Judul, periode, dan jumlah keuangan yang valid wajib diisi.');
+            return $this->fail('/bencab/laporan', 'Judul dan periode laporan keuangan wajib diisi.');
         }
 
         $existing = null;
@@ -282,8 +280,8 @@ class WorkspaceController
         }
 
         if ($existing) {
-            $fields = [$title, $description ?: null, $period, (float) $amount];
-            $sql = 'UPDATE office_documents SET title = ?, description = ?, period = ?, amount = ?';
+            $fields = [$title, $description ?: null, $period];
+            $sql = 'UPDATE office_documents SET title = ?, description = ?, period = ?';
             if ($file) {
                 $sql .= ', stored_name = ?, original_name = ?, mime_type = ?';
                 array_push($fields, $file['stored_name'], $file['original_name'], $file['mime_type']);
@@ -297,8 +295,8 @@ class WorkspaceController
             $message = 'Laporan keuangan berhasil diperbarui.';
         } else {
             Database::execute(
-                "INSERT INTO office_documents (document_type, title, description, period, amount, stored_name, original_name, mime_type, created_by, created_at) VALUES ('finance', ?, ?, ?, ?, ?, ?, ?, ?, NOW())",
-                [$title, $description ?: null, $period, (float) $amount, $file['stored_name'], $file['original_name'], $file['mime_type'], Auth::id()]
+                "INSERT INTO office_documents (document_type, title, description, period, amount, stored_name, original_name, mime_type, created_by, created_at) VALUES ('finance', ?, ?, ?, NULL, ?, ?, ?, ?, NOW())",
+                [$title, $description ?: null, $period, $file['stored_name'], $file['original_name'], $file['mime_type'], Auth::id()]
             );
             $message = 'Laporan keuangan berhasil disimpan.';
         }
@@ -332,6 +330,8 @@ class WorkspaceController
         }
         if ($document['document_type'] === 'finance') {
             Authorization::authorize('reports.download');
+        } elseif (Auth::role() === 'sekfung_medko') {
+            Authorization::authorize('reports.download');
         } else {
             Authorization::authorize('archive.view');
         }
@@ -350,8 +350,8 @@ class WorkspaceController
     public function files(Request $request): Response
     {
         $role = Auth::role();
-        if (!in_array($role, ['admin', 'ketcab', 'sekcab', 'bencab'], true)) {
-            Authorization::authorizeRole(['admin', 'ketcab', 'sekcab', 'bencab']);
+        if (!in_array($role, ['admin', 'bencab', 'sekfung_medko'], true)) {
+            Authorization::authorizeRole(['admin', 'bencab', 'sekfung_medko']);
         }
 
         $query = trim((string) $request->query('q', ''));
@@ -365,8 +365,6 @@ class WorkspaceController
         // Role-based visibility
         if ($role === 'bencab') {
             $where[] = "d.document_type = 'finance'";
-        } elseif ($role === 'sekcab') {
-            $where[] = "d.document_type = 'archive'";
         }
 
         // Category filter
@@ -444,8 +442,6 @@ class WorkspaceController
         $roleParams = [];
         if ($role === 'bencab') {
             $roleScope = "WHERE document_type = 'finance'";
-        } elseif ($role === 'sekcab') {
-            $roleScope = "WHERE document_type = 'archive'";
         }
 
         $totalCount = (int) (Database::fetchOne("SELECT COUNT(*) AS total FROM office_documents {$roleScope}", $roleParams)['total'] ?? 0);

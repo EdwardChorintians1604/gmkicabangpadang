@@ -98,6 +98,7 @@ return [
             'news.update',
             'news.delete',
             'statistics.view',
+            'reports.download',
             'coordination.view',
             'coordination.manage',
         ],

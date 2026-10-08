@@ -24,7 +24,7 @@ $router->post('/sekcab/arsip/{id}/delete', 'WorkspaceController@deleteArchive', 
 $router->get('/bencab/laporan', 'WorkspaceController@finance', ['auth', 'role:admin,ketcab,bencab']);
 $router->post('/bencab/laporan', 'WorkspaceController@saveFinance', ['auth', 'role:bencab', 'csrf']);
 $router->post('/bencab/laporan/{id}/delete', 'WorkspaceController@deleteFinance', ['auth', 'role:bencab', 'csrf']);
-$router->get('/ruang-kerja/berkas', 'WorkspaceController@files', ['auth', 'role:admin,ketcab,sekcab,bencab']);
+$router->get('/ruang-kerja/berkas', 'WorkspaceController@files', ['auth', 'role:admin,bencab,sekfung_medko']);
 $router->get('/dokumen/{id}/unduh', 'WorkspaceController@downloadDocument', ['auth']);
 
 $router->get('/ketcab/strategi', 'WorkspaceController@strategies', ['auth', 'role:admin,ketcab']);

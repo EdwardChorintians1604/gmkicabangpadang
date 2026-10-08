@@ -194,7 +194,6 @@ $backLabel = $role === 'admin' ? 'Dashboard Admin' : 'Ruang Kerja';
                         <th style="min-width:240px;">Berkas &amp; Format</th>
                         <th style="min-width:200px;">Judul &amp; Keterangan</th>
                         <th style="min-width:140px;">Kategori</th>
-                        <th style="min-width:130px;">Nominal (Rp)</th>
                         <th style="min-width:100px;">Ukuran</th>
                         <th style="min-width:150px;">Pengunggah</th>
                         <th style="min-width:140px;">Waktu Simpan</th>
@@ -267,15 +266,6 @@ $backLabel = $role === 'admin' ? 'Dashboard Admin' : 'Ruang Kerja';
                                     </span>
                                 </td>
                                 <td>
-                                    <?php if ($doc['document_type'] === 'finance' && isset($doc['amount'])): ?>
-                                        <span style="font-weight:700;color:#0f5132;font-size:0.875rem;">
-                                            Rp <?= number_format((float)$doc['amount'], 0, ',', '.') ?>
-                                        </span>
-                                    <?php else: ?>
-                                        <span class="text-muted">-</span>
-                                    <?php endif; ?>
-                                </td>
-                                <td>
                                     <span class="text-muted font-medium" style="font-size:0.8125rem;">
                                         <?= e($doc['file_size_formatted'] ?? '0 B') ?>
                                     </span>
@@ -328,7 +318,6 @@ $backLabel = $role === 'admin' ? 'Dashboard Admin' : 'Ruang Kerja';
                                             data-uploader="<?= e($doc['nama_lengkap']) ?>"
                                             data-createdat="<?= e($doc['created_at']) ?>"
                                             data-period="<?= e($doc['period'] ?? '-') ?>"
-                                            data-amount="<?= ($doc['document_type'] === 'finance' && isset($doc['amount'])) ? 'Rp ' . number_format((float)$doc['amount'], 2, ',', '.') : '-' ?>"
                                             data-downloadurl="<?= e($doc['download_url']) ?>"
                                         >
                                             <?= svg_icon('eye', 14) ?>
@@ -339,7 +328,7 @@ $backLabel = $role === 'admin' ? 'Dashboard Admin' : 'Ruang Kerja';
                         <?php endforeach; ?>
                     <?php else: ?>
                         <tr id="emptyTableRow">
-                            <td colspan="10" style="text-align:center;padding:3rem 1.5rem;">
+                            <td colspan="9" style="text-align:center;padding:3rem 1.5rem;">
                                 <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.75rem;">
                                     <div style="font-size:2.5rem;background:#f1f5f9;width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;">
                                         📂
@@ -370,7 +359,7 @@ $backLabel = $role === 'admin' ? 'Dashboard Admin' : 'Ruang Kerja';
                     <?php endif; ?>
                     <!-- Baris jika client-side filter tidak menemukan hasil -->
                     <tr id="noMatchClientRow" style="display:none;">
-                        <td colspan="10" style="text-align:center;padding:3rem 1.5rem;">
+                        <td colspan="9" style="text-align:center;padding:3rem 1.5rem;">
                             <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.75rem;">
                                 <div style="font-size:2rem;">🔍</div>
                                 <div style="font-size:1.05rem;font-weight:700;color:var(--text-main);">
@@ -436,15 +425,9 @@ $backLabel = $role === 'admin' ? 'Dashboard Admin' : 'Ruang Kerja';
                 </div>
             </div>
 
-            <div class="grid grid-cols-2 gap-3" style="margin-top:0.75rem;">
-                <div class="file-meta-item">
-                    <span class="file-meta-label">Periode</span>
-                    <span class="file-meta-value" id="modalPeriod"></span>
-                </div>
-                <div class="file-meta-item">
-                    <span class="file-meta-label">Nominal Tercatat</span>
-                    <span class="file-meta-value font-semibold" id="modalAmount" style="color:#0f5132;"></span>
-                </div>
+            <div class="file-meta-item" style="margin-top:0.75rem;">
+                <span class="file-meta-label">Periode</span>
+                <span class="file-meta-value font-semibold" id="modalPeriod"></span>
             </div>
 
             <div class="grid grid-cols-2 gap-3" style="margin-top:0.75rem;">
@@ -754,7 +737,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const uploader = this.getAttribute('data-uploader') || '-';
             const createdAt = this.getAttribute('data-createdat') || '-';
             const period = this.getAttribute('data-period') || '-';
-            const amount = this.getAttribute('data-amount') || '-';
             const downloadUrl = this.getAttribute('data-downloadurl') || '#';
 
             document.getElementById('modalFileTitle').textContent = title;
@@ -767,7 +749,6 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('modalUploader').textContent = uploader;
             document.getElementById('modalCreatedAt').textContent = createdAt;
             document.getElementById('modalPeriod').textContent = period;
-            document.getElementById('modalAmount').textContent = amount;
 
             const dlBtn = document.getElementById('modalDownloadBtn');
             if (dlBtn) dlBtn.setAttribute('href', downloadUrl);

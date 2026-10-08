@@ -459,8 +459,7 @@ $backLabel = $role === 'admin' ? 'Dashboard Admin' : 'Ruang kerja';
                 <?= csrf_field() ?>
                 <label>Judul laporan<input class="form-control" name="title" maxlength="180" required></label>
                 <label>Periode<input class="form-control" name="period" placeholder="Contoh: Triwulan I 2026" maxlength="40" required></label>
-                <label>Jumlah (Rp)<input class="form-control" name="amount" type="number" min="0" step="0.01" required></label>
-                <label>Berkas laporan<input class="form-control" type="file" name="document" accept=".pdf,.doc,.docx,.xls,.xlsx,.odt,.jpg,.jpeg,.png" required></label>
+                <label style="grid-column:1/-1;">Berkas laporan<input class="form-control" type="file" name="document" accept=".pdf,.doc,.docx,.xls,.xlsx,.odt,.jpg,.jpeg,.png" required></label>
                 <label style="grid-column:1/-1;">Ringkasan/keterangan<textarea class="form-control" name="description" rows="2"></textarea></label>
                 <div><button class="btn btn-primary" type="submit">Simpan laporan</button></div>
             </form>
@@ -474,9 +473,8 @@ $backLabel = $role === 'admin' ? 'Dashboard Admin' : 'Ruang kerja';
                 <form method="post" action="/bencab/laporan" enctype="multipart/form-data">
                     <?= csrf_field() ?><input type="hidden" name="id" value="<?= (int)$document['id'] ?>">
                     <label>Judul<input class="form-control" name="title" value="<?= e($document['title']) ?>" required></label>
-                    <div class="grid grid-cols-2 gap-3" style="margin-top:.5rem;">
+                    <div style="margin-top:.5rem;">
                         <label>Periode<input class="form-control" name="period" value="<?= e($document['period']) ?>" required></label>
-                        <label>Jumlah (Rp)<input class="form-control" name="amount" type="number" min="0" step="0.01" value="<?= e($document['amount']) ?>" required></label>
                     </div>
                     <label style="display:block;margin-top:.5rem;">Ganti berkas (opsional)<input class="form-control" type="file" name="document" accept=".pdf,.doc,.docx,.xls,.xlsx,.odt,.jpg,.jpeg,.png"></label>
                     <label style="display:block;margin-top:.5rem;">Ringkasan<textarea class="form-control" name="description" rows="2"><?= e($document['description'] ?? '') ?></textarea></label>
@@ -487,7 +485,6 @@ $backLabel = $role === 'admin' ? 'Dashboard Admin' : 'Ruang kerja';
                 </div>
             <?php else: ?>
                 <h2><?= e($document['title']) ?></h2><p class="text-muted"><?= e($document['period']) ?> · diunggah oleh <?= e($document['nama_lengkap']) ?></p>
-                <strong>Rp <?= number_format((float)$document['amount'], 2, ',', '.') ?></strong>
                 <?php if (!empty($document['description'])): ?><p><?= nl2br(e($document['description'])) ?></p><?php endif; ?>
                 <a class="btn btn-outline btn-sm" href="/dokumen/<?= (int)$document['id'] ?>/unduh">Unduh laporan</a>
             <?php endif; ?>
