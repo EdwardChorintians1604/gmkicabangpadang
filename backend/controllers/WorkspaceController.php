@@ -39,8 +39,8 @@ class WorkspaceController
             'finance' => [
                 can('reports.view') ? 'reports.view' : 'finance.view',
                 $role === 'bencab'
-                    ? "SELECT COUNT(*) AS total FROM office_documents WHERE document_type = 'finance' AND created_by = ?"
-                    : "SELECT COUNT(*) AS total FROM office_documents WHERE document_type = 'finance'",
+                ? "SELECT COUNT(*) AS total FROM office_documents WHERE document_type = 'finance' AND created_by = ?"
+                : "SELECT COUNT(*) AS total FROM office_documents WHERE document_type = 'finance'",
                 $role === 'bencab' ? [Auth::id()] : [],
             ],
             'messages' => [
@@ -56,7 +56,7 @@ class WorkspaceController
         ];
         foreach ($queries as $key => [$permission, $sql, $params]) {
             if (can($permission)) {
-                $counts[$key] = (int)(Database::fetchOne($sql, $params)['total'] ?? 0);
+                $counts[$key] = (int) (Database::fetchOne($sql, $params)['total'] ?? 0);
             }
         }
 
@@ -100,19 +100,19 @@ class WorkspaceController
     public function saveInventory(Request $request): Response
     {
         Authorization::authorize('inventory.manage');
-        $id = (int)$request->post('id', 0);
-        $name = trim((string)$request->post('name'));
-        $category = trim((string)$request->post('category'));
+        $id = (int) $request->post('id', 0);
+        $name = trim((string) $request->post('name'));
+        $category = trim((string) $request->post('category'));
         $quantity = $request->post('quantity');
-        $unit = trim((string)$request->post('unit'));
-        $location = trim((string)$request->post('location'));
-        $condition = (string)$request->post('item_condition', 'Baik');
-        $notes = trim((string)$request->post('notes'));
+        $unit = trim((string) $request->post('unit'));
+        $location = trim((string) $request->post('location'));
+        $condition = (string) $request->post('item_condition', 'Baik');
+        $notes = trim((string) $request->post('notes'));
 
         if (
             $name === '' || mb_strlen($name) > 180
             || $category === '' || mb_strlen($category) > 100
-            || !is_numeric($quantity) || (float)$quantity < 0 || (float)$quantity > 99999999.99
+            || !is_numeric($quantity) || (float) $quantity < 0 || (float) $quantity > 99999999.99
             || $unit === '' || mb_strlen($unit) > 40
             || mb_strlen($location) > 180
         ) {
@@ -129,13 +129,13 @@ class WorkspaceController
             }
             Database::execute(
                 'UPDATE inventory_items SET name = ?, category = ?, quantity = ?, unit = ?, location = ?, item_condition = ?, notes = ? WHERE id = ?',
-                [$name, $category, (float)$quantity, $unit, $location ?: null, $condition, $notes ?: null, $id]
+                [$name, $category, (float) $quantity, $unit, $location ?: null, $condition, $notes ?: null, $id]
             );
             $message = 'Data inventaris berhasil diperbarui.';
         } else {
             Database::execute(
                 'INSERT INTO inventory_items (name, category, quantity, unit, location, item_condition, notes, created_by, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW())',
-                [$name, $category, (float)$quantity, $unit, $location ?: null, $condition, $notes ?: null, Auth::id()]
+                [$name, $category, (float) $quantity, $unit, $location ?: null, $condition, $notes ?: null, Auth::id()]
             );
             $message = 'Inventaris berhasil ditambahkan.';
         }
@@ -147,10 +147,10 @@ class WorkspaceController
     public function deleteInventory(Request $request, string $id): Response
     {
         Authorization::authorize('inventory.manage');
-        if (!Database::fetchOne('SELECT id FROM inventory_items WHERE id = ?', [(int)$id])) {
+        if (!Database::fetchOne('SELECT id FROM inventory_items WHERE id = ?', [(int) $id])) {
             return $this->fail('/sekcab/inventaris', 'Data inventaris tidak ditemukan.');
         }
-        Database::execute('DELETE FROM inventory_items WHERE id = ?', [(int)$id]);
+        Database::execute('DELETE FROM inventory_items WHERE id = ?', [(int) $id]);
         Session::flash('success', 'Data inventaris berhasil dihapus.');
         redirect('/sekcab/inventaris');
     }
@@ -170,9 +170,9 @@ class WorkspaceController
     public function saveArchive(Request $request): Response
     {
         Authorization::authorize('archive.manage');
-        $id = (int)$request->post('id', 0);
-        $title = trim((string)$request->post('title'));
-        $description = trim((string)$request->post('description'));
+        $id = (int) $request->post('id', 0);
+        $title = trim((string) $request->post('title'));
+        $description = trim((string) $request->post('description'));
         if ($title === '' || mb_strlen($title) > 180) {
             return $this->fail('/sekcab/arsip', 'Judul dokumen wajib diisi.');
         }
@@ -248,15 +248,15 @@ class WorkspaceController
     public function saveFinance(Request $request): Response
     {
         Authorization::authorize('finance.manage');
-        $id = (int)$request->post('id', 0);
-        $title = trim((string)$request->post('title'));
-        $period = trim((string)$request->post('period'));
+        $id = (int) $request->post('id', 0);
+        $title = trim((string) $request->post('title'));
+        $period = trim((string) $request->post('period'));
         $amount = $request->post('amount');
-        $description = trim((string)$request->post('description'));
+        $description = trim((string) $request->post('description'));
         if (
             $title === '' || mb_strlen($title) > 180
             || $period === '' || mb_strlen($period) > 40
-            || !is_numeric($amount) || (float)$amount < 0 || (float)$amount > 9999999999999.99
+            || !is_numeric($amount) || (float) $amount < 0 || (float) $amount > 9999999999999.99
         ) {
             return $this->fail('/bencab/laporan', 'Judul, periode, dan jumlah keuangan yang valid wajib diisi.');
         }
@@ -282,7 +282,7 @@ class WorkspaceController
         }
 
         if ($existing) {
-            $fields = [$title, $description ?: null, $period, (float)$amount];
+            $fields = [$title, $description ?: null, $period, (float) $amount];
             $sql = 'UPDATE office_documents SET title = ?, description = ?, period = ?, amount = ?';
             if ($file) {
                 $sql .= ', stored_name = ?, original_name = ?, mime_type = ?';
@@ -298,7 +298,7 @@ class WorkspaceController
         } else {
             Database::execute(
                 "INSERT INTO office_documents (document_type, title, description, period, amount, stored_name, original_name, mime_type, created_by, created_at) VALUES ('finance', ?, ?, ?, ?, ?, ?, ?, ?, NOW())",
-                [$title, $description ?: null, $period, (float)$amount, $file['stored_name'], $file['original_name'], $file['mime_type'], Auth::id()]
+                [$title, $description ?: null, $period, (float) $amount, $file['stored_name'], $file['original_name'], $file['mime_type'], Auth::id()]
             );
             $message = 'Laporan keuangan berhasil disimpan.';
         }
@@ -312,12 +312,12 @@ class WorkspaceController
         Authorization::authorize('finance.manage');
         $document = Database::fetchOne(
             "SELECT * FROM office_documents WHERE id = ? AND document_type = 'finance' AND created_by = ?",
-            [(int)$id, Auth::id()]
+            [(int) $id, Auth::id()]
         );
         if (!$document) {
             return $this->fail('/bencab/laporan', 'Laporan tidak ditemukan atau bukan milik akun Anda.');
         }
-        Database::execute('DELETE FROM office_documents WHERE id = ?', [(int)$id]);
+        Database::execute('DELETE FROM office_documents WHERE id = ?', [(int) $id]);
         $this->removeDocumentFile($document['stored_name']);
         Session::flash('success', 'Laporan keuangan berhasil dihapus.');
         redirect('/bencab/laporan');
@@ -325,16 +325,13 @@ class WorkspaceController
 
     public function downloadDocument(Request $request, string $id): Response
     {
-        $document = Database::fetchOne('SELECT * FROM office_documents WHERE id = ?', [(int)$id]);
+        $document = Database::fetchOne('SELECT * FROM office_documents WHERE id = ?', [(int) $id]);
         if (!$document) {
             http_response_code(404);
             return (new Response())->html('Dokumen tidak ditemukan.', 404);
         }
         if ($document['document_type'] === 'finance') {
             Authorization::authorize('reports.download');
-            if (Auth::role() === 'bencab' && (int)$document['created_by'] !== Auth::id()) {
-                Authorization::authorizeRole('admin');
-            }
         } else {
             Authorization::authorize('archive.view');
         }
@@ -350,17 +347,166 @@ class WorkspaceController
         return new Response();
     }
 
+    public function files(Request $request): Response
+    {
+        $role = Auth::role();
+        if (!in_array($role, ['admin', 'ketcab', 'sekcab', 'bencab'], true)) {
+            Authorization::authorizeRole(['admin', 'ketcab', 'sekcab', 'bencab']);
+        }
+
+        $query = trim((string) $request->query('q', ''));
+        $category = trim((string) $request->query('category', 'all'));
+        $extension = strtolower(trim((string) $request->query('ext', 'all')));
+        $sort = trim((string) $request->query('sort', 'latest'));
+
+        $where = [];
+        $params = [];
+
+        // Role-based visibility
+        if ($role === 'bencab') {
+            $where[] = "d.document_type = 'finance'";
+        } elseif ($role === 'sekcab') {
+            $where[] = "d.document_type = 'archive'";
+        }
+
+        // Category filter
+        if ($category === 'finance') {
+            $where[] = "d.document_type = 'finance'";
+        } elseif ($category === 'archive') {
+            $where[] = "d.document_type = 'archive'";
+        }
+
+        // Search engine filter (matches title, original_name, description, period, uploader name)
+        if ($query !== '') {
+            $where[] = "(d.title LIKE ? OR d.original_name LIKE ? OR d.description LIKE ? OR d.period LIKE ? OR u.nama_lengkap LIKE ?)";
+            $term = '%' . $query . '%';
+            array_push($params, $term, $term, $term, $term, $term);
+        }
+
+        // Extension filter
+        if ($extension !== '' && $extension !== 'all') {
+            if ($extension === 'images') {
+                $where[] = "LOWER(SUBSTRING_INDEX(d.original_name, '.', -1)) IN ('jpg', 'jpeg', 'png', 'webp')";
+            } elseif ($extension === 'excel') {
+                $where[] = "LOWER(SUBSTRING_INDEX(d.original_name, '.', -1)) IN ('xls', 'xlsx')";
+            } elseif ($extension === 'word') {
+                $where[] = "LOWER(SUBSTRING_INDEX(d.original_name, '.', -1)) IN ('doc', 'docx', 'odt')";
+            } else {
+                $where[] = "LOWER(SUBSTRING_INDEX(d.original_name, '.', -1)) = ?";
+                $params[] = $extension;
+            }
+        }
+
+        $whereSql = $where ? 'WHERE ' . implode(' AND ', $where) : '';
+
+        $countSql = "SELECT COUNT(*) AS total 
+                     FROM office_documents d 
+                     JOIN users u ON u.id = d.created_by 
+                     {$whereSql}";
+        $pagination = $this->pagination($request, $countSql, $params);
+
+        $orderSql = match ($sort) {
+            'oldest' => 'ORDER BY d.created_at ASC, d.id ASC',
+            'name_asc' => 'ORDER BY d.original_name ASC',
+            'name_desc' => 'ORDER BY d.original_name DESC',
+            'amount_desc' => 'ORDER BY d.amount DESC',
+            'amount_asc' => 'ORDER BY d.amount ASC',
+            default => 'ORDER BY d.created_at DESC, d.id DESC',
+        };
+
+        $listSql = "SELECT d.*, u.nama_lengkap, u.role AS uploader_role 
+                    FROM office_documents d 
+                    JOIN users u ON u.id = d.created_by 
+                    {$whereSql} 
+                    {$orderSql} 
+                    LIMIT {$pagination['perPage']} OFFSET {$pagination['offset']}";
+
+        $rows = Database::fetchAll($listSql, $params);
+
+        $documents = [];
+        foreach ($rows as $row) {
+            $path = $this->documentPath($row['stored_name']);
+            $fileExists = is_file($path);
+            $fileSize = $fileExists ? (int) filesize($path) : 0;
+            $ext = strtolower(pathinfo($row['original_name'], PATHINFO_EXTENSION));
+
+            $row['file_exists'] = $fileExists;
+            $row['file_size'] = $fileSize;
+            $row['file_size_formatted'] = $this->formatBytes($fileSize);
+            $row['extension'] = $ext;
+            $row['download_url'] = '/dokumen/' . (int) $row['id'] . '/unduh';
+
+            $documents[] = $row;
+        }
+
+        // Stats summary calculation
+        $roleScope = '';
+        $roleParams = [];
+        if ($role === 'bencab') {
+            $roleScope = "WHERE document_type = 'finance'";
+        } elseif ($role === 'sekcab') {
+            $roleScope = "WHERE document_type = 'archive'";
+        }
+
+        $totalCount = (int) (Database::fetchOne("SELECT COUNT(*) AS total FROM office_documents {$roleScope}", $roleParams)['total'] ?? 0);
+        $financeCount = (int) (Database::fetchOne("SELECT COUNT(*) AS total FROM office_documents WHERE document_type = 'finance'")['total'] ?? 0);
+        $archiveCount = (int) (Database::fetchOne("SELECT COUNT(*) AS total FROM office_documents WHERE document_type = 'archive'")['total'] ?? 0);
+
+        // Calculate total physical bytes stored on disk
+        $allDocs = Database::fetchAll("SELECT stored_name FROM office_documents {$roleScope}", $roleParams);
+        $totalStorageBytes = 0;
+        foreach ($allDocs as $docItem) {
+            $p = $this->documentPath($docItem['stored_name']);
+            if (is_file($p)) {
+                $totalStorageBytes += (int) filesize($p);
+            }
+        }
+
+        $stats = [
+            'total' => $totalCount,
+            'finance' => $financeCount,
+            'archive' => $archiveCount,
+            'storage_used' => $this->formatBytes($totalStorageBytes),
+            'storage_bytes' => $totalStorageBytes,
+        ];
+
+        $layout = Auth::role() === 'admin' ? 'admin' : 'dashboard';
+
+        return view('workspaces.files', [
+            'pageTitle' => 'Direktori & Pencarian Berkas Laporan - GMKI Cabang Padang',
+            'documents' => $documents,
+            'stats' => $stats,
+            'query' => $query,
+            'category' => $category,
+            'extension' => $extension,
+            'sort' => $sort,
+            'pagination' => $pagination,
+            'user' => Auth::user(),
+        ], $layout);
+    }
+
+    private function formatBytes(int $bytes): string
+    {
+        if ($bytes <= 0) {
+            return '0 B';
+        }
+        $units = ['B', 'KB', 'MB', 'GB'];
+        $i = (int) floor(log($bytes, 1024));
+        $i = min($i, count($units) - 1);
+        return round($bytes / pow(1024, $i), 2) . ' ' . $units[$i];
+    }
+
     public function deleteArchive(Request $request, string $id): Response
     {
         Authorization::authorize('archive.manage');
         $document = Database::fetchOne(
             "SELECT * FROM office_documents WHERE id = ? AND document_type = 'archive'",
-            [(int)$id]
+            [(int) $id]
         );
         if (!$document) {
             return $this->fail('/sekcab/arsip', 'Dokumen arsip tidak ditemukan.');
         }
-        Database::execute('DELETE FROM office_documents WHERE id = ?', [(int)$id]);
+        Database::execute('DELETE FROM office_documents WHERE id = ?', [(int) $id]);
         $this->removeDocumentFile($document['stored_name']);
         Session::flash('success', 'Dokumen arsip berhasil dihapus.');
         redirect('/sekcab/arsip');
@@ -380,11 +526,11 @@ class WorkspaceController
     public function saveStrategy(Request $request): Response
     {
         Authorization::authorize('strategy.manage');
-        $id = (int)$request->post('id', 0);
-        $title = trim((string)$request->post('title'));
-        $objective = trim((string)$request->post('objective'));
-        $status = (string)$request->post('status', 'Rencana');
-        $targetDate = trim((string)$request->post('target_date'));
+        $id = (int) $request->post('id', 0);
+        $title = trim((string) $request->post('title'));
+        $objective = trim((string) $request->post('objective'));
+        $status = (string) $request->post('status', 'Rencana');
+        $targetDate = trim((string) $request->post('target_date'));
         if ($title === '' || mb_strlen($title) > 180 || $objective === '' || !in_array($status, ['Rencana', 'Berjalan', 'Selesai'], true)) {
             return $this->fail('/ketcab/strategi', 'Judul, tujuan, dan status strategi wajib valid.');
         }
@@ -417,10 +563,10 @@ class WorkspaceController
     public function deleteStrategy(Request $request, string $id): Response
     {
         Authorization::authorize('strategy.manage');
-        if (!Database::fetchOne('SELECT id FROM organization_strategies WHERE id = ?', [(int)$id])) {
+        if (!Database::fetchOne('SELECT id FROM organization_strategies WHERE id = ?', [(int) $id])) {
             return $this->fail('/ketcab/strategi', 'Catatan strategi tidak ditemukan.');
         }
-        Database::execute('DELETE FROM organization_strategies WHERE id = ?', [(int)$id]);
+        Database::execute('DELETE FROM organization_strategies WHERE id = ?', [(int) $id]);
         Session::flash('success', 'Catatan strategi berhasil dihapus.');
         redirect('/ketcab/strategi');
     }
@@ -500,10 +646,10 @@ class WorkspaceController
     public function sendMessage(Request $request): Response
     {
         Authorization::authorize('coordination.manage');
-        $role = (string)Auth::role();
-        $subject = trim((string)$request->post('subject', 'Koordinasi BPC'));
-        $body = trim((string)$request->post('body'));
-        $parentId = (int)$request->post('parent_id', 0);
+        $role = (string) Auth::role();
+        $subject = trim((string) $request->post('subject', 'Koordinasi BPC'));
+        $body = trim((string) $request->post('body'));
+        $parentId = (int) $request->post('parent_id', 0);
         if ($subject === '' || mb_strlen($subject) > 180 || $body === '' || mb_strlen($body) > 5000) {
             return $this->coordinationFailure($request, 'Isi pesan wajib diisi dan tidak boleh lebih dari 5.000 karakter.');
         }
@@ -530,7 +676,7 @@ class WorkspaceController
             $message = Database::fetchOne(
                 'SELECT m.id, m.sender_id, m.sender_role, m.subject, m.body, m.created_at, u.nama_lengkap AS sender_name
                  FROM coordination_messages m JOIN users u ON u.id = m.sender_id WHERE m.id = ?',
-                [(int)Database::lastInsertId()]
+                [(int) Database::lastInsertId()]
             );
             return (new Response())->json(['message' => $message], 201);
         }
@@ -550,10 +696,10 @@ class WorkspaceController
 
     private function pagination(Request $request, string $countSql, array $params = []): array
     {
-        $total = (int)(Database::fetchOne($countSql, $params)['total'] ?? 0);
+        $total = (int) (Database::fetchOne($countSql, $params)['total'] ?? 0);
         $perPage = 25;
-        $totalPages = max(1, (int)ceil($total / $perPage));
-        $currentPage = max(1, min($totalPages, (int)$request->query('page', 1)));
+        $totalPages = max(1, (int) ceil($total / $perPage));
+        $currentPage = max(1, min($totalPages, (int) $request->query('page', 1)));
 
         return [
             'currentPage' => $currentPage,
@@ -616,11 +762,11 @@ class WorkspaceController
             throw new \RuntimeException('Pilih berkas dokumen yang akan diunggah.');
         }
         $upload = $request->file($field);
-        if (($upload['error'] ?? UPLOAD_ERR_OK) !== UPLOAD_ERR_OK || (int)$upload['size'] > 10 * 1024 * 1024) {
+        if (($upload['error'] ?? UPLOAD_ERR_OK) !== UPLOAD_ERR_OK || (int) $upload['size'] > 10 * 1024 * 1024) {
             throw new \RuntimeException('Unggahan gagal atau ukuran berkas melebihi 10 MB.');
         }
 
-        $extension = strtolower(pathinfo((string)$upload['name'], PATHINFO_EXTENSION));
+        $extension = strtolower(pathinfo((string) $upload['name'], PATHINFO_EXTENSION));
         if (!isset(self::DOCUMENT_EXTENSIONS[$extension])) {
             throw new \RuntimeException('Format yang didukung: PDF, Word, Excel, ODT, JPG, atau PNG.');
         }
@@ -639,7 +785,7 @@ class WorkspaceController
             throw new \RuntimeException('Berkas gagal dipindahkan ke penyimpanan privat.');
         }
 
-        $originalName = trim(str_replace(["\0", "\r", "\n"], '', basename((string)$upload['name'])));
+        $originalName = trim(str_replace(["\0", "\r", "\n"], '', basename((string) $upload['name'])));
         return [
             'stored_name' => $storedName,
             'original_name' => mb_strcut($originalName ?: 'dokumen.' . $extension, 0, 255, 'UTF-8'),

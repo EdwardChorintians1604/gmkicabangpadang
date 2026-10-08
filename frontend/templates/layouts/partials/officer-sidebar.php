@@ -21,6 +21,9 @@ $navigation = [
             ['/admin/civitas', 'users', 'Pantauan Anggota'],
             ['/admin/statistik', 'chart', 'Statistik Cabang'],
         ]],
+        ['Tools', [
+            ['/ruang-kerja/berkas', 'search', 'Direktori Berkas Laporan'],
+        ]],
     ],
     'sekcab' => [
         ['Administrasi Cabang', [
@@ -32,12 +35,18 @@ $navigation = [
             ['/sekcab/arsip', 'backup', 'Arsip Surat'],
             ['/admin/statistik', 'chart', 'Statistik Anggota'],
         ]],
+        ['Tools', [
+            ['/ruang-kerja/berkas', 'search', 'Direktori Berkas Laporan'],
+        ]],
     ],
     'bencab' => [
         ['Keuangan Cabang', [
             ['/ruang-kerja', 'dashboard', 'Dashboard Bencab'],
             ['/bencab/laporan', 'download', 'Laporan Keuangan'],
             ['/ruang-kerja/antrian', 'chart', 'Antrean Ekspor'],
+        ]],
+        ['Tools', [
+            ['/ruang-kerja/berkas', 'search', 'Direktori Berkas Laporan'],
         ]],
     ],
     'sekfung_medko' => [

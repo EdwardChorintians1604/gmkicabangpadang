@@ -83,6 +83,9 @@
                     <?php if (can('finance.view') || can('reports.view')): ?>
                         <li class="sidebar-nav-item"><a href="/bencab/laporan" class="sidebar-nav-link"><span class="sidebar-nav-icon">💰</span><span>Laporan Keuangan</span></a></li>
                     <?php endif; ?>
+                    <?php if (can('finance.view') || can('reports.view') || can('archive.view')): ?>
+                        <li class="sidebar-nav-item"><a href="/ruang-kerja/berkas" class="sidebar-nav-link <?= active_nav('/ruang-kerja/berkas') ?>"><span class="sidebar-nav-icon">🔍</span><span>Direktori Berkas Laporan</span></a></li>
+                    <?php endif; ?>
                     <?php if (can('strategy.view')): ?>
                         <li class="sidebar-nav-item"><a href="/ketcab/strategi" class="sidebar-nav-link"><span class="sidebar-nav-icon">🧭</span><span>Strategi Organisasi</span></a></li>
                     <?php endif; ?>

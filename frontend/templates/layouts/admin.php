@@ -175,6 +175,15 @@
                         <span>Cadangan Data</span>
                     </a>
                 </li>
+
+                <li class="nav-category">Tools & Berkas</li>
+                <li class="sidebar-nav-item">
+                    <a href="/ruang-kerja/berkas"
+                        class="sidebar-nav-link <?= active_nav('/ruang-kerja/berkas') ?>">
+                        <span class="sidebar-nav-icon"><?= svg_icon('search', 18) ?></span>
+                        <span>Direktori Berkas Laporan</span>
+                    </a>
+                </li>
             </ul>
 
             <div class="sidebar-footer">
