@@ -178,10 +178,17 @@
 
                 <li class="nav-category">Tools & Berkas</li>
                 <li class="sidebar-nav-item">
-                    <a href="/ruang-kerja/berkas"
-                        class="sidebar-nav-link <?= active_nav('/ruang-kerja/berkas') ?>">
-                        <span class="sidebar-nav-icon"><?= svg_icon('search', 18) ?></span>
-                        <span>Direktori Berkas Laporan</span>
+                    <a href="/sekcab/berkas"
+                        class="sidebar-nav-link <?= active_nav('/sekcab/berkas') ?>">
+                        <span class="sidebar-nav-icon">📁</span>
+                        <span>Direktori Berkas Persuratan</span>
+                    </a>
+                </li>
+                <li class="sidebar-nav-item">
+                    <a href="/bencab/berkas"
+                        class="sidebar-nav-link <?= active_nav('/bencab/berkas') ?>">
+                        <span class="sidebar-nav-icon">📊</span>
+                        <span>Direktori Berkas Keuangan</span>
                     </a>
                 </li>
             </ul>

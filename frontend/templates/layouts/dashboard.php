@@ -78,13 +78,14 @@
                         <li class="sidebar-nav-item"><a href="/sekcab/inventaris" class="sidebar-nav-link"><span class="sidebar-nav-icon">📦</span><span>Inventaris</span></a></li>
                     <?php endif; ?>
                     <?php if (can('archive.view')): ?>
-                        <li class="sidebar-nav-item"><a href="/sekcab/arsip" class="sidebar-nav-link"><span class="sidebar-nav-icon">🗂️</span><span>Arsip Surat</span></a></li>
+                        <li class="sidebar-nav-item"><a href="/sekcab/arsip" class="sidebar-nav-link <?= active_nav('/sekcab/arsip') ?>"><span class="sidebar-nav-icon">🗂️</span><span>Arsip Surat</span></a></li>
+                        <li class="sidebar-nav-item"><a href="/sekcab/berkas" class="sidebar-nav-link <?= active_nav('/sekcab/berkas') ?>"><span class="sidebar-nav-icon">📁</span><span>Direktori Berkas Persuratan</span></a></li>
                     <?php endif; ?>
                     <?php if (can('finance.view') || can('reports.view')): ?>
-                        <li class="sidebar-nav-item"><a href="/bencab/laporan" class="sidebar-nav-link"><span class="sidebar-nav-icon">💰</span><span>Laporan Keuangan</span></a></li>
-                    <?php endif; ?>
-                    <?php if (in_array(auth()['role'] ?? '', ['bencab', 'sekfung_medko', 'admin'], true)): ?>
-                        <li class="sidebar-nav-item"><a href="/ruang-kerja/berkas" class="sidebar-nav-link <?= active_nav('/ruang-kerja/berkas') ?>"><span class="sidebar-nav-icon">🔍</span><span>Direktori Berkas Laporan</span></a></li>
+                        <li class="sidebar-nav-item"><a href="/bencab/laporan" class="sidebar-nav-link <?= active_nav('/bencab/laporan') ?>"><span class="sidebar-nav-icon">💰</span><span>Laporan Keuangan</span></a></li>
+                        <?php if (can('finance.view')): ?>
+                            <li class="sidebar-nav-item"><a href="/bencab/berkas" class="sidebar-nav-link <?= active_nav('/bencab/berkas') ?>"><span class="sidebar-nav-icon">📊</span><span>Direktori Berkas Keuangan</span></a></li>
+                        <?php endif; ?>
                     <?php endif; ?>
                     <?php if (can('strategy.view')): ?>
                         <li class="sidebar-nav-item"><a href="/ketcab/strategi" class="sidebar-nav-link"><span class="sidebar-nav-icon">🧭</span><span>Strategi Organisasi</span></a></li>

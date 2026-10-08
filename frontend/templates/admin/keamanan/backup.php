@@ -27,6 +27,31 @@
     </div>
 </div>
 
+<!-- Workspace Documents & Letters Archive ZIP Backup Card -->
+<div class="table-card" style="margin-bottom: 2rem; border-top: 3px solid #3b82f6;">
+    <div class="table-header flex items-center justify-between" style="gap: 1rem; flex-wrap: wrap;">
+        <div>
+            <div class="table-title" style="display: flex; align-items: center; gap: 0.5rem;">
+                <span>📦 Cadangan Berkas Laporan &amp; Persuratan Cabang (Paket ZIP Lengkap)</span>
+            </div>
+            <div class="text-muted" style="font-size: 0.75rem; margin-top: 0.25rem;">
+                Mencadangkan seluruh berkas fisik (Master &amp; Duplikasi Cadangan), log manifest verifikasi cryptographic SHA-256, serta metadata JSON untuk rekonstruksi data bencana (disaster recovery).
+            </div>
+        </div>
+        <div class="flex items-center gap-2" style="flex-wrap: wrap;">
+            <a href="/admin/berkas/backup?type=all" class="btn btn-primary btn-sm flex items-center gap-1">
+                <span>⬇️ Unduh Semua Berkas (ZIP)</span>
+            </a>
+            <a href="/admin/berkas/backup?type=archive" class="btn btn-outline btn-sm flex items-center gap-1">
+                <span>🗂️ Khusus Persuratan Sekcab</span>
+            </a>
+            <a href="/admin/berkas/backup?type=finance" class="btn btn-outline btn-sm flex items-center gap-1">
+                <span>💰 Khusus Keuangan Bencab</span>
+            </a>
+        </div>
+    </div>
+</div>
+
 <!-- Database Backups Card -->
 <div class="table-card" style="margin-bottom: 2.5rem;">
     <div class="table-header">

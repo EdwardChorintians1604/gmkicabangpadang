@@ -32,6 +32,9 @@ $navigation = [
             ['/sekcab/arsip', 'backup', 'Arsip Surat'],
             ['/admin/statistik', 'chart', 'Statistik Anggota'],
         ]],
+        ['Tools & Berkas', [
+            ['/sekcab/berkas', 'search', 'Direktori Berkas Persuratan'],
+        ]],
     ],
     'bencab' => [
         ['Keuangan Cabang', [
@@ -39,8 +42,8 @@ $navigation = [
             ['/bencab/laporan', 'download', 'Laporan Keuangan'],
             ['/ruang-kerja/antrian', 'chart', 'Antrean Ekspor'],
         ]],
-        ['Tools', [
-            ['/ruang-kerja/berkas', 'search', 'Direktori Berkas Laporan'],
+        ['Tools & Berkas', [
+            ['/bencab/berkas', 'search', 'Direktori Berkas Keuangan'],
         ]],
     ],
     'sekfung_medko' => [
@@ -49,9 +52,6 @@ $navigation = [
             ['/admin/berita', 'news', 'Kelola Warta'],
             ['/admin/berita/create', 'plus', 'Tulis Warta'],
             ['/admin/statistik', 'chart', 'Statistik Konten'],
-        ]],
-        ['Tools', [
-            ['/ruang-kerja/berkas', 'search', 'Direktori Berkas Laporan'],
         ]],
     ],
 ];

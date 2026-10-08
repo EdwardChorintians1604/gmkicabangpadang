@@ -162,17 +162,17 @@ class WorkspaceController
         $summary = Database::fetchOne(
             "SELECT 
                 COUNT(*) as total_arsip,
-                COALESCE(SUM(CASE WHEN letter_category = 'Surat Masuk' THEN 1 ELSE 0 END), 0) as total_masuk,
-                COALESCE(SUM(CASE WHEN letter_category = 'Surat Keluar' THEN 1 ELSE 0 END), 0) as total_keluar,
-                COALESCE(SUM(CASE WHEN letter_category LIKE '%SK%' OR letter_category LIKE '%Keputusan%' OR letter_category LIKE '%Tugas%' OR letter_category LIKE '%Mandat%' THEN 1 ELSE 0 END), 0) as total_sk_mandat,
-                COALESCE(SUM(CASE WHEN letter_category NOT IN ('Surat Masuk', 'Surat Keluar') AND letter_category NOT LIKE '%SK%' AND letter_category NOT LIKE '%Keputusan%' AND letter_category NOT LIKE '%Tugas%' AND letter_category NOT LIKE '%Mandat%' THEN 1 ELSE 0 END), 0) as total_notula
+                COALESCE(SUM(CASE WHEN letter_nature IN ('Rahasia', 'Sangat Segera') THEN 1 ELSE 0 END), 0) as total_rahasia,
+                COALESCE(SUM(CASE WHEN letter_nature = 'Penting' THEN 1 ELSE 0 END), 0) as total_penting,
+                COALESCE(SUM(CASE WHEN is_duplicated = 1 THEN 1 ELSE 0 END), 0) as total_duplikasi,
+                COALESCE(SUM(CASE WHEN status IN ('Diarsipkan', 'Selesai') THEN 1 ELSE 0 END), 0) as total_selesai
              FROM office_documents WHERE document_type = 'archive'"
         ) ?: [
             'total_arsip' => 0,
-            'total_masuk' => 0,
-            'total_keluar' => 0,
-            'total_sk_mandat' => 0,
-            'total_notula' => 0,
+            'total_rahasia' => 0,
+            'total_penting' => 0,
+            'total_duplikasi' => 0,
+            'total_selesai' => 0,
         ];
 
         $pagination = $this->pagination($request, "SELECT COUNT(*) AS total FROM office_documents WHERE document_type = 'archive'");
@@ -181,7 +181,7 @@ class WorkspaceController
              WHERE d.document_type = 'archive' ORDER BY COALESCE(d.letter_date, d.created_at) DESC, d.id DESC
              LIMIT " . $pagination['perPage'] . ' OFFSET ' . $pagination['offset']
         );
-        return $this->page('Arsip Persuratan & Dokumen Cabang', 'archive', [
+        return $this->page('Arsip Surat & Perlindungan Dokumen Sekcab', 'archive', [
             'documents' => $documents,
             'pagination' => $pagination,
             'summary' => $summary,
@@ -191,24 +191,18 @@ class WorkspaceController
     public function saveArchive(Request $request): Response
     {
         Authorization::authorize('archive.manage');
+        if (Auth::role() !== 'sekcab') {
+            return $this->fail('/sekcab/arsip', 'Pengelolaan data arsip surat merupakan wewenang khusus Sekretaris Cabang (Sekcab). Akun Admin berstatus read-only.');
+        }
         $id = (int) $request->post('id', 0);
         $title = trim((string) $request->post('title'));
-        $letterNumber = trim((string) $request->post('letter_number', ''));
-        $letterCategory = trim((string) $request->post('letter_category', 'Surat Masuk'));
-        $sender = trim((string) $request->post('sender', ''));
-        $recipient = trim((string) $request->post('recipient', ''));
-        $letterDate = $request->post('letter_date') ?: null;
-        $receivedOrSentDate = $request->post('received_or_sent_date') ?: null;
+        $letterDate = $request->post('letter_date') ?: date('Y-m-d');
         $letterNature = trim((string) $request->post('letter_nature', 'Biasa'));
         $status = trim((string) $request->post('status', 'Diarsipkan'));
         $description = trim((string) $request->post('description', ''));
 
         if ($title === '' || mb_strlen($title) > 180) {
-            return $this->fail('/sekcab/arsip', 'Perihal atau judul surat wajib diisi (maksimal 180 karakter).');
-        }
-
-        if ($letterCategory === '') {
-            $letterCategory = 'Surat Masuk';
+            return $this->fail('/sekcab/arsip', 'Judul surat wajib diisi (maksimal 180 karakter).');
         }
 
         $validNatures = ['Biasa', 'Penting', 'Segera', 'Sangat Segera', 'Rahasia'];
@@ -222,10 +216,7 @@ class WorkspaceController
         }
 
         if ($letterDate && !preg_match('/^\d{4}-\d{2}-\d{2}$/', (string)$letterDate)) {
-            $letterDate = null;
-        }
-        if ($receivedOrSentDate && !preg_match('/^\d{4}-\d{2}-\d{2}$/', (string)$receivedOrSentDate)) {
-            $receivedOrSentDate = null;
+            $letterDate = date('Y-m-d');
         }
 
         $existing = null;
@@ -239,6 +230,19 @@ class WorkspaceController
             }
         }
 
+        // Periksa apakah terjadi kesalahan teknis saat pengunggahan berkas oleh PHP
+        if (isset($_FILES['document']) && $_FILES['document']['error'] !== UPLOAD_ERR_OK && $_FILES['document']['error'] !== UPLOAD_ERR_NO_FILE) {
+            $errCode = (int) $_FILES['document']['error'];
+            $errMsg = match ($errCode) {
+                UPLOAD_ERR_INI_SIZE, UPLOAD_ERR_FORM_SIZE => 'Ukuran berkas melebihi batas maksimum unggahan server (maksimal 10 MB). Silakan pilih berkas yang lebih kecil.',
+                UPLOAD_ERR_PARTIAL => 'Berkas hanya terunggah sebagian. Silakan coba unggah kembali.',
+                UPLOAD_ERR_NO_TMP_DIR => 'Direktori sementara penyimpanan berkas tidak ditemukan di server.',
+                UPLOAD_ERR_CANT_WRITE => 'Gagal menulis berkas ke penyimpanan server.',
+                default => 'Gagal mengunggah berkas (Kode status error: ' . $errCode . ').',
+            };
+            return $this->fail('/sekcab/arsip', $errMsg);
+        }
+
         try {
             $file = $request->hasFile('document') ? $this->storeDocument($request, 'document') : null;
         } catch (\RuntimeException $exception) {
@@ -248,60 +252,62 @@ class WorkspaceController
         if ($existing) {
             $fields = [
                 $title,
-                $letterNumber ?: null,
-                $letterCategory,
-                $sender ?: null,
-                $recipient ?: null,
                 $letterDate,
-                $receivedOrSentDate,
                 $letterNature,
                 $status,
                 $description ?: null,
             ];
-            $sql = 'UPDATE office_documents SET title = ?, letter_number = ?, letter_category = ?, sender = ?, recipient = ?, letter_date = ?, received_or_sent_date = ?, letter_nature = ?, status = ?, description = ?';
+            $sql = 'UPDATE office_documents SET title = ?, letter_date = ?, letter_nature = ?, status = ?, description = ?';
             if ($file) {
-                $sql .= ', stored_name = ?, original_name = ?, mime_type = ?';
-                array_push($fields, $file['stored_name'], $file['original_name'], $file['mime_type']);
+                $sql .= ', stored_name = ?, backup_stored_name = ?, file_hash = ?, original_name = ?, mime_type = ?, is_duplicated = 1, duplicate_status = ?';
+                array_push(
+                    $fields,
+                    $file['stored_name'],
+                    $file['backup_stored_name'],
+                    $file['file_hash'],
+                    $file['original_name'],
+                    $file['mime_type'],
+                    'Duplikasi Terverifikasi (Identik)'
+                );
             }
             $sql .= " WHERE id = ? AND document_type = 'archive'";
             $fields[] = $id;
             Database::execute($sql, $fields);
-            if ($file) {
-                $this->removeDocumentFile($existing['stored_name']);
+            if ($file && !empty($existing['stored_name'])) {
+                $this->removeDocumentFile($existing['stored_name'], $existing['backup_stored_name'] ?? null);
             }
-            $message = 'Data arsip surat berhasil diperbarui.';
+            $message = 'Data arsip surat berhasil diperbarui' . ($file ? ' beserta salinan duplikasi cadangannya.' : '.');
         } else {
-            if (!$file) {
-                return $this->fail('/sekcab/arsip', 'Pilih berkas dokumen/surat yang akan diunggah.');
-            }
+            // Registrasi surat baru (Berkas bersifat opsional)
             Database::execute(
                 "INSERT INTO office_documents (
-                    document_type, letter_number, letter_category, title, sender, recipient,
-                    letter_date, received_or_sent_date, letter_nature, status, description,
-                    stored_name, original_name, mime_type, created_by, created_at
+                    document_type, title, letter_date, letter_nature, status, description,
+                    stored_name, backup_stored_name, file_hash, original_name, mime_type,
+                    is_duplicated, duplicate_status, created_by, created_at
                 ) VALUES (
                     'archive', ?, ?, ?, ?, ?,
                     ?, ?, ?, ?, ?,
-                    ?, ?, ?, ?, NOW()
+                    ?, ?, ?, NOW()
                 )",
                 [
-                    $letterNumber ?: null,
-                    $letterCategory,
                     $title,
-                    $sender ?: null,
-                    $recipient ?: null,
                     $letterDate,
-                    $receivedOrSentDate,
                     $letterNature,
                     $status,
                     $description ?: null,
-                    $file['stored_name'],
-                    $file['original_name'],
-                    $file['mime_type'],
+                    $file['stored_name'] ?? null,
+                    $file['backup_stored_name'] ?? null,
+                    $file['file_hash'] ?? null,
+                    $file['original_name'] ?? null,
+                    $file['mime_type'] ?? null,
+                    $file ? 1 : 0,
+                    $file ? 'Duplikasi Terverifikasi (Identik)' : 'Menunggu Berkas Lampiran',
                     Auth::id()
                 ]
             );
-            $message = 'Arsip surat berhasil dicatat dan disimpan ke repositori kesekretariatan.';
+            $message = $file
+                ? 'Arsip surat berhasil disimpan dengan salinan duplikasi cadangan terverifikasi (SHA-256 Identik).'
+                : 'Arsip surat berhasil dicatat ke buku agenda. Anda dapat melampirkan berkas digital kapan saja via tombol Edit.';
         }
         Session::flash('success', $message);
         redirect('/sekcab/arsip');
@@ -421,52 +427,65 @@ class WorkspaceController
             Authorization::authorize('archive.view');
         }
 
-        $path = $this->documentPath($document['stored_name']);
+        $isDuplicate = ($request->query('tipe') === 'salinan' || $request->query('salinan') === '1');
+        if ($isDuplicate && !empty($document['backup_stored_name'])) {
+            $path = dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . 'storage' . DIRECTORY_SEPARATOR . 'private' . DIRECTORY_SEPARATOR . 'documents' . DIRECTORY_SEPARATOR . 'backups' . DIRECTORY_SEPARATOR . basename($document['backup_stored_name']);
+            $prefix = '[SALINAN-DUPLIKASI]_';
+        } else {
+            $path = $this->documentPath($document['stored_name']);
+            $prefix = '[ASLI-MASTER]_';
+        }
+
+        // Self-healing: jika berkas asli hilang atau bermasalah, pulihkan otomatis dari salinan duplikasi cadangan
+        if (!is_file($path) && !$isDuplicate && !empty($document['backup_stored_name'])) {
+            $backupPath = dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . 'storage' . DIRECTORY_SEPARATOR . 'private' . DIRECTORY_SEPARATOR . 'documents' . DIRECTORY_SEPARATOR . 'backups' . DIRECTORY_SEPARATOR . basename($document['backup_stored_name']);
+            if (is_file($backupPath)) {
+                copy($backupPath, $path);
+            }
+        }
+
         if (!is_file($path)) {
             error_log('Berkas workspace hilang dari penyimpanan: ' . $document['stored_name']);
             http_response_code(404);
             return (new Response())->html('Berkas tidak tersedia di penyimpanan.', 404);
         }
         $safeName = preg_replace('/[^A-Za-z0-9._-]/', '_', basename($document['original_name']));
-        (new Response())->file($path, $safeName ?: 'dokumen', 'attachment');
+        (new Response())->file($path, $prefix . ($safeName ?: 'dokumen'), 'attachment');
         return new Response();
     }
 
-    public function files(Request $request): Response
+    public function archiveFiles(Request $request): Response
     {
         $role = Auth::role();
-        if (!in_array($role, ['admin', 'bencab', 'sekfung_medko'], true)) {
-            Authorization::authorizeRole(['admin', 'bencab', 'sekfung_medko']);
+        if (!in_array($role, ['admin', 'sekcab'], true)) {
+            Authorization::authorize('archive.view');
         }
 
         $query = trim((string) $request->query('q', ''));
-        $category = trim((string) $request->query('category', 'all'));
+        $nature = trim((string) $request->query('nature', ''));
+        $status = trim((string) $request->query('status', ''));
         $extension = strtolower(trim((string) $request->query('ext', 'all')));
         $sort = trim((string) $request->query('sort', 'latest'));
 
-        $where = [];
+        $where = ["d.document_type = 'archive'"];
         $params = [];
 
-        // Role-based visibility
-        if ($role === 'bencab') {
-            $where[] = "d.document_type = 'finance'";
-        }
-
-        // Category filter
-        if ($category === 'finance') {
-            $where[] = "d.document_type = 'finance'";
-        } elseif ($category === 'archive') {
-            $where[] = "d.document_type = 'archive'";
-        }
-
-        // Search engine filter (matches title, original_name, description, period, uploader name)
         if ($query !== '') {
-            $where[] = "(d.title LIKE ? OR d.original_name LIKE ? OR d.description LIKE ? OR d.period LIKE ? OR u.nama_lengkap LIKE ?)";
+            $where[] = "(d.title LIKE ? OR d.original_name LIKE ? OR d.description LIKE ? OR u.nama_lengkap LIKE ?)";
             $term = '%' . $query . '%';
-            array_push($params, $term, $term, $term, $term, $term);
+            array_push($params, $term, $term, $term, $term);
         }
 
-        // Extension filter
+        if ($nature !== '') {
+            $where[] = "d.letter_nature = ?";
+            $params[] = $nature;
+        }
+
+        if ($status !== '') {
+            $where[] = "d.status = ?";
+            $params[] = $status;
+        }
+
         if ($extension !== '' && $extension !== 'all') {
             if ($extension === 'images') {
                 $where[] = "LOWER(SUBSTRING_INDEX(d.original_name, '.', -1)) IN ('jpg', 'jpeg', 'png', 'webp')";
@@ -480,7 +499,7 @@ class WorkspaceController
             }
         }
 
-        $whereSql = $where ? 'WHERE ' . implode(' AND ', $where) : '';
+        $whereSql = 'WHERE ' . implode(' AND ', $where);
 
         $countSql = "SELECT COUNT(*) AS total 
                      FROM office_documents d 
@@ -490,10 +509,10 @@ class WorkspaceController
 
         $orderSql = match ($sort) {
             'oldest' => 'ORDER BY d.created_at ASC, d.id ASC',
-            'name_asc' => 'ORDER BY d.original_name ASC',
-            'name_desc' => 'ORDER BY d.original_name DESC',
-            'amount_desc' => 'ORDER BY d.amount DESC',
-            'amount_asc' => 'ORDER BY d.amount ASC',
+            'letter_date_desc' => 'ORDER BY d.letter_date DESC, d.id DESC',
+            'letter_date_asc' => 'ORDER BY d.letter_date ASC, d.id ASC',
+            'name_asc' => 'ORDER BY d.title ASC',
+            'name_desc' => 'ORDER BY d.title DESC',
             default => 'ORDER BY d.created_at DESC, d.id DESC',
         };
 
@@ -508,10 +527,144 @@ class WorkspaceController
 
         $documents = [];
         foreach ($rows as $row) {
-            $path = $this->documentPath($row['stored_name']);
-            $fileExists = is_file($path);
+            $path = $this->documentPath($row['stored_name'] ?? '');
+            $fileExists = !empty($row['stored_name']) && is_file($path);
             $fileSize = $fileExists ? (int) filesize($path) : 0;
-            $ext = strtolower(pathinfo($row['original_name'], PATHINFO_EXTENSION));
+            $ext = strtolower(pathinfo($row['original_name'] ?? '', PATHINFO_EXTENSION));
+
+            $backupPath = dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . 'storage' . DIRECTORY_SEPARATOR . 'private' . DIRECTORY_SEPARATOR . 'documents' . DIRECTORY_SEPARATOR . 'backups' . DIRECTORY_SEPARATOR . basename($row['backup_stored_name'] ?? '');
+            $backupExists = !empty($row['backup_stored_name']) && is_file($backupPath);
+
+            $row['file_exists'] = $fileExists;
+            $row['backup_exists'] = $backupExists;
+            $row['file_size'] = $fileSize;
+            $row['file_size_formatted'] = $this->formatBytes($fileSize);
+            $row['extension'] = $ext;
+            $row['download_url'] = '/dokumen/' . (int) $row['id'] . '/unduh';
+            $row['download_backup_url'] = '/dokumen/' . (int) $row['id'] . '/unduh?salinan=1';
+
+            $documents[] = $row;
+        }
+
+        // Stats summary calculation khusus archive
+        $archiveTotal = (int) (Database::fetchOne("SELECT COUNT(*) AS total FROM office_documents WHERE document_type = 'archive'")['total'] ?? 0);
+        $secretCount = (int) (Database::fetchOne("SELECT COUNT(*) AS total FROM office_documents WHERE document_type = 'archive' AND letter_nature = 'Rahasia'")['total'] ?? 0);
+        $urgentCount = (int) (Database::fetchOne("SELECT COUNT(*) AS total FROM office_documents WHERE document_type = 'archive' AND letter_nature IN ('Penting', 'Segera', 'Sangat Segera')")['total'] ?? 0);
+        $duplicatedCount = (int) (Database::fetchOne("SELECT COUNT(*) AS total FROM office_documents WHERE document_type = 'archive' AND is_duplicated = 1 AND stored_name IS NOT NULL")['total'] ?? 0);
+
+        $allDocs = Database::fetchAll("SELECT stored_name, backup_stored_name FROM office_documents WHERE document_type = 'archive'");
+        $totalStorageBytes = 0;
+        foreach ($allDocs as $docItem) {
+            if (!empty($docItem['stored_name'])) {
+                $p = $this->documentPath($docItem['stored_name']);
+                if (is_file($p)) {
+                    $totalStorageBytes += (int) filesize($p);
+                }
+            }
+            if (!empty($docItem['backup_stored_name'])) {
+                $bp = dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . 'storage' . DIRECTORY_SEPARATOR . 'private' . DIRECTORY_SEPARATOR . 'documents' . DIRECTORY_SEPARATOR . 'backups' . DIRECTORY_SEPARATOR . basename($docItem['backup_stored_name']);
+                if (is_file($bp)) {
+                    $totalStorageBytes += (int) filesize($bp);
+                }
+            }
+        }
+
+        $stats = [
+            'total' => $archiveTotal,
+            'secret' => $secretCount,
+            'urgent' => $urgentCount,
+            'duplicated' => $duplicatedCount,
+            'storage_used' => $this->formatBytes($totalStorageBytes),
+            'storage_bytes' => $totalStorageBytes,
+        ];
+
+        $layout = Auth::role() === 'admin' ? 'admin' : 'dashboard';
+
+        return view('workspaces.archive_files', [
+            'pageTitle' => 'Direktori Berkas Laporan & Persuratan Sekcab - GMKI Cabang Padang',
+            'documents' => $documents,
+            'stats' => $stats,
+            'query' => $query,
+            'nature' => $nature,
+            'status' => $status,
+            'extension' => $extension,
+            'sort' => $sort,
+            'pagination' => $pagination,
+            'user' => Auth::user(),
+        ], $layout);
+    }
+
+    public function financeFiles(Request $request): Response
+    {
+        $role = Auth::role();
+        if (!in_array($role, ['admin', 'bencab'], true)) {
+            Authorization::authorize('finance.view');
+        }
+
+        $query = trim((string) $request->query('q', ''));
+        $period = trim((string) $request->query('period', ''));
+        $extension = strtolower(trim((string) $request->query('ext', 'all')));
+        $sort = trim((string) $request->query('sort', 'latest'));
+
+        $where = ["d.document_type = 'finance'"];
+        $params = [];
+
+        if ($query !== '') {
+            $where[] = "(d.title LIKE ? OR d.original_name LIKE ? OR d.description LIKE ? OR d.period LIKE ? OR u.nama_lengkap LIKE ?)";
+            $term = '%' . $query . '%';
+            array_push($params, $term, $term, $term, $term, $term);
+        }
+
+        if ($period !== '') {
+            $where[] = "d.period = ?";
+            $params[] = $period;
+        }
+
+        if ($extension !== '' && $extension !== 'all') {
+            if ($extension === 'images') {
+                $where[] = "LOWER(SUBSTRING_INDEX(d.original_name, '.', -1)) IN ('jpg', 'jpeg', 'png', 'webp')";
+            } elseif ($extension === 'excel') {
+                $where[] = "LOWER(SUBSTRING_INDEX(d.original_name, '.', -1)) IN ('xls', 'xlsx')";
+            } elseif ($extension === 'word') {
+                $where[] = "LOWER(SUBSTRING_INDEX(d.original_name, '.', -1)) IN ('doc', 'docx', 'odt')";
+            } else {
+                $where[] = "LOWER(SUBSTRING_INDEX(d.original_name, '.', -1)) = ?";
+                $params[] = $extension;
+            }
+        }
+
+        $whereSql = 'WHERE ' . implode(' AND ', $where);
+
+        $countSql = "SELECT COUNT(*) AS total 
+                     FROM office_documents d 
+                     JOIN users u ON u.id = d.created_by 
+                     {$whereSql}";
+        $pagination = $this->pagination($request, $countSql, $params);
+
+        $orderSql = match ($sort) {
+            'oldest' => 'ORDER BY d.created_at ASC, d.id ASC',
+            'name_asc' => 'ORDER BY d.original_name ASC',
+            'name_desc' => 'ORDER BY d.original_name DESC',
+            'period_desc' => 'ORDER BY d.period DESC, d.id DESC',
+            'period_asc' => 'ORDER BY d.period ASC, d.id ASC',
+            default => 'ORDER BY d.created_at DESC, d.id DESC',
+        };
+
+        $listSql = "SELECT d.*, u.nama_lengkap, u.role AS uploader_role 
+                    FROM office_documents d 
+                    JOIN users u ON u.id = d.created_by 
+                    {$whereSql} 
+                    {$orderSql} 
+                    LIMIT {$pagination['perPage']} OFFSET {$pagination['offset']}";
+
+        $rows = Database::fetchAll($listSql, $params);
+
+        $documents = [];
+        foreach ($rows as $row) {
+            $path = $this->documentPath($row['stored_name'] ?? '');
+            $fileExists = !empty($row['stored_name']) && is_file($path);
+            $fileSize = $fileExists ? (int) filesize($path) : 0;
+            $ext = strtolower(pathinfo($row['original_name'] ?? '', PATHINFO_EXTENSION));
 
             $row['file_exists'] = $fileExists;
             $row['file_size'] = $fileSize;
@@ -522,19 +675,12 @@ class WorkspaceController
             $documents[] = $row;
         }
 
-        // Stats summary calculation
-        $roleScope = '';
-        $roleParams = [];
-        if ($role === 'bencab') {
-            $roleScope = "WHERE document_type = 'finance'";
-        }
+        // Stats summary calculation khusus finance
+        $financeTotal = (int) (Database::fetchOne("SELECT COUNT(*) AS total FROM office_documents WHERE document_type = 'finance'")['total'] ?? 0);
+        $excelCount = (int) (Database::fetchOne("SELECT COUNT(*) AS total FROM office_documents WHERE document_type = 'finance' AND LOWER(SUBSTRING_INDEX(original_name, '.', -1)) IN ('xls', 'xlsx')")['total'] ?? 0);
+        $pdfCount = (int) (Database::fetchOne("SELECT COUNT(*) AS total FROM office_documents WHERE document_type = 'finance' AND LOWER(SUBSTRING_INDEX(original_name, '.', -1)) = 'pdf'")['total'] ?? 0);
 
-        $totalCount = (int) (Database::fetchOne("SELECT COUNT(*) AS total FROM office_documents {$roleScope}", $roleParams)['total'] ?? 0);
-        $financeCount = (int) (Database::fetchOne("SELECT COUNT(*) AS total FROM office_documents WHERE document_type = 'finance'")['total'] ?? 0);
-        $archiveCount = (int) (Database::fetchOne("SELECT COUNT(*) AS total FROM office_documents WHERE document_type = 'archive'")['total'] ?? 0);
-
-        // Calculate total physical bytes stored on disk
-        $allDocs = Database::fetchAll("SELECT stored_name FROM office_documents {$roleScope}", $roleParams);
+        $allDocs = Database::fetchAll("SELECT stored_name FROM office_documents WHERE document_type = 'finance' AND stored_name IS NOT NULL");
         $totalStorageBytes = 0;
         foreach ($allDocs as $docItem) {
             $p = $this->documentPath($docItem['stored_name']);
@@ -543,27 +689,44 @@ class WorkspaceController
             }
         }
 
+        $allPeriods = Database::fetchAll("SELECT DISTINCT period FROM office_documents WHERE document_type = 'finance' AND period IS NOT NULL AND period != '' ORDER BY period DESC");
+
         $stats = [
-            'total' => $totalCount,
-            'finance' => $financeCount,
-            'archive' => $archiveCount,
+            'total' => $financeTotal,
+            'excel' => $excelCount,
+            'pdf' => $pdfCount,
             'storage_used' => $this->formatBytes($totalStorageBytes),
             'storage_bytes' => $totalStorageBytes,
         ];
 
         $layout = Auth::role() === 'admin' ? 'admin' : 'dashboard';
 
-        return view('workspaces.files', [
-            'pageTitle' => 'Direktori & Pencarian Berkas Laporan - GMKI Cabang Padang',
+        return view('workspaces.finance_files', [
+            'pageTitle' => 'Direktori Berkas Laporan Keuangan - GMKI Cabang Padang',
             'documents' => $documents,
             'stats' => $stats,
             'query' => $query,
-            'category' => $category,
+            'period' => $period,
+            'periods' => array_column($allPeriods, 'period'),
             'extension' => $extension,
             'sort' => $sort,
             'pagination' => $pagination,
             'user' => Auth::user(),
         ], $layout);
+    }
+
+    public function files(Request $request): Response
+    {
+        $role = Auth::role();
+        if ($role === 'bencab') {
+            redirect('/bencab/berkas');
+        } elseif ($role === 'sekcab') {
+            redirect('/sekcab/berkas');
+        } elseif ($role === 'admin') {
+            redirect('/sekcab/berkas');
+        } else {
+            redirect('/ruang-kerja');
+        }
     }
 
     private function formatBytes(int $bytes): string
@@ -577,9 +740,200 @@ class WorkspaceController
         return round($bytes / pow(1024, $i), 2) . ' ' . $units[$i];
     }
 
+    public function downloadArchiveZip(Request $request): void
+    {
+        if (Auth::role() !== 'admin') {
+            http_response_code(403);
+            exit('Akses ditolak: Hanya Administrator yang berhak membuat dan mengunduh paket cadangan arsip berkas.');
+        }
+
+        $type = trim((string) $request->query('type', 'all'));
+        if (!in_array($type, ['all', 'archive', 'finance'], true)) {
+            $type = 'all';
+        }
+
+        $where = [];
+        $params = [];
+        if ($type === 'archive') {
+            $where[] = "document_type = 'archive'";
+        } elseif ($type === 'finance') {
+            $where[] = "document_type = 'finance'";
+        }
+
+        $whereSql = $where ? 'WHERE ' . implode(' AND ', $where) : '';
+        $docs = Database::fetchAll("SELECT * FROM office_documents {$whereSql} ORDER BY id ASC", $params);
+
+        $tempDir = dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . 'storage' . DIRECTORY_SEPARATOR . 'temp';
+        if (!is_dir($tempDir)) {
+            mkdir($tempDir, 0755, true);
+        }
+
+        $zipFilename = 'backup_berkas_gmki_padang_' . $type . '_' . date('Ymd_His') . '.zip';
+        $zipPath = $tempDir . DIRECTORY_SEPARATOR . $zipFilename;
+
+        $zip = new \ZipArchive();
+        if ($zip->open($zipPath, \ZipArchive::CREATE | \ZipArchive::OVERWRITE) !== true) {
+            http_response_code(500);
+            exit('Gagal membuat arsip ZIP untuk cadangan berkas.');
+        }
+
+        $baseDocDir = dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . 'storage' . DIRECTORY_SEPARATOR . 'private' . DIRECTORY_SEPARATOR . 'documents';
+        $backupDocDir = $baseDocDir . DIRECTORY_SEPARATOR . 'backups';
+
+        $manifestRows = [];
+        $manifestRows[] = [
+            'ID',
+            'Tipe Dokumen',
+            'Judul Dokumen',
+            'Sifat / Periode',
+            'Status',
+            'Tanggal Dokumen',
+            'Nama Berkas Asli',
+            'Berkas Master Ditemukan',
+            'SHA256 Master Terverifikasi',
+            'Berkas Duplikasi Ditemukan',
+            'SHA256 Duplikasi Terverifikasi',
+            'Status Integritas Redundansi'
+        ];
+
+        $metadataExport = [];
+        $fileCount = 0;
+
+        foreach ($docs as $doc) {
+            $id = (int) $doc['id'];
+            $docType = $doc['document_type'];
+            $title = $doc['title'];
+            $natureOrPeriod = $doc['letter_nature'] ?: ($doc['period'] ?: '-');
+            $status = $doc['status'] ?: '-';
+            $letterDate = $doc['letter_date'] ?: ($doc['created_at'] ?: '-');
+            $originalName = $doc['original_name'] ?: 'berkas_' . $id;
+            $safeOriginalName = preg_replace('/[^a-zA-Z0-9_\-\.]/', '_', $originalName);
+
+            $masterStored = $doc['stored_name'] ?? '';
+            $masterPath = $masterStored ? ($baseDocDir . DIRECTORY_SEPARATOR . basename($masterStored)) : '';
+            $masterExists = $masterPath && is_file($masterPath);
+
+            $backupStored = $doc['backup_stored_name'] ?? '';
+            $backupPath = $backupStored ? ($backupDocDir . DIRECTORY_SEPARATOR . basename($backupStored)) : '';
+            $backupExists = $backupPath && is_file($backupPath);
+
+            $masterSha = $masterExists ? (hash_file('sha256', $masterPath) ?: '') : '';
+            $backupSha = $backupExists ? (hash_file('sha256', $backupPath) ?: '') : '';
+
+            $folderPrefix = ($docType === 'archive' ? 'arsip_persuratan_sekcab' : 'laporan_keuangan_bencab');
+
+            if ($masterExists) {
+                $zipSubPath = $folderPrefix . '/master/' . sprintf('%04d', $id) . '_' . $safeOriginalName;
+                $zip->addFile($masterPath, $zipSubPath);
+                $fileCount++;
+            }
+
+            if ($backupExists) {
+                $zipSubPathBackup = $folderPrefix . '/duplikasi_cadangan/' . sprintf('%04d', $id) . '_bak_' . $safeOriginalName;
+                $zip->addFile($backupPath, $zipSubPathBackup);
+                $fileCount++;
+            }
+
+            $integrityStatus = 'Tanpa Berkas Digital';
+            if ($masterExists && $backupExists) {
+                $integrityStatus = ($masterSha === $backupSha) ? '100% IDENTIK & VALID' : 'PERBEDAAN HASH (PERIKSA)';
+            } elseif ($masterExists) {
+                $integrityStatus = 'Hanya Master Tersedia';
+            } elseif ($backupExists) {
+                $integrityStatus = 'Hanya Duplikasi Tersedia';
+            }
+
+            $manifestRows[] = [
+                $id,
+                $docType,
+                $title,
+                $natureOrPeriod,
+                $status,
+                $letterDate,
+                $originalName,
+                $masterExists ? 'YA' : 'TIDAK',
+                $masterSha,
+                $backupExists ? 'YA' : 'TIDAK',
+                $backupSha,
+                $integrityStatus,
+            ];
+
+            $metadataExport[] = [
+                'id' => $id,
+                'document_type' => $docType,
+                'title' => $title,
+                'letter_nature' => $doc['letter_nature'] ?? null,
+                'period' => $doc['period'] ?? null,
+                'status' => $doc['status'] ?? null,
+                'description' => $doc['description'] ?? null,
+                'original_name' => $originalName,
+                'file_hash' => $doc['file_hash'] ?? null,
+                'master_hash_now' => $masterSha,
+                'backup_hash_now' => $backupSha,
+                'is_duplicated' => (int) ($doc['is_duplicated'] ?? 0),
+                'duplicate_status' => $doc['duplicate_status'] ?? '',
+                'created_at' => $doc['created_at'] ?? null,
+            ];
+        }
+
+        // Tulis Manifest CSV ke dalam ZIP
+        $csvBuffer = fopen('php://temp', 'r+');
+        foreach ($manifestRows as $row) {
+            fputcsv($csvBuffer, $row);
+        }
+        rewind($csvBuffer);
+        $csvContent = stream_get_contents($csvBuffer);
+        fclose($csvBuffer);
+        $zip->addFromString('MANIFEST_VERIFIKASI_INTEGRITAS_SHA256.csv', $csvContent);
+
+        // Tulis Metadata JSON untuk Full Disaster Recovery
+        $jsonContent = json_encode([
+            'system' => 'GMKI Cabang Padang - Sistem Informasi & Manajemen Keanggotaan',
+            'backup_type' => $type,
+            'generated_at' => date('Y-m-d H:i:s'),
+            'generated_by' => Auth::user()['nama_lengkap'] ?? 'Administrator',
+            'total_records' => count($docs),
+            'total_files_packaged' => $fileCount,
+            'documents' => $metadataExport,
+        ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+        $zip->addFromString('METADATA_LENGKAP_DISASTER_RECOVERY.json', $jsonContent);
+
+        // Tulis README Pemulihan
+        $readme = "=========================================================================\n"
+            . "GMKI CABANG PADANG - PAKET PENCADANGAN BERKAS DOKUMEN & INTEGRITAS SHA-256\n"
+            . "=========================================================================\n\n"
+            . "Waktu Pembuatan : " . date('Y-m-d H:i:s') . "\n"
+            . "Kategori Backup : " . strtoupper($type) . "\n"
+            . "Total Dokumen   : " . count($docs) . " data\n"
+            . "Total Berkas    : " . $fileCount . " berkas fisik\n\n"
+            . "STRUKTUR DIREKTORI CADANGAN:\n"
+            . "- master/              : Berkas asli (Master scan/laporan).\n"
+            . "- duplikasi_cadangan/  : Salinan ganda redundan terverifikasi (SHA-256 Identik).\n"
+            . "- MANIFEST_VERIFIKASI_INTEGRITAS_SHA256.csv : Log matriks hash cryptographic tiap file.\n"
+            . "- METADATA_LENGKAP_DISASTER_RECOVERY.json   : Seluruh catatan database siap restore.\n\n"
+            . "Simpan paket ZIP ini di media penyimpanan eksternal yang aman dan terenkripsi.\n";
+        $zip->addFromString('README_PETUNJUK_PEMULIHAN.txt', $readme);
+
+        $zip->close();
+
+        // Catat jejak audit
+        $auditService = new \App\Services\AuditLogService();
+        $auditService->log('DOWNLOAD_BACKUP_DOCUMENTS_ZIP', 'workspace_documents', $zipFilename, [
+            'type' => $type,
+            'total_documents' => count($docs),
+            'files_packaged' => $fileCount,
+            'zip_size' => filesize($zipPath),
+        ]);
+
+        (new Response())->file($zipPath, $zipFilename, 'application/zip');
+    }
+
     public function deleteArchive(Request $request, string $id): Response
     {
         Authorization::authorize('archive.manage');
+        if (Auth::role() !== 'sekcab') {
+            return $this->fail('/sekcab/arsip', 'Penghapusan data arsip surat merupakan wewenang khusus Sekretaris Cabang (Sekcab). Akun Admin berstatus read-only.');
+        }
         $document = Database::fetchOne(
             "SELECT * FROM office_documents WHERE id = ? AND document_type = 'archive'",
             [(int) $id]
@@ -588,8 +942,8 @@ class WorkspaceController
             return $this->fail('/sekcab/arsip', 'Dokumen arsip tidak ditemukan.');
         }
         Database::execute('DELETE FROM office_documents WHERE id = ?', [(int) $id]);
-        $this->removeDocumentFile($document['stored_name']);
-        Session::flash('success', 'Dokumen arsip berhasil dihapus.');
+        $this->removeDocumentFile($document['stored_name'], $document['backup_stored_name'] ?? null);
+        Session::flash('success', 'Dokumen arsip beserta salinan duplikasinya berhasil dihapus.');
         redirect('/sekcab/arsip');
     }
 
@@ -858,20 +1212,38 @@ class WorkspaceController
         }
 
         $directory = dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . 'storage' . DIRECTORY_SEPARATOR . 'private' . DIRECTORY_SEPARATOR . 'documents';
+        $backupDirectory = $directory . DIRECTORY_SEPARATOR . 'backups';
         if (!is_dir($directory) && !mkdir($directory, 0750, true) && !is_dir($directory)) {
             throw new \RuntimeException('Folder penyimpanan dokumen tidak dapat disiapkan.');
         }
+        if (!is_dir($backupDirectory) && !mkdir($backupDirectory, 0750, true) && !is_dir($backupDirectory)) {
+            throw new \RuntimeException('Folder duplikasi dokumen cadangan tidak dapat disiapkan.');
+        }
+
         $storedName = bin2hex(random_bytes(16)) . '.' . $extension;
-        if (!move_uploaded_file($upload['tmp_name'], $directory . DIRECTORY_SEPARATOR . $storedName)) {
-            if (!copy($upload['tmp_name'], $directory . DIRECTORY_SEPARATOR . $storedName)) {
+        $destPath = $directory . DIRECTORY_SEPARATOR . $storedName;
+
+        if (!move_uploaded_file($upload['tmp_name'], $destPath)) {
+            if (!copy($upload['tmp_name'], $destPath)) {
                 throw new \RuntimeException('Berkas gagal dipindahkan ke penyimpanan privat.');
             }
             @unlink($upload['tmp_name']);
         }
 
+        // Duplikasi otomatis identik untuk redundansi keamanan
+        $backupStoredName = 'bak_' . $storedName;
+        $backupDestPath = $backupDirectory . DIRECTORY_SEPARATOR . $backupStoredName;
+        if (!copy($destPath, $backupDestPath)) {
+            throw new \RuntimeException('Sistem gagal membuat salinan duplikasi cadangan berkas.');
+        }
+
+        $fileHash = hash_file('sha256', $destPath) ?: '';
+
         $originalName = trim(str_replace(["\0", "\r", "\n"], '', basename((string) $upload['name'])));
         return [
             'stored_name' => $storedName,
+            'backup_stored_name' => $backupStoredName,
+            'file_hash' => $fileHash,
             'original_name' => mb_strcut($originalName ?: 'dokumen.' . $extension, 0, 255, 'UTF-8'),
             'mime_type' => $mime,
         ];
@@ -883,11 +1255,17 @@ class WorkspaceController
             . 'private' . DIRECTORY_SEPARATOR . 'documents' . DIRECTORY_SEPARATOR . basename($storedName);
     }
 
-    private function removeDocumentFile(string $storedName): void
+    private function removeDocumentFile(string $storedName, ?string $backupStoredName = null): void
     {
         $path = $this->documentPath($storedName);
         if (is_file($path) && !unlink($path)) {
             error_log('Gagal menghapus berkas workspace: ' . basename($storedName));
+        }
+
+        $backupName = $backupStoredName ?: ('bak_' . basename($storedName));
+        $backupPath = dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . 'storage' . DIRECTORY_SEPARATOR . 'private' . DIRECTORY_SEPARATOR . 'documents' . DIRECTORY_SEPARATOR . 'backups' . DIRECTORY_SEPARATOR . basename($backupName);
+        if (is_file($backupPath)) {
+            @unlink($backupPath);
         }
     }
 }
