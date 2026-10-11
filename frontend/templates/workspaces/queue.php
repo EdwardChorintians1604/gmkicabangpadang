@@ -39,6 +39,23 @@
         </table>
     </div>
     <div class="card-body">
-        <p class="text-muted" style="margin:0;">Jika status tetap menunggu, jalankan <code>tools\queue_worker.php</code> di terminal terpisah.</p>
+        <?php
+        $hasPending = false;
+        foreach ($jobs as $j) {
+            if (in_array($j['status'] ?? '', ['queued', 'processing'], true)) {
+                $hasPending = true;
+                break;
+            }
+        }
+        ?>
+        <?php if ($hasPending): ?>
+            <div style="display:flex;align-items:center;gap:.75rem;padding:.75rem 1rem;background:rgba(37,99,235,0.08);border-left:4px solid var(--primary);border-radius:4px;margin-bottom:.5rem;">
+                <span class="spinner" style="display:inline-block;width:1rem;height:1rem;border:2px solid var(--primary);border-top-color:transparent;border-radius:50%;animation:spin 0.8s linear infinite;"></span>
+                <span style="font-size:.9rem;color:var(--text-main);">Pekerjaan sedang diproses di latar belakang... Halaman akan diperbarui otomatis.</span>
+            </div>
+            <style>@keyframes spin { to { transform: rotate(360deg); } }</style>
+            <script>setTimeout(function() { window.location.reload(); }, 4000);</script>
+        <?php endif; ?>
+        <p class="text-muted" style="margin:0;font-size:.85rem;">Jika status tetap menunggu, pastikan jendela worker antrean (<code>jalankan-queue.bat</code> atau opsi 3 di <code>jalankan-semua.bat</code>) sedang berjalan.</p>
     </div>
 </section>

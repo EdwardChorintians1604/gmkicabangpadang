@@ -32,7 +32,7 @@ $router->get('/dashboard', function () {
 $router->get('/admin/dashboard', 'Admin\DashboardController@index', ['auth', 'role:admin,operator']);
 
 // 2. Modul Civitas (Data Anggota & Kaderisasi)
-$router->get('/admin/civitas', 'Admin\CivitasController@index', ['auth', 'role:admin,operator,sekcab']);
+$router->get('/admin/civitas', 'Admin\CivitasController@index', ['auth', 'role:admin,operator,sekcab,ketcab']);
 $router->get('/admin/civitas/create', 'Admin\CivitasController@create', ['auth', 'role:admin,operator,sekcab']);
 $router->post('/admin/civitas', 'Admin\CivitasController@store', ['auth', 'role:admin,operator,sekcab', 'csrf']);
 $router->get('/admin/civitas/impor', 'Admin\CivitasController@imporForm', ['auth', 'role:admin,operator,sekcab']);
@@ -45,7 +45,7 @@ $router->post('/admin/civitas/{id}', 'Admin\CivitasController@update', ['auth', 
 $router->post('/admin/civitas/{id}/delete', 'Admin\CivitasController@delete', ['auth', 'role:admin,sekcab', 'csrf']);
 
 // 2b. Modul Kader Baru / Calon Anggota (Maperca) - terpisah dari data civitas resmi
-$router->get('/admin/maperca', 'Admin\MapercaController@index', ['auth', 'role:admin,operator,sekcab']);
+$router->get('/admin/maperca', 'Admin\MapercaController@index', ['auth', 'role:admin,operator,sekcab,ketcab']);
 $router->get('/admin/maperca/create', 'Admin\MapercaController@create', ['auth', 'role:admin,operator,sekcab']);
 $router->post('/admin/maperca', 'Admin\MapercaController@store', ['auth', 'role:admin,operator,sekcab', 'csrf']);
 $router->get('/admin/maperca/impor', 'Admin\MapercaController@imporForm', ['auth', 'role:admin,operator,sekcab']);
@@ -102,7 +102,7 @@ $router->post('/admin/users/{id}', 'Admin\UserController@update', ['auth', 'role
 $router->post('/admin/users/{id}/delete', 'Admin\UserController@delete', ['auth', 'role:admin', 'csrf']);
 
 // 7. Modul Keamanan, Audit Log & Cadangan Data
-$router->get('/admin/keamanan/audit-log', 'Admin\SecurityController@auditLog', ['auth', 'role:admin']);
+$router->get('/admin/keamanan/audit-log', 'Admin\SecurityController@auditLog', ['auth', 'role:admin,ketcab']);
 $router->get('/admin/keamanan/akses-log', 'Admin\SecurityController@accessLog', ['auth', 'role:admin']);
 $router->get('/admin/keamanan/ancaman', 'Admin\SecurityController@threats', ['auth', 'role:admin']);
 $router->post('/admin/keamanan/ancaman/{id}/resolve', 'Admin\SecurityController@resolveAncaman', ['auth', 'role:admin']);

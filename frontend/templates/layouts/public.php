@@ -79,23 +79,23 @@
 
                     <?php if ($isLoggedIn): ?>
                         <li class="nav-auth-item flex items-center gap-2">
-                            <a href="<?= e($dashboardRoute) ?>" class="btn btn-primary btn-sm flex items-center gap-1 whitespace-nowrap">
-                                <?= svg_icon('dashboard', 14) ?>
+                            <a href="<?= e($dashboardRoute) ?>" class="btn-nav-auth btn-nav-auth-primary flex items-center gap-2 whitespace-nowrap">
+                                <span class="btn-nav-icon"><?= svg_icon('dashboard', 14) ?></span>
                                 <span><?= e($dashboardLabel) ?></span>
                             </a>
                             <form action="/logout" method="POST" style="margin: 0; display: inline;"
                                 onsubmit="sessionStorage.clear(); return confirm('Apakah Anda yakin ingin keluar dari sesi akun ini?');">
                                 <?= csrf_field() ?>
-                                <button type="submit" class="btn btn-outline btn-sm flex items-center justify-center"
-                                    title="Keluar / Logout Aman" style="padding: 6px 10px; line-height: 1;">
+                                <button type="submit" class="btn-nav-logout"
+                                    title="Keluar / Logout Aman">
                                     <?= svg_icon('logout', 14) ?>
                                 </button>
                             </form>
                         </li>
                     <?php else: ?>
                         <li class="nav-auth-item">
-                            <a href="/login" class="btn btn-outline btn-sm flex items-center gap-1 whitespace-nowrap">
-                                <?= svg_icon('lock', 13) ?>
+                            <a href="/login" class="btn-nav-auth btn-nav-auth-login flex items-center gap-2 whitespace-nowrap">
+                                <span class="btn-nav-icon"><?= svg_icon('lock', 14) ?></span>
                                 <span>Masuk Sistem</span>
                             </a>
                         </li>

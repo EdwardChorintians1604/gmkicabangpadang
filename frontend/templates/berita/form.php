@@ -30,6 +30,7 @@
                             $currKat = $isEdit ? $article['kategori'] : old('kategori', 'Warta Cabang'); 
                         ?>
                         <option value="Warta Cabang" <?= ($currKat === 'Warta Cabang') ? 'selected' : '' ?>>Warta Cabang</option>
+                        <option value="Berita Umum" <?= ($currKat === 'Berita Umum') ? 'selected' : '' ?>>Berita Umum</option>
                         <option value="Kaderisasi" <?= ($currKat === 'Kaderisasi') ? 'selected' : '' ?>>Kaderisasi</option>
                         <option value="Opini" <?= ($currKat === 'Opini') ? 'selected' : '' ?>>Opini Kader</option>
                         <option value="Kegiatan" <?= ($currKat === 'Kegiatan') ? 'selected' : '' ?>>Aksi & Pelayanan</option>

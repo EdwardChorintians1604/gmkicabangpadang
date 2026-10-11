@@ -12,6 +12,16 @@
             <a href="/admin/berita" class="btn btn-outline btn-sm">&larr; Kembali</a>
         </div>
 
+        <!-- Pengingat Nilai Organisasi & Keselarasan AD/ART -->
+        <div style="background: rgba(15, 61, 100, 0.05); border-left: 4px solid var(--primary); padding: 0.9rem 1.25rem; border-radius: var(--radius-sm); margin-bottom: 1.75rem;">
+            <div style="font-weight: 700; color: var(--primary); font-size: 0.88rem; margin-bottom: 0.25rem; display: flex; align-items: center; gap: 0.5rem;">
+                📌 <span>Pedoman Publikasi &amp; Nilai Organisasi GMKI</span>
+            </div>
+            <p style="font-size: 0.82rem; color: var(--text-muted); margin: 0; line-height: 1.5;">
+                Pastikan setiap warta, dokumentasi, dan opini yang diterbitkan senantiasa selaras dengan <strong>AD/ART, Visi, Misi</strong>, serta <strong>Tri Panji GMKI</strong> (Tinggi Iman, Tinggi Ilmu, Tinggi Pengabdian) di tiga medan pelayanan (Gereja, Perguruan Tinggi, dan Masyarakat).
+            </p>
+        </div>
+
         <form action="<?= $isEdit ? '/admin/berita/' . $article['id'] : '/admin/berita' ?>" method="POST" enctype="multipart/form-data" data-validate>
             <?= csrf_field() ?>
 
@@ -30,6 +40,7 @@
                             $currKat = $isEdit ? $article['kategori'] : old('kategori', 'Warta Cabang'); 
                         ?>
                         <option value="Warta Cabang" <?= ($currKat === 'Warta Cabang') ? 'selected' : '' ?>>Warta Cabang</option>
+                        <option value="Berita Umum" <?= ($currKat === 'Berita Umum') ? 'selected' : '' ?>>Berita Umum</option>
                         <option value="Kaderisasi" <?= ($currKat === 'Kaderisasi') ? 'selected' : '' ?>>Kaderisasi</option>
                         <option value="Opini" <?= ($currKat === 'Opini') ? 'selected' : '' ?>>Opini Kader</option>
                         <option value="Kegiatan" <?= ($currKat === 'Kegiatan') ? 'selected' : '' ?>>Aksi & Pelayanan</option>

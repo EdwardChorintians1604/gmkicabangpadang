@@ -19,8 +19,10 @@
                 <select name="kategori" class="form-control rounded-xl">
                     <option value="">Semua Kategori</option>
                     <option value="Warta Cabang" <?= ($kategori === 'Warta Cabang') ? 'selected' : '' ?>>Warta Cabang</option>
+                    <option value="Berita Umum" <?= ($kategori === 'Berita Umum') ? 'selected' : '' ?>>Berita Umum</option>
                     <option value="Kaderisasi" <?= ($kategori === 'Kaderisasi') ? 'selected' : '' ?>>Kaderisasi</option>
                     <option value="Opini" <?= ($kategori === 'Opini') ? 'selected' : '' ?>>Opini</option>
+                    <option value="Kegiatan" <?= ($kategori === 'Kegiatan') ? 'selected' : '' ?>>Aksi & Pelayanan</option>
                     <option value="Pengumuman" <?= ($kategori === 'Pengumuman') ? 'selected' : '' ?>>Pengumuman</option>
                 </select>
                 <button type="submit" class="btn btn-primary rounded-xl px-5">Cari</button>

@@ -19,6 +19,8 @@ $navigation = [
             ['/bencab/laporan', 'download', 'Laporan Keuangan'],
             ['/ruang-kerja/antrian', 'chart', 'Antrean Ekspor'],
             ['/admin/civitas', 'users', 'Pantauan Anggota'],
+            ['/admin/maperca', 'users', 'Pantauan Maperca'],
+            ['/admin/komisariat', 'organization', 'Data Komisariat'],
             ['/admin/statistik', 'chart', 'Statistik Cabang'],
         ]],
     ],
