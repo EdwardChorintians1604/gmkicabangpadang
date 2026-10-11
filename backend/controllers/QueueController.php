@@ -35,9 +35,58 @@ class QueueController
     {
         Authorization::authorize('reports.download');
         $jobId = Queue::dispatchFinanceExport((int)Auth::id(), (string)Auth::role());
-        Session::flash('success', 'Ekspor laporan masuk antrean dengan nomor #' . $jobId . '.');
+
+        // Di shared hosting / InfinityFree tanpa CLI background daemon,
+        // jalankan antrean secara sinkron (sync) jika dikonfigurasi
+        $queueMode = $_ENV['QUEUE_CONNECTION'] ?? 'sync';
+        if ($queueMode === 'sync') {
+            try {
+                $worker = new \App\Core\QueueWorker();
+                $worker->workNext();
+                Session::flash('success', 'Ekspor laporan keuangan berhasil diproses langsung dan siap diunduh.');
+            } catch (\Throwable $e) {
+                error_log('Eksekusi antrean sinkron gagal: ' . $e->getMessage());
+                Session::flash('success', 'Ekspor laporan masuk antrean dengan nomor #' . $jobId . '.');
+            }
+        } else {
+            Session::flash('success', 'Ekspor laporan masuk antrean dengan nomor #' . $jobId . '.');
+        }
+
         redirect('/ruang-kerja/antrian');
         return new Response();
+    }
+
+    /**
+     * Web-Cron Endpoint: Memproses antrean via pemicu eksternal (Cron-job.org / UptimeRobot)
+     * Menggunakan proteksi kunci rahasia token di parameter URL.
+     */
+    public function cronWorker(Request $request): Response
+    {
+        $cronToken = trim((string)($_ENV['CRON_SECRET_TOKEN'] ?? 'gmki_secret_cron_key'));
+        $inputToken = trim((string)$request->query('token', ''));
+
+        if (empty($inputToken) || !hash_equals($cronToken, $inputToken)) {
+            http_response_code(403);
+            return (new Response())->json(['status' => 'error', 'message' => 'Token cron tidak valid.'], 403);
+        }
+
+        $processedCount = 0;
+        $maxJobs = 5;
+        $worker = new \App\Core\QueueWorker();
+
+        while ($processedCount < $maxJobs) {
+            $worked = $worker->workNext();
+            if (!$worked) {
+                break;
+            }
+            $processedCount++;
+        }
+
+        return (new Response())->json([
+            'status' => 'ok',
+            'processed_jobs' => $processedCount,
+            'timestamp' => date('Y-m-d H:i:s'),
+        ]);
     }
 
     public function download(Request $request, string $id): Response

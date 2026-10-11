@@ -427,6 +427,17 @@ class WorkspaceController
             Authorization::authorize('archive.view');
         }
 
+        // Jika dokumen disimpan di Google Drive (Cloud Offload), unduh langsung dari Google Drive
+        if (!empty($document['stored_name']) && str_starts_with((string)$document['stored_name'], 'gdrive:')) {
+            $parts = explode(':', (string)$document['stored_name']);
+            $gdriveId = $parts[1] ?? '';
+            if (!empty($gdriveId)) {
+                $downloadUrl = \App\Services\GoogleDriveService::getDownloadUrl($gdriveId);
+                header('Location: ' . $downloadUrl);
+                exit;
+            }
+        }
+
         $isDuplicate = ($request->query('tipe') === 'salinan' || $request->query('salinan') === '1');
         if ($isDuplicate && !empty($document['backup_stored_name'])) {
             $path = dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . 'storage' . DIRECTORY_SEPARATOR . 'private' . DIRECTORY_SEPARATOR . 'documents' . DIRECTORY_SEPARATOR . 'backups' . DIRECTORY_SEPARATOR . basename($document['backup_stored_name']);
@@ -1240,6 +1251,27 @@ class WorkspaceController
         $fileHash = hash_file('sha256', $destPath) ?: '';
 
         $originalName = trim(str_replace(["\0", "\r", "\n"], '', basename((string) $upload['name'])));
+
+        // Jika integrasi Google Drive aktif, kirim berkas ke Cloud Storage Google
+        if (\App\Services\GoogleDriveService::isConfigured()) {
+            try {
+                $gdriveResult = \App\Services\GoogleDriveService::uploadFile($destPath, $originalName ?: $storedName, $mime);
+                if ($gdriveResult && !empty($gdriveResult['id'])) {
+                    $storedName = 'gdrive:' . $gdriveResult['id'] . ':' . $storedName;
+
+                    // Jika mode offload lokal diaktifkan (misal di InfinityFree untuk menghemat Inode & kuota storage)
+                    $offloadLocal = filter_var($_ENV['GDRIVE_OFFLOAD_LOCAL'] ?? false, FILTER_VALIDATE_BOOLEAN);
+                    if ($offloadLocal) {
+                        @unlink($destPath);
+                        @unlink($backupDestPath);
+                    }
+                }
+            } catch (\Throwable $e) {
+                error_log('GoogleDrive upload error: ' . $e->getMessage());
+                // Fallback: berkas lokal tetap aman digunakan jika Google Drive API error
+            }
+        }
+
         return [
             'stored_name' => $storedName,
             'backup_stored_name' => $backupStoredName,
@@ -1251,12 +1283,30 @@ class WorkspaceController
 
     private function documentPath(string $storedName): string
     {
+        if (str_starts_with($storedName, 'gdrive:')) {
+            $parts = explode(':', $storedName);
+            $storedName = $parts[2] ?? '';
+        }
+
         return dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . 'storage' . DIRECTORY_SEPARATOR
             . 'private' . DIRECTORY_SEPARATOR . 'documents' . DIRECTORY_SEPARATOR . basename($storedName);
     }
 
     private function removeDocumentFile(string $storedName, ?string $backupStoredName = null): void
     {
+        if (str_starts_with($storedName, 'gdrive:')) {
+            $parts = explode(':', $storedName);
+            $gdriveId = $parts[1] ?? '';
+            if (!empty($gdriveId) && \App\Services\GoogleDriveService::isConfigured()) {
+                try {
+                    \App\Services\GoogleDriveService::deleteFile($gdriveId);
+                } catch (\Throwable $e) {
+                    error_log('GoogleDrive delete error: ' . $e->getMessage());
+                }
+            }
+            $storedName = $parts[2] ?? '';
+        }
+
         $path = $this->documentPath($storedName);
         if (is_file($path) && !unlink($path)) {
             error_log('Gagal menghapus berkas workspace: ' . basename($storedName));

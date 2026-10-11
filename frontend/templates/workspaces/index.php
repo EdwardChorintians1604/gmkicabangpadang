@@ -907,55 +907,455 @@ $backLabel = $role === 'admin' ? 'Dashboard Admin' : 'Ruang kerja';
 
 
 <?php elseif ($section === 'finance'): ?>
-    <section class="card" style="margin-bottom:1.25rem;"><div class="card-body flex justify-between items-center" style="gap:1rem;flex-wrap:wrap;">
-        <div><strong>Ekspor laporan untuk rekap</strong><p class="text-muted" style="margin:.25rem 0 0;">Pembuatan CSV berjalan di background agar tidak menahan halaman.</p></div>
-        <div class="flex items-center gap-2">
-            <a class="btn btn-outline" href="/ruang-kerja/antrian">Lihat antrean</a>
-            <form method="post" action="/ruang-kerja/antrian/laporan-keuangan" style="margin:0;">
-                <?= csrf_field() ?><button class="btn btn-primary" type="submit">Buat ekspor CSV</button>
-            </form>
+    <?php
+    $totalDocs = count($documents);
+    $latestPeriod = !empty($documents[0]['period']) ? $documents[0]['period'] : '-';
+    $canManageFinance = ($role === 'bencab');
+    $uniquePeriods = [];
+    foreach ($documents as $d) {
+        if (!empty($d['period']) && !in_array($d['period'], $uniquePeriods, true)) {
+            $uniquePeriods[] = $d['period'];
+        }
+    }
+    ?>
+
+    <!-- 1. Ringkasan Metrik Keuangan Cabang -->
+    <div class="metrics-grid" style="margin-bottom: 1.5rem;">
+        <div class="metric-card">
+            <div class="metric-info">
+                <span class="metric-label">Total Laporan Keuangan</span>
+                <span class="metric-value"><?= number_format((int)($pagination['total'] ?? $totalDocs)) ?></span>
+                <span class="text-muted" style="font-size: 0.8rem; margin-top: 0.25rem;">
+                    Dokumen pembukuan resmi BPC
+                </span>
+            </div>
+            <div class="metric-icon-wrap metric-icon-primary">
+                💰
+            </div>
         </div>
-    </div></section>
-    <?php if ($role === 'bencab'): ?>
-        <section class="card" style="margin-bottom:1.25rem;"><div class="card-body">
-            <h2 style="font-size:1.1rem;font-weight:700;margin:0 0 1rem;">Tambah laporan keuangan</h2>
-            <form method="post" action="/bencab/laporan" enctype="multipart/form-data" class="grid grid-cols-2 gap-4">
-                <?= csrf_field() ?>
-                <label>Judul laporan<input class="form-control" name="title" maxlength="180" required></label>
-                <label>Periode<input class="form-control" name="period" placeholder="Contoh: Triwulan I 2026" maxlength="40" required></label>
-                <label style="grid-column:1/-1;">Berkas laporan<input class="form-control" type="file" name="document" accept=".pdf,.doc,.docx,.xls,.xlsx,.odt,.jpg,.jpeg,.png" required></label>
-                <label style="grid-column:1/-1;">Ringkasan/keterangan<textarea class="form-control" name="description" rows="2"></textarea></label>
-                <div><button class="btn btn-primary" type="submit">Simpan laporan</button></div>
-            </form>
-        </div></section>
-        <p class="text-muted">Anda hanya dapat mengelola laporan yang diunggah oleh akun Anda.</p>
-    <?php endif; ?>
-    <div class="grid grid-cols-2 gap-4">
-        <?php foreach ($documents as $document): ?><article class="card"><div class="card-body">
-            <?php if ($role === 'bencab'): ?>
-                <div class="flex gap-2">
-                <form method="post" action="/bencab/laporan" enctype="multipart/form-data">
-                    <?= csrf_field() ?><input type="hidden" name="id" value="<?= (int)$document['id'] ?>">
-                    <label>Judul<input class="form-control" name="title" value="<?= e($document['title']) ?>" required></label>
-                    <div style="margin-top:.5rem;">
-                        <label>Periode<input class="form-control" name="period" value="<?= e($document['period']) ?>" required></label>
-                    </div>
-                    <label style="display:block;margin-top:.5rem;">Ganti berkas (opsional)<input class="form-control" type="file" name="document" accept=".pdf,.doc,.docx,.xls,.xlsx,.odt,.jpg,.jpeg,.png"></label>
-                    <label style="display:block;margin-top:.5rem;">Ringkasan<textarea class="form-control" name="description" rows="2"><?= e($document['description'] ?? '') ?></textarea></label>
-                    <p class="text-muted"><a href="/dokumen/<?= (int)$document['id'] ?>/unduh">Unduh berkas saat ini: <?= e($document['original_name']) ?></a></p>
-                    <button class="btn btn-primary btn-sm" type="submit">Perbarui</button>
-                </form>
-                <form method="post" action="/bencab/laporan/<?= (int)$document['id'] ?>/delete" data-confirm="Hapus laporan ini?"><?= csrf_field() ?><button class="btn btn-danger btn-sm" type="submit">Hapus</button></form>
-                </div>
-            <?php else: ?>
-                <h2><?= e($document['title']) ?></h2><p class="text-muted"><?= e($document['period']) ?> · diunggah oleh <?= e($document['nama_lengkap']) ?></p>
-                <?php if (!empty($document['description'])): ?><p><?= nl2br(e($document['description'])) ?></p><?php endif; ?>
-                <a class="btn btn-outline btn-sm" href="/dokumen/<?= (int)$document['id'] ?>/unduh">Unduh laporan</a>
-            <?php endif; ?>
-        </div></article><?php endforeach; ?>
-        <?php if (!$documents): ?><div class="card"><div class="card-body text-muted">Belum ada laporan keuangan yang diterbitkan.</div></div><?php endif; ?>
+
+        <div class="metric-card">
+            <div class="metric-info">
+                <span class="metric-label">Periode Terkini</span>
+                <span class="metric-value" style="font-size: 1.25rem; word-break: break-word;"><?= e($latestPeriod) ?></span>
+                <span class="text-muted" style="font-size: 0.8rem; margin-top: 0.25rem;">
+                    Laporan mutakhir yang diarsipkan
+                </span>
+            </div>
+            <div class="metric-icon-wrap metric-icon-secondary">
+                📅
+            </div>
+        </div>
+
+        <div class="metric-card">
+            <div class="metric-info">
+                <span class="metric-label">Format Dokumen</span>
+                <span class="metric-value" style="font-size: 1.25rem;">PDF, Excel, Word</span>
+                <span class="text-muted" style="font-size: 0.8rem; margin-top: 0.25rem;">
+                    Tersimpan aman &amp; siap diunduh
+                </span>
+            </div>
+            <div class="metric-icon-wrap metric-icon-success">
+                📑
+            </div>
+        </div>
+
+        <div class="metric-card">
+            <div class="metric-info">
+                <span class="metric-label">Status Tata Kelola</span>
+                <span class="metric-value" style="font-size: 1.25rem; color: #008f72;">Terbuka &amp; Teruji</span>
+                <span class="text-muted" style="font-size: 0.8rem; margin-top: 0.25rem;">
+                    Sinkron dengan Pengawasan Ketcab
+                </span>
+            </div>
+            <div class="metric-icon-wrap metric-icon-info">
+                ⚖️
+            </div>
+        </div>
     </div>
-    <?= partial('partials.pagination', $pagination) ?>
+
+    <!-- 2. Banner Ekspor Rekap Keuangan -->
+    <div class="card" style="margin-bottom: 1.5rem; background: linear-gradient(to right, #ffffff, #f8fafc); border-left: 4px solid var(--primary);">
+        <div class="card-body flex justify-between items-center" style="gap: 1rem; flex-wrap: wrap; padding: 1.25rem 1.5rem;">
+            <div>
+                <div style="font-weight: 750; font-size: 1rem; color: var(--primary); display: flex; align-items: center; gap: 0.5rem;">
+                    <span>📊</span>
+                    <span>Ekspor &amp; Rekapitulasi Pembukuan Keuangan</span>
+                </div>
+                <p class="text-muted" style="margin: 0.25rem 0 0; font-size: 0.85rem;">
+                    Ekspor seluruh rekapitulasi laporan keuangan ke format CSV diproses di latar belakang agar tidak memperlambat respon aplikasi.
+                </p>
+            </div>
+            <div class="flex items-center gap-2">
+                <a class="btn btn-outline btn-sm" href="/ruang-kerja/antrian" style="display: inline-flex; align-items: center; gap: 0.35rem;">
+                    ⏱️ <span>Lihat Antrean Ekspor</span>
+                </a>
+                <form method="post" action="/ruang-kerja/antrian/laporan-keuangan" style="margin: 0;">
+                    <?= csrf_field() ?>
+                    <button class="btn btn-primary btn-sm" type="submit" style="display: inline-flex; align-items: center; gap: 0.35rem;">
+                        📥 <span>Buat Ekspor CSV</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. Grid Kerja Laporan Keuangan (Form & Tabel Data) -->
+    <div style="display: grid; <?= $canManageFinance ? 'grid-template-columns: minmax(320px, 390px) minmax(0, 1fr);' : 'grid-template-columns: 1fr;' ?> gap: 1.5rem; align-items: start;">
+        <?php if ($canManageFinance): ?>
+            <!-- Form Input / Edit Laporan Keuangan (Bendahara Cabang) -->
+            <div class="card" id="formFinanceCard" style="position: sticky; top: 1.5rem; border-top: 3px solid var(--primary);">
+                <div class="card-body" style="padding: 1.5rem;">
+                    <div class="flex justify-between items-center" style="margin-bottom: 1rem;">
+                        <div>
+                            <h2 id="finFormTitle" style="font-size: 1.15rem; font-weight: 800; color: var(--primary); margin: 0;">
+                                Tambah Laporan Keuangan
+                            </h2>
+                            <p id="finFormSubtitle" class="text-muted" style="font-size: 0.8rem; margin: 0.2rem 0 0;">
+                                Unggah berkas pembukuan, pertanggungjawaban kas, atau laporan kepanitiaan.
+                            </p>
+                        </div>
+                        <span id="finModeBadge" class="badge badge-primary" style="font-size: 0.75rem;">
+                            Mode Baru
+                        </span>
+                    </div>
+
+                    <form id="financeForm" method="post" action="/bencab/laporan" enctype="multipart/form-data">
+                        <?= csrf_field() ?>
+                        <input type="hidden" name="id" id="fin_id" value="">
+
+                        <div class="form-group" style="margin-bottom: 1rem;">
+                            <label class="form-label" for="fin_title" style="font-weight: 600; font-size: 0.875rem;">
+                                Judul Laporan <span style="color: #ef4444;">*</span>
+                            </label>
+                            <input type="text" id="fin_title" name="title" class="form-control" maxlength="180" 
+                                   placeholder="Contoh: LPJ Konfercab, Kas Triwulan I" required>
+                        </div>
+
+                        <div class="form-group" style="margin-bottom: 1rem;">
+                            <label class="form-label" for="fin_period" style="font-weight: 600; font-size: 0.875rem;">
+                                Periode Anggaran / Kegiatan <span style="color: #ef4444;">*</span>
+                            </label>
+                            <input type="text" id="fin_period" name="period" class="form-control" maxlength="40" 
+                                   placeholder="Contoh: Triwulan I 2026 atau 2026" required>
+                        </div>
+
+                        <div class="form-group" style="margin-bottom: 1rem;">
+                            <label class="form-label" for="fin_document" style="font-weight: 600; font-size: 0.875rem;">
+                                Berkas Dokumen <span id="fin_file_required_marker" style="color: #ef4444;">*</span>
+                            </label>
+                            <input type="file" id="fin_document" name="document" class="form-control" 
+                                   accept=".pdf,.doc,.docx,.xls,.xlsx,.odt,.jpg,.jpeg,.png" required>
+                            <div id="fin_file_help" class="form-help" style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.35rem;">
+                                📁 <em>Format PDF, Excel (.xlsx/.xls), Word, atau Gambar kwitansi. Maksimal 10 MB.</em>
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin-bottom: 1.25rem;">
+                            <label class="form-label" for="fin_description" style="font-weight: 600; font-size: 0.875rem;">
+                                Ringkasan / Keterangan Kas
+                            </label>
+                            <textarea id="fin_description" name="description" class="form-control" rows="3" 
+                                      placeholder="Catatan saldo kas, rincian penerimaan/pengeluaran pokok..."></textarea>
+                        </div>
+
+                        <div class="flex items-center gap-2" style="margin-top: 1.25rem;">
+                            <button type="submit" id="btnSubmitFin" class="btn btn-primary" style="flex: 1; justify-content: center;">
+                                💾 Simpan Laporan
+                            </button>
+                            <button type="button" id="btnCancelEditFin" class="btn btn-outline" style="display: none;" onclick="batalEditFin()">
+                                Batal
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        <?php endif; ?>
+
+        <!-- Daftar Laporan Keuangan (Tabel Resmi BPC) -->
+        <div class="card" style="border-top: 3px solid #00a884;">
+            <div class="card-body" style="padding: 1.5rem;">
+                <div class="flex justify-between items-center" style="margin-bottom: 1.25rem; flex-wrap: wrap; gap: 1rem;">
+                    <div>
+                        <h2 style="font-size: 1.25rem; font-weight: 800; color: var(--text-main); margin: 0;">
+                            Daftar Arsip Laporan Keuangan
+                        </h2>
+                        <p class="text-muted" style="font-size: 0.85rem; margin: 0.25rem 0 0;">
+                            <?= $canManageFinance
+                                ? 'Seluruh berkas laporan keuangan yang Anda terbitkan untuk transparansi cabang.'
+                                : 'Akses pemantauan berkas laporan pertanggungjawaban keuangan resmi BPC.' ?>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Filter & Pencarian Cepat -->
+                <div style="background: #f8fafc; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 0.85rem 1rem; margin-bottom: 1.25rem;">
+                    <div style="display: grid; grid-template-columns: minmax(180px, 1fr) auto auto; gap: 0.75rem; align-items: center;">
+                        <input type="text" id="finSearchInput" class="form-control" 
+                               placeholder="🔍 Cari judul laporan atau catatan..." oninput="filterFinanceTable()">
+                        <select id="finPeriodFilter" class="form-control" onchange="filterFinanceTable()" style="min-width: 150px;">
+                            <option value="">Semua Periode</option>
+                            <?php foreach ($uniquePeriods as $up): ?>
+                                <option value="<?= e($up) ?>"><?= e($up) ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                        <button type="button" class="btn btn-outline btn-sm" onclick="document.getElementById('finSearchInput').value=''; document.getElementById('finPeriodFilter').value=''; filterFinanceTable();">
+                            Reset
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Tabel Data Laporan Keuangan -->
+                <div class="table-responsive">
+                    <table class="table" style="margin-bottom: 0;">
+                        <thead>
+                            <tr>
+                                <th style="width: 40px; text-align: center;">#</th>
+                                <th>Laporan &amp; Keterangan</th>
+                                <th style="text-align: center; width: 140px;">Periode</th>
+                                <th>Berkas Lampiran</th>
+                                <th style="text-align: center; width: 140px;">Tanggal Terbit</th>
+                                <th style="text-align: center; width: 110px;">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php if (!empty($documents)): ?>
+                                <?php $no = 1; foreach ($documents as $doc): ?>
+                                    <?php
+                                        $ext = strtolower(pathinfo($doc['original_name'] ?? '', PATHINFO_EXTENSION));
+                                        $fileIcon = match ($ext) {
+                                            'pdf' => '📄',
+                                            'doc', 'docx' => '📝',
+                                            'xls', 'xlsx' => '📊',
+                                            'jpg', 'jpeg', 'png' => '🖼️',
+                                            default => '📎',
+                                        };
+                                        $badgeExt = match ($ext) {
+                                            'pdf' => 'badge-danger',
+                                            'xls', 'xlsx' => 'badge-success',
+                                            'doc', 'docx' => 'badge-primary',
+                                            default => 'badge-neutral',
+                                        };
+                                    ?>
+                                    <tr class="fin-row"
+                                        data-id="<?= (int)$doc['id'] ?>"
+                                        data-title="<?= e($doc['title']) ?>"
+                                        data-period="<?= e($doc['period'] ?? '') ?>"
+                                        data-description="<?= e($doc['description'] ?? '') ?>"
+                                        data-filename="<?= e($doc['original_name'] ?? '') ?>">
+                                        <td style="text-align: center; color: var(--text-muted); font-weight: 600;">
+                                            <?= $no++ ?>
+                                        </td>
+                                        <td>
+                                            <div style="font-weight: 750; color: var(--primary); font-size: 0.95rem; line-height: 1.35; margin-bottom: 0.25rem;">
+                                                <?= e($doc['title']) ?>
+                                            </div>
+                                            <?php if (!empty($doc['description'])): ?>
+                                                <div style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;" title="<?= e($doc['description']) ?>">
+                                                    <?= e($doc['description']) ?>
+                                                </div>
+                                            <?php endif; ?>
+                                        </td>
+                                        <td style="text-align: center;">
+                                            <span class="badge" style="background: #fef3c7; color: #92400e; border: 1px solid #fde68a; font-weight: 700; font-size: 0.78rem;">
+                                                📅 <?= e($doc['period']) ?>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <?php if (!empty($doc['stored_name'])): ?>
+                                                <div class="flex items-center gap-1.5">
+                                                    <span class="badge <?= $badgeExt ?>" style="font-size: 0.7rem; text-transform: uppercase;">
+                                                        <?= e($ext ?: 'FILE') ?>
+                                                    </span>
+                                                    <a href="/dokumen/<?= (int)$doc['id'] ?>/unduh" 
+                                                       style="font-size: 0.85rem; font-weight: 600; color: var(--primary); text-decoration: underline; text-underline-offset: 2px;"
+                                                       title="Unduh Berkas: <?= e($doc['original_name']) ?>">
+                                                        <?= e(mb_strimwidth($doc['original_name'], 0, 24, '...')) ?>
+                                                    </a>
+                                                </div>
+                                            <?php else: ?>
+                                                <span class="text-muted" style="font-size: 0.8rem;">Tanpa Berkas Digital</span>
+                                            <?php endif; ?>
+                                        </td>
+                                        <td style="text-align: center;">
+                                            <div style="font-size: 0.82rem; font-weight: 600; color: var(--text-main);">
+                                                <?= date('d M Y', strtotime($doc['created_at'])) ?>
+                                            </div>
+                                            <div class="text-muted" style="font-size: 0.72rem;">
+                                                <?= e($doc['nama_lengkap'] ?? 'Bencab') ?>
+                                            </div>
+                                        </td>
+                                        <td style="text-align: center;">
+                                            <div class="flex items-center justify-center gap-1">
+                                                <a href="/dokumen/<?= (int)$doc['id'] ?>/unduh" 
+                                                   class="btn btn-outline btn-sm" 
+                                                   style="padding: 0.25rem 0.55rem; font-size: 0.8rem;" 
+                                                   title="Unduh Dokumen">
+                                                    ⬇️
+                                                </a>
+                                                <?php if ($canManageFinance): ?>
+                                                    <button type="button" 
+                                                            class="btn btn-secondary btn-sm" 
+                                                            style="padding: 0.25rem 0.55rem; font-size: 0.8rem;" 
+                                                            title="Edit Laporan Keuangan"
+                                                            onclick="editFinFromRow(this)">
+                                                        ✏️
+                                                    </button>
+                                                    <form method="post" action="/bencab/laporan/<?= (int)$doc['id'] ?>/delete" 
+                                                          data-confirm="Hapus laporan keuangan '<?= e($doc['title']) ?>'?" 
+                                                          style="margin: 0; display: inline;">
+                                                        <?= csrf_field() ?>
+                                                        <button class="btn btn-danger btn-sm" 
+                                                                style="padding: 0.25rem 0.55rem; font-size: 0.8rem;" 
+                                                                type="submit" 
+                                                                title="Hapus Laporan">
+                                                            🗑️
+                                                        </button>
+                                                    </form>
+                                                <?php endif; ?>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <tr id="noDataFinRow">
+                                    <td colspan="6" style="text-align: center; padding: 3.5rem 1.5rem;">
+                                        <div style="font-size: 2.75rem; margin-bottom: 0.5rem;">💰</div>
+                                        <div style="font-weight: 750; color: var(--text-main); font-size: 1.05rem; margin-bottom: 0.25rem;">
+                                            Belum ada laporan keuangan yang diterbitkan
+                                        </div>
+                                        <div class="text-muted" style="font-size: 0.875rem;">
+                                            <?= $canManageFinance
+                                                ? 'Gunakan form di samping untuk mulai mengunggah laporan kas atau pertanggungjawaban resmi.'
+                                                : 'Bendahara Cabang belum mengunggah dokumen laporan keuangan.' ?>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <?php endif; ?>
+                            <tr id="noMatchFinRow" style="display: none;">
+                                <td colspan="6" style="text-align: center; padding: 2rem 1.5rem;">
+                                    <div class="text-muted" style="font-size: 0.9rem;">
+                                        Tidak ditemukan laporan keuangan yang sesuai dengan pencarian.
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <?php if (!empty($pagination)): ?>
+                    <div style="padding: 0.75rem 1rem; border-top: 1px solid var(--border-color); margin-top: 1rem;">
+                        <?= partial('partials.pagination', $pagination) ?>
+                    </div>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script Interaktif untuk Pencarian, Filter, dan Mode Edit Laporan Keuangan -->
+    <script>
+    function editFinFromRow(btn) {
+        const row = btn.closest('.fin-row');
+        if (!row) return;
+
+        const id = row.getAttribute('data-id');
+        const title = row.getAttribute('data-title');
+        const period = row.getAttribute('data-period');
+        const description = row.getAttribute('data-description');
+        const filename = row.getAttribute('data-filename');
+
+        document.getElementById('fin_id').value = id;
+        document.getElementById('fin_title').value = title;
+        document.getElementById('fin_period').value = period;
+        document.getElementById('fin_description').value = description;
+
+        // Tampilan Mode Edit
+        document.getElementById('finFormTitle').innerText = 'Edit Laporan Keuangan';
+        document.getElementById('finFormSubtitle').innerText = 'Perbarui judul, periode, catatan, atau ganti berkas lampiran';
+
+        const modeBadge = document.getElementById('finModeBadge');
+        modeBadge.className = 'badge badge-warning';
+        modeBadge.innerText = 'Mode Edit #' + id;
+
+        // Berkas bersifat opsional saat edit
+        const docInput = document.getElementById('fin_document');
+        docInput.removeAttribute('required');
+        const reqMarker = document.getElementById('fin_file_required_marker');
+        if (reqMarker) reqMarker.style.display = 'none';
+
+        const fileHelp = document.getElementById('fin_file_help');
+        if (fileHelp) {
+            fileHelp.innerHTML = 'Berkas saat ini: <strong>' + (filename || '-') + '</strong><br><span class="text-muted">(Kosongkan jika tidak ingin mengganti berkas saat ini)</span>';
+        }
+
+        document.getElementById('btnSubmitFin').innerHTML = '💾 Perbarui Laporan';
+        document.getElementById('btnCancelEditFin').style.display = 'inline-flex';
+
+        // Scroll halus ke form jika di perangkat mobile
+        const formCard = document.getElementById('formFinanceCard');
+        if (formCard) {
+            formCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    }
+
+    function batalEditFin() {
+        const form = document.getElementById('financeForm');
+        if (form) form.reset();
+
+        document.getElementById('fin_id').value = '';
+        document.getElementById('finFormTitle').innerText = 'Tambah Laporan Keuangan';
+        document.getElementById('finFormSubtitle').innerText = 'Unggah berkas pembukuan, pertanggungjawaban kas, atau laporan kepanitiaan.';
+
+        const modeBadge = document.getElementById('finModeBadge');
+        modeBadge.className = 'badge badge-primary';
+        modeBadge.innerText = 'Mode Baru';
+
+        const docInput = document.getElementById('fin_document');
+        if (docInput) {
+            docInput.setAttribute('required', 'required');
+        }
+
+        const reqMarker = document.getElementById('fin_file_required_marker');
+        if (reqMarker) reqMarker.style.display = 'inline';
+
+        const fileHelp = document.getElementById('fin_file_help');
+        if (fileHelp) {
+            fileHelp.innerHTML = '📁 <em>Format PDF, Excel (.xlsx/.xls), Word, atau Gambar kwitansi. Maksimal 10 MB.</em>';
+        }
+
+        document.getElementById('btnSubmitFin').innerHTML = '💾 Simpan Laporan';
+        document.getElementById('btnCancelEditFin').style.display = 'none';
+    }
+
+    function filterFinanceTable() {
+        const query = (document.getElementById('finSearchInput')?.value || '').toLowerCase().trim();
+        const periodFilter = (document.getElementById('finPeriodFilter')?.value || '').trim();
+
+        const rows = document.querySelectorAll('.fin-row');
+        let visibleCount = 0;
+
+        rows.forEach(row => {
+            const title = (row.getAttribute('data-title') || '').toLowerCase();
+            const desc = (row.getAttribute('data-description') || '').toLowerCase();
+            const rowPeriod = row.getAttribute('data-period') || '';
+
+            const matchQuery = !query || title.includes(query) || desc.includes(query);
+            const matchPeriod = !periodFilter || rowPeriod === periodFilter;
+
+            if (matchQuery && matchPeriod) {
+                row.style.display = '';
+                visibleCount++;
+            } else {
+                row.style.display = 'none';
+            }
+        });
+
+        const noMatchRow = document.getElementById('noMatchFinRow');
+        if (noMatchRow) {
+            noMatchRow.style.display = (visibleCount === 0 && rows.length > 0) ? '' : 'none';
+        }
+    }
+    </script>
 
 <?php elseif ($section === 'strategies'): ?>
     <?php if (can('strategy.manage')): ?>
@@ -1042,8 +1442,24 @@ $backLabel = $role === 'admin' ? 'Dashboard Admin' : 'Ruang kerja';
         <div class="coordination-conversation">
             <header class="coordination-conversation-header">
                 <span class="coordination-group-avatar coordination-header-avatar" aria-hidden="true"><span>G</span><i>●</i></span>
-                <div><strong>Koordinasi Pengurus BPC</strong><small><?= count($participants) ?> pengurus · Ketcab, Sekcab, Bencab, Medko</small></div>
-                <span class="coordination-live" aria-live="polite">Terhubung</span>
+                <div>
+                    <strong>Koordinasi Pengurus BPC</strong>
+                    <small><?= count($participants) ?> pengurus · Ketcab, Sekcab, Bencab, Medko</small>
+                </div>
+                <div class="coordination-header-actions">
+                    <button type="button" class="coordination-action-btn" id="coordinationSoundToggle" title="Nyalakan/Matikan Suara Pesan">
+                        <span class="coordination-action-icon" id="soundIcon">🔊</span>
+                        <span class="coordination-action-text">Suara</span>
+                    </button>
+                    <button type="button" class="coordination-action-btn" id="coordinationNotifyToggle" title="Aktifkan Notifikasi Popup Browser">
+                        <span class="coordination-action-icon" id="notifyIcon">🔔</span>
+                        <span class="coordination-action-text" id="notifyText">Notifikasi</span>
+                    </button>
+                    <span class="coordination-live" id="coordinationLiveStatus" aria-live="polite">
+                        <span class="coordination-live-dot"></span>
+                        <span class="coordination-live-label">Real-time</span>
+                    </span>
+                </div>
             </header>
             <div class="coordination-messages" id="coordinationMessages" aria-live="polite" aria-label="Pesan percakapan">
                 <button type="button" class="coordination-load-older" id="coordinationLoadOlder" <?= $hasOlderMessages ? '' : 'hidden' ?>>Muat pesan sebelumnya</button>

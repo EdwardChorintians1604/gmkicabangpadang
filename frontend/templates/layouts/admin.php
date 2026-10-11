@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="<?= asset('css/app.css') ?>">
     <link rel="stylesheet" href="<?= asset('css/admin.css') ?>">
     <?php if (($section ?? '') === 'coordination'): ?>
-        <link rel="stylesheet" href="<?= asset('css/coordination.css') ?>?v=4">
+        <link rel="stylesheet" href="<?= asset('css/coordination.css') ?>?v=6">
     <?php endif; ?>
     <!-- Tailwind CSS with custom GMKI palette -->
     <script defer src="https://cdn.tailwindcss.com"></script>
@@ -274,7 +274,7 @@
     <script src="<?= asset('js/admin.js') ?>"></script>
     <script src="<?= asset('js/statistik.js') ?>"></script>
     <?php if (($section ?? '') === 'coordination'): ?>
-        <script src="<?= asset('js/coordination.js') ?>?v=4"></script>
+        <script src="<?= asset('js/coordination.js') ?>?v=6"></script>
     <?php endif; ?>
     <script>
         window.__AUTH_USER_ID__ = <?= !empty(auth()['id']) ? (int)auth()['id'] : 'null' ?>;

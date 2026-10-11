@@ -1,0 +1,4 @@
+# Abaikan seluruh kunci kredensial JSON kecuali README atau file .gitignore
+*
+!.gitignore
+!README.md

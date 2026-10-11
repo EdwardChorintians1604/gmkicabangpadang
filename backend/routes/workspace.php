@@ -47,3 +47,5 @@ $router->post('/admin/koordinasi', 'WorkspaceController@sendMessage', ['auth', '
 $router->get('/ruang-kerja/antrian', 'QueueController@index', ['auth', 'role:admin,ketcab,bencab']);
 $router->post('/ruang-kerja/antrian/laporan-keuangan', 'QueueController@enqueueFinanceExport', ['auth', 'role:admin,ketcab,bencab', 'csrf']);
 $router->get('/ruang-kerja/antrian/{id}/unduh', 'QueueController@download', ['auth', 'role:admin,ketcab,bencab']);
+$router->get('/api/cron/worker', 'QueueController@cronWorker');
+

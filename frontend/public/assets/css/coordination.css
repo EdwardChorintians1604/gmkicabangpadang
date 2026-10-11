@@ -276,15 +276,99 @@
     font-size: .72rem;
 }
 
-.coordination-live {
+.coordination-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
     margin-left: auto;
+    flex-shrink: 0;
+}
+
+.coordination-action-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 10px;
+    border: 1px solid #d1d7db;
+    border-radius: 20px;
+    background: #fff;
+    color: #41525d;
+    font-size: 0.73rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none;
+}
+
+.coordination-action-btn:hover {
+    background: #e9edef;
+    border-color: #bec7cc;
+    color: #111b21;
+}
+
+.coordination-action-btn.active {
+    background: #e7f7f3;
+    border-color: #00a884;
+    color: #008069;
+}
+
+.coordination-action-btn.muted {
+    background: #f8d7da;
+    border-color: #f5c2c7;
+    color: #842029;
+}
+
+.coordination-action-icon {
+    font-size: 0.85rem;
+    line-height: 1;
+}
+
+.coordination-live {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
     color: #008f72;
     font-size: .72rem;
+    font-weight: 600;
     white-space: nowrap;
+    padding: 3px 8px;
+    background: rgba(0, 143, 114, 0.08);
+    border-radius: 12px;
+}
+
+.coordination-live-dot {
+    width: 7px;
+    height: 7px;
+    background-color: #00a884;
+    border-radius: 50%;
+    display: inline-block;
+    box-shadow: 0 0 0 0 rgba(0, 168, 132, 0.7);
+    animation: coordinationPulse 1.8s infinite;
+}
+
+@keyframes coordinationPulse {
+    0% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(0, 168, 132, 0.7);
+    }
+    70% {
+        transform: scale(1);
+        box-shadow: 0 0 0 6px rgba(0, 168, 132, 0);
+    }
+    100% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(0, 168, 132, 0);
+    }
 }
 
 .coordination-live.offline {
     color: #b45309;
+    background: rgba(180, 83, 9, 0.08);
+}
+
+.coordination-live.offline .coordination-live-dot {
+    background-color: #f59e0b;
+    animation: none;
 }
 
 .coordination-messages {
@@ -496,6 +580,10 @@
     .coordination-conversation-header {
         min-height: 62px;
         padding: 8px 12px;
+    }
+
+    .coordination-action-text {
+        display: none;
     }
 
     .coordination-messages {

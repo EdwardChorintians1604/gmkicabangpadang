@@ -1,13 +1,25 @@
 # Lingkungan & Kredensial
 .env
-.env.backup
-.env.production
+.env.*
+!.env.example
+
+# Kunci API & Sertifikat
+/storage/private/keys/*.json
+/storage/private/keys/*.pem
+*.pem
+*.key
 
 # Composer
 /vendor/
 composer.phar
 
 # Penyimpanan Cadangan & Unggahan Pribadi
+/storage/private/documents/*
+!/storage/private/documents/.gitkeep
+/storage/private/documents/backups/*
+!/storage/private/documents/backups/.gitkeep
+/storage/private/exports/*
+!/storage/private/exports/.gitkeep
 /storage/private/foto-anggota/*
 !/storage/private/foto-anggota/.gitkeep
 /storage/private/kta/*
