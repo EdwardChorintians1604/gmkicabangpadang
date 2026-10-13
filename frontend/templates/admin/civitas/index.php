@@ -10,17 +10,17 @@
                 : 'Daftar anggota sah (Anggota, KK) dan alumni GMKI Cabang Padang. Kader baru Maperca dikelola di menu terpisah.' ?>
         </p>
     </div>
-    <div class="flex gap-2">
-        <a href="<?= e($basePath) ?>/export<?= !empty($_SERVER['QUERY_STRING']) ? '?' . $_SERVER['QUERY_STRING'] : '' ?>" class="btn btn-outline btn-sm">
+    <div class="flex flex-wrap sm:flex-nowrap gap-2 w-full sm:w-auto">
+        <a href="<?= e($basePath) ?>/export<?= !empty($_SERVER['QUERY_STRING']) ? '?' . $_SERVER['QUERY_STRING'] : '' ?>" class="btn btn-outline btn-sm flex-1 sm:flex-none justify-center">
             📥 Unduh CSV
         </a>
         <?php if (can('civitas.import')): ?>
-            <a href="<?= e($basePath) ?>/impor" class="btn btn-outline btn-sm">
+            <a href="<?= e($basePath) ?>/impor" class="btn btn-outline btn-sm flex-1 sm:flex-none justify-center">
                 📂 Impor CSV / Excel
             </a>
         <?php endif; ?>
         <?php if (can('civitas.create')): ?>
-            <a href="<?= e($basePath) ?>/create" class="btn btn-primary btn-sm">
+            <a href="<?= e($basePath) ?>/create" class="btn btn-primary btn-sm flex-1 sm:flex-none justify-center">
                 ➕ <?= $isMaperca ? 'Daftarkan Anggota Baru' : 'Tambah Anggota' ?>
             </a>
         <?php endif; ?>
@@ -28,7 +28,7 @@
 </div>
 
 <div class="card" style="margin-bottom: 1.5rem; padding: 1.25rem;">
-    <form action="<?= e($basePath) ?>" method="GET" class="grid <?= $isMaperca ? 'grid-cols-3' : 'grid-cols-5' ?> gap-3">
+    <form action="<?= e($basePath) ?>" method="GET" class="grid <?= $isMaperca ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-5' ?> gap-3">
         <div class="form-group" style="margin-bottom: 0;">
             <input type="text" name="q" class="form-control" placeholder="Cari ID (#1), nama, NIM, kampus..." value="<?= e($search ?? '') ?>">
         </div>

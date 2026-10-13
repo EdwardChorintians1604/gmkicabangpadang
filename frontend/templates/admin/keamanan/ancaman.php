@@ -9,7 +9,7 @@
 
 <!-- Security Health Status -->
 <h3 style="font-size: 1.15rem; margin-bottom: 1rem; color: var(--primary);">Kondisi Kesehatan Keamanan Sistem</h3>
-<div class="grid grid-cols-3 gap-4" style="margin-bottom: 2.5rem;">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4" style="margin-bottom: 2.5rem;">
     <?php foreach ($healthChecks as $check): ?>
         <div class="card" style="padding: 1.25rem;">
             <div class="flex items-center justify-between" style="margin-bottom: 0.5rem;">

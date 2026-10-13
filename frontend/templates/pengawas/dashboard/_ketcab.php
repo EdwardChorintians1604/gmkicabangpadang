@@ -17,7 +17,7 @@
                 </div>
                 <div class="text-left sm:text-right mt-2 sm:mt-0">
                     <div style="font-size: 0.75rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em;">Status Kepengurusan BPC</div>
-                    <div style="font-size: 1.25rem; font-weight: 800; color: #38bdf8;">Periode <?= e($profile['tema_periode'] ?? '2024-2026') ?></div>
+                    <div style="font-size: 1.25rem; font-weight: 800; color: #38bdf8;">Periode 2026-2027</div>
                 </div>
             </div>
         </div>

@@ -68,7 +68,7 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
                 <div class="sidebar-brand-sub"><?= e($roleNames[$role] ?? 'Pengurus BPC') ?></div>
             </div>
         </div>
-        <button type="button" class="sidebar-close-btn" aria-label="Tutup menu">✕</button>
+        <button type="button" class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="Tutup menu">✕</button>
     </div>
     <ul class="sidebar-nav">
         <?php foreach ($navigation[$role] ?? [] as [$category, $items]): ?>

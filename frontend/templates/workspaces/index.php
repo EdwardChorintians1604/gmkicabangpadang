@@ -75,7 +75,7 @@ $backLabel = $role === 'admin' ? 'Dashboard Admin' : 'Ruang kerja';
     <div class="grid grid-cols-1 <?= can('inventory.manage') ? 'lg:grid-cols-3' : '' ?> gap-6" style="align-items: start;">
         <?php if (can('inventory.manage')): ?>
             <!-- Kolom Form Tambah/Edit (Kiri) -->
-            <div class="card" id="formInventoryCard" style="position: sticky; top: 88px; z-index: 10;">
+            <div class="card sticky-form-card" id="formInventoryCard">
                 <div class="card-body">
                     <div class="flex items-center justify-between" style="margin-bottom: 1rem;">
                         <div>
@@ -483,7 +483,7 @@ $backLabel = $role === 'admin' ? 'Dashboard Admin' : 'Ruang kerja';
     <div class="grid grid-cols-1 <?= $isSekcab ? 'lg:grid-cols-3' : '' ?> gap-6" style="align-items: start;">
         <?php if ($isSekcab): ?>
             <!-- Kolom Form Registrasi / Edit Arsip (Kiri) -->
-            <div class="card" id="formArchiveCard" style="position: sticky; top: 88px; z-index: 10;">
+            <div class="card sticky-form-card" id="formArchiveCard">
                 <div class="card-body">
                     <div class="flex items-center justify-between" style="margin-bottom: 1rem;">
                         <div>
@@ -1001,10 +1001,10 @@ $backLabel = $role === 'admin' ? 'Dashboard Admin' : 'Ruang kerja';
     </div>
 
     <!-- 3. Grid Kerja Laporan Keuangan (Form & Tabel Data) -->
-    <div style="display: grid; <?= $canManageFinance ? 'grid-template-columns: minmax(320px, 390px) minmax(0, 1fr);' : 'grid-template-columns: 1fr;' ?> gap: 1.5rem; align-items: start;">
+    <div class="grid grid-cols-1 <?= $canManageFinance ? 'lg:grid-cols-12' : '' ?> gap-6 items-start">
         <?php if ($canManageFinance): ?>
             <!-- Form Input / Edit Laporan Keuangan (Bendahara Cabang) -->
-            <div class="card" id="formFinanceCard" style="position: sticky; top: 1.5rem; border-top: 3px solid var(--primary);">
+            <div class="card sticky-form-card <?= $canManageFinance ? 'lg:col-span-5' : '' ?>" id="formFinanceCard" style="border-top: 3px solid var(--primary);">
                 <div class="card-body" style="padding: 1.5rem;">
                     <div class="flex justify-between items-center" style="margin-bottom: 1rem;">
                         <div>
@@ -1073,7 +1073,7 @@ $backLabel = $role === 'admin' ? 'Dashboard Admin' : 'Ruang kerja';
         <?php endif; ?>
 
         <!-- Daftar Laporan Keuangan (Tabel Resmi BPC) -->
-        <div class="card" style="border-top: 3px solid #00a884;">
+        <div class="card <?= $canManageFinance ? 'lg:col-span-7' : 'col-span-1' ?>" style="border-top: 3px solid #00a884;">
             <div class="card-body" style="padding: 1.5rem;">
                 <div class="flex justify-between items-center" style="margin-bottom: 1.25rem; flex-wrap: wrap; gap: 1rem;">
                     <div>
@@ -1090,16 +1090,16 @@ $backLabel = $role === 'admin' ? 'Dashboard Admin' : 'Ruang kerja';
 
                 <!-- Filter & Pencarian Cepat -->
                 <div style="background: #f8fafc; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 0.85rem 1rem; margin-bottom: 1.25rem;">
-                    <div style="display: grid; grid-template-columns: minmax(180px, 1fr) auto auto; gap: 0.75rem; align-items: center;">
-                        <input type="text" id="finSearchInput" class="form-control" 
+                    <div class="flex items-center gap-2" style="flex-wrap: wrap;">
+                        <input type="text" id="finSearchInput" class="form-control" style="flex: 1 1 200px; min-width: 160px;"
                                placeholder="🔍 Cari judul laporan atau catatan..." oninput="filterFinanceTable()">
-                        <select id="finPeriodFilter" class="form-control" onchange="filterFinanceTable()" style="min-width: 150px;">
+                        <select id="finPeriodFilter" class="form-control" onchange="filterFinanceTable()" style="flex: 0 1 auto; min-width: 140px;">
                             <option value="">Semua Periode</option>
                             <?php foreach ($uniquePeriods as $up): ?>
                                 <option value="<?= e($up) ?>"><?= e($up) ?></option>
                             <?php endforeach; ?>
                         </select>
-                        <button type="button" class="btn btn-outline btn-sm" onclick="document.getElementById('finSearchInput').value=''; document.getElementById('finPeriodFilter').value=''; filterFinanceTable();">
+                        <button type="button" class="btn btn-outline btn-sm" onclick="document.getElementById('finSearchInput').value=''; document.getElementById('finPeriodFilter').value=''; filterFinanceTable();" style="white-space: nowrap;">
                             Reset
                         </button>
                     </div>
@@ -1107,15 +1107,15 @@ $backLabel = $role === 'admin' ? 'Dashboard Admin' : 'Ruang kerja';
 
                 <!-- Tabel Data Laporan Keuangan -->
                 <div class="table-responsive">
-                    <table class="table" style="margin-bottom: 0;">
+                    <table class="data-table" style="margin-bottom: 0;">
                         <thead>
                             <tr>
-                                <th style="width: 40px; text-align: center;">#</th>
-                                <th>Laporan &amp; Keterangan</th>
-                                <th style="text-align: center; width: 140px;">Periode</th>
-                                <th>Berkas Lampiran</th>
-                                <th style="text-align: center; width: 140px;">Tanggal Terbit</th>
-                                <th style="text-align: center; width: 110px;">Aksi</th>
+                                <th class="col-no">#</th>
+                                <th style="min-width: 200px;">Laporan &amp; Keterangan</th>
+                                <th style="text-align: center; width: 140px; min-width: 120px;">Periode</th>
+                                <th style="min-width: 150px;">Berkas Lampiran</th>
+                                <th style="text-align: center; width: 140px; min-width: 120px;">Tanggal Terbit</th>
+                                <th style="text-align: center; width: 110px; min-width: 100px;">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -1143,7 +1143,7 @@ $backLabel = $role === 'admin' ? 'Dashboard Admin' : 'Ruang kerja';
                                         data-period="<?= e($doc['period'] ?? '') ?>"
                                         data-description="<?= e($doc['description'] ?? '') ?>"
                                         data-filename="<?= e($doc['original_name'] ?? '') ?>">
-                                        <td style="text-align: center; color: var(--text-muted); font-weight: 600;">
+                                        <td class="col-no" style="color: var(--text-muted); font-weight: 600;">
                                             <?= $no++ ?>
                                         </td>
                                         <td>
@@ -1361,7 +1361,7 @@ $backLabel = $role === 'admin' ? 'Dashboard Admin' : 'Ruang kerja';
     <?php if (can('strategy.manage')): ?>
         <section class="card" style="margin-bottom:1.25rem;"><div class="card-body">
             <h2 style="font-size:1.1rem;font-weight:700;margin:0 0 1rem;">Catat arah strategis</h2>
-            <form method="post" action="/ketcab/strategi" class="grid grid-cols-2 gap-4">
+            <form method="post" action="/ketcab/strategi" class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <?= csrf_field() ?><label>Judul strategi<input class="form-control" name="title" maxlength="180" required></label>
                 <label>Status<select class="form-control" name="status"><option>Rencana</option><option>Berjalan</option><option>Selesai</option></select></label>
                 <label>Tanggal target<input class="form-control" name="target_date" type="date"></label>
@@ -1370,14 +1370,14 @@ $backLabel = $role === 'admin' ? 'Dashboard Admin' : 'Ruang kerja';
             </form>
         </div></section>
     <?php endif; ?>
-    <div class="grid grid-cols-2 gap-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <?php foreach ($strategies as $strategy): ?><article class="card"><div class="card-body">
             <?php if (can('strategy.manage')): ?>
                 <div class="flex gap-2">
                 <form method="post" action="/ketcab/strategi">
                     <?= csrf_field() ?><input type="hidden" name="id" value="<?= (int)$strategy['id'] ?>">
                     <label>Judul<input class="form-control" name="title" value="<?= e($strategy['title']) ?>" required></label>
-                    <div class="grid grid-cols-2 gap-3" style="margin-top:.5rem;"><label>Status<select class="form-control" name="status"><?php foreach (['Rencana', 'Berjalan', 'Selesai'] as $status): ?><option <?= $strategy['status'] === $status ? 'selected' : '' ?>><?= e($status) ?></option><?php endforeach; ?></select></label>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" style="margin-top:.5rem;"><label>Status<select class="form-control" name="status"><?php foreach (['Rencana', 'Berjalan', 'Selesai'] as $status): ?><option <?= $strategy['status'] === $status ? 'selected' : '' ?>><?= e($status) ?></option><?php endforeach; ?></select></label>
                     <label>Target<input class="form-control" type="date" name="target_date" value="<?= e($strategy['target_date'] ?? '') ?>"></label></div>
                     <label style="display:block;margin-top:.5rem;">Tujuan dan langkah<textarea class="form-control" name="objective" rows="3" required><?= e($strategy['objective']) ?></textarea></label>
                     <button class="btn btn-primary btn-sm" style="margin-top:.5rem;">Simpan</button>

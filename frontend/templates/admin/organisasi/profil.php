@@ -10,7 +10,7 @@
         <form action="/admin/organisasi/profil" method="POST" data-validate>
             <?= csrf_field() ?>
 
-            <div class="grid grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div class="form-group">
                     <label class="form-label" for="nama_organisasi">Nama Organisasi</label>
                     <input type="text" id="nama_organisasi" name="nama_organisasi" class="form-control" 
@@ -24,7 +24,7 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div class="form-group">
                     <label class="form-label" for="tema_periode">Tema Periode</label>
                     <input type="text" id="tema_periode" name="tema_periode" class="form-control" 
@@ -43,7 +43,7 @@
                 <textarea id="sejarah" name="sejarah" class="form-control" rows="5"><?= e($profile['sejarah'] ?? '') ?></textarea>
             </div>
 
-            <div class="grid grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div class="form-group">
                     <label class="form-label" for="visi">Visi Cabang</label>
                     <textarea id="visi" name="visi" class="form-control" rows="4"><?= e($profile['visi'] ?? '') ?></textarea>
@@ -55,7 +55,7 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div class="form-group">
                     <label class="form-label" for="tri_panji">Tri Panji GMKI</label>
                     <textarea id="tri_panji" name="tri_panji" class="form-control" rows="4"><?= e($profile['tri_panji'] ?? '') ?></textarea>
@@ -74,7 +74,7 @@
                 <textarea id="alamat_sekretariat" name="alamat_sekretariat" class="form-control" rows="2"><?= e($profile['alamat_sekretariat'] ?? '') ?></textarea>
             </div>
 
-            <div class="grid grid-cols-3 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div class="form-group">
                     <label class="form-label" for="telepon">Telepon / WhatsApp</label>
                     <input type="text" id="telepon" name="telepon" class="form-control" value="<?= e($profile['telepon'] ?? '') ?>">

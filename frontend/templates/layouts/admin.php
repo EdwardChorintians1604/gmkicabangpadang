@@ -9,10 +9,10 @@
     <link rel="shortcut icon" href="/favicon.ico">
     <link rel="stylesheet" href="<?= asset('vendor/animate.min.css') ?>">
     <link rel="stylesheet" href="<?= asset('vendor/leaflet/leaflet.css') ?>">
-    <link rel="stylesheet" href="<?= asset('css/app.css') ?>">
-    <link rel="stylesheet" href="<?= asset('css/admin.css') ?>">
+    <link rel="stylesheet" href="<?= asset('css/app.css') ?>?v=2">
+    <link rel="stylesheet" href="<?= asset('css/admin.css') ?>?v=2">
     <?php if (($section ?? '') === 'coordination'): ?>
-        <link rel="stylesheet" href="<?= asset('css/coordination.css') ?>?v=6">
+        <link rel="stylesheet" href="<?= asset('css/coordination.css') ?>?v=7">
     <?php endif; ?>
     <!-- Tailwind CSS with custom GMKI palette -->
     <script defer src="https://cdn.tailwindcss.com"></script>

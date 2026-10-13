@@ -1,7 +1,7 @@
 <?php $isMaperca = ($kelompok ?? 'anggota') === 'maperca'; ?>
 <div style="max-width: 900px; margin: 0 auto;">
     <!-- Header -->
-    <div class="flex justify-between items-center" style="margin-bottom: 2rem;">
+    <div class="flex justify-between items-center" style="margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
         <div>
             <div class="flex items-center gap-2" style="font-size: 0.875rem; margin-bottom: 0.25rem;">
                 <a href="<?= e($basePath) ?>" class="text-muted">&larr; Kembali ke <?= $isMaperca ? 'Data Kader Baru' : 'Data Civitas' ?></a>
@@ -10,7 +10,7 @@
                 <?= $isMaperca ? 'Profil Kader Baru' : 'Profil Civitas' ?>: <?= e($member['nama_lengkap']) ?>
             </h1>
         </div>
-        <div class="flex gap-2">
+        <div class="flex gap-2" style="flex-wrap: wrap;">
             <?php if (can('civitas.update')): ?>
                 <a href="<?= e($basePath) ?>/<?= $member['id'] ?>/edit" class="btn btn-outline btn-sm">
                     ✏️ Edit Data

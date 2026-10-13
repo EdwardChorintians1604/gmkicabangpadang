@@ -22,7 +22,7 @@
 
 <!-- Filter Bar -->
 <div class="card" style="margin-bottom: 1.5rem; padding: 1.25rem;">
-    <form action="/admin/keamanan/audit-log" method="GET" class="grid grid-cols-4 gap-3">
+    <form action="/admin/keamanan/audit-log" method="GET" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
         <div class="form-group" style="margin-bottom: 0;">
             <input type="text" name="username" class="form-control" placeholder="Cari nama pengguna..." value="<?= e($searchUsername ?? '') ?>">
         </div>

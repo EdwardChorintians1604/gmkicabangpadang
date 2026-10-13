@@ -17,68 +17,290 @@ if (!defined('GMKI_SECURE_ACCESS')) {
 ?>
 
 <style>
-/* Styling Khusus Halaman AD/ART */
+/* =====================================================================
+ * GMKI CABANG PADANG - AD/ART DESIGN SYSTEM
+ * ===================================================================== */
 :root {
     --reading-font-size: 1rem;
     --ad-navy: #0a263f;
     --ad-blue: #0f3d64;
     --ad-gold: #d97706;
-    --ad-gold-light: #fef3c7;
-    --ad-border: #e2e8f0;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
+/* Reading Progress Bar */
+#readingProgressBar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    width: 0%;
+    background: linear-gradient(90deg, #d97706 0%, #2563eb 50%, #10b981 100%);
+    z-index: 9999;
+    transition: width 0.1s ease;
+}
+
+/* Reading Container */
 .ad-reading-container {
     font-size: var(--reading-font-size);
-    line-height: 1.8;
+    line-height: 1.85;
+    color: #334155;
 }
 
+/* Card Styling */
 .ad-card {
+    position: relative;
     background: #ffffff;
     border: 1px solid #e2e8f0;
-    border-radius: 1rem;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-    scroll-margin-top: 100px;
+    border-radius: 1.25rem;
+    box-shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.04), 0 2px 4px -1px rgba(15, 23, 42, 0.02);
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease, border-color 0.25s ease;
+    scroll-margin-top: 110px;
+    overflow: hidden;
 }
 
 .ad-card:hover {
+    transform: translateY(-3px);
     border-color: #cbd5e1;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+    box-shadow: 0 16px 36px -6px rgba(15, 23, 42, 0.08), 0 4px 12px -2px rgba(15, 23, 42, 0.03);
 }
 
+/* Top Accent Bar per Section */
+#section-ad .ad-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3.5px;
+    background: linear-gradient(90deg, #0f3d64 0%, #2563eb 50%, #38bdf8 100%);
+}
+
+#section-art .ad-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3.5px;
+    background: linear-gradient(90deg, #d97706 0%, #f59e0b 50%, #fbbf24 100%);
+}
+
+#section-po .ad-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3.5px;
+    background: linear-gradient(90deg, #4f46e5 0%, #7c3aed 50%, #c084fc 100%);
+}
+
+#section-penjelasan .ad-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3.5px;
+    background: linear-gradient(90deg, #0d9488 0%, #10b981 50%, #34d399 100%);
+}
+
+/* Pasal Badge Styling */
+#section-ad .ad-card span[class*="bg-[#0f3d64]"] {
+    background: linear-gradient(135deg, #0a263f 0%, #0f3d64 100%) !important;
+    box-shadow: 0 2px 6px rgba(15, 61, 100, 0.25);
+    border-radius: 0.5rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    letter-spacing: 0.05em;
+}
+
+#section-art .ad-card span[class*="bg-amber-600"] {
+    background: linear-gradient(135deg, #d97706 0%, #b45309 100%) !important;
+    box-shadow: 0 2px 6px rgba(217, 119, 6, 0.25);
+    border-radius: 0.5rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    letter-spacing: 0.05em;
+}
+
+#section-po .ad-card span[class*="bg-blue-800"] {
+    background: linear-gradient(135deg, #4338ca 0%, #6366f1 100%) !important;
+    box-shadow: 0 2px 6px rgba(99, 102, 241, 0.25);
+    border-radius: 0.5rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    letter-spacing: 0.05em;
+}
+
+/* Card Target Highlight */
 .ad-card.highlight-target {
-    border-color: #f59e0b;
-    box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2);
+    border-color: #f59e0b !important;
+    box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.25), 0 16px 36px -6px rgba(15, 23, 42, 0.12) !important;
+    animation: pulseCardTarget 1.5s ease-in-out infinite;
 }
 
-.toc-item.active {
-    background: rgba(15, 61, 100, 0.08);
-    color: #0f3d64;
-    font-weight: 700;
-    border-left: 3px solid #0f3d64;
+@keyframes pulseCardTarget {
+    0%, 100% { transform: translateY(-3px) scale(1); }
+    50% { transform: translateY(-3px) scale(1.006); }
 }
 
+/* Preambule Special Card */
+#ad-pembukaan {
+    background: linear-gradient(135deg, #fffdf8 0%, #ffffff 50%, rgba(254, 243, 199, 0.25) 100%) !important;
+    border: 1.5px solid #fde68a !important;
+}
+#ad-pembukaan::before {
+    background: linear-gradient(90deg, #d97706 0%, #fbbf24 50%, #d97706 100%) !important;
+    height: 4.5px !important;
+}
+
+/* Navigation Segmented Control */
 .tab-btn {
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    color: #64748b;
+}
+.tab-btn:hover {
+    color: #0f172a;
+    background-color: #ffffff;
+}
+.tab-btn.active {
+    background: #0f3d64 !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 12px -1px rgba(15, 61, 100, 0.35) !important;
+}
+.tab-btn.active .tab-count-badge {
+    background: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.3);
+}
+.tab-count-badge {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 9999px;
+    background: #e2e8f0;
+    color: #475569;
+    border: 1px solid #cbd5e1;
     transition: all 0.2s ease;
 }
 
-.tab-btn.active {
-    background: #0f3d64;
-    color: #ffffff;
-    box-shadow: 0 4px 6px -1px rgba(15, 61, 100, 0.3);
+/* Quick Topic Chips */
+.quick-chip {
+    transition: all 0.18s ease;
+}
+.quick-chip.active {
+    background: #0f3d64 !important;
+    color: #ffffff !important;
+    box-shadow: 0 2px 6px rgba(15, 61, 100, 0.25);
 }
 
-.search-highlight {
-    background-color: #fef08a;
-    color: #854d0e;
-    padding: 0 2px;
-    border-radius: 2px;
+/* Copy Link Button */
+.ad-card button[onclick^="copyPasalLink"] {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.35rem 0.65rem;
+    border-radius: 0.625rem;
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    color: #64748b;
+    font-size: 0.75rem;
     font-weight: 600;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+.ad-card button[onclick^="copyPasalLink"]:hover {
+    background-color: #0f3d64;
+    border-color: #0f3d64;
+    color: #ffffff;
+    box-shadow: 0 3px 8px rgba(15, 61, 100, 0.2);
+    transform: translateY(-1px);
+}
+
+/* TOC Items */
+.custom-toc-scroll::-webkit-scrollbar {
+    width: 4px;
+}
+.custom-toc-scroll::-webkit-scrollbar-track {
+    background: transparent;
+}
+.custom-toc-scroll::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 9999px;
+}
+.custom-toc-scroll::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+.toc-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.45rem 0.65rem;
+    border-radius: 0.5rem;
+    transition: all 0.18s ease;
+    text-decoration: none;
+    color: #475569;
+    border-left: 2.5px solid transparent;
+}
+.toc-item:hover {
+    background-color: #f8fafc;
+    color: #0f3d64;
+    transform: translateX(2px);
+}
+.toc-item.active {
+    background: linear-gradient(90deg, rgba(15, 61, 100, 0.08) 0%, rgba(15, 61, 100, 0.02) 100%);
+    color: #0f3d64;
+    font-weight: 700;
+    border-left-color: #0f3d64;
+}
+.toc-item-badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 1px 5px;
+    border-radius: 4px;
+    background: #f1f5f9;
+    color: #64748b;
+    flex-shrink: 0;
+}
+.toc-item.active .toc-item-badge {
+    background: #0f3d64;
+    color: #ffffff;
+}
+
+/* Search Highlights */
+.search-highlight {
+    background: linear-gradient(120deg, #fef08a 0%, #fde047 100%);
+    color: #713f12;
+    padding: 0.1em 0.35em;
+    border-radius: 0.25rem;
+    font-weight: 700;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+/* Toast Notification */
+#copyToast {
+    position: fixed !important;
+    top: 88px !important;
+    right: 24px !important;
+    z-index: 999999 !important;
+    opacity: 0 !important;
+    transform: translateY(-12px) !important;
+    pointer-events: none !important;
+    transition: opacity 0.28s ease, transform 0.28s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+#copyToast.toast-visible {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+    pointer-events: auto !important;
 }
 
 /* Print Optimization */
 @media print {
-    .site-header, .site-footer, .no-print, .toc-sidebar {
+    .site-header, .site-footer, .no-print, .toc-sidebar, #readingProgressBar, #copyToast, #backToTopBtn {
         display: none !important;
     }
     .ad-card {
@@ -97,102 +319,171 @@ if (!defined('GMKI_SECURE_ACCESS')) {
 }
 </style>
 
-<div class="bg-gradient-to-b from-slate-50 to-slate-100 min-w-full pb-16">
+<!-- Top Reading Progress Indicator -->
+<div id="readingProgressBar"></div>
+
+<!-- Modern Toast Notification -->
+<div id="copyToast" class="flex items-center gap-2.5 px-4 py-3 rounded-2xl bg-slate-900/95 text-white shadow-2xl backdrop-blur-md border border-slate-700/60 text-xs font-semibold no-print">
+    <span class="flex items-center justify-center w-5 h-5 rounded-full bg-emerald-500 text-white text-[11px] font-bold">✓</span>
+    <span id="copyToastText">Tautan pasal berhasil disalin ke papan klip!</span>
+</div>
+
+<div class="bg-gradient-to-b from-slate-50 via-slate-100/60 to-slate-100 min-w-full pb-20">
     <!-- Top Hero Section -->
-    <section class="relative bg-gradient-to-r from-[#0a263f] via-[#0f3d64] to-[#1e4e79] text-white pt-12 pb-16 overflow-hidden">
-        <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: radial-gradient(#ffffff 1px, transparent 1px); background-size: 24px 24px;"></div>
+    <section class="relative bg-gradient-to-br from-[#06192e] via-[#0a263f] to-[#0f3d64] text-white pt-14 pb-20 overflow-hidden shadow-md">
+        <!-- Ambient decorative glows & subtle grid -->
+        <div class="absolute -top-24 left-1/2 -translate-x-1/2 w-[800px] h-[350px] bg-gradient-to-b from-blue-500/15 via-amber-500/10 to-transparent blur-3xl pointer-events-none rounded-full"></div>
+        <div class="absolute inset-0 opacity-[0.04] pointer-events-none" style="background-image: radial-gradient(#ffffff 1px, transparent 1px); background-size: 28px 28px;"></div>
         
         <div class="container relative z-10 px-4 sm:px-6">
             <div class="max-w-4xl mx-auto text-center">
-                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-400/30 text-xs font-bold uppercase tracking-wider mb-4 animate__animated animate__fadeInDown">
-                    <span>⚖️</span>
-                    <span>Hukum Tertinggi & Landasan Konstitusional</span>
+                
+                <!-- Ornamental Header Badge -->
+                <div class="mx-auto mb-5 flex items-center justify-center gap-3 animate__animated animate__fadeInDown">
+                    <span class="block h-px w-10 sm:w-16 bg-gradient-to-r from-transparent via-amber-400/60 to-amber-400 rounded-full"></span>
+                    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-extrabold uppercase tracking-widest bg-amber-500/15 text-amber-300 border border-amber-400/30 shadow-sm backdrop-blur-md">
+                        <span>⚖️</span>
+                        <span>Konstitusi &amp; Landasan Yuridis Organisasi</span>
+                    </div>
+                    <span class="block h-px w-10 sm:w-16 bg-gradient-to-l from-transparent via-amber-400/60 to-amber-400 rounded-full"></span>
                 </div>
                 
-                <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-white mb-4 animate__animated animate__fadeIn">
-                    Anggaran Dasar & Anggaran Rumah Tangga
+                <!-- Title -->
+                <h1 class="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight mb-4 leading-tight animate__animated animate__fadeIn">
+                    Anggaran Dasar &amp; Anggaran Rumah Tangga<br class="hidden sm:inline">
+                    <span class="bg-gradient-to-r from-amber-300 via-amber-200 to-amber-400 bg-clip-text text-transparent">GMKI Cabang Padang</span>
                 </h1>
                 
-                <p class="text-slate-200 text-sm sm:text-base md:text-lg max-w-2xl mx-auto mb-6 leading-relaxed font-normal animate__animated animate__fadeIn">
-                    Serta Peraturan Organisasi (PO) dan Penjelasannya Gerakan Mahasiswa Kristen Indonesia (GMKI) Cabang Padang. Pedoman tertinggi penatalayanan dan pergerakan di tiga medan layan.
+                <!-- Subtitle -->
+                <p class="text-slate-200/90 text-sm sm:text-base md:text-lg max-w-2xl mx-auto mb-8 leading-relaxed font-normal animate__animated animate__fadeIn">
+                    Pedoman konstitusional tertinggi penatalayanan, kepemimpinan, dan kaderisasi di Tiga Medan Pelayanan (Gereja, Perguruan Tinggi, dan Masyarakat) Gerakan Mahasiswa Kristen Indonesia.
                 </p>
 
-                <!-- Quick Stats Badge Bar -->
-                <div class="flex flex-wrap items-center justify-center gap-3 text-xs sm:text-sm font-semibold mb-8 animate__animated animate__fadeInUp">
-                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/10 backdrop-blur-md border border-white/15 text-slate-100 shadow-sm">
-                        📜 <strong>12 Pasal</strong> Anggaran Dasar
-                    </span>
-                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/10 backdrop-blur-md border border-white/15 text-slate-100 shadow-sm">
-                        ⚖️ <strong>12 Pasal</strong> Anggaran Rumah Tangga
-                    </span>
-                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/10 backdrop-blur-md border border-white/15 text-slate-100 shadow-sm">
-                        📑 <strong>11 Pasal</strong> Peraturan Organisasi
-                    </span>
-                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-400/20 border border-amber-300/30 text-amber-200 shadow-sm">
-                        🏛️ Ditetapkan Kongres XX GMKI
-                    </span>
+                <!-- Quick Stats 4-Column Grid -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 max-w-4xl mx-auto mb-10 text-left animate__animated animate__fadeInUp">
+                    <!-- Stat 1 -->
+                    <div class="p-3.5 sm:p-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/15 hover:bg-white/15 hover:border-blue-400/40 transition-all duration-300 shadow-lg group">
+                        <div class="flex items-center gap-2.5 mb-1.5">
+                            <span class="text-xl sm:text-2xl group-hover:scale-110 transition-transform">📜</span>
+                            <span class="text-xs font-extrabold text-blue-200 uppercase tracking-wider">Hukum Pokok</span>
+                        </div>
+                        <div class="text-lg sm:text-xl font-black text-white">12 Pasal</div>
+                        <div class="text-[11px] text-slate-300 font-medium">Anggaran Dasar (AD)</div>
+                    </div>
+                    <!-- Stat 2 -->
+                    <div class="p-3.5 sm:p-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/15 hover:bg-white/15 hover:border-amber-400/40 transition-all duration-300 shadow-lg group">
+                        <div class="flex items-center gap-2.5 mb-1.5">
+                            <span class="text-xl sm:text-2xl group-hover:scale-110 transition-transform">⚖️</span>
+                            <span class="text-xs font-extrabold text-amber-300 uppercase tracking-wider">Tata Laksana</span>
+                        </div>
+                        <div class="text-lg sm:text-xl font-black text-white">12 Pasal</div>
+                        <div class="text-[11px] text-slate-300 font-medium">Anggaran Rumah Tangga</div>
+                    </div>
+                    <!-- Stat 3 -->
+                    <div class="p-3.5 sm:p-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/15 hover:bg-white/15 hover:border-indigo-400/40 transition-all duration-300 shadow-lg group">
+                        <div class="flex items-center gap-2.5 mb-1.5">
+                            <span class="text-xl sm:text-2xl group-hover:scale-110 transition-transform">📑</span>
+                            <span class="text-xs font-extrabold text-purple-200 uppercase tracking-wider">Pedoman Teknis</span>
+                        </div>
+                        <div class="text-lg sm:text-xl font-black text-white">11 Pasal</div>
+                        <div class="text-[11px] text-slate-300 font-medium">Peraturan Organisasi</div>
+                    </div>
+                    <!-- Stat 4 -->
+                    <div class="p-3.5 sm:p-4 rounded-2xl bg-amber-500/15 backdrop-blur-md border border-amber-400/30 hover:bg-amber-500/20 transition-all duration-300 shadow-lg group">
+                        <div class="flex items-center gap-2.5 mb-1.5">
+                            <span class="text-xl sm:text-2xl group-hover:scale-110 transition-transform">🏛️</span>
+                            <span class="text-xs font-extrabold text-amber-300 uppercase tracking-wider">Otoritas Yuridis</span>
+                        </div>
+                        <div class="text-lg sm:text-xl font-black text-amber-100">Kongres XX</div>
+                        <div class="text-[11px] text-amber-200/80 font-medium">Ketetapan Nasional</div>
+                    </div>
                 </div>
 
                 <!-- Floating Interactive Toolbar -->
-                <div class="bg-white/95 backdrop-blur-md p-3 sm:p-4 rounded-2xl shadow-xl border border-white/40 text-slate-800 max-w-3xl mx-auto flex flex-col sm:flex-row items-center gap-3 no-print">
-                    <!-- Search input -->
-                    <div class="relative w-full sm:flex-1">
-                        <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-400">
-                            <?= svg_icon('search', 18) ?>
-                        </span>
-                        <input type="text" id="adSearchInput" placeholder="Cari pasal, ayat, atau topik (cth: keanggotaan, baret, kongres)..." 
-                               class="w-full pl-10 pr-10 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#0f3d64] focus:border-transparent text-sm bg-slate-50 focus:bg-white transition-all shadow-inner"
-                               autocomplete="off">
-                        <button type="button" id="clearSearchBtn" class="hidden absolute inset-y-0 right-0 items-center pr-3 text-slate-400 hover:text-slate-600">
-                            ✕
-                        </button>
-                    </div>
-
-                    <!-- Reading Tools Controls -->
-                    <div class="flex items-center justify-between w-full sm:w-auto gap-2">
-                        <!-- Font Size Controls -->
-                        <div class="inline-flex rounded-xl border border-slate-200 bg-slate-50 p-0.5 text-xs font-bold text-slate-600 shadow-inner">
-                            <button type="button" id="fontDecrease" class="px-2.5 py-1.5 rounded-lg hover:bg-white hover:text-slate-900 transition" title="Perkecil Ukuran Teks">A-</button>
-                            <button type="button" id="fontReset" class="px-2.5 py-1.5 rounded-lg hover:bg-white hover:text-slate-900 transition" title="Ukuran Standar">A</button>
-                            <button type="button" id="fontIncrease" class="px-2.5 py-1.5 rounded-lg hover:bg-white hover:text-slate-900 transition" title="Perbesar Ukuran Teks">A+</button>
+                <div class="bg-white/95 backdrop-blur-xl p-3.5 sm:p-5 rounded-2xl shadow-2xl border border-white/60 text-slate-800 max-w-4xl mx-auto flex flex-col gap-3 no-print">
+                    <div class="flex flex-col sm:flex-row items-center gap-3">
+                        <!-- Search input with shortcut badge -->
+                        <div class="relative w-full sm:flex-1">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-400">
+                                <?= svg_icon('search', 18) ?>
+                            </span>
+                            <input type="text" id="adSearchInput" placeholder="Cari pasal, ayat, atau kata kunci (cth: keanggotaan, maper, kongres, konpercab)..." 
+                                   class="w-full pl-10 pr-20 py-2.5 sm:py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#0f3d64] focus:border-transparent text-xs sm:text-sm bg-slate-50 focus:bg-white transition-all shadow-inner placeholder:text-slate-400"
+                                   autocomplete="off">
+                            <div class="absolute inset-y-0 right-0 flex items-center pr-3 gap-1.5">
+                                <button type="button" id="clearSearchBtn" class="hidden text-slate-400 hover:text-slate-600 text-sm p-1" title="Hapus Pencarian">
+                                    ✕
+                                </button>
+                                <kbd class="hidden md:inline-flex items-center px-2 py-0.5 text-[10px] font-semibold text-slate-400 bg-slate-100 border border-slate-200 rounded-md shadow-xs pointer-events-none">
+                                    /
+                                </kbd>
+                            </div>
                         </div>
 
-                        <!-- Print Action -->
-                        <button type="button" onclick="window.print()" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold shadow-sm transition" title="Cetak atau Simpan PDF">
-                            <span>🖨️</span>
-                            <span class="hidden md:inline">Cetak PDF</span>
-                        </button>
+                        <!-- Reading Tools Controls -->
+                        <div class="flex items-center justify-between w-full sm:w-auto gap-2">
+                            <!-- Font Size Controls with visual pills -->
+                            <div class="inline-flex items-center rounded-xl border border-slate-200 bg-slate-100 p-1 text-xs font-bold text-slate-600 shadow-inner">
+                                <span class="text-[10px] font-semibold text-slate-400 px-2 uppercase hidden lg:inline">Ukuran:</span>
+                                <button type="button" id="fontDecrease" class="font-size-btn px-2.5 py-1.5 rounded-lg text-slate-600 hover:bg-white hover:text-slate-900 transition" title="Perkecil Ukuran Teks (A-)">A-</button>
+                                <button type="button" id="fontReset" class="font-size-btn active px-2.5 py-1.5 rounded-lg bg-white text-slate-900 shadow-xs transition" title="Ukuran Normal (A)">A</button>
+                                <button type="button" id="fontIncrease" class="font-size-btn px-2.5 py-1.5 rounded-lg text-slate-600 hover:bg-white hover:text-slate-900 transition" title="Perbesar Ukuran Teks (A+)">A+</button>
+                            </div>
+
+                            <!-- Print Action -->
+                            <button type="button" onclick="window.print()" class="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-bold shadow-xs hover:shadow-sm transition" title="Cetak atau Simpan PDF">
+                                <span>🖨️</span>
+                                <span class="hidden sm:inline">Cetak / PDF</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Quick Filter Chips -->
+                    <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar pt-1 text-xs">
+                        <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider shrink-0 mr-1">Topik Cepat:</span>
+                        <button type="button" onclick="quickFilter('')" class="quick-chip active px-2.5 py-1 rounded-lg bg-[#0f3d64] text-white font-medium hover:opacity-90 transition whitespace-nowrap">✨ Semua</button>
+                        <button type="button" onclick="quickFilter('keanggotaan')" class="quick-chip px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium transition whitespace-nowrap">Keanggotaan</button>
+                        <button type="button" onclick="quickFilter('asas')" class="quick-chip px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium transition whitespace-nowrap">Asas &amp; Visi</button>
+                        <button type="button" onclick="quickFilter('bpc')" class="quick-chip px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium transition whitespace-nowrap">Badan Pengurus Cabang</button>
+                        <button type="button" onclick="quickFilter('konpercab')" class="quick-chip px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium transition whitespace-nowrap">Konperensi Cabang</button>
+                        <button type="button" onclick="quickFilter('maper')" class="quick-chip px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium transition whitespace-nowrap">Maper</button>
+                        <button type="button" onclick="quickFilter('disiplin')" class="quick-chip px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium transition whitespace-nowrap">Disiplin Organisasi</button>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Main Navigation Tabs -->
-    <div class="sticky top-[72px] z-30 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm no-print">
+    <!-- Main Navigation Tabs (Segmented Sticky Navigation) -->
+    <div class="sticky top-[72px] z-30 bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-xs no-print">
         <div class="container px-4 sm:px-6">
-            <div class="flex items-center justify-between overflow-x-auto no-scrollbar py-2.5 gap-2">
-                <div class="flex items-center gap-2">
-                    <button type="button" onclick="switchSection('ad')" class="tab-btn active px-4 py-2 rounded-xl text-xs sm:text-sm font-bold flex items-center gap-2 whitespace-nowrap" id="tab-ad">
+            <div class="flex items-center justify-between py-2.5 gap-3">
+                <!-- Segmented Control Container -->
+                <div class="inline-flex p-1.5 rounded-2xl bg-slate-100/90 border border-slate-200/80 overflow-x-auto no-scrollbar gap-1.5 max-w-full">
+                    <button type="button" onclick="switchSection('ad')" class="tab-btn active px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold flex items-center gap-2 whitespace-nowrap transition-all" id="tab-ad">
                         <span>📜</span>
-                        <span>Anggaran Dasar (AD)</span>
+                        <span>Anggaran Dasar</span>
+                        <span class="tab-count-badge">12 Pasal</span>
                     </button>
-                    <button type="button" onclick="switchSection('art')" class="tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-100 flex items-center gap-2 whitespace-nowrap" id="tab-art">
+                    <button type="button" onclick="switchSection('art')" class="tab-btn px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold text-slate-600 hover:text-slate-900 hover:bg-white/60 flex items-center gap-2 whitespace-nowrap transition-all" id="tab-art">
                         <span>⚖️</span>
-                        <span>Anggaran Rumah Tangga (ART)</span>
+                        <span>Anggaran Rumah Tangga</span>
+                        <span class="tab-count-badge">12 Pasal</span>
                     </button>
-                    <button type="button" onclick="switchSection('po')" class="tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-100 flex items-center gap-2 whitespace-nowrap" id="tab-po">
+                    <button type="button" onclick="switchSection('po')" class="tab-btn px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold text-slate-600 hover:text-slate-900 hover:bg-white/60 flex items-center gap-2 whitespace-nowrap transition-all" id="tab-po">
                         <span>📑</span>
-                        <span>Peraturan Organisasi (PO)</span>
+                        <span>Peraturan Organisasi</span>
+                        <span class="tab-count-badge">11 Pasal</span>
                     </button>
-                    <button type="button" onclick="switchSection('penjelasan')" class="tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-100 flex items-center gap-2 whitespace-nowrap" id="tab-penjelasan">
+                    <button type="button" onclick="switchSection('penjelasan')" class="tab-btn px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold text-slate-600 hover:text-slate-900 hover:bg-white/60 flex items-center gap-2 whitespace-nowrap transition-all" id="tab-penjelasan">
                         <span>💡</span>
                         <span>Penjelasan Resmi PO</span>
+                        <span class="tab-count-badge">Doktrin</span>
                     </button>
                 </div>
 
                 <!-- Match counter banner -->
-                <div id="searchCounter" class="hidden text-xs font-semibold text-amber-700 bg-amber-50 px-3 py-1.5 rounded-lg border border-amber-200 whitespace-nowrap">
+                <div id="searchCounter" class="hidden text-xs font-bold text-amber-800 bg-amber-50 px-3 py-2 rounded-xl border border-amber-300/80 shadow-xs whitespace-nowrap animate__animated animate__fadeIn">
                     0 hasil ditemukan
                 </div>
             </div>
@@ -203,20 +494,44 @@ if (!defined('GMKI_SECURE_ACCESS')) {
     <div class="container px-4 sm:px-6 pt-8">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             
-            <!-- Sticky Table of Contents Sidebar (Desktop) -->
-            <aside class="hidden lg:block lg:col-span-3 sticky top-[136px] max-h-[calc(100vh-160px)] overflow-y-auto no-print bg-white p-5 rounded-2xl border border-slate-200 shadow-sm text-sm">
-                <div class="flex items-center justify-between pb-3 mb-3 border-b border-slate-100">
-                    <span class="font-bold text-slate-900 flex items-center gap-1.5 text-xs uppercase tracking-wider text-[#0f3d64]">
-                        <span>📌</span>
-                        <span id="tocHeaderTitle">Daftar Isi AD</span>
+            <!-- Upgraded Sticky Table of Contents Sidebar (Desktop) -->
+            <aside class="hidden lg:flex lg:col-span-3 sticky top-[140px] max-h-[calc(100vh-160px)] flex-col no-print bg-white rounded-2xl border border-slate-200/80 shadow-sm p-4 text-sm overflow-hidden">
+                <!-- TOC Header -->
+                <div class="pb-3 mb-3 border-b border-slate-100 flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-blue-600 animate-pulse"></span>
+                        <span class="font-extrabold text-xs uppercase tracking-wider text-slate-800" id="tocHeaderTitle">
+                            Daftar Isi AD
+                        </span>
+                    </div>
+                    <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-500" id="tocCountBadge">
+                        12 Pasal
                     </span>
-                    <span class="text-[11px] text-slate-400">Navigasi Cepat</span>
                 </div>
 
-                <!-- TOC dynamic container -->
-                <nav id="tocContainer" class="space-y-1 text-slate-600 text-xs">
+                <!-- TOC Filter Input -->
+                <div class="mb-3">
+                    <input type="text" id="tocFilterInput" placeholder="Saring daftar pasal..." 
+                           class="w-full text-xs px-3 py-1.5 rounded-lg border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#0f3d64] text-slate-700 placeholder:text-slate-400">
+                </div>
+
+                <!-- Dynamic TOC Container with custom sleek scrollbar -->
+                <nav id="tocContainer" class="space-y-1 text-slate-600 text-xs overflow-y-auto pr-1 flex-1 custom-toc-scroll">
                     <!-- Populated by JavaScript according to active section -->
                 </nav>
+
+                <!-- Constitutional Hierarchy Widget -->
+                <div class="mt-4 pt-3 border-t border-slate-100 text-[11px] text-slate-500 bg-slate-50/80 p-2.5 rounded-xl border border-slate-200/60">
+                    <div class="font-bold text-slate-700 flex items-center gap-1 mb-1">
+                        <span>🏛️</span> Hierarki Hukum GMKI:
+                    </div>
+                    <ol class="list-decimal list-inside space-y-0.5 text-[10px] text-slate-500 leading-tight">
+                        <li>Anggaran Dasar (AD)</li>
+                        <li>Anggaran Rumah Tangga (ART)</li>
+                        <li>Peraturan Organisasi (PO)</li>
+                        <li>Ketetapan Kongres / Konpercab</li>
+                    </ol>
+                </div>
             </aside>
 
             <!-- Main Legal Body Content -->
@@ -1356,7 +1671,7 @@ if (!defined('GMKI_SECURE_ACCESS')) {
 </div>
 
 <!-- Back to Top Button -->
-<button type="button" id="backToTopBtn" class="fixed bottom-6 right-6 p-3 rounded-full bg-[#0f3d64] text-white shadow-xl hover:bg-[#0a263f] transition-all opacity-0 pointer-events-none z-50 no-print" title="Kembali ke Atas">
+<button type="button" id="backToTopBtn" class="fixed bottom-6 right-6 p-3.5 rounded-2xl bg-[#0f3d64] text-white shadow-2xl hover:bg-[#0a263f] hover:scale-105 active:scale-95 transition-all opacity-0 pointer-events-none z-50 no-print border border-white/20" title="Kembali ke Atas">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
         <polyline points="18 15 12 9 6 15"></polyline>
     </svg>
@@ -1367,10 +1682,10 @@ document.addEventListener('DOMContentLoaded', function () {
     // 1. Tab Switching System
     const sections = ['ad', 'art', 'po', 'penjelasan'];
     const sectionTitles = {
-        'ad': 'Daftar Isi Anggaran Dasar (AD)',
-        'art': 'Daftar Isi Anggaran Rumah Tangga (ART)',
-        'po': 'Daftar Isi Peraturan Organisasi (PO)',
-        'penjelasan': 'Daftar Isi Penjelasan PO'
+        'ad': 'Daftar Isi AD',
+        'art': 'Daftar Isi ART',
+        'po': 'Daftar Isi PO',
+        'penjelasan': 'Penjelasan PO'
     };
 
     window.switchSection = function(sectionId) {
@@ -1379,12 +1694,12 @@ document.addEventListener('DOMContentLoaded', function () {
             const pane = document.getElementById('section-' + s);
             if (s === sectionId) {
                 tabBtn.classList.add('active');
-                tabBtn.classList.remove('text-slate-600', 'hover:bg-slate-100');
-                pane.classList.remove('hidden');
+                tabBtn.classList.remove('text-slate-600', 'hover:bg-white/60');
+                if (pane) pane.classList.remove('hidden');
             } else {
                 tabBtn.classList.remove('active');
-                tabBtn.classList.add('text-slate-600', 'hover:bg-slate-100');
-                pane.classList.add('hidden');
+                tabBtn.classList.add('text-slate-600', 'hover:bg-white/60');
+                if (pane) pane.classList.add('hidden');
             }
         });
 
@@ -1397,10 +1712,14 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     };
 
-    // 2. Build Table of Contents dynamically for the active section
+    // 2. Build Table of Contents dynamically for active section
     function buildToc(sectionId) {
         const tocHeader = document.getElementById('tocHeaderTitle');
         const tocContainer = document.getElementById('tocContainer');
+        const tocBadge = document.getElementById('tocCountBadge');
+        const tocFilter = document.getElementById('tocFilterInput');
+        if (tocFilter) tocFilter.value = '';
+
         if (tocHeader) tocHeader.textContent = sectionTitles[sectionId] || 'Daftar Isi';
         
         tocContainer.innerHTML = '';
@@ -1408,15 +1727,37 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!currentPane) return;
 
         const cards = currentPane.querySelectorAll('.ad-card');
+        if (tocBadge) {
+            tocBadge.textContent = cards.length + (sectionId === 'penjelasan' ? ' Bagian' : ' Pasal');
+        }
+
         cards.forEach(card => {
             const id = card.id;
             const headingEl = card.querySelector('h2, h3');
+            const badgeEl = card.querySelector('span[class*="rounded"]');
+            
+            let badgeText = '';
+            if (id === 'ad-pembukaan') {
+                badgeText = 'Mukadimah';
+            } else if (badgeEl) {
+                badgeText = badgeEl.textContent.trim().replace('ART ', '').replace('PO ', '');
+            } else {
+                badgeText = 'Pasal';
+            }
+
             const title = headingEl ? headingEl.textContent.trim() : id;
 
             const a = document.createElement('a');
             a.href = '#' + id;
-            a.className = 'toc-item block px-3 py-1.5 rounded-lg text-slate-600 hover:text-[#0f3d64] hover:bg-slate-50 transition truncate';
-            a.textContent = title;
+            a.className = 'toc-item group';
+            a.setAttribute('data-target-id', id);
+            a.setAttribute('data-toc-title', (badgeText + ' ' + title).toLowerCase());
+            
+            a.innerHTML = `
+                <span class="toc-item-badge">${badgeText}</span>
+                <span class="truncate flex-1 group-hover:text-[#0f3d64] transition-colors">${title}</span>
+            `;
+
             a.addEventListener('click', function(e) {
                 e.preventDefault();
                 const target = document.getElementById(id);
@@ -1427,6 +1768,25 @@ document.addEventListener('DOMContentLoaded', function () {
             });
             tocContainer.appendChild(a);
         });
+
+        updateTocScrollspy();
+    }
+
+    // Filter TOC Items
+    const tocFilterInput = document.getElementById('tocFilterInput');
+    if (tocFilterInput) {
+        tocFilterInput.addEventListener('input', function() {
+            const query = this.value.trim().toLowerCase();
+            const items = document.querySelectorAll('#tocContainer .toc-item');
+            items.forEach(item => {
+                const searchStr = item.getAttribute('data-toc-title') || '';
+                if (!query || searchStr.includes(query)) {
+                    item.style.display = 'flex';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
     }
 
     function highlightCard(element) {
@@ -1434,7 +1794,7 @@ document.addEventListener('DOMContentLoaded', function () {
         element.classList.add('highlight-target');
         setTimeout(() => {
             element.classList.remove('highlight-target');
-        }, 3000);
+        }, 3500);
     }
 
     // 3. Search Engine & Live Filter
@@ -1443,29 +1803,73 @@ document.addEventListener('DOMContentLoaded', function () {
     const searchCounter = document.getElementById('searchCounter');
 
     let searchDebounceTimer;
-    searchInput.addEventListener('input', function() {
-        clearTimeout(searchDebounceTimer);
-        const term = this.value.trim().toLowerCase();
-        
-        if (term.length > 0) {
-            clearBtn.classList.remove('hidden');
-            clearBtn.classList.add('flex');
-        } else {
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
+            clearTimeout(searchDebounceTimer);
+            const term = this.value.trim().toLowerCase();
+            
+            if (term.length > 0) {
+                clearBtn.classList.remove('hidden');
+                clearBtn.classList.add('flex');
+            } else {
+                clearBtn.classList.add('hidden');
+                clearBtn.classList.remove('flex');
+            }
+
+            searchDebounceTimer = setTimeout(() => {
+                performSearch(term);
+            }, 200);
+        });
+    }
+
+    if (clearBtn) {
+        clearBtn.addEventListener('click', function() {
+            searchInput.value = '';
             clearBtn.classList.add('hidden');
-            clearBtn.classList.remove('flex');
+            performSearch('');
+            updateQuickChips('');
+            searchInput.focus();
+        });
+    }
+
+    // Keyboard shortcut '/' to search
+    document.addEventListener('keydown', function(e) {
+        if (e.key === '/' && document.activeElement !== searchInput && document.activeElement.tagName !== 'INPUT') {
+            e.preventDefault();
+            searchInput.focus();
+            searchInput.select();
+        } else if (e.key === 'Escape' && document.activeElement === searchInput) {
+            searchInput.blur();
         }
-
-        searchDebounceTimer = setTimeout(() => {
-            performSearch(term);
-        }, 200);
     });
 
-    clearBtn.addEventListener('click', function() {
-        searchInput.value = '';
-        clearBtn.classList.add('hidden');
-        performSearch('');
-        searchInput.focus();
-    });
+    // Quick Filter Topic Chips
+    window.quickFilter = function(term) {
+        if (searchInput) {
+            searchInput.value = term;
+            if (term) {
+                clearBtn.classList.remove('hidden');
+                clearBtn.classList.add('flex');
+            } else {
+                clearBtn.classList.add('hidden');
+                clearBtn.classList.remove('flex');
+            }
+        }
+        updateQuickChips(term);
+        performSearch(term.toLowerCase());
+    };
+
+    function updateQuickChips(term) {
+        document.querySelectorAll('.quick-chip').forEach(chip => {
+            if (term === '' && chip.textContent.includes('Semua')) {
+                chip.classList.add('active');
+            } else if (term !== '' && chip.textContent.toLowerCase().includes(term.toLowerCase())) {
+                chip.classList.add('active');
+            } else {
+                chip.classList.remove('active');
+            }
+        });
+    }
 
     function performSearch(term) {
         const searchableCards = document.querySelectorAll('[data-searchable]');
@@ -1485,7 +1889,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // Show all sections during search so matches across all categories are visible
         sections.forEach(s => {
             const pane = document.getElementById('section-' + s);
-            pane.classList.remove('hidden');
+            if (pane) pane.classList.remove('hidden');
         });
 
         let matchCount = 0;
@@ -1550,55 +1954,191 @@ document.addEventListener('DOMContentLoaded', function () {
     // 4. Reading Font Size Controls
     const fontSizes = ['0.875rem', '1rem', '1.125rem'];
     let currentFontIdx = 1;
+    const fontBtnDecrease = document.getElementById('fontDecrease');
+    const fontBtnReset = document.getElementById('fontReset');
+    const fontBtnIncrease = document.getElementById('fontIncrease');
 
-    document.getElementById('fontIncrease').addEventListener('click', function() {
-        if (currentFontIdx < fontSizes.length - 1) {
-            currentFontIdx++;
-            applyFontSize();
+    function updateFontSizeButtons() {
+        [fontBtnDecrease, fontBtnReset, fontBtnIncrease].forEach(b => {
+            if (b) b.classList.remove('active', 'bg-white', 'text-slate-900', 'shadow-xs');
+        });
+        if (currentFontIdx === 0 && fontBtnDecrease) {
+            fontBtnDecrease.classList.add('active', 'bg-white', 'text-slate-900', 'shadow-xs');
+        } else if (currentFontIdx === 1 && fontBtnReset) {
+            fontBtnReset.classList.add('active', 'bg-white', 'text-slate-900', 'shadow-xs');
+        } else if (currentFontIdx === 2 && fontBtnIncrease) {
+            fontBtnIncrease.classList.add('active', 'bg-white', 'text-slate-900', 'shadow-xs');
         }
-    });
+    }
 
-    document.getElementById('fontDecrease').addEventListener('click', function() {
-        if (currentFontIdx > 0) {
-            currentFontIdx--;
+    if (fontBtnIncrease) {
+        fontBtnIncrease.addEventListener('click', function() {
+            if (currentFontIdx < fontSizes.length - 1) {
+                currentFontIdx++;
+                applyFontSize();
+            }
+        });
+    }
+
+    if (fontBtnDecrease) {
+        fontBtnDecrease.addEventListener('click', function() {
+            if (currentFontIdx > 0) {
+                currentFontIdx--;
+                applyFontSize();
+            }
+        });
+    }
+
+    if (fontBtnReset) {
+        fontBtnReset.addEventListener('click', function() {
+            currentFontIdx = 1;
             applyFontSize();
-        }
-    });
-
-    document.getElementById('fontReset').addEventListener('click', function() {
-        currentFontIdx = 1;
-        applyFontSize();
-    });
+        });
+    }
 
     function applyFontSize() {
         document.documentElement.style.setProperty('--reading-font-size', fontSizes[currentFontIdx]);
+        updateFontSizeButtons();
     }
 
-    // 5. Copy Pasal Anchor Link Helper
-    window.copyPasalLink = function(id) {
+    // 5. Toast & Copy Pasal Anchor Link Helper
+    window.copyPasalLink = function(id, btn) {
         const url = window.location.origin + window.location.pathname + '#' + id;
-        navigator.clipboard.writeText(url).then(() => {
-            alert('Tautan pasal berhasil disalin ke papan klip:\n' + url);
-        }).catch(() => {
-            prompt('Salin tautan ini:', url);
-        });
+        const targetCard = document.getElementById(id);
+        if (targetCard) highlightCard(targetCard);
+
+        showCopyToast('Tautan pasal berhasil disalin ke papan klip!');
+
+        if (btn) {
+            const originalHtml = btn.innerHTML;
+            btn.innerHTML = `<span style="color:#10b981;font-weight:bold;">✓</span><span class="hidden sm:inline" style="color:#10b981;font-weight:bold;">Tersalin!</span>`;
+            btn.style.borderColor = '#10b981';
+            btn.style.backgroundColor = '#ecfdf5';
+            setTimeout(() => {
+                btn.innerHTML = originalHtml;
+                btn.style.borderColor = '';
+                btn.style.backgroundColor = '';
+            }, 1800);
+        }
+
+        try {
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(url).catch(() => fallbackCopy(url));
+            } else {
+                fallbackCopy(url);
+            }
+        } catch (e) {
+            fallbackCopy(url);
+        }
     };
 
-    // 6. Back to Top Button
-    const backToTopBtn = document.getElementById('backToTopBtn');
-    window.addEventListener('scroll', function() {
-        if (window.scrollY > 400) {
-            backToTopBtn.classList.remove('opacity-0', 'pointer-events-none');
-            backToTopBtn.classList.add('opacity-100');
-        } else {
-            backToTopBtn.classList.add('opacity-0', 'pointer-events-none');
-            backToTopBtn.classList.remove('opacity-100');
+    function fallbackCopy(text) {
+        try {
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            ta.style.position = 'fixed';
+            ta.style.opacity = '0';
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand('copy');
+            document.body.removeChild(ta);
+            showCopyToast('Tautan pasal berhasil disalin ke papan klip!');
+        } catch (e) {
+            prompt('Salin tautan ini:', text);
+        }
+    }
+
+    function showCopyToast(msg) {
+        const toast = document.getElementById('copyToast');
+        const text = document.getElementById('copyToastText');
+        if (!toast) return;
+        if (text) text.textContent = msg;
+        toast.classList.add('toast-visible');
+        clearTimeout(window._copyToastTimer);
+        window._copyToastTimer = setTimeout(() => {
+            toast.classList.remove('toast-visible');
+        }, 2500);
+    }
+
+    // Enhance all Copy Buttons across articles to have SVG, text and click handler
+    document.querySelectorAll('.ad-card button[onclick^="copyPasalLink"]').forEach(btn => {
+        btn.innerHTML = `
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+            </svg>
+            <span class="hidden sm:inline">Salin Link</span>
+        `;
+        const match = btn.getAttribute('onclick')?.match(/copyPasalLink\(['"]([^'"]+)['"]\)/);
+        if (match && match[1]) {
+            btn.removeAttribute('onclick');
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                window.copyPasalLink(match[1], this);
+            });
         }
     });
 
-    backToTopBtn.addEventListener('click', function() {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+    // 6. Scrollspy & Reading Progress Bar
+    const backToTopBtn = document.getElementById('backToTopBtn');
+    const pBar = document.getElementById('readingProgressBar');
+
+    function updateTocScrollspy() {
+        const activeTab = document.querySelector('.tab-btn.active');
+        const activeSec = activeTab ? activeTab.id.replace('tab-', '') : 'ad';
+        const currentPane = document.getElementById('section-' + activeSec);
+        if (!currentPane) return;
+
+        const cards = currentPane.querySelectorAll('.ad-card');
+        let currentCardId = null;
+        const scrollPosition = window.scrollY + 160;
+
+        cards.forEach(card => {
+            const top = card.offsetTop;
+            const height = card.offsetHeight;
+            if (scrollPosition >= top && scrollPosition < top + height) {
+                currentCardId = card.id;
+            }
+        });
+
+        if (currentCardId) {
+            document.querySelectorAll('#tocContainer .toc-item').forEach(item => {
+                if (item.getAttribute('data-target-id') === currentCardId) {
+                    item.classList.add('active');
+                } else {
+                    item.classList.remove('active');
+                }
+            });
+        }
+    }
+
+    window.addEventListener('scroll', function() {
+        // Progress bar
+        const winScroll = document.documentElement.scrollTop || document.body.scrollTop;
+        const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrolled = height > 0 ? (winScroll / height) * 100 : 0;
+        if (pBar) pBar.style.width = scrolled + '%';
+
+        // Back to top button
+        if (backToTopBtn) {
+            if (window.scrollY > 400) {
+                backToTopBtn.classList.remove('opacity-0', 'pointer-events-none');
+                backToTopBtn.classList.add('opacity-100');
+            } else {
+                backToTopBtn.classList.add('opacity-0', 'pointer-events-none');
+                backToTopBtn.classList.remove('opacity-100');
+            }
+        }
+
+        // Scrollspy
+        updateTocScrollspy();
     });
+
+    if (backToTopBtn) {
+        backToTopBtn.addEventListener('click', function() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    }
 
     // 7. Initial Hash Handling
     const hash = window.location.hash.replace('#', '');
@@ -1609,25 +2149,37 @@ document.addEventListener('DOMContentLoaded', function () {
             switchSection('art');
             setTimeout(() => {
                 const el = document.getElementById(hash);
-                if (el) el.scrollIntoView({ behavior: 'smooth' });
+                if (el) {
+                    el.scrollIntoView({ behavior: 'smooth' });
+                    highlightCard(el);
+                }
             }, 300);
         } else if (hash.startsWith('po-')) {
             switchSection('po');
             setTimeout(() => {
                 const el = document.getElementById(hash);
-                if (el) el.scrollIntoView({ behavior: 'smooth' });
+                if (el) {
+                    el.scrollIntoView({ behavior: 'smooth' });
+                    highlightCard(el);
+                }
             }, 300);
         } else if (hash.startsWith('penjelasan-')) {
             switchSection('penjelasan');
             setTimeout(() => {
                 const el = document.getElementById(hash);
-                if (el) el.scrollIntoView({ behavior: 'smooth' });
+                if (el) {
+                    el.scrollIntoView({ behavior: 'smooth' });
+                    highlightCard(el);
+                }
             }, 300);
         } else {
             switchSection('ad');
             setTimeout(() => {
                 const el = document.getElementById(hash);
-                if (el) el.scrollIntoView({ behavior: 'smooth' });
+                if (el) {
+                    el.scrollIntoView({ behavior: 'smooth' });
+                    highlightCard(el);
+                }
             }, 300);
         }
     } else {
@@ -1635,3 +2187,4 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 </script>
+

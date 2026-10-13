@@ -22,7 +22,7 @@
         <form action="<?= $isEdit ? e($basePath) . '/' . $member['id'] : e($basePath) ?>" method="POST" enctype="multipart/form-data" data-validate>
             <?= csrf_field() ?>
 
-            <div class="grid grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div class="form-group">
                     <label class="form-label" for="nim">
                         ID Anggota / NIM
@@ -44,7 +44,7 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-3 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div class="form-group">
                     <label class="form-label" for="jenis_kelamin">Jenis Kelamin</label>
                     <?php $jk = $isEdit ? $member['jenis_kelamin'] : old('jenis_kelamin', 'L'); ?>
@@ -67,7 +67,7 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div class="form-group">
                     <label class="form-label" for="telepon">Nomor WhatsApp / HP</label>
                     <input type="text" id="telepon" name="telepon" class="form-control" 
@@ -85,7 +85,7 @@
 
             <h3 style="font-size: 1.15rem; margin: 1.5rem 0 1rem; color: var(--primary);">Informasi Keanggotaan</h3>
 
-            <div class="grid grid-cols-3 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div class="form-group">
                     <label class="form-label" for="perguruan_tinggi">Perguruan Tinggi</label>
                     <input type="text" id="perguruan_tinggi" name="perguruan_tinggi" class="form-control" 
@@ -113,7 +113,7 @@
                 : (old('anggota_komisariat') !== null ? (int)old('anggota_komisariat') : 0);
             $komCurrent = $isEdit ? ($member['komisariat'] ?? '') : old('komisariat', '');
             ?>
-            <div class="grid grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div class="form-group">
                     <label class="form-label" for="anggota_komisariat">Apakah pernah menjadi anggota komisariat?</label>
                     <select id="anggota_komisariat" name="anggota_komisariat" class="form-control" required>
@@ -137,7 +137,7 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div class="form-group">
                     <label class="form-label" for="tahun_maperca">Tahun Maperca</label>
                     <input type="number" id="tahun_maperca" name="tahun_maperca" class="form-control" 
@@ -163,7 +163,7 @@
                 <input type="hidden" name="status_keanggotaan" value="<?= e($isEdit ? $member['status_keanggotaan'] : old('status_keanggotaan', 'Aktif')) ?>">
             <?php endif; ?>
 
-            <div class="grid grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div class="form-group">
                     <label class="form-label" for="alamat_padang">Alamat Domisili di Padang</label>
                     <textarea id="alamat_padang" name="alamat_padang" class="form-control" rows="2"><?= e($isEdit ? $member['alamat_padang'] : old('alamat_padang')) ?></textarea>

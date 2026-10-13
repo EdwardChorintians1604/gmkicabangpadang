@@ -41,7 +41,7 @@
                 </div>
 
                 <!-- Periode & Nomor Urut -->
-                <div class="grid grid-cols-2 gap-3">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div class="form-group">
                         <label class="form-label" for="periode">Periode</label>
                         <input type="text" id="periode" name="periode" class="form-control" value="2024-2026" placeholder="2024-2026">
