@@ -70,10 +70,6 @@ return [
         'sekcab' => [
             'dashboard.view',
             'civitas.view',
-            'civitas.create',
-            'civitas.update',
-            'civitas.delete',
-            'civitas.import',
             'civitas.export',
             'inventory.view',
             'inventory.manage',

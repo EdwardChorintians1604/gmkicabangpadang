@@ -10,8 +10,18 @@
                 : 'Daftar anggota sah (Anggota, KK) dan alumni GMKI Cabang Padang. Kader baru Maperca dikelola di menu terpisah.' ?>
         </p>
     </div>
+    <?php
+    $currentParams = $_GET;
+    $paramsExcel = array_merge($currentParams, ['format' => 'xlsx']);
+    $paramsCsv = array_merge($currentParams, ['format' => 'csv']);
+    $excelUrl = e($basePath) . '/export?' . http_build_query($paramsExcel);
+    $csvUrl = e($basePath) . '/export?' . http_build_query($paramsCsv);
+    ?>
     <div class="flex flex-wrap sm:flex-nowrap gap-2 w-full sm:w-auto">
-        <a href="<?= e($basePath) ?>/export<?= !empty($_SERVER['QUERY_STRING']) ? '?' . $_SERVER['QUERY_STRING'] : '' ?>" class="btn btn-outline btn-sm flex-1 sm:flex-none justify-center">
+        <a href="<?= $excelUrl ?>" class="btn btn-outline btn-sm flex-1 sm:flex-none justify-center" title="Unduh data dalam format Excel (.xlsx)">
+            📊 Unduh Excel
+        </a>
+        <a href="<?= $csvUrl ?>" class="btn btn-outline btn-sm flex-1 sm:flex-none justify-center" title="Unduh data dalam format CSV (.csv)">
             📥 Unduh CSV
         </a>
         <?php if (can('civitas.import')): ?>

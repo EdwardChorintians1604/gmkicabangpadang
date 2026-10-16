@@ -489,11 +489,12 @@ class CivitasService
         exit;
     }
 
-    public function generateExportCsv(array $filters = []): void
+    public function generateExportCsv(array $filters = [], string $kelompok = 'anggota'): void
     {
         $members = $this->civitasRepo->getAllForExport($filters);
+        $isMaperca = ($kelompok === 'maperca');
 
-        $filename = 'data_civitas_gmki_padang_' . date('Ymd_His') . '.csv';
+        $filename = ($isMaperca ? 'data_maperca_gmki_padang_' : 'data_civitas_gmki_padang_') . date('Ymd_His') . '.csv';
 
         header('Content-Type: text/csv; charset=utf-8');
         header('Content-Disposition: attachment; filename="' . $filename . '"');
@@ -502,47 +503,176 @@ class CivitasService
         // UTF-8 BOM untuk kompatibilitas Excel
         fprintf($output, chr(0xEF) . chr(0xBB) . chr(0xBF));
 
-        fputcsv($output, [
-            'NIM',
-            'Nama Lengkap',
-            'Jenis Kelamin',
-            'Tempat Lahir',
-            'Tanggal Lahir',
-            'Telepon/WA',
-            'Email',
-            'Perguruan Tinggi',
-            'Fakultas',
-            'Jurusan',
-            'Komisariat',
-            'Tahun Maperca',
-            'Tingkat Kaderisasi',
-            'Status Keanggotaan',
-            'Alamat di Padang',
-            'Alamat Asal'
-        ]);
-
-        foreach ($members as $row) {
+        if ($isMaperca) {
             fputcsv($output, [
-                $row['nim'],
-                $row['nama_lengkap'],
-                $row['jenis_kelamin'] === 'L' ? 'Laki-laki' : 'Perempuan',
-                $row['tempat_lahir'] ?? '',
-                $row['tanggal_lahir'] ?? '',
-                $row['telepon'] ?? '',
-                $row['email'] ?? '',
-                $row['perguruan_tinggi'],
-                $row['fakultas'] ?? '',
-                $row['jurusan'] ?? '',
-                !empty($row['anggota_komisariat']) ? ($row['komisariat'] ?? '') : 'Tidak',
-                $row['tahun_maperca'],
-                $row['tingkat_kaderisasi'],
-                $row['status_keanggotaan'],
-                $row['alamat_padang'] ?? '',
-                $row['alamat_asal'] ?? '',
+                'ID/NIM',
+                'Nama Lengkap',
+                'Jenis Kelamin',
+                'Tempat Lahir',
+                'Tanggal Lahir',
+                'Telepon/WA',
+                'Email',
+                'Perguruan Tinggi',
+                'Fakultas',
+                'Jurusan',
+                'Tahun Maperca',
+                'Status Pendaftaran',
+                'Alamat di Padang',
+                'Alamat Asal'
             ]);
+
+            foreach ($members as $row) {
+                fputcsv($output, [
+                    $row['nim'],
+                    $row['nama_lengkap'],
+                    $row['jenis_kelamin'] === 'L' ? 'Laki-laki' : 'Perempuan',
+                    $row['tempat_lahir'] ?? '',
+                    $row['tanggal_lahir'] ?? '',
+                    $row['telepon'] ?? '',
+                    $row['email'] ?? '',
+                    $row['perguruan_tinggi'],
+                    $row['fakultas'] ?? '',
+                    $row['jurusan'] ?? '',
+                    $row['tahun_maperca'] ?? '',
+                    $row['status_keanggotaan'] ?? '',
+                    $row['alamat_padang'] ?? '',
+                    $row['alamat_asal'] ?? '',
+                ]);
+            }
+        } else {
+            fputcsv($output, [
+                'NIM',
+                'Nama Lengkap',
+                'Jenis Kelamin',
+                'Tempat Lahir',
+                'Tanggal Lahir',
+                'Telepon/WA',
+                'Email',
+                'Perguruan Tinggi',
+                'Fakultas',
+                'Jurusan',
+                'Komisariat',
+                'Tahun Maperca',
+                'Tingkat Kaderisasi',
+                'Status Keanggotaan',
+                'Alamat di Padang',
+                'Alamat Asal'
+            ]);
+
+            foreach ($members as $row) {
+                fputcsv($output, [
+                    $row['nim'],
+                    $row['nama_lengkap'],
+                    $row['jenis_kelamin'] === 'L' ? 'Laki-laki' : 'Perempuan',
+                    $row['tempat_lahir'] ?? '',
+                    $row['tanggal_lahir'] ?? '',
+                    $row['telepon'] ?? '',
+                    $row['email'] ?? '',
+                    $row['perguruan_tinggi'],
+                    $row['fakultas'] ?? '',
+                    $row['jurusan'] ?? '',
+                    !empty($row['anggota_komisariat']) ? ($row['komisariat'] ?? '') : 'Tidak',
+                    $row['tahun_maperca'],
+                    $row['tingkat_kaderisasi'],
+                    $row['status_keanggotaan'],
+                    $row['alamat_padang'] ?? '',
+                    $row['alamat_asal'] ?? '',
+                ]);
+            }
         }
 
         fclose($output);
+        exit;
+    }
+
+    public function generateExportXlsx(array $filters = [], string $kelompok = 'anggota'): void
+    {
+        $members = $this->civitasRepo->getAllForExport($filters);
+        $isMaperca = ($kelompok === 'maperca');
+
+        $filename = ($isMaperca ? 'data_maperca_gmki_padang_' : 'data_civitas_gmki_padang_') . date('Ymd_His');
+
+        $rows = [];
+        if ($isMaperca) {
+            $rows[] = [
+                'ID / NIM',
+                'Nama Lengkap',
+                'Jenis Kelamin',
+                'Tempat Lahir',
+                'Tanggal Lahir',
+                'Telepon / WA',
+                'Email',
+                'Perguruan Tinggi',
+                'Fakultas',
+                'Jurusan',
+                'Tahun Maperca',
+                'Status Pendaftaran',
+                'Alamat di Padang',
+                'Alamat Asal'
+            ];
+
+            foreach ($members as $row) {
+                $rows[] = [
+                    (string)$row['nim'],
+                    $row['nama_lengkap'],
+                    $row['jenis_kelamin'] === 'L' ? 'Laki-laki' : 'Perempuan',
+                    $row['tempat_lahir'] ?? '',
+                    $row['tanggal_lahir'] ?? '',
+                    (string)($row['telepon'] ?? ''),
+                    $row['email'] ?? '',
+                    $row['perguruan_tinggi'],
+                    $row['fakultas'] ?? '',
+                    $row['jurusan'] ?? '',
+                    $row['tahun_maperca'] ? (int)$row['tahun_maperca'] : '',
+                    $row['status_keanggotaan'] ?? '',
+                    $row['alamat_padang'] ?? '',
+                    $row['alamat_asal'] ?? '',
+                ];
+            }
+        } else {
+            $rows[] = [
+                'NIM',
+                'Nama Lengkap',
+                'Jenis Kelamin',
+                'Tempat Lahir',
+                'Tanggal Lahir',
+                'Telepon / WA',
+                'Email',
+                'Perguruan Tinggi',
+                'Fakultas',
+                'Jurusan',
+                'Komisariat',
+                'Tahun Maperca',
+                'Tingkat Kaderisasi',
+                'Status Keanggotaan',
+                'Alamat di Padang',
+                'Alamat Asal'
+            ];
+
+            foreach ($members as $row) {
+                $rows[] = [
+                    (string)$row['nim'],
+                    $row['nama_lengkap'],
+                    $row['jenis_kelamin'] === 'L' ? 'Laki-laki' : 'Perempuan',
+                    $row['tempat_lahir'] ?? '',
+                    $row['tanggal_lahir'] ?? '',
+                    (string)($row['telepon'] ?? ''),
+                    $row['email'] ?? '',
+                    $row['perguruan_tinggi'],
+                    $row['fakultas'] ?? '',
+                    $row['jurusan'] ?? '',
+                    !empty($row['anggota_komisariat']) ? ($row['komisariat'] ?? '') : 'Tidak',
+                    $row['tahun_maperca'] ? (int)$row['tahun_maperca'] : '',
+                    $row['tingkat_kaderisasi'] ?? '',
+                    $row['status_keanggotaan'] ?? '',
+                    $row['alamat_padang'] ?? '',
+                    $row['alamat_asal'] ?? '',
+                ];
+            }
+        }
+
+        $xlsx = \Shuchkin\SimpleXLSXGen::fromArray($rows);
+        $xlsx->downloadAs($filename . '.xlsx');
         exit;
     }
 }

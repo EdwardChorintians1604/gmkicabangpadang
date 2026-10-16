@@ -6,14 +6,25 @@ use App\Core\Database;
 
 class KomisariatRepository
 {
-    public function allWithCounts(): array
+    public function allWithCounts(?string $search = null): array
     {
+        $params = [];
+        $where = '';
+        if ($search !== null && trim($search) !== '') {
+            $where = " WHERE (k.`nama` LIKE :s1 OR k.`perguruan_tinggi` LIKE :s2 OR k.`keterangan` LIKE :s3) ";
+            $term = '%' . trim($search) . '%';
+            $params[':s1'] = $term;
+            $params[':s2'] = $term;
+            $params[':s3'] = $term;
+        }
+
         $sql = "SELECT k.*,
                        (SELECT COUNT(*) FROM `civitas` c
                         WHERE c.`komisariat` = k.`nama` AND c.`tingkat_kaderisasi` <> 'Maperca') AS total_anggota
                 FROM `komisariat` k
+                {$where}
                 ORDER BY k.`nama` ASC";
-        return Database::fetchAll($sql);
+        return Database::fetchAll($sql, $params);
     }
 
     public function names(): array

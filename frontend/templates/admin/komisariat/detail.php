@@ -8,9 +8,17 @@
                 <?= !empty($item['keterangan']) ? ' &middot; ' . e($item['keterangan']) : '' ?>
             </p>
         </div>
-        <?php if (can('civitas.update')): ?>
-            <a href="/admin/komisariat/<?= (int)$item['id'] ?>/edit" class="btn btn-outline btn-sm">✏️ Edit Komisariat</a>
-        <?php endif; ?>
+        <div class="flex flex-wrap gap-2">
+            <a href="/admin/civitas/export?komisariat=<?= urlencode($item['nama']) ?>&format=xlsx" class="btn btn-outline btn-sm" title="Unduh anggota komisariat ini dalam format Excel (.xlsx)">
+                📊 Unduh Anggota (Excel)
+            </a>
+            <a href="/admin/civitas/export?komisariat=<?= urlencode($item['nama']) ?>&format=csv" class="btn btn-outline btn-sm" title="Unduh anggota komisariat ini dalam format CSV (.csv)">
+                📥 Unduh Anggota (CSV)
+            </a>
+            <?php if (can('civitas.update')): ?>
+                <a href="/admin/komisariat/<?= (int)$item['id'] ?>/edit" class="btn btn-outline btn-sm">✏️ Edit Komisariat</a>
+            <?php endif; ?>
+        </div>
     </div>
 
     <div class="table-card">

@@ -61,10 +61,61 @@ class KomisariatController
     {
         Authorization::authorize('civitas.view');
 
+        $search = $request->query('q');
         return view('admin.komisariat.index', [
             'pageTitle' => 'Kelola Komisariat - GMKI Cabang Padang',
-            'komisariat' => $this->repo->allWithCounts(),
+            'komisariat' => $this->repo->allWithCounts($search),
+            'search' => $search,
         ], $this->layout());
+    }
+
+    public function export(Request $request): void
+    {
+        Authorization::authorize('civitas.export');
+
+        $search = $request->query('q');
+        $format = strtolower((string)$request->query('format', 'xlsx'));
+        $data = $this->repo->allWithCounts($search);
+
+        $headers = [
+            'No',
+            'Nama Komisariat',
+            'Perguruan Tinggi / Basis Kampus',
+            'Keterangan',
+            'Jumlah Anggota Aktif',
+            'Tanggal Terdaftar',
+        ];
+
+        $rows = [$headers];
+        $i = 1;
+        foreach ($data as $k) {
+            $rows[] = [
+                $i++,
+                $k['nama'],
+                $k['perguruan_tinggi'] ?? '-',
+                $k['keterangan'] ?? '-',
+                (int)$k['total_anggota'],
+                $k['created_at'] ?? '-',
+            ];
+        }
+
+        $filename = 'data_komisariat_gmki_padang_' . date('Ymd_His');
+
+        if ($format === 'csv') {
+            header('Content-Type: text/csv; charset=utf-8');
+            header('Content-Disposition: attachment; filename="' . $filename . '.csv"');
+            $output = fopen('php://output', 'w');
+            fprintf($output, chr(0xEF) . chr(0xBB) . chr(0xBF));
+            foreach ($rows as $row) {
+                fputcsv($output, $row);
+            }
+            fclose($output);
+            exit;
+        }
+
+        $xlsx = \Shuchkin\SimpleXLSXGen::fromArray($rows);
+        $xlsx->downloadAs($filename . '.xlsx');
+        exit;
     }
 
     public function create(Request $request): Response

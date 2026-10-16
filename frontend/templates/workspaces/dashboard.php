@@ -320,8 +320,22 @@ $roleMottos = [
             <a href="/admin/civitas" class="launchpad-card">
                 <div class="launchpad-icon" style="background:#dcfce7;color:#15803d;">👥</div>
                 <div class="launchpad-info">
-                    <h4>Data Anggota &amp; Kader</h4>
-                    <p>Kelola data anggota, verifikasi calon anggota Maperca, dan komisariat.</p>
+                    <h4>Pangkalan Data Civitas</h4>
+                    <p>Pantau data anggota aktif, telusuri profil, dan unduh rekapitulasi (Excel &amp; CSV).</p>
+                </div>
+            </a>
+            <a href="/admin/maperca" class="launchpad-card">
+                <div class="launchpad-icon" style="background:#fef3c7;color:#b45309;">🎓</div>
+                <div class="launchpad-info">
+                    <h4>Data Kader Baru (Maperca)</h4>
+                    <p>Melihat daftar calon kader baru Maperca, pencarian, dan unduh rekapitulasi data.</p>
+                </div>
+            </a>
+            <a href="/admin/komisariat" class="launchpad-card">
+                <div class="launchpad-icon" style="background:#e0f2fe;color:#0369a1;">🏛️</div>
+                <div class="launchpad-info">
+                    <h4>Data Komisariat</h4>
+                    <p>Melihat persebaran komisariat di perguruan tinggi, pantau anggota, dan unduh data.</p>
                 </div>
             </a>
             <a href="/ruang-kerja/koordinasi" class="launchpad-card">

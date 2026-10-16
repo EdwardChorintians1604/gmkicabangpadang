@@ -391,7 +391,7 @@ class CivitasController
     }
 
     /**
-     * Ekspor data ke berkas CSV
+     * Ekspor data ke berkas Excel (XLSX) atau CSV
      */
     public function export(Request $request): void
     {
@@ -406,6 +406,11 @@ class CivitasController
         ]);
         $filters['kelompok'] = $this->kelompok;
 
-        $this->civitasService->generateExportCsv($filters);
+        $format = strtolower((string)$request->query('format', 'xlsx'));
+        if ($format === 'csv') {
+            $this->civitasService->generateExportCsv($filters, $this->kelompok);
+        } else {
+            $this->civitasService->generateExportXlsx($filters, $this->kelompok);
+        }
     }
 }

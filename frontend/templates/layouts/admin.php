@@ -80,12 +80,14 @@
                         <span>Kelola Civitas</span>
                     </a>
                 </li>
+                <?php if (can('civitas.create')): ?>
                 <li class="sidebar-nav-item">
                     <a href="/admin/civitas/create" class="sidebar-nav-link <?= active_nav('/admin/civitas/create') ?>">
                         <span class="sidebar-nav-icon"><?= svg_icon('plus', 18) ?></span>
                         <span>Tambah Anggota</span>
                     </a>
                 </li>
+                <?php endif; ?>
                 <li class="sidebar-nav-item">
                     <a href="/admin/maperca"
                         class="sidebar-nav-link <?= (active_nav('/admin/maperca') && !str_contains($_SERVER['REQUEST_URI'], '/create')) ? 'active' : '' ?>">
@@ -93,24 +95,28 @@
                         <span>Kader Baru (Maperca)</span>
                     </a>
                 </li>
+                <?php if (can('civitas.create')): ?>
                 <li class="sidebar-nav-item">
                     <a href="/admin/maperca/create" class="sidebar-nav-link <?= active_nav('/admin/maperca/create') ?>">
                         <span class="sidebar-nav-icon"><?= svg_icon('plus', 18) ?></span>
                         <span>Tambah Kader Baru</span>
                     </a>
                 </li>
+                <?php endif; ?>
                 <li class="sidebar-nav-item">
                     <a href="/admin/komisariat" class="sidebar-nav-link <?= active_nav('/admin/komisariat') ?>">
                         <span class="sidebar-nav-icon"><?= svg_icon('organization', 18) ?></span>
                         <span>Komisariat</span>
                     </a>
                 </li>
+                <?php if (can('civitas.import')): ?>
                 <li class="sidebar-nav-item">
                     <a href="/admin/civitas/impor" class="sidebar-nav-link <?= active_nav('/admin/civitas/impor') ?>">
                         <span class="sidebar-nav-icon"><?= svg_icon('upload', 18) ?></span>
                         <span>Impor Civitas (CSV/Excel)</span>
                     </a>
                 </li>
+                <?php endif; ?>
 
                 <li class="nav-category">Publikasi & Cabang</li>
                 <li class="sidebar-nav-item">

@@ -58,15 +58,15 @@ $router->post('/admin/berita/{id}/delete', 'NewsController@delete', ['auth', 'ro
 // RUTE CIVITAS / ANGGOTA (Admin, Operator, Pengawas)
 // =====================================================================
 $router->get('/admin/civitas', 'CivitasController@index', ['auth', 'role:admin,operator,sekcab,ketcab']);
-$router->get('/admin/civitas/create', 'CivitasController@create', ['auth', 'role:admin,operator,sekcab']);
-$router->post('/admin/civitas', 'CivitasController@store', ['auth', 'role:admin,operator,sekcab', 'csrf']);
-$router->get('/admin/civitas/impor', 'CivitasController@imporForm', ['auth', 'role:admin,operator,sekcab']);
-$router->post('/admin/civitas/impor', 'CivitasController@imporProcess', ['auth', 'role:admin,operator,sekcab', 'csrf']);
+$router->get('/admin/civitas/create', 'CivitasController@create', ['auth', 'role:admin,operator']);
+$router->post('/admin/civitas', 'CivitasController@store', ['auth', 'role:admin,operator', 'csrf']);
+$router->get('/admin/civitas/impor', 'CivitasController@imporForm', ['auth', 'role:admin,operator']);
+$router->post('/admin/civitas/impor', 'CivitasController@imporProcess', ['auth', 'role:admin,operator', 'csrf']);
 $router->get('/admin/civitas/export', 'CivitasController@export', ['auth', 'role:admin,operator,sekcab,ketcab']);
 $router->get('/admin/civitas/{id}', 'CivitasController@detail', ['auth', 'role:admin,operator,sekcab,ketcab']);
-$router->get('/admin/civitas/{id}/edit', 'CivitasController@edit', ['auth', 'role:admin,operator,sekcab']);
-$router->post('/admin/civitas/{id}', 'CivitasController@update', ['auth', 'role:admin,operator,sekcab', 'csrf']);
-$router->post('/admin/civitas/{id}/delete', 'CivitasController@delete', ['auth', 'role:admin,sekcab', 'csrf']);
+$router->get('/admin/civitas/{id}/edit', 'CivitasController@edit', ['auth', 'role:admin,operator']);
+$router->post('/admin/civitas/{id}', 'CivitasController@update', ['auth', 'role:admin,operator', 'csrf']);
+$router->post('/admin/civitas/{id}/delete', 'CivitasController@delete', ['auth', 'role:admin', 'csrf']);
 
 // =====================================================================
 // RUTE STATISTIK & ANALISIS DATA
