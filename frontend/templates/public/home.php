@@ -18,11 +18,14 @@
             </p>
             <div class="hero-actions animate__animated animate__fadeInUp flex flex-wrap gap-4">
                 <a href="/profil"
-                    class="btn btn-secondary btn-lg transform hover:-translate-y-1 transition-all duration-300">Pelajari
-                    Profil Cabang</a>
+                    class="btn btn-secondary btn-lg transform hover:-translate-y-1 transition-all duration-300">
+                    Pelajari Profil Cabang
+                </a>
                 <a href="/berita"
-                    class="btn btn-outline btn-lg transform hover:-translate-y-1 transition-all duration-300"
-                    style="color: #ffffff; border-color: rgba(255,255,255,0.4);">Warta Kegiatan &rarr;</a>
+                    class="btn btn-lg hero-btn-glass transform hover:-translate-y-1 transition-all duration-300">
+                    <span>Warta Kegiatan</span>
+                    <?= svg_icon('arrow-right', 16) ?>
+                </a>
             </div>
         </div>
     </div>

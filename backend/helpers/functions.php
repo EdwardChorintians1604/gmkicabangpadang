@@ -313,7 +313,9 @@ if (!function_exists('svg_icon')) {
             'filter' => '<polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>',
             'refresh' => '<polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>',
             'menu' => '<line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/>',
-            'sidebar' => '<rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/>'
+            'sidebar' => '<rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/>',
+            'chevron-right' => '<polyline points="9 18 15 12 9 6"/>',
+            'arrow-right' => '<line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>'
         ];
 
         $svgBody = $icons[$name] ?? '<circle cx="12" cy="12" r="10"/>';

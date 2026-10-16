@@ -82,14 +82,14 @@
         </div>
 
         <!-- Section Header -->
-        <div class="text-center max-w-3xl mx-auto mb-14">
+        <div class="text-center max-w-3xl mx-auto mb-8 sm:mb-10">
             <h2
-                class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-900 mb-4 tracking-tight leading-tight">
+                class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-900 mb-2.5 tracking-tight leading-snug">
                 Mengenal Tugas, Fungsi &amp; Peran<br>
                 <span class="bg-gradient-to-r from-primary to-blue-500 bg-clip-text text-transparent">Fungsionaris
                     BPC</span>
             </h2>
-            <p class="text-slate-500 text-sm sm:text-base leading-relaxed">
+            <p class="text-slate-500 text-sm sm:text-base leading-relaxed" style="margin-top: -35px;">
                 Badan Pengurus Cabang (BPC) GMKI Cabang Padang adalah lembaga kepemimpinan eksekutif
                 tertinggi di tingkat cabang yang mengemban mandat <em>Konperensi Cabang</em> (Konpercab)
                 dan Pengurus Pusat (PP) GMKI. BPC memimpin dinamika organisasi, membina kader mahasiswa Kristen,

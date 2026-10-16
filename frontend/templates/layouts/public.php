@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="<?= asset('vendor/animate.min.css') ?>">
     <link rel="stylesheet" href="<?= asset('vendor/leaflet/leaflet.css') ?>">
     <link rel="stylesheet" href="<?= asset('css/app.css') ?>?v=2">
-    <link rel="stylesheet" href="<?= asset('css/public.css') ?>?v=6">
+    <link rel="stylesheet" href="<?= asset('css/public.css') ?>?v=7">
     <!-- Tailwind CSS with custom GMKI palette -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>

@@ -676,6 +676,35 @@
 .hero-actions .btn-secondary {
     color: #fff;
     background: linear-gradient(135deg, #c56a08, #e2911c);
+    border: none;
+    box-shadow: 0 4px 14px rgba(197, 106, 8, 0.35);
+}
+
+.hero-actions .btn-secondary:hover {
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(197, 106, 8, 0.45);
+}
+
+.hero-actions .hero-btn-glass {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    color: #ffffff !important;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    backdrop-filter: blur(10px);
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    text-decoration: none;
+}
+
+.hero-actions .hero-btn-glass:hover {
+    color: #0f3d64 !important;
+    background: #ffffff !important;
+    border-color: #ffffff;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    transform: translateY(-2px);
 }
 
 .stats-strip {
