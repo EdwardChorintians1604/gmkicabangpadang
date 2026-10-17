@@ -49,7 +49,7 @@
                         <div>
                             <strong>Email Resmi:</strong>
                             <div class="text-muted" style="font-size: 0.95rem; margin-top: 0.25rem;">
-                                <?= e($profile['email'] ?? 'gmkipadang2425@gmail.com') ?>
+                                <a href="mailto:gmkipadang2425@gmail.com" style="color: inherit; text-decoration: none;">gmkipadang2425@gmail.com</a>
                             </div>
                         </div>
                     </div>
@@ -201,8 +201,19 @@
                         secepatnya.
                     </p>
 
-                    <form action="/kontak" method="POST" data-validate>
+                    <?php
+                    $rawPhone = $profile['telepon'] ?? '6281234567890';
+                    $cleanWa = preg_replace('/[^0-9]/', '', $rawPhone);
+                    if (str_starts_with($cleanWa, '0')) {
+                        $cleanWa = '62' . substr($cleanWa, 1);
+                    }
+                    $waNumber = !empty($cleanWa) ? $cleanWa : '6281234567890';
+                    ?>
+
+                    <form id="formKontakPublic" action="/kontak" method="POST" novalidate>
                         <?= csrf_field() ?>
+
+                        <div id="contactFormAlert" style="display: none; margin-bottom: 1rem;" class="animate__animated animate__fadeIn"></div>
 
                         <div class="form-group">
                             <label class="form-label" for="nama">Nama Lengkap</label>
@@ -222,10 +233,34 @@
                                 placeholder="Tuliskan pesan atau aspirasi Anda di sini..." required></textarea>
                         </div>
 
-                        <button type="submit" class="btn btn-primary"
-                            style="width: 100%; padding: 0.85rem; font-weight: 700; font-size: 0.95rem;">
-                            Kirim Pesan ke BPC GMKI Padang
+                        <button type="submit" id="btnSubmitContact" class="btn btn-primary"
+                            style="width: 100%; padding: 0.85rem; font-weight: 700; font-size: 0.95rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem; box-shadow: var(--shadow-sm); transition: transform 0.15s ease;">
+                            <span style="font-size: 1.15rem;">✉️</span>
+                            <span>Kirim Pesan ke BPC GMKI Padang</span>
                         </button>
+
+                        <!-- Pilihan Kirim Cepat / Direct Integration -->
+                        <div style="margin-top: 1.25rem; padding-top: 1rem; border-top: 1px dashed var(--border-color); text-align: center;">
+                            <div class="text-muted" style="font-size: 0.8rem; font-weight: 600; margin-bottom: 0.65rem;">
+                                Terkoneksi langsung ke email resmi:
+                            </div>
+                            <div class="grid grid-cols-2 gap-2" style="font-size: 0.825rem;">
+                                <button type="button" id="btnDirectGmail" class="btn btn-outline flex items-center justify-center gap-1.5"
+                                    style="padding: 0.55rem 0.75rem; border-color: #fca5a5; color: #dc2626; background: #fff5f5; font-weight: 600; cursor: pointer;">
+                                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z"/>
+                                    </svg>
+                                    <span>Gmail Web</span>
+                                </button>
+                                <button type="button" id="btnDirectMailto" class="btn btn-outline flex items-center justify-center gap-1.5"
+                                    style="padding: 0.55rem 0.75rem; border-color: #93c5fd; color: #2563eb; background: #eff6ff; font-weight: 600; cursor: pointer;">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                                    </svg>
+                                    <span>Aplikasi Mail</span>
+                                </button>
+                            </div>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -246,43 +281,308 @@
         </div>
         <div id="mapSekretariat" style="height: 380px; width: 100%; z-index: 10;"></div>
     </div>
+
+    <!-- Modal Konfirmasi & Pilihan Pengiriman Email -->
+    <div id="emailSenderModal" style="display: none; position: fixed; inset: 0; z-index: 99999; align-items: center; justify-content: center; padding: 1rem; background-color: rgba(15, 23, 42, 0.65); backdrop-filter: blur(4px);">
+        <div class="animate__animated animate__zoomIn animate__faster" style="background: #ffffff; border-radius: 1rem; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); max-width: 520px; width: 100%; overflow: hidden; border: 1px solid #e2e8f0;">
+            <!-- Modal Header -->
+            <div style="background: linear-gradient(135deg, #0f3d64 0%, #1e5687 100%); padding: 1.25rem 1.5rem; color: #ffffff; display: flex; justify-content: space-between; align-items: center;">
+                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                    <span style="font-size: 1.6rem;">✉️</span>
+                    <div>
+                        <h4 style="margin: 0; font-size: 1.1rem; font-weight: 700; color: #ffffff;">Kirim Pesan ke Email Resmi</h4>
+                        <p style="margin: 0.15rem 0 0; font-size: 0.8rem; color: #cbd5e1;">Tujuan: <strong style="color: #fde047;">gmkipadang2425@gmail.com</strong></p>
+                    </div>
+                </div>
+                <button type="button" id="btnCloseEmailModal" aria-label="Tutup" style="background: transparent; border: none; color: #ffffff; font-size: 1.6rem; cursor: pointer; line-height: 1; padding: 0.25rem;">&times;</button>
+            </div>
+
+            <!-- Modal Body -->
+            <div style="padding: 1.5rem;">
+                <!-- Summary Card -->
+                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 0.75rem; padding: 0.85rem 1rem; margin-bottom: 1.25rem; font-size: 0.85rem;">
+                    <div style="font-weight: 700; color: #0f3d64; margin-bottom: 0.25rem;" id="modalPreviewSubject"></div>
+                    <div class="text-muted" style="font-size: 0.8rem; margin-bottom: 0.5rem;" id="modalPreviewSender"></div>
+                    <div style="white-space: pre-wrap; word-break: break-word; color: #334155; max-height: 100px; overflow-y: auto; background: #ffffff; padding: 0.65rem 0.75rem; border-radius: 0.5rem; border: 1px solid #cbd5e1; font-size: 0.825rem; line-height: 1.45;" id="modalPreviewPesan"></div>
+                </div>
+
+                <div style="font-weight: 700; font-size: 0.875rem; margin-bottom: 0.75rem; color: #0f172a;">
+                    Pilih Aplikasi untuk Mengirim Pesan:
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 0.65rem;">
+                    <!-- Option 1: Gmail Web -->
+                    <button type="button" id="btnModalGmail" style="display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1rem; border-radius: 0.75rem; border: 1px solid #fca5a5; background: #fff5f5; text-align: left; cursor: pointer; transition: all 0.2s;">
+                        <div style="display: flex; align-items: center; gap: 0.75rem;">
+                            <div style="width: 2.5rem; height: 2.5rem; border-radius: 0.65rem; background: #dc2626; display: flex; align-items: center; justify-content: center; color: white; flex-shrink: 0; box-shadow: 0 2px 4px rgba(220, 38, 38, 0.2);">
+                                <svg style="width: 1.25rem; height: 1.25rem;" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <div style="font-weight: 700; font-size: 0.925rem; color: #991b1b;">Buka di Gmail Web (Rekomendasi)</div>
+                                <div style="font-size: 0.75rem; color: #64748b;">Membuka Google Mail langsung di browser dengan draf siap kirim</div>
+                            </div>
+                        </div>
+                        <span style="font-size: 0.75rem; background: #dc2626; color: white; padding: 3px 10px; border-radius: 9999px; font-weight: 700; white-space: nowrap;">Buka ↗</span>
+                    </button>
+
+                    <!-- Option 2: Default Mail Client (Mailto) -->
+                    <button type="button" id="btnModalMailto" style="display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1rem; border-radius: 0.75rem; border: 1px solid #93c5fd; background: #eff6ff; text-align: left; cursor: pointer; transition: all 0.2s;">
+                        <div style="display: flex; align-items: center; gap: 0.75rem;">
+                            <div style="width: 2.5rem; height: 2.5rem; border-radius: 0.65rem; background: #2563eb; display: flex; align-items: center; justify-content: center; color: white; flex-shrink: 0; box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);">
+                                <svg style="width: 1.25rem; height: 1.25rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <div style="font-weight: 700; font-size: 0.925rem; color: #1e40af;">Aplikasi Email Perangkat</div>
+                                <div style="font-size: 0.75rem; color: #64748b;">Membuka Outlook, Thunderbird, atau Apple Mail</div>
+                            </div>
+                        </div>
+                        <span style="font-size: 0.75rem; background: #2563eb; color: white; padding: 3px 10px; border-radius: 9999px; font-weight: 700; white-space: nowrap;">Buka ↗</span>
+                    </button>
+
+                    <!-- Option 3: WhatsApp Resmi -->
+                    <button type="button" id="btnModalWhatsApp" style="display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1rem; border-radius: 0.75rem; border: 1px solid #a7f3d0; background: #f0fdf4; text-align: left; cursor: pointer; transition: all 0.2s;">
+                        <div style="display: flex; align-items: center; gap: 0.75rem;">
+                            <div style="width: 2.5rem; height: 2.5rem; border-radius: 0.65rem; background: #059669; display: flex; align-items: center; justify-content: center; color: white; flex-shrink: 0; box-shadow: 0 2px 4px rgba(5, 150, 105, 0.2);">
+                                <svg style="width: 1.25rem; height: 1.25rem;" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.312.045-.694.076-2.121-.497-1.809-.728-2.957-2.58-3.047-2.7-.091-.121-.735-.977-.735-1.86 0-.884.464-1.319.629-1.498.165-.178.36-.223.48-.223.12 0 .24.002.345.006.11.004.258-.042.404.308.15.361.51 1.246.555 1.337.045.09.075.196.015.316-.06.12-.09.196-.18.301-.09.106-.19.236-.271.317-.091.091-.186.19-.08.372.105.182.467.771 1.001 1.247.688.613 1.269.803 1.45.894.18.09.286.076.391-.045.105-.121.45-.526.57-.706.12-.18.24-.15.405-.09.165.06 1.05.496 1.23.586.18.09.3.136.345.211.045.075.045.436-.099.841z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <div style="font-weight: 700; font-size: 0.925rem; color: #065f46;">Kirim via WhatsApp Resmi</div>
+                                <div style="font-size: 0.75rem; color: #64748b;">Langsung kirim pesan ke kontak WhatsApp BPC GMKI Padang</div>
+                            </div>
+                        </div>
+                        <span style="font-size: 0.75rem; background: #059669; color: white; padding: 3px 10px; border-radius: 9999px; font-weight: 700; white-space: nowrap;">Chat ↗</span>
+                    </button>
+                </div>
+
+                <div style="margin-top: 1.25rem; display: flex; justify-content: space-between; align-items: center; padding-top: 0.75rem; border-top: 1px solid #f1f5f9;">
+                    <button type="button" id="btnCopyMessage" style="background: none; border: none; cursor: pointer; color: #475569; font-size: 0.775rem; font-weight: 600; display: flex; align-items: center; gap: 0.35rem; padding: 0.25rem 0.5rem; border-radius: 0.35rem;">
+                        📋 <span id="copyBtnText">Salin Teks Pesan</span>
+                    </button>
+                    <span style="font-size: 0.75rem; color: #059669; font-weight: 600;">
+                        ✓ Pesan tercatat di sistem
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
-<!-- Leaflet Map Initialization Script -->
+<!-- Leaflet Map & Interactive Contact Email Scripts -->
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        if (typeof L === 'undefined') {
-            console.warn('Leaflet belum dimuat.');
-            return;
+        // --- 1. Leaflet Map Initialization ---
+        if (typeof L !== 'undefined') {
+            const lat = -0.958567;
+            const lng = 100.357547;
+
+            const map = L.map('mapSekretariat', {
+                center: [lat, lng],
+                zoom: 17,
+                scrollWheelZoom: false
+            });
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> kontributor | GMKI Padang',
+                maxZoom: 19
+            }).addTo(map);
+
+            const marker = L.marker([lat, lng]).addTo(map);
+            marker.bindPopup(`
+                <div style="text-align: center; font-family: sans-serif; padding: 6px;">
+                    <strong style="color: #0f3d64; font-size: 14px;">Sekretariat BPC GMKI Cabang Padang</strong>
+                    <p style="margin: 4px 0 6px; font-size: 12px; color: #475569;">Jl. Tanah Beroyo No.2c, Belakang Tangsi, Kec. Padang Bar., kodya padang, Sumatera Barat</p>
+                    <a href="https://maps.app.goo.gl/qLeJStyXJXK9PHxh9" target="_blank" rel="noopener noreferrer" style="display: inline-block; background: #0f3d64; color: #ffffff; padding: 4px 10px; border-radius: 4px; font-size: 11px; text-decoration: none; font-weight: 600; margin-bottom: 6px;">
+                        Buka di Google Maps ↗
+                    </a><br>
+                    <span style="font-size: 11px; color: #d97706; font-weight: bold;">"Ut Omnes Unum Sint"</span>
+                </div>
+            `).openPopup();
         }
 
-        // Koordinat Sekretariat BPC GMKI Cabang Padang (Jl. Tanah Beroyo No.2c, Belakang Tangsi, Kec. Padang Barat)
-        const lat = -0.958567;
-        const lng = 100.357547;
+        // --- 2. Interactive Email Sender Integration ---
+        const form = document.getElementById('formKontakPublic');
+        if (!form) return;
 
-        const map = L.map('mapSekretariat', {
-            center: [lat, lng],
-            zoom: 17,
-            scrollWheelZoom: false // Mencegah scroll halaman terganggu
+        const modal = document.getElementById('emailSenderModal');
+        const btnCloseModal = document.getElementById('btnCloseEmailModal');
+        const alertBox = document.getElementById('contactFormAlert');
+        const namaInput = document.getElementById('nama');
+        const emailInput = document.getElementById('email');
+        const pesanInput = document.getElementById('pesan');
+
+        const OFFICIAL_EMAIL = 'gmkipadang2425@gmail.com';
+        const OFFICIAL_WA = '<?= e($waNumber) ?>';
+
+        function buildMessageData() {
+            const nama = (namaInput.value || '').trim();
+            const contact = (emailInput.value || '').trim();
+            const pesan = (pesanInput.value || '').trim();
+            const waktu = new Date().toLocaleString('id-ID', { dateStyle: 'full', timeStyle: 'short' });
+
+            const subject = `[Pesan Kontak GMKI Padang] dari ${nama}`;
+            const body = `Yth. Pengurus BPC GMKI Cabang Padang,\n\nBerikut pesan/aspirasi yang dikirim melalui formulir kontak Portal GMKI Cabang Padang:\n\n• Nama Pengirim: ${nama}\n• Kontak (Email/WhatsApp): ${contact}\n• Waktu Pengiriman: ${waktu}\n\n--- PESAN / ASPIRASI ---\n${pesan}\n\n--------------------------------------------------\nPesan ini dikirim melalui portal resmi GMKI Cabang Padang (${OFFICIAL_EMAIL}).`;
+
+            const waText = `*Halo BPC GMKI Cabang Padang,*\n\nSaya ingin menyampaikan pesan/aspirasi via Website GMKI:\n\n*Nama:* ${nama}\n*Kontak:* ${contact}\n\n*Pesan:*\n${pesan}`;
+
+            return { nama, contact, pesan, subject, body, waText };
+        }
+
+        function validateForm() {
+            let isValid = true;
+            form.querySelectorAll('.validation-error-msg').forEach(el => el.remove());
+
+            [namaInput, emailInput, pesanInput].forEach(inp => {
+                inp.classList.remove('is-invalid');
+                inp.style.borderColor = '';
+                if (!inp.value.trim()) {
+                    isValid = false;
+                    inp.classList.add('is-invalid');
+                    inp.style.borderColor = '#ef4444';
+                    const err = document.createElement('div');
+                    err.className = 'validation-error-msg';
+                    err.style.color = '#ef4444';
+                    err.style.fontSize = '0.75rem';
+                    err.style.marginTop = '0.25rem';
+                    err.textContent = 'Bagian ini tidak boleh kosong.';
+                    inp.parentNode.appendChild(err);
+                }
+            });
+            return isValid;
+        }
+
+        function recordAuditAsync() {
+            try {
+                const formData = new FormData(form);
+                formData.append('ajax', '1');
+                fetch('/kontak', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json'
+                    }
+                }).catch(err => console.log('Audit notice:', err));
+            } catch (e) {
+                console.warn('Silent log capture:', e);
+            }
+        }
+
+        function showSuccessNotification(appText) {
+            if (!alertBox) return;
+            alertBox.innerHTML = `
+                <div style="background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; padding: 0.85rem 1rem; border-radius: 0.5rem; font-size: 0.85rem; display: flex; align-items: center; gap: 0.65rem;">
+                    <span style="font-size: 1.25rem;">✅</span>
+                    <div>
+                        <strong>Terkoneksi ke Email Resmi!</strong><br>
+                        <span>${appText} dengan penerima <strong>${OFFICIAL_EMAIL}</strong>. Pastikan Anda menekan tombol Kirim (Send) pada aplikasi email Anda.</span>
+                    </div>
+                </div>
+            `;
+            alertBox.style.display = 'block';
+            alertBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function openGmail(data) {
+            const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(OFFICIAL_EMAIL)}&su=${encodeURIComponent(data.subject)}&body=${encodeURIComponent(data.body)}`;
+            window.open(gmailUrl, '_blank', 'noopener,noreferrer');
+            showSuccessNotification('Draft Gmail Web berhasil disiapkan dan dibuka');
+        }
+
+        function openMailto(data) {
+            const mailtoUrl = `mailto:${encodeURIComponent(OFFICIAL_EMAIL)}?subject=${encodeURIComponent(data.subject)}&body=${encodeURIComponent(data.body)}`;
+            window.location.href = mailtoUrl;
+            showSuccessNotification('Aplikasi email perangkat Anda telah dibuka');
+        }
+
+        function openWhatsApp(data) {
+            const waUrl = `https://api.whatsapp.com/send?phone=${OFFICIAL_WA}&text=${encodeURIComponent(data.waText)}`;
+            window.open(waUrl, '_blank', 'noopener,noreferrer');
+            showSuccessNotification('WhatsApp resmi sekretariat telah dibuka');
+        }
+
+        function showModal(data) {
+            document.getElementById('modalPreviewSubject').textContent = data.subject;
+            document.getElementById('modalPreviewSender').textContent = `Pengirim: ${data.nama} • ${data.contact}`;
+            document.getElementById('modalPreviewPesan').textContent = data.pesan;
+            modal.style.display = 'flex';
+        }
+
+        function closeModal() {
+            modal.style.display = 'none';
+        }
+
+        // Submit form utama -> Buka Modal Pilihan Pengiriman
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            if (!validateForm()) return;
+
+            const data = buildMessageData();
+            recordAuditAsync();
+            showModal(data);
         });
 
-        // Tile Layer OpenStreetMap
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> kontributor | GMKI Padang',
-            maxZoom: 19
-        }).addTo(map);
+        // Direct Quick Buttons pada Form
+        document.getElementById('btnDirectGmail')?.addEventListener('click', function () {
+            if (!validateForm()) return;
+            const data = buildMessageData();
+            recordAuditAsync();
+            openGmail(data);
+        });
 
-        // Marker dengan Popup Interaktif
-        const marker = L.marker([lat, lng]).addTo(map);
-        marker.bindPopup(`
-        <div style="text-align: center; font-family: sans-serif; padding: 6px;">
-            <strong style="color: #0f3d64; font-size: 14px;">Sekretariat BPC GMKI Cabang Padang</strong>
-            <p style="margin: 4px 0 6px; font-size: 12px; color: #475569;">Jl. Tanah Beroyo No.2c, Belakang Tangsi, Kec. Padang Bar., kodya padang, Sumatera Barat</p>
-            <a href="https://maps.app.goo.gl/qLeJStyXJXK9PHxh9" target="_blank" rel="noopener noreferrer" style="display: inline-block; background: #0f3d64; color: #ffffff; padding: 4px 10px; border-radius: 4px; font-size: 11px; text-decoration: none; font-weight: 600; margin-bottom: 6px;">
-                Buka di Google Maps ↗
-            </a><br>
-            <span style="font-size: 11px; color: #d97706; font-weight: bold;">"Ut Omnes Unum Sint"</span>
-        </div>
-    `).openPopup();
+        document.getElementById('btnDirectMailto')?.addEventListener('click', function () {
+            if (!validateForm()) return;
+            const data = buildMessageData();
+            recordAuditAsync();
+            openMailto(data);
+        });
+
+        // Tombol di dalam Modal
+        document.getElementById('btnModalGmail')?.addEventListener('click', function () {
+            const data = buildMessageData();
+            closeModal();
+            openGmail(data);
+        });
+
+        document.getElementById('btnModalMailto')?.addEventListener('click', function () {
+            const data = buildMessageData();
+            closeModal();
+            openMailto(data);
+        });
+
+        document.getElementById('btnModalWhatsApp')?.addEventListener('click', function () {
+            const data = buildMessageData();
+            closeModal();
+            openWhatsApp(data);
+        });
+
+        btnCloseModal?.addEventListener('click', closeModal);
+        modal?.addEventListener('click', function (e) {
+            if (e.target === modal) closeModal();
+        });
+
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && modal.style.display === 'flex') {
+                closeModal();
+            }
+        });
+
+        // Salin Teks
+        document.getElementById('btnCopyMessage')?.addEventListener('click', function () {
+            const data = buildMessageData();
+            const textToCopy = `${data.subject}\n\n${data.body}`;
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                const copyText = document.getElementById('copyBtnText');
+                copyText.textContent = 'Pesan Berhasil Disalin! ✓';
+                setTimeout(() => { copyText.textContent = 'Salin Teks Pesan'; }, 2500);
+            }).catch(() => {
+                alert('Teks pesan siap dikirim:\n\n' + textToCopy);
+            });
+        });
     });
 </script>

@@ -26,7 +26,7 @@ class OrganizationRepository
                 'panca_kegiatan' => "1. Berdoa/Beribadah\n2. Belajar\n3. Bersaksi\n4. Bersosialisasi\n5. Berjuang",
                 'alamat_sekretariat' => 'Jl. Tanah Beroyo No.2c, Belakang Tangsi, Kec. Padang Bar., kodya padang, Sumatera Barat',
                 'telepon' => '+62 812-3456-7890',
-                'email' => 'sekretariat@gmkicabangpadang.or.id',
+                'email' => 'gmkipadang2425@gmail.com',
                 'instagram' => '@gmkicabangpadang',
                 'youtube' => 'GMKI Cabang Padang Official',
                 'facebook' => 'GMKI Cabang Padang',

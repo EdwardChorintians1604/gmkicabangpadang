@@ -161,7 +161,7 @@
                         Jl. Tanah Beroyo No.2c, Belakang Tangsi, Kec. Padang Bar., kodya padang, Sumatera Barat.
                     </p>
                     <p style="font-size: 0.875rem; color: #cbd5e1; margin-bottom: 0.35rem;">
-                        <strong>Email:</strong> sekretariat@gmkicabangpadang.or.id
+                        <strong>Email:</strong> <a href="mailto:gmkipadang2425@gmail.com" style="color: #cbd5e1; text-decoration: none;">gmkipadang2425@gmail.com</a>
                     </p>
                     <p style="font-size: 0.875rem; color: #cbd5e1;">
                         <strong>Instagram:</strong> @gmkicabangpadang

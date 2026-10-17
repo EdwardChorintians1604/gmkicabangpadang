@@ -124,11 +124,20 @@ class PublicController
 
     public function kirimKontak(Request $request): Response
     {
-        $nama = $request->post('nama');
-        $email = $request->post('email');
-        $pesan = $request->post('pesan');
+        $nama = trim((string)$request->post('nama'));
+        $email = trim((string)$request->post('email'));
+        $pesan = trim((string)$request->post('pesan'));
+        $isAjax = $request->isAjax() 
+            || str_contains($_SERVER['HTTP_ACCEPT'] ?? '', 'application/json') 
+            || $request->input('ajax') === '1';
 
         if (empty($nama) || empty($pesan)) {
+            if ($isAjax) {
+                return (new Response())->json([
+                    'success' => false,
+                    'message' => 'Silakan lengkapi nama dan pesan Anda.'
+                ], 422);
+            }
             Session::flash('error', 'Silakan lengkapi nama dan pesan Anda.');
             redirect('/kontak');
         }
@@ -137,6 +146,13 @@ class PublicController
             'nama' => $nama,
             'email' => $email,
         ]);
+
+        if ($isAjax) {
+            return (new Response())->json([
+                'success' => true,
+                'message' => 'Pesan Anda telah berhasil dicatat di sistem sekretariat BPC GMKI Cabang Padang.'
+            ]);
+        }
 
         Session::flash('success', 'Pesan Anda telah berhasil dikirim ke sekretariat BPC GMKI Cabang Padang.');
         redirect('/kontak');

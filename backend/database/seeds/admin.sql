@@ -29,7 +29,7 @@ INSERT INTO `profil_organisasi` (`id`, `nama_organisasi`, `slogan`, `tema_period
  '1. Berdoa / Beribadah\n2. Belajar\n3. Bersaksi\n4. Bersosialisasi\n5. Berjuang',
  'Jl. Tanah Beroyo No.2c, Belakang Tangsi, Kec. Padang Bar., kodya padang, Sumatera Barat',
  '+62 812-3456-7890',
- 'sekretariat@gmkicabangpadang.or.id',
+ 'gmkipadang2425@gmail.com',
  '@gmkicabangpadang',
  'GMKI Cabang Padang Official',
  'GMKI Cabang Padang'
