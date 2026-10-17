@@ -101,6 +101,8 @@ class Router
                     }
                 }
 
+                $request->setParams($params);
+
                 // Execute route middleware
                 $middlewareResponse = $this->runMiddleware($route['middleware'], $request);
                 if ($middlewareResponse instanceof Response) {

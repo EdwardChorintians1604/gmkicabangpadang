@@ -39,11 +39,13 @@ class BackupController
         Authorization::authorize('backup.view');
 
         $databaseBackups = $this->backupService->getDatabaseBackups();
+        $totalBackups = $this->backupService->getTotalBackups();
         $manifestEntries = $this->backupService->getUploadsManifest();
 
         return view('admin.keamanan.backup', [
             'pageTitle' => 'Pencadangan Data & Integritas Berkas - GMKI Cabang Padang',
             'dbBackups' => $databaseBackups,
+            'totalBackups' => $totalBackups,
             'manifestEntries' => $manifestEntries,
         ], 'admin');
     }
@@ -69,11 +71,12 @@ class BackupController
     /**
      * Unduh berkas backup database dengan proteksi ketat Path Traversal
      */
-    public function download(Request $request): void
+    public function download(Request $request, ?string $filename = null): void
     {
         Authorization::authorize('backup.download');
 
-        $filename = basename($request->query('file', $request->param('filename', '')));
+        $rawFilename = $filename ?? $request->query('file') ?? $request->param('filename') ?? '';
+        $filename = basename((string)$rawFilename);
 
         if (empty($filename) || !str_ends_with($filename, '.sql.gz') || !preg_match('/^[a-zA-Z0-9_\-\.]+\.sql\.gz$/', $filename)) {
             Session::flash('error', 'Format nama berkas cadangan tidak valid atau mengandung karakter terlarang.');
@@ -156,5 +159,126 @@ class BackupController
         }
 
         redirect('/admin/keamanan/backup');
+    }
+
+    /**
+     * Eksekusi pencadangan total sistem (Database + Seluruh Berkas Fisik)
+     */
+    public function backupTotal(Request $request): Response
+    {
+        Authorization::authorize('backup.create');
+
+        $result = $this->backupService->createTotalBackup();
+
+        if ($result['success']) {
+            Session::flash('success', $result['message']);
+        } else {
+            Session::flash('error', $result['message']);
+        }
+
+        redirect('/admin/keamanan/backup');
+    }
+
+    /**
+     * Endpoint API / AJAX untuk Pencadangan Kilat Otomatis (5-10 Detik)
+     * Mengembalikan URL unduhan langsung agar browser dapat mengunduh secara otomatis tanpa reload
+     */
+    public function createTotalAjax(Request $request): Response
+    {
+        Authorization::authorize('backup.create');
+
+        $result = $this->backupService->createTotalBackup();
+
+        if (!$result['success']) {
+            return (new Response())->json([
+                'success' => false,
+                'message' => $result['message'] ?? 'Gagal membuat cadangan total.',
+            ], 500);
+        }
+
+        return (new Response())->json([
+            'success' => true,
+            'filename' => $result['filename'],
+            'size_formatted' => $result['size_formatted'],
+            'total_files' => $result['total_files'],
+            'sha256' => $result['sha256'],
+            'download_url' => '/admin/keamanan/backup/download-total?file=' . urlencode($result['filename']),
+            'message' => 'Cadangan total sistem berhasil dibuat! Memulai pengunduhan otomatis...',
+        ]);
+    }
+
+    /**
+     * Buat cadangan total sistem terbaru dan langsung streaming unduhan (Satu Langkah)
+     */
+    public function createAndDownloadTotal(Request $request): void
+    {
+        Authorization::authorize('backup.create');
+        Authorization::authorize('backup.download');
+
+        $result = $this->backupService->createTotalBackup();
+
+        if (!$result['success']) {
+            Session::flash('error', 'Gagal membuat cadangan total sistem: ' . ($result['message'] ?? ''));
+            redirect('/admin/keamanan/backup');
+            return;
+        }
+
+        $filename = $result['filename'];
+        $backupDir = realpath($this->storageService->getBackupDir('total'));
+        $targetPath = realpath($backupDir . DIRECTORY_SEPARATOR . $filename);
+
+        if (!$backupDir || !$targetPath || !str_starts_with($targetPath, $backupDir) || !is_file($targetPath)) {
+            Session::flash('error', 'Berkas backup total gagal dipersiapkan untuk pengunduhan.');
+            redirect('/admin/keamanan/backup');
+            return;
+        }
+
+        // Catat jejak audit pengunduhan langsung
+        $auditService = new \App\Services\AuditLogService();
+        $auditService->log('INSTANT_TOTAL_BACKUP_AND_DOWNLOAD', 'system', $filename, [
+            'filename' => $filename,
+            'size' => filesize($targetPath),
+            'sha256' => $result['sha256'] ?? '',
+        ]);
+
+        $response = new Response();
+        $response->file($targetPath, $filename, 'attachment');
+    }
+
+    /**
+     * Unduh berkas cadangan total (.zip) dengan proteksi ketat Path Traversal
+     */
+    public function downloadTotal(Request $request, ?string $filename = null): void
+    {
+        Authorization::authorize('backup.download');
+
+        $rawFilename = $filename ?? $request->query('file') ?? $request->param('filename') ?? '';
+        $filename = basename((string)$rawFilename);
+
+        if (empty($filename) || !str_ends_with($filename, '.zip') || !preg_match('/^[a-zA-Z0-9_\-\.]+\.zip$/', $filename)) {
+            Session::flash('error', 'Format nama berkas cadangan total tidak valid atau mengandung karakter terlarang.');
+            redirect('/admin/keamanan/backup');
+            return;
+        }
+
+        $backupDir = realpath($this->storageService->getBackupDir('total'));
+        $targetPath = realpath($this->storageService->getBackupDir('total') . DIRECTORY_SEPARATOR . $filename);
+
+        if (!$backupDir || !$targetPath || !str_starts_with($targetPath, $backupDir) || !is_file($targetPath)) {
+            Session::flash('error', 'Berkas backup total tidak ditemukan di direktori penyimpanan aman.');
+            redirect('/admin/keamanan/backup');
+            return;
+        }
+
+        // Catat jejak audit pengunduhan
+        $auditService = new \App\Services\AuditLogService();
+        $auditService->log('DOWNLOAD_BACKUP_TOTAL', 'system', $filename, [
+            'filename' => $filename,
+            'size' => filesize($targetPath),
+            'sha256' => hash_file('sha256', $targetPath),
+        ]);
+
+        $response = new Response();
+        $response->file($targetPath, $filename, 'attachment');
     }
 }

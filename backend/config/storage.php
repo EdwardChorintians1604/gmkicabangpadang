@@ -17,7 +17,8 @@ return [
     'backup' => [
         'database' => $baseDir . '/storage/backup/database',
         'uploads' => $baseDir . '/storage/backup/uploads',
-        'retain_count' => (int)($_ENV['BACKUP_RETAIN_COUNT'] ?? 3),
+        'total' => $baseDir . '/storage/backup/total',
+        'retain_count' => (int)($_ENV['BACKUP_RETAIN_COUNT'] ?? 5),
     ],
     'logs' => $baseDir . '/storage/logs',
     'temp' => $baseDir . '/storage/temp',

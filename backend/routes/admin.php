@@ -110,7 +110,13 @@ $router->post('/admin/keamanan/ancaman/{id}/resolve', 'Admin\SecurityController@
 $router->get('/admin/keamanan/ancaman/{id}/resolve', 'Admin\SecurityController@resolveAncaman', ['auth', 'role:admin']);
 $router->get('/admin/keamanan/backup', 'Admin\BackupController@index', ['auth', 'role:admin']);
 $router->post('/admin/keamanan/backup/database', 'Admin\BackupController@backupDatabase', ['auth', 'role:admin', 'csrf']);
+$router->post('/admin/keamanan/backup/total', 'Admin\BackupController@backupTotal', ['auth', 'role:admin', 'csrf']);
+$router->post('/admin/keamanan/backup/total-ajax', 'Admin\BackupController@createTotalAjax', ['auth', 'role:admin']);
+$router->get('/admin/keamanan/backup/total-ajax', 'Admin\BackupController@createTotalAjax', ['auth', 'role:admin']);
 $router->post('/admin/keamanan/backup/manifest', 'Admin\BackupController@generateManifest', ['auth', 'role:admin', 'csrf']);
 $router->get('/admin/keamanan/backup/download', 'Admin\BackupController@download', ['auth', 'role:admin']);
+$router->get('/admin/keamanan/backup/download-total', 'Admin\BackupController@downloadTotal', ['auth', 'role:admin']);
 $router->get('/admin/keamanan/backup/unduh-sekarang', 'Admin\BackupController@createAndDownload', ['auth', 'role:admin']);
+$router->get('/admin/keamanan/backup/unduh-total-sekarang', 'Admin\BackupController@createAndDownloadTotal', ['auth', 'role:admin']);
 $router->get('/admin/keamanan/backup/database/{filename}', 'Admin\BackupController@download', ['auth', 'role:admin']);
+$router->get('/admin/keamanan/backup/total/{filename}', 'Admin\BackupController@downloadTotal', ['auth', 'role:admin']);

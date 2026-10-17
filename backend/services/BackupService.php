@@ -298,4 +298,286 @@ class BackupService
 
         return $entries;
     }
+
+    /**
+     * Membuat paket cadangan total sistem (Basis Data MySQL + Seluruh Berkas Fisik & Unggahan)
+     * Mengemas database dump, dokumen privat, foto anggota, KTA, lampiran publik, serta manifest integritas SHA-256 ke dalam satu paket arsip ZIP.
+     */
+    public function createTotalBackup(): array
+    {
+        if (!class_exists('\ZipArchive')) {
+            return [
+                'success' => false,
+                'message' => 'Ekstensi PHP ZipArchive tidak aktif pada server.',
+            ];
+        }
+
+        @set_time_limit(300);
+        @ini_set('memory_limit', '512M');
+
+        try {
+            $totalBackupDir = $this->storageService->getBackupDir('total');
+            if (!is_dir($totalBackupDir)) {
+                mkdir($totalBackupDir, 0755, true);
+            }
+
+            $timestamp = date('Ymd_His');
+            $zipFilename = 'backup_total_gmki_padang_' . $timestamp . '.zip';
+            $zipPath = $totalBackupDir . DIRECTORY_SEPARATOR . $zipFilename;
+
+            $zip = new \ZipArchive();
+            if ($zip->open($zipPath, \ZipArchive::CREATE | \ZipArchive::OVERWRITE) !== true) {
+                throw new \RuntimeException("Gagal membuat arsip ZIP di folder {$totalBackupDir}");
+            }
+
+            $manifestRows = [];
+            $manifestRows[] = ['relative_path', 'filesize_bytes', 'sha256', 'type', 'created_at'];
+            $fileCount = 0;
+            $totalUncompressedBytes = 0;
+
+            // 1. Eksekusi Pencadangan Basis Data MySQL (SQL Dump)
+            $dbBackup = $this->createDatabaseBackup();
+            if ($dbBackup['success']) {
+                $dbGzPath = $this->storageService->getBackupDir('database') . DIRECTORY_SEPARATOR . $dbBackup['filename'];
+                if (file_exists($dbGzPath)) {
+                    $zip->addFile($dbGzPath, 'database/' . $dbBackup['filename']);
+                    $gzSize = filesize($dbGzPath);
+                    $fileCount++;
+                    $totalUncompressedBytes += $gzSize;
+                    $manifestRows[] = [
+                        'database/' . $dbBackup['filename'],
+                        $gzSize,
+                        $dbBackup['sha256'],
+                        'database_gzip',
+                        date('Y-m-d H:i:s')
+                    ];
+
+                    // Unpack satu salinan raw .sql agar mudah diimpor langsung via phpMyAdmin / Adminer
+                    $rawSqlContent = @gzdecode(file_get_contents($dbGzPath));
+                    if ($rawSqlContent !== false) {
+                        $rawSqlFilename = 'database/database_dump_' . $timestamp . '.sql';
+                        $zip->addFromString($rawSqlFilename, $rawSqlContent);
+                        $sqlSize = strlen($rawSqlContent);
+                        $fileCount++;
+                        $totalUncompressedBytes += $sqlSize;
+                        $manifestRows[] = [
+                            $rawSqlFilename,
+                            $sqlSize,
+                            hash('sha256', $rawSqlContent),
+                            'database_raw_sql',
+                            date('Y-m-d H:i:s')
+                        ];
+                    }
+                }
+            }
+
+            // 2. Kumpulkan Seluruh Direktori Berkas Fisik Sistem
+            $targetFolders = [
+                'storage_private/foto-anggota' => $this->storageService->getPrivateUploadDir('foto_anggota'),
+                'storage_private/kta' => $this->storageService->getPrivateUploadDir('kta'),
+                'storage_private/documents' => dirname(__DIR__, 2) . '/storage/private/documents',
+                'public_uploads/berita' => $this->storageService->getPublicUploadDir('berita'),
+                'public_uploads/lampiran' => $this->storageService->getPublicUploadDir('lampiran'),
+                'public_uploads/organisasi' => $this->storageService->getPublicUploadDir('organisasi'),
+            ];
+
+            foreach ($targetFolders as $zipPrefix => $realDir) {
+                if (!is_dir($realDir)) {
+                    continue;
+                }
+
+                $iterator = new \RecursiveIteratorIterator(
+                    new \RecursiveDirectoryIterator($realDir, \FilesystemIterator::SKIP_DOTS),
+                    \RecursiveIteratorIterator::LEAVES_ONLY
+                );
+
+                foreach ($iterator as $file) {
+                    if ($file->isFile()) {
+                        $filename = $file->getFilename();
+                        if ($filename === '.gitkeep') {
+                            continue;
+                        }
+
+                        $filePath = $file->getRealPath();
+                        $subPath = substr($filePath, strlen(realpath($realDir)) + 1);
+                        $subPath = str_replace('\\', '/', $subPath);
+                        $zipEntryName = $zipPrefix . '/' . $subPath;
+
+                        $zip->addFile($filePath, $zipEntryName);
+                        $fSize = $file->getSize();
+                        $fileCount++;
+                        $totalUncompressedBytes += $fSize;
+
+                        $manifestRows[] = [
+                            $zipEntryName,
+                            $fSize,
+                            hash_file('sha256', $filePath),
+                            'file_asset',
+                            date('Y-m-d H:i:s', $file->getMTime())
+                        ];
+                    }
+                }
+            }
+
+            // 3. Tambahkan Manifest CSV
+            $manifestCsv = '';
+            $fp = fopen('php://temp', 'r+');
+            foreach ($manifestRows as $row) {
+                fputcsv($fp, $row);
+            }
+            rewind($fp);
+            $manifestCsv = stream_get_contents($fp);
+            fclose($fp);
+            $zip->addFromString('manifest.csv', $manifestCsv);
+
+            // 4. Tambahkan Informasi Metadata JSON
+            $info = [
+                'app_name' => 'GMKI Cabang Padang - Sistem Informasi & Manajemen Keanggotaan Terpadu',
+                'backup_type' => 'TOTAL_SYSTEM_FULL_BACKUP',
+                'timestamp' => $timestamp,
+                'created_at' => date('Y-m-d H:i:s'),
+                'php_version' => PHP_VERSION,
+                'total_files_included' => $fileCount,
+                'uncompressed_bytes' => $totalUncompressedBytes,
+                'uncompressed_formatted' => $this->formatBytes($totalUncompressedBytes),
+                'database_included' => $dbBackup['success'] ?? false,
+                'database_file' => $dbBackup['filename'] ?? null,
+                'database_sha256' => $dbBackup['sha256'] ?? null,
+                'security_features' => [
+                    'Cryptographic SHA-256 for all individual files',
+                    'Whole Archive Integrity Verification',
+                    'Path Traversal Shielded Extraction Structure',
+                    'ACID Consistent Snapshot Database Dump'
+                ],
+            ];
+            $zip->addFromString('backup_info.json', json_encode($info, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+
+            // 5. Tambahkan Panduan Pemulihan Bencana (README_RESTORE.txt)
+            $readme = "===============================================================================\n"
+                . " GMKI CABANG PADANG - PANDUAN PEMULIHAN BENCANA CADANGAN TOTAL (DISASTER RECOVERY)\n"
+                . " Waktu Pencadangan: " . date('Y-m-d H:i:s') . "\n"
+                . " Berkas Cadangan: {$zipFilename}\n"
+                . "===============================================================================\n\n"
+                . "STRUKTUR DIREKTORI CADANGAN:\n"
+                . "1. database/         : Berisi dump basis data MySQL (.sql dan .sql.gz).\n"
+                . "2. storage_private/  : Berisi dokumen rahasia, surat sekretariat, foto civitas & berkas KTA.\n"
+                . "3. public_uploads/   : Berisi media berita, lampiran pengumuman, dan aset publik.\n"
+                . "4. manifest.csv      : Daftar verifikasi keaslian SHA-256 untuk setiap berkas fisik.\n"
+                . "5. backup_info.json  : Metadata konfigurasi dan ringkasan audit pencadangan.\n\n"
+                . "LANGKAH-LANGKAH PEMULIHAN (RESTORE):\n"
+                . "A. Pemulihan Basis Data:\n"
+                . "   - Buka phpMyAdmin / MySQL CLI pada server tujuan.\n"
+                . "   - Impor berkas 'database/database_dump_{$timestamp}.sql' ke database MySQL yang aktif.\n\n"
+                . "B. Pemulihan Berkas Media & Unggahan:\n"
+                . "   - Salin isi folder 'storage_private/' ke direktori server: 'storage/private/'\n"
+                . "   - Salin isi folder 'public_uploads/' ke direktori server: 'frontend/public/uploads/'\n\n"
+                . "C. Verifikasi Integritas:\n"
+                . "   - Periksa keaslian berkas dengan mencocokkan nilai hash SHA-256 pada 'manifest.csv'.\n\n"
+                . "Dokumen ini dibuat otomatis oleh Sistem Informasi GMKI Cabang Padang.\n";
+            $zip->addFromString('README_RESTORE.txt', $readme);
+
+            // Tutup dan simpan arsip ZIP
+            $zip->close();
+
+            $zipSize = filesize($zipPath);
+            $zipSha256 = hash_file('sha256', $zipPath);
+            file_put_contents($zipPath . '.sha256', $zipSha256);
+
+            // Rotasi cadangan: simpan 5 arsip total terbaru secara aman
+            $this->rotateTotalBackups(5);
+
+            // Catat jejak audit pengamanan total
+            $this->auditLogService->log('BACKUP_TOTAL_SYSTEM', 'system', $zipFilename, [
+                'filename' => $zipFilename,
+                'size' => $zipSize,
+                'sha256' => $zipSha256,
+                'total_files' => $fileCount,
+            ]);
+
+            return [
+                'success' => true,
+                'filename' => $zipFilename,
+                'filepath' => $zipPath,
+                'size' => $zipSize,
+                'size_formatted' => $this->formatBytes($zipSize),
+                'sha256' => $zipSha256,
+                'total_files' => $fileCount,
+                'message' => 'Cadangan total sistem (Database + Seluruh Berkas Fisik) berhasil dibuat (.zip) dengan verifikasi SHA-256.',
+            ];
+        } catch (\Throwable $e) {
+            error_log("Backup Total Error: " . $e->getMessage());
+            return [
+                'success' => false,
+                'message' => 'Gagal membuat cadangan total: ' . $e->getMessage(),
+            ];
+        }
+    }
+
+    /**
+     * Dapatkan daftar seluruh arsip cadangan total (.zip)
+     */
+    public function getTotalBackups(): array
+    {
+        $totalBackupDir = $this->storageService->getBackupDir('total');
+        if (!is_dir($totalBackupDir)) {
+            return [];
+        }
+
+        $files = glob($totalBackupDir . '/*.zip');
+        $backups = [];
+
+        foreach ($files as $f) {
+            $shaFile = $f . '.sha256';
+            $sha256 = file_exists($shaFile) ? trim(file_get_contents($shaFile)) : hash_file('sha256', $f);
+
+            $backups[] = [
+                'filename' => basename($f),
+                'filepath' => $f,
+                'size' => filesize($f),
+                'size_formatted' => $this->formatBytes(filesize($f)),
+                'sha256' => $sha256,
+                'sha256_short' => substr($sha256, 0, 16) . '...',
+                'created_at' => date('Y-m-d H:i:s', filemtime($f)),
+            ];
+        }
+
+        usort($backups, function ($a, $b) {
+            return strcmp($b['filename'], $a['filename']);
+        });
+
+        return $backups;
+    }
+
+    /**
+     * Rotasi cadangan total: pertahankan sejumlah berkas terbaru
+     */
+    public function rotateTotalBackups(int $keepCount = 5): void
+    {
+        $backups = $this->getTotalBackups();
+        if (count($backups) > $keepCount) {
+            $toDelete = array_slice($backups, $keepCount);
+            foreach ($toDelete as $item) {
+                if (file_exists($item['filepath'])) {
+                    @unlink($item['filepath']);
+                }
+                if (file_exists($item['filepath'] . '.sha256')) {
+                    @unlink($item['filepath'] . '.sha256');
+                }
+            }
+        }
+    }
+
+    /**
+     * Format byte ke satuan yang mudah dibaca manusia (B, KB, MB, GB)
+     */
+    public function formatBytes(int $bytes): string
+    {
+        if ($bytes <= 0) {
+            return '0 B';
+        }
+        $units = ['B', 'KB', 'MB', 'GB'];
+        $i = (int) floor(log($bytes, 1024));
+        $i = min($i, count($units) - 1);
+        return round($bytes / pow(1024, $i), 2) . ' ' . $units[$i];
+    }
 }

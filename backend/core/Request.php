@@ -12,6 +12,7 @@ class Request
     protected array $files;
     protected array $server;
     protected array $headers;
+    protected array $params = [];
 
     public function __construct()
     {
@@ -76,9 +77,27 @@ class Request
         return strtoupper($method) === $this->method;
     }
 
+    public function setParams(array $params): void
+    {
+        $this->params = $params;
+    }
+
+    public function param(?string $key = null, mixed $default = null): mixed
+    {
+        if ($key === null) {
+            return $this->params;
+        }
+        return $this->params[$key] ?? $default;
+    }
+
+    public function params(?string $key = null, mixed $default = null): mixed
+    {
+        return $this->param($key, $default);
+    }
+
     public function input(?string $key = null, mixed $default = null): mixed
     {
-        $data = array_merge($this->query, $this->body);
+        $data = array_merge($this->query, $this->body, $this->params);
         if ($key === null) {
             return $data;
         }
@@ -87,7 +106,7 @@ class Request
 
     public function all(): array
     {
-        return array_merge($this->query, $this->body);
+        return array_merge($this->query, $this->body, $this->params);
     }
 
     public function query(?string $key = null, mixed $default = null): mixed

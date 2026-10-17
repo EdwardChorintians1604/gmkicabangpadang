@@ -106,11 +106,12 @@ class MonitoringController
     /**
      * Unduh berkas cadangan database (Khusus Pengawas / BENCAB / MPPC)
      */
-    public function download(Request $request): void
+    public function download(Request $request, ?string $filename = null): void
     {
         Authorization::authorize('backup.download');
 
-        $filename = basename($request->query('file', $request->param('filename', '')));
+        $rawFilename = $filename ?? $request->query('file') ?? $request->param('filename') ?? '';
+        $filename = basename((string)$rawFilename);
 
         if (empty($filename) || !str_ends_with($filename, '.sql.gz') || !preg_match('/^[a-zA-Z0-9_\-\.]+\.sql\.gz$/', $filename)) {
             \App\Core\Session::flash('error', 'Format nama berkas cadangan tidak valid.');
