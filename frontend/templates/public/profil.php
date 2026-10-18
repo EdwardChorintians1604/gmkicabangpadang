@@ -83,17 +83,17 @@
                 <div class="text-center p-6 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 transition-colors">
                     <div class="text-4xl mb-3">⛪</div>
                     <h4 class="text-lg font-bold text-white mb-2">Gereja</h4>
-                    <p class="text-slate-200 text-xs sm:text-sm leading-relaxed">Menjadi pelayan oikoumene yang mempererat persekutuan tubuh Kristus.</p>
+                    <p class="text-slate-200 text-xs sm:text-sm leading-relaxed text-justify">Menjadi pelayan oikoumene yang mempererat persekutuan tubuh Kristus.</p>
                 </div>
                 <div class="text-center p-6 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 transition-colors">
                     <div class="text-4xl mb-3">🏫</div>
                     <h4 class="text-lg font-bold text-white mb-2">Perguruan Tinggi</h4>
-                    <p class="text-slate-200 text-xs sm:text-sm leading-relaxed">Wadah kader intelektual kritis, berprestasi, dan menjunjung kebenaran ilmiah.</p>
+                    <p class="text-slate-200 text-xs sm:text-sm leading-relaxed text-justify">Wadah kader intelektual kritis, berprestasi, dan menjunjung kebenaran ilmiah.</p>
                 </div>
                 <div class="text-center p-6 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 transition-colors">
                     <div class="text-4xl mb-3">🌏</div>
                     <h4 class="text-lg font-bold text-white mb-2">Masyarakat</h4>
-                    <p class="text-slate-200 text-xs sm:text-sm leading-relaxed">Garam dan terang dunia yang memperjuangkan keadilan sosial dan kemanusiaan.</p>
+                    <p class="text-slate-200 text-xs sm:text-sm leading-relaxed text-justify">Garam dan terang dunia yang memperjuangkan keadilan sosial dan kemanusiaan.</p>
                 </div>
             </div>
         </div>
