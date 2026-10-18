@@ -88,7 +88,7 @@
                         <?php endif; ?>
                     <?php endif; ?>
                     <?php if (can('strategy.view')): ?>
-                        <li class="sidebar-nav-item"><a href="/ketcab/strategi" class="sidebar-nav-link"><span class="sidebar-nav-icon">🧭</span><span>Strategi Organisasi</span></a></li>
+                        <li class="sidebar-nav-item"><a href="/ketcab/proker" class="sidebar-nav-link <?= (active_nav('/ketcab/proker') || active_nav('/ketcab/strategi')) ?>"><span class="sidebar-nav-icon">📋</span><span>Program Kerja Sekfung</span></a></li>
                     <?php endif; ?>
                     <?php if (can('coordination.view')): ?>
                         <?php $coordinationPath = (auth()['role'] ?? '') === 'admin' ? '/admin/koordinasi' : ((auth()['role'] ?? '') === 'ketcab' ? '/ketcab/koordinasi' : '/ruang-kerja/koordinasi'); ?>

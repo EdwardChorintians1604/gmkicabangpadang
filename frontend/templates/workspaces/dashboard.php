@@ -52,8 +52,8 @@ $roleMottos = [
         </div>
         <div class="workspace-hero-actions">
             <?php if ($role === 'ketcab'): ?>
-                <a href="/ketcab/strategi" class="btn btn-primary" style="background:#f59e0b;border-color:#d97706;color:#0f2d4a;font-weight:750;">
-                    🧭 Catat Strategi
+                <a href="/ketcab/proker" class="btn btn-primary" style="background:#0284c7;border-color:#0369a1;color:#ffffff;font-weight:750;">
+                    📋 Pemantauan Proker Sekfung
                 </a>
                 <a href="/ketcab/koordinasi" class="btn btn-outline" style="background:rgba(255,255,255,0.12);border-color:rgba(255,255,255,0.3);color:#ffffff;">
                     💬 Ruang Koordinasi
@@ -152,11 +152,11 @@ $roleMottos = [
 
         <div class="metric-card">
             <div class="metric-info">
-                <span class="metric-label">Catatan Strategi</span>
+                <span class="metric-label">Program Kerja Sekfung</span>
                 <span class="metric-value"><?= (int)$counts['strategies'] ?></span>
-                <span class="text-muted" style="font-size:0.8rem;margin-top:0.25rem;">Target arah kebijakan</span>
+                <span class="text-muted" style="font-size:0.8rem;margin-top:0.25rem;">Proker terdata &amp; dipantau</span>
             </div>
-            <div class="metric-icon-wrap metric-icon-secondary">🧭</div>
+            <div class="metric-icon-wrap metric-icon-primary" style="background:#e0f2fe;color:#0284c7;">📋</div>
         </div>
 
     <?php elseif ($role === 'sekcab'): ?>
@@ -258,12 +258,11 @@ $roleMottos = [
                 </div>
             </a>
 
-        <?php elseif ($role === 'ketcab'): ?>
-            <a href="/ketcab/strategi" class="launchpad-card">
-                <div class="launchpad-icon" style="background:#fef3c7;color:#b45309;">🧭</div>
+            <a href="/ketcab/proker" class="launchpad-card">
+                <div class="launchpad-icon" style="background:#e0f2fe;color:#0284c7;">📋</div>
                 <div class="launchpad-info">
-                    <h4>Strategi Organisasi</h4>
-                    <p>Rumuskan target, sasaran kebijakan, dan langkah taktis BPC periode aktif.</p>
+                    <h4>Program Kerja Sekfung</h4>
+                    <p>Pantau dasar pemikiran, indikator, keberhasilan, dan koordinasi via WhatsApp.</p>
                 </div>
             </a>
             <a href="/bencab/laporan" class="launchpad-card">

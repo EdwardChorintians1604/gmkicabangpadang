@@ -30,6 +30,9 @@ $router->get('/ruang-kerja/berkas', 'WorkspaceController@files', ['auth', 'role:
 $router->get('/dokumen/{id}/unduh', 'WorkspaceController@downloadDocument', ['auth']);
 $router->get('/admin/berkas/backup', 'WorkspaceController@downloadArchiveZip', ['auth', 'role:admin']);
 
+$router->get('/ketcab/proker', 'WorkspaceController@strategies', ['auth', 'role:admin,ketcab']);
+$router->post('/ketcab/proker', 'WorkspaceController@saveStrategy', ['auth', 'role:admin,ketcab', 'csrf']);
+$router->post('/ketcab/proker/{id}/delete', 'WorkspaceController@deleteStrategy', ['auth', 'role:admin,ketcab', 'csrf']);
 $router->get('/ketcab/strategi', 'WorkspaceController@strategies', ['auth', 'role:admin,ketcab']);
 $router->post('/ketcab/strategi', 'WorkspaceController@saveStrategy', ['auth', 'role:admin,ketcab', 'csrf']);
 $router->post('/ketcab/strategi/{id}/delete', 'WorkspaceController@deleteStrategy', ['auth', 'role:admin,ketcab', 'csrf']);

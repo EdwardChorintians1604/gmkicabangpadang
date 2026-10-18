@@ -961,60 +961,174 @@ class WorkspaceController
     public function strategies(Request $request): Response
     {
         Authorization::authorize('strategy.view');
-        $pagination = $this->pagination($request, 'SELECT COUNT(*) AS total FROM organization_strategies');
+
+        $sekfungFilter = trim((string) $request->query('sekfung', ''));
+        $achievedFilter = trim((string) $request->query('achieved', ''));
+        $search = trim((string) $request->query('q', ''));
+
+        $where = [];
+        $params = [];
+
+        if ($sekfungFilter !== '') {
+            $where[] = "sekfung_jabatan = ?";
+            $params[] = $sekfungFilter;
+        }
+
+        if ($achievedFilter !== '') {
+            $where[] = "is_achieved = ?";
+            $params[] = $achievedFilter;
+        }
+
+        if ($search !== '') {
+            $where[] = "(title LIKE ? OR dasar_pemikiran LIKE ? OR objective LIKE ? OR indicator LIKE ? OR sekfung_name LIKE ? OR activity_type LIKE ?)";
+            $term = "%{$search}%";
+            array_push($params, $term, $term, $term, $term, $term, $term);
+        }
+
+        $whereSql = $where ? 'WHERE ' . implode(' AND ', $where) : '';
+
+        $countSql = "SELECT COUNT(*) AS total FROM organization_strategies {$whereSql}";
+        $pagination = $this->pagination($request, $countSql, $params);
+
         $strategies = Database::fetchAll(
-            'SELECT * FROM organization_strategies ORDER BY target_date IS NULL, target_date, id DESC
-             LIMIT ' . $pagination['perPage'] . ' OFFSET ' . $pagination['offset']
+            "SELECT * FROM organization_strategies {$whereSql} 
+             ORDER BY id DESC 
+             LIMIT {$pagination['perPage']} OFFSET {$pagination['offset']}",
+            $params
         );
-        return $this->page('Strategi Organisasi', 'strategies', ['strategies' => $strategies, 'pagination' => $pagination]);
+
+        // Ringkasan statistik capaian program kerja untuk Ketcab
+        $stats = [
+            'total' => (int) (Database::fetchOne("SELECT COUNT(*) AS total FROM organization_strategies")['total'] ?? 0),
+            'achieved' => (int) (Database::fetchOne("SELECT COUNT(*) AS total FROM organization_strategies WHERE is_achieved = 'Iya'")['total'] ?? 0),
+            'not_achieved' => (int) (Database::fetchOne("SELECT COUNT(*) AS total FROM organization_strategies WHERE is_achieved = 'Tidak'")['total'] ?? 0),
+            'in_progress' => (int) (Database::fetchOne("SELECT COUNT(*) AS total FROM organization_strategies WHERE is_achieved = 'Proses'")['total'] ?? 0),
+            'planned' => (int) (Database::fetchOne("SELECT COUNT(*) AS total FROM organization_strategies WHERE is_achieved = 'Rencana'")['total'] ?? 0),
+        ];
+
+        // Ambil daftar Sekfung yang telah tersedia di struktur BPC GMKI Padang
+        $dbSekfung = Database::fetchAll(
+            "SELECT nama, jabatan, telepon FROM struktur_organisasi 
+             WHERE jabatan LIKE '%SEKFUNG%' OR jabatan LIKE '%KABID%' 
+             ORDER BY urutan ASC"
+        );
+
+        $availableSekfung = [];
+        if (!empty($dbSekfung)) {
+            foreach ($dbSekfung as $row) {
+                $availableSekfung[] = [
+                    'jabatan' => $row['jabatan'],
+                    'nama' => $row['nama'],
+                    'wa' => !empty($row['telepon']) ? $row['telepon'] : '',
+                ];
+            }
+        } else {
+            $availableSekfung = [
+                ['jabatan' => 'SEKFUNG OR-LITBANG', 'nama' => 'Sony Boston Josuarez Sinaga', 'wa' => '081234567890'],
+                ['jabatan' => 'SEKFUNG MEDKO', 'nama' => 'Erantus Paripurna Samaloisa', 'wa' => '082198765432'],
+                ['jabatan' => 'SEKFUNG AKSPEL', 'nama' => 'Sutan Radex Aritonang', 'wa' => '081377889900'],
+                ['jabatan' => 'SEKFUNG Pemberdayaan Perempuan', 'nama' => 'Sefrida Sakiaddat, S.Psi', 'wa' => '085266778899'],
+                ['jabatan' => 'KABID / SEKFUNG PKK', 'nama' => 'Ronaldo Ucale Douw', 'wa' => '082233445566'],
+            ];
+        }
+
+        return $this->page('Program Kerja Sekfung', 'strategies', [
+            'strategies' => $strategies,
+            'pagination' => $pagination,
+            'stats' => $stats,
+            'availableSekfung' => $availableSekfung,
+            'sekfungFilter' => $sekfungFilter,
+            'achievedFilter' => $achievedFilter,
+            'search' => $search,
+        ]);
     }
 
     public function saveStrategy(Request $request): Response
     {
         Authorization::authorize('strategy.manage');
+
         $id = (int) $request->post('id', 0);
-        $title = trim((string) $request->post('title'));
-        $objective = trim((string) $request->post('objective'));
-        $status = (string) $request->post('status', 'Rencana');
-        $targetDate = trim((string) $request->post('target_date'));
-        if ($title === '' || mb_strlen($title) > 180 || $objective === '' || !in_array($status, ['Rencana', 'Berjalan', 'Selesai'], true)) {
-            return $this->fail('/ketcab/strategi', 'Judul, tujuan, dan status strategi wajib valid.');
+        $title = trim((string) $request->post('title', $request->post('program_name', '')));
+        $sekfungJabatan = trim((string) $request->post('sekfung_jabatan', ''));
+        $sekfungName = trim((string) $request->post('sekfung_name', ''));
+        $sekfungWa = trim((string) $request->post('sekfung_wa', ''));
+        $dasarPemikiran = trim((string) $request->post('dasar_pemikiran', ''));
+        $activityType = trim((string) $request->post('activity_type', ''));
+        $objective = trim((string) $request->post('objective', ''));
+        $indicator = trim((string) $request->post('indicator', ''));
+        $isAchieved = (string) $request->post('is_achieved', 'Rencana');
+        $executionTime = trim((string) $request->post('execution_time', ''));
+        $notes = trim((string) $request->post('notes', ''));
+
+        if ($title === '' || mb_strlen($title) > 255) {
+            return $this->fail('/ketcab/proker', 'Nama Program Kerja wajib diisi (maksimal 255 karakter).');
         }
-        if ($targetDate !== '') {
-            $parsedDate = \DateTime::createFromFormat('!Y-m-d', $targetDate);
-            if (!$parsedDate || $parsedDate->format('Y-m-d') !== $targetDate) {
-                return $this->fail('/ketcab/strategi', 'Tanggal target tidak valid.');
-            }
+
+        if (!in_array($isAchieved, ['Iya', 'Tidak', 'Proses', 'Rencana'], true)) {
+            $isAchieved = 'Rencana';
+        }
+
+        // Standardisasi status ke kolom lama agar sinkron
+        $status = match ($isAchieved) {
+            'Iya' => 'Selesai',
+            'Tidak' => 'Rencana',
+            'Proses' => 'Berjalan',
+            default => 'Rencana',
+        };
+
+        // Bersihkan dan format nomor WhatsApp
+        $cleanWa = preg_replace('/[^0-9]/', '', $sekfungWa);
+        if (str_starts_with($cleanWa, '0')) {
+            $cleanWa = '62' . substr($cleanWa, 1);
         }
 
         if ($id > 0) {
             $exists = Database::fetchOne('SELECT id FROM organization_strategies WHERE id = ?', [$id]);
             if (!$exists) {
-                return $this->fail('/ketcab/strategi', 'Catatan strategi tidak ditemukan.');
+                return $this->fail('/ketcab/proker', 'Data program kerja tidak ditemukan.');
             }
+
             Database::execute(
-                'UPDATE organization_strategies SET title = ?, objective = ?, status = ?, target_date = ? WHERE id = ?',
-                [$title, $objective, $status, $targetDate ?: null, $id]
+                'UPDATE organization_strategies 
+                 SET title = ?, sekfung_name = ?, sekfung_jabatan = ?, sekfung_wa = ?, 
+                     dasar_pemikiran = ?, activity_type = ?, objective = ?, indicator = ?, 
+                     is_achieved = ?, execution_time = ?, notes = ?, status = ?
+                 WHERE id = ?',
+                [
+                    $title, $sekfungName, $sekfungJabatan, $cleanWa ?: $sekfungWa,
+                    $dasarPemikiran, $activityType, $objective, $indicator,
+                    $isAchieved, $executionTime, $notes, $status, $id
+                ]
             );
         } else {
             Database::execute(
-                'INSERT INTO organization_strategies (title, objective, status, target_date, created_by, created_at) VALUES (?, ?, ?, ?, ?, NOW())',
-                [$title, $objective, $status, $targetDate ?: null, Auth::id()]
+                'INSERT INTO organization_strategies 
+                 (title, sekfung_name, sekfung_jabatan, sekfung_wa, dasar_pemikiran, 
+                  activity_type, objective, indicator, is_achieved, execution_time, notes, status, created_by, created_at)
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())',
+                [
+                    $title, $sekfungName, $sekfungJabatan, $cleanWa ?: $sekfungWa,
+                    $dasarPemikiran, $activityType, $objective, $indicator,
+                    $isAchieved, $executionTime, $notes, $status, Auth::id()
+                ]
             );
         }
-        Session::flash('success', 'Catatan strategi berhasil disimpan.');
-        redirect('/ketcab/strategi');
+
+        Session::flash('success', 'Data program kerja sekfung berhasil disimpan.');
+        redirect('/ketcab/proker');
     }
 
     public function deleteStrategy(Request $request, string $id): Response
     {
         Authorization::authorize('strategy.manage');
+
         if (!Database::fetchOne('SELECT id FROM organization_strategies WHERE id = ?', [(int) $id])) {
-            return $this->fail('/ketcab/strategi', 'Catatan strategi tidak ditemukan.');
+            return $this->fail('/ketcab/proker', 'Data program kerja tidak ditemukan.');
         }
+
         Database::execute('DELETE FROM organization_strategies WHERE id = ?', [(int) $id]);
-        Session::flash('success', 'Catatan strategi berhasil dihapus.');
-        redirect('/ketcab/strategi');
+        Session::flash('success', 'Data program kerja sekfung berhasil dihapus.');
+        redirect('/ketcab/proker');
     }
 
     public function coordination(Request $request): Response

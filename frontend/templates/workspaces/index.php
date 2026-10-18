@@ -4,7 +4,7 @@ $titles = [
     'inventory' => 'Inventaris GMKI',
     'archive' => 'Buku Agenda & Arsip Persuratan Sekcab',
     'finance' => 'Laporan Keuangan Cabang',
-    'strategies' => 'Strategi Organisasi',
+    'strategies' => 'Program Kerja Sekfung',
     'coordination' => 'Ruang Koordinasi BPC',
 ];
 $backPath = match ($role) {
@@ -1358,40 +1358,559 @@ $backLabel = $role === 'admin' ? 'Dashboard Admin' : 'Ruang kerja';
     </script>
 
 <?php elseif ($section === 'strategies'): ?>
-    <?php if (can('strategy.manage')): ?>
-        <section class="card" style="margin-bottom:1.25rem;"><div class="card-body">
-            <h2 style="font-size:1.1rem;font-weight:700;margin:0 0 1rem;">Catat arah strategis</h2>
-            <form method="post" action="/ketcab/strategi" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <?= csrf_field() ?><label>Judul strategi<input class="form-control" name="title" maxlength="180" required></label>
-                <label>Status<select class="form-control" name="status"><option>Rencana</option><option>Berjalan</option><option>Selesai</option></select></label>
-                <label>Tanggal target<input class="form-control" name="target_date" type="date"></label>
-                <label style="grid-column:1/-1;">Tujuan dan langkah<textarea class="form-control" name="objective" rows="3" required></textarea></label>
-                <div><button class="btn btn-primary" type="submit">Simpan strategi</button></div>
-            </form>
-        </div></section>
-    <?php endif; ?>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <?php foreach ($strategies as $strategy): ?><article class="card"><div class="card-body">
+    <?php
+    $stats = $stats ?? [
+        'total' => count($strategies ?? []),
+        'achieved' => 0,
+        'not_achieved' => 0,
+        'in_progress' => 0,
+        'planned' => 0,
+    ];
+    $availableSekfung = $availableSekfung ?? [];
+    $sekfungFilter = $sekfungFilter ?? '';
+    $achievedFilter = $achievedFilter ?? '';
+    $search = $search ?? '';
+    ?>
+
+    <!-- 1. KPI Metric Summary Cards (Proker Sekfung) -->
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-6">
+        <div class="card p-3 sm:p-4 border border-slate-200/80 shadow-xs" style="background:#ffffff;border-radius:12px;">
+            <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Total Proker Terdata</div>
+            <div class="text-2xl font-black text-slate-800" style="color:#0f3d64;"><?= (int)$stats['total'] ?></div>
+            <div class="text-xs text-slate-500 mt-0.5">Program kerja sekfung BPC</div>
+        </div>
+        <div class="card p-3 sm:p-4 border border-emerald-200 shadow-xs" style="background:#f0fdf4;border-radius:12px;">
+            <div class="text-xs font-bold text-emerald-700 uppercase tracking-wider mb-1">Berhasil (Iya)</div>
+            <div class="text-2xl font-black text-emerald-800"><?= (int)$stats['achieved'] ?></div>
+            <div class="text-xs text-emerald-600 mt-0.5">Terealisasi dengan baik</div>
+        </div>
+        <div class="card p-3 sm:p-4 border border-rose-200 shadow-xs" style="background:#fff1f2;border-radius:12px;">
+            <div class="text-xs font-bold text-rose-700 uppercase tracking-wider mb-1">Belum Berhasil (Tidak)</div>
+            <div class="text-2xl font-black text-rose-800"><?= (int)$stats['not_achieved'] ?></div>
+            <div class="text-xs text-rose-600 mt-0.5">Evaluasi &amp; kendala</div>
+        </div>
+        <div class="card p-3 sm:p-4 border border-sky-200 shadow-xs" style="background:#f0f9ff;border-radius:12px;">
+            <div class="text-xs font-bold text-sky-700 uppercase tracking-wider mb-1">Proses / Rencana</div>
+            <div class="text-2xl font-black text-sky-800"><?= (int)($stats['in_progress'] + $stats['planned']) ?></div>
+            <div class="text-xs text-sky-600 mt-0.5">Sedang berjalan / agenda</div>
+        </div>
+    </div>
+
+    <!-- 2. Action Bar & Filter Bar -->
+    <div class="card p-4 border border-slate-200 shadow-xs mb-6" style="background:#ffffff;border-radius:14px;">
+        <div class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 mb-4 pb-3 border-b border-slate-100">
+            <div>
+                <h2 class="text-base sm:text-lg font-black m-0" style="color:#0f3d64;">
+                    Daftar &amp; Pemantauan Program Kerja Fungsionaris (Sekfung)
+                </h2>
+                <p class="text-xs sm:text-sm text-slate-500 m-0 mt-0.5">
+                    Ketua Cabang dapat memantau ketercapaian proker, dasar pemikiran, indikator keberhasilan, dan langsung berkoordinasi via WhatsApp.
+                </p>
+            </div>
             <?php if (can('strategy.manage')): ?>
-                <div class="flex gap-2">
-                <form method="post" action="/ketcab/strategi">
-                    <?= csrf_field() ?><input type="hidden" name="id" value="<?= (int)$strategy['id'] ?>">
-                    <label>Judul<input class="form-control" name="title" value="<?= e($strategy['title']) ?>" required></label>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" style="margin-top:.5rem;"><label>Status<select class="form-control" name="status"><?php foreach (['Rencana', 'Berjalan', 'Selesai'] as $status): ?><option <?= $strategy['status'] === $status ? 'selected' : '' ?>><?= e($status) ?></option><?php endforeach; ?></select></label>
-                    <label>Target<input class="form-control" type="date" name="target_date" value="<?= e($strategy['target_date'] ?? '') ?>"></label></div>
-                    <label style="display:block;margin-top:.5rem;">Tujuan dan langkah<textarea class="form-control" name="objective" rows="3" required><?= e($strategy['objective']) ?></textarea></label>
-                    <button class="btn btn-primary btn-sm" style="margin-top:.5rem;">Simpan</button>
-                </form>
-                <form method="post" action="/ketcab/strategi/<?= (int)$strategy['id'] ?>/delete" data-confirm="Hapus catatan strategi ini?"><?= csrf_field() ?><button class="btn btn-danger btn-sm">Hapus</button></form>
-                </div>
-            <?php else: ?>
-                <h2><?= e($strategy['title']) ?></h2><p><?= nl2br(e($strategy['objective'])) ?></p><span class="badge badge-primary"><?= e($strategy['status']) ?></span>
-                <?php if ($strategy['target_date']): ?><span class="text-muted">Target <?= e($strategy['target_date']) ?></span><?php endif; ?>
+                <button type="button" class="btn btn-primary btn-sm flex items-center justify-center gap-1.5 font-bold shadow-xs flex-shrink-0" onclick="toggleAddProkerForm()" style="background:#0284c7;border-color:#0369a1;color:#ffffff;padding:0.6rem 1.15rem;border-radius:9px;">
+                    <span>+ Tambah Pendataan Proker Baru</span>
+                </button>
             <?php endif; ?>
-        </div></article><?php endforeach; ?>
-        <?php if (!$strategies): ?><div class="card"><div class="card-body text-muted">Belum ada strategi yang dicatat.</div></div><?php endif; ?>
+        </div>
+
+        <!-- Filter Form -->
+        <form method="GET" action="/ketcab/proker" class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-2.5">
+            <div>
+                <select name="sekfung" class="form-control text-xs" style="height:38px;" onchange="this.form.submit()">
+                    <option value="">-- Semua Bidang Sekfung --</option>
+                    <?php foreach ($availableSekfung as $sf): ?>
+                        <option value="<?= e($sf['jabatan']) ?>" <?= ($sekfungFilter === $sf['jabatan']) ? 'selected' : '' ?>>
+                            <?= e($sf['jabatan']) ?> (<?= e($sf['nama']) ?>)
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            <div>
+                <select name="achieved" class="form-control text-xs" style="height:38px;" onchange="this.form.submit()">
+                    <option value="">-- Status Berhasil (Semua) --</option>
+                    <option value="Iya" <?= ($achievedFilter === 'Iya') ? 'selected' : '' ?>>✓ Berhasil (Iya)</option>
+                    <option value="Tidak" <?= ($achievedFilter === 'Tidak') ? 'selected' : '' ?>>✗ Belum Berhasil (Tidak)</option>
+                    <option value="Proses" <?= ($achievedFilter === 'Proses') ? 'selected' : '' ?>>⏳ Sedang Berjalan</option>
+                    <option value="Rencana" <?= ($achievedFilter === 'Rencana') ? 'selected' : '' ?>>📋 Direncanakan</option>
+                </select>
+            </div>
+            <div class="sm:col-span-1 lg:col-span-2 flex gap-2">
+                <input type="text" name="q" class="form-control text-xs" placeholder="Cari nama proker, dasar pemikiran, tujuan..." value="<?= e($search) ?>" style="height:38px;">
+                <button type="submit" class="btn btn-outline btn-sm font-bold text-xs" style="padding:0 0.85rem;height:38px;color:#0f3d64;">Cari</button>
+                <?php if ($sekfungFilter !== '' || $achievedFilter !== '' || $search !== ''): ?>
+                    <a href="/ketcab/proker" class="btn btn-outline btn-sm text-xs flex items-center justify-center text-slate-500" style="height:38px;" title="Reset filter">✕</a>
+                <?php endif; ?>
+            </div>
+        </form>
+    </div>
+
+    <!-- 3. Form Input Proker Baru (Collapsible) -->
+    <?php if (can('strategy.manage')): ?>
+        <section id="formAddProkerContainer" class="card border border-sky-200 shadow-md mb-6" style="display:none;background:#f8fafc;border-radius:14px;overflow:hidden;">
+            <div style="padding:1rem 1.25rem;background:linear-gradient(135deg, #0284c7 0%, #0369a1 100%);color:#ffffff;" class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <span style="font-size:1.25rem;">📝</span>
+                    <h3 class="text-sm sm:text-base font-extrabold text-white m-0">Formulir Pendataan Program Kerja (Proker) Sekfung</h3>
+                </div>
+                <button type="button" class="text-white hover:text-slate-200 font-bold text-lg" onclick="toggleAddProkerForm()">✕</button>
+            </div>
+            <div class="p-4 sm:p-5">
+                <form method="POST" action="/ketcab/proker" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <?= csrf_field() ?>
+
+                    <!-- Pilihan Sekfung Preset -->
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">
+                            Pilih Sekfung / Fungsionaris BPC: <span class="text-rose-500">*</span>
+                        </label>
+                        <select id="selectPresetSekfung" class="form-control text-xs" onchange="applySekfungPreset(this)">
+                            <option value="">-- Pilih dari Daftar Sekfung Tersedia --</option>
+                            <?php foreach ($availableSekfung as $sf): ?>
+                                <option value="<?= e($sf['jabatan']) ?>" data-nama="<?= e($sf['nama']) ?>" data-wa="<?= e($sf['wa']) ?>">
+                                    <?= e($sf['jabatan']) ?> - <?= e($sf['nama']) ?>
+                                </option>
+                            <?php endforeach; ?>
+                            <option value="CUSTOM">-- Masukkan Jabatan Lain Secara Manual --</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">
+                            Jabatan Fungsional (Sekfung): <span class="text-rose-500">*</span>
+                        </label>
+                        <input id="inputSekfungJabatan" type="text" name="sekfung_jabatan" class="form-control text-xs" placeholder="Contoh: SEKFUNG OR-LITBANG" required>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">
+                            Nama Sekfung Penanggung Jawab:
+                        </label>
+                        <input id="inputSekfungNama" type="text" name="sekfung_name" class="form-control text-xs" placeholder="Nama lengkap sekfung">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">
+                            Nomor WhatsApp Sekfung (Untuk Chat Langsung): <span class="text-emerald-600 font-semibold">(Aktif WA)</span>
+                        </label>
+                        <input id="inputSekfungWa" type="text" name="sekfung_wa" class="form-control text-xs" placeholder="Contoh: 081234567890 atau 62812...">
+                        <span class="text-slate-400 text-xs">Ketua Cabang dapat langsung klik chat WA sekfung pada tabel.</span>
+                    </div>
+
+                    <div class="md:col-span-2">
+                        <label class="block text-xs font-bold text-slate-700 mb-1">
+                            Nama Program Kerja: <span class="text-rose-500">*</span>
+                        </label>
+                        <input type="text" name="title" class="form-control text-xs" placeholder="Contoh: Masa Perkenalan Calon Anggota (MAPERCA) Semester Genap" maxlength="255" required>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">
+                            Jenis Kegiatan:
+                        </label>
+                        <input type="text" name="activity_type" class="form-control text-xs" list="activityTypeSuggestions" placeholder="Ketik jenis kegiatan (cth: Pelatihan, Diskusi, Aksi Sosial, dll.)">
+                        <datalist id="activityTypeSuggestions">
+                            <option value="Pelatihan &amp; Kaderisasi">
+                            <option value="Diskusi Publik &amp; Seminar">
+                            <option value="Ibadah &amp; Kerohanian">
+                            <option value="Aksi Sosial &amp; Pengabdian">
+                            <option value="Publikasi &amp; Media Komunikasi">
+                            <option value="Pengkajian &amp; Litbang">
+                            <option value="Advokasi &amp; Kebijakan">
+                            <option value="Audiensi &amp; Relasi">
+                            <option value="Konsolidasi Organisasi">
+                        </datalist>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">
+                            Waktu Pelaksanaan (Keterangan):
+                        </label>
+                        <select id="selectWaktuPelaksanaan" class="form-control text-xs mb-1" onchange="handleWaktuPreset(this)">
+                            <option value="Selama masa bakti">Selama masa bakti (Rutin / Berkala)</option>
+                            <option value="1 kali selama masa bakti">1 kali selama masa bakti (Insidental)</option>
+                            <option value="CUSTOM">Tulis Keterangan Waktu Khusus...</option>
+                        </select>
+                        <input id="inputWaktuPelaksanaan" type="text" name="execution_time" class="form-control text-xs" value="Selama masa bakti" placeholder="Keterangan waktu pelaksanaan">
+                    </div>
+
+                    <div class="md:col-span-2">
+                        <label class="block text-xs font-bold text-slate-700 mb-1">
+                            Dasar Pemikiran: <span class="text-rose-500">*</span>
+                        </label>
+                        <textarea name="dasar_pemikiran" class="form-control text-xs" rows="3" placeholder="Rasionalisasi, latar belakang, dan urgensi diangkatnya program kerja ini..." required></textarea>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">
+                            Tujuan Program: <span class="text-rose-500">*</span>
+                        </label>
+                        <textarea name="objective" class="form-control text-xs" rows="3" placeholder="Tujuan terukur yang hendak dicapai dari program kerja ini..." required></textarea>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">
+                            Indikator Keberhasilan: <span class="text-rose-500">*</span>
+                        </label>
+                        <textarea name="indicator" class="form-control text-xs" rows="3" placeholder="Tolok ukur kuantitatif / kualitatif keberhasilan pelaksanaan program..." required></textarea>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">
+                            Status Berhasil (Iya / Tidak): <span class="text-rose-500">*</span>
+                        </label>
+                        <select name="is_achieved" class="form-control text-xs font-bold">
+                            <option value="Rencana">📋 Direncanakan (Belum Berjalan)</option>
+                            <option value="Proses">⏳ Sedang Berjalan (Proses)</option>
+                            <option value="Iya">✅ Berhasil (Iya)</option>
+                            <option value="Tidak">❌ Belum Berhasil (Tidak)</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">
+                            Catatan &amp; Evaluasi Ketcab (Opsional):
+                        </label>
+                        <input type="text" name="notes" class="form-control text-xs" placeholder="Catatan khusus atau arahan Ketua Cabang...">
+                    </div>
+
+                    <div class="md:col-span-2 flex items-center justify-end gap-2 pt-2 border-t border-slate-200">
+                        <button type="button" class="btn btn-outline btn-sm text-xs" onclick="toggleAddProkerForm()">Batal</button>
+                        <button type="submit" class="btn btn-primary btn-sm text-xs font-bold" style="background:#0284c7;border-color:#0369a1;color:#ffffff;padding:0.6rem 1.25rem;">
+                            💾 Simpan Program Kerja
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+    <?php endif; ?>
+
+    <!-- 4. Tabel Pemantauan Proker Sekfung -->
+    <div class="table-card shadow-sm border border-slate-200/90 mb-6" style="border-radius:14px;overflow:hidden;">
+        <div class="table-header flex items-center justify-between" style="background:#f8fafc;padding:0.85rem 1.25rem;">
+            <div class="text-xs font-black uppercase tracking-wider" style="color:#0f3d64;">
+                Data Program Kerja Fungsional Terdaftar (<?= count($strategies) ?> Ditampilkan)
+            </div>
+            <div class="text-xs text-slate-500">
+                Klik ikon <strong>Chat WA</strong> untuk langsung menghubungi Sekfung bersangkutan.
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="data-table" style="font-size:0.8rem;">
+                <thead>
+                    <tr style="background:#f1f5f9;color:#334155;">
+                        <th style="width:40px;text-align:center;">No</th>
+                        <th style="min-width:150px;">Sekfung &amp; No WA</th>
+                        <th style="min-width:180px;">Dasar Pemikiran</th>
+                        <th style="min-width:170px;">Nama Program</th>
+                        <th style="min-width:130px;">Jenis Kegiatan</th>
+                        <th style="min-width:170px;">Tujuan</th>
+                        <th style="min-width:170px;">Indikator</th>
+                        <th style="min-width:130px;">Waktu Pelaksanaan</th>
+                        <th style="min-width:120px;text-align:center;">Berhasil (Iya/Tidak)</th>
+                        <?php if (can('strategy.manage')): ?>
+                            <th style="min-width:85px;text-align:center;">Aksi</th>
+                        <?php endif; ?>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if (!empty($strategies)): ?>
+                        <?php $no = $pagination['offset'] ?? 0; ?>
+                        <?php foreach ($strategies as $proker): ?>
+                            <?php 
+                            $no++;
+                            $sekfungTitle = !empty($proker['sekfung_jabatan']) ? $proker['sekfung_jabatan'] : 'SEKFUNG';
+                            $sekfungNama = !empty($proker['sekfung_name']) ? $proker['sekfung_name'] : '-';
+                            $rawWa = !empty($proker['sekfung_wa']) ? $proker['sekfung_wa'] : '';
+                            $cleanWa = preg_replace('/[^0-9]/', '', $rawWa);
+                            if (str_starts_with($cleanWa, '0')) {
+                                $cleanWa = '62' . substr($cleanWa, 1);
+                            }
+
+                            // Format pesan WhatsApp ramah untuk koordinasi Ketcab -> Sekfung
+                            $waMessage = "Halo Rekan {$sekfungNama} ({$sekfungTitle}), saya Ketua Cabang GMKI Padang ingin memantau dan berkoordinasi mengenai Program Kerja: \"{$proker['title']}\". Bagaimana perkembangan pelaksanaannya saat ini? Terima kasih.";
+                            $waUrl = !empty($cleanWa) ? "https://api.whatsapp.com/send?phone={$cleanWa}&text=" . urlencode($waMessage) : '#';
+
+                            $achievedStatus = $proker['is_achieved'] ?? 'Rencana';
+                            ?>
+                            <tr style="vertical-align:top;">
+                                <!-- No -->
+                                <td style="text-align:center;font-weight:bold;color:#64748b;">
+                                    <?= $no ?>
+                                </td>
+
+                                <!-- Sekfung & Kontak WA -->
+                                <td>
+                                    <div class="font-extrabold text-slate-800" style="color:#0f3d64;">
+                                        <?= e($sekfungTitle) ?>
+                                    </div>
+                                    <div class="text-xs text-slate-600 mb-1.5">
+                                        <?= e($sekfungNama) ?>
+                                    </div>
+                                    <?php if (!empty($cleanWa)): ?>
+                                        <a href="<?= e($waUrl) ?>" target="_blank" rel="noopener noreferrer" class="btn btn-sm flex items-center gap-1 font-bold shadow-2xs" style="background:#22c55e;color:#ffffff;border:none;font-size:0.68rem;padding:0.25rem 0.55rem;border-radius:6px;display:inline-flex;" title="Buka WhatsApp untuk berkoordinasi langsung dengan Sekfung mengenai proker ini">
+                                            <span>💬 Chat WA Sekfung</span>
+                                        </a>
+                                        <div class="text-2xs text-slate-400 mt-0.5" style="font-size:0.68rem;">
+                                            <?= e($rawWa) ?>
+                                        </div>
+                                    <?php else: ?>
+                                        <span class="text-slate-400 text-xs italic">No WA belum diisi</span>
+                                    <?php endif; ?>
+                                </td>
+
+                                <!-- Dasar Pemikiran -->
+                                <td>
+                                    <div class="text-xs text-slate-700 leading-relaxed" style="max-height:140px;overflow-y:auto;">
+                                        <?= !empty($proker['dasar_pemikiran']) ? nl2br(e($proker['dasar_pemikiran'])) : '<span class="text-slate-400 italic">Dasar pemikiran belum dirincikan.</span>' ?>
+                                    </div>
+                                </td>
+
+                                <!-- Nama Program (Kolom Terpisah) -->
+                                <td>
+                                    <div class="font-black text-slate-800 text-sm leading-snug" style="color:#0f3d64;">
+                                        <?= e($proker['title']) ?>
+                                    </div>
+                                </td>
+
+                                <!-- Jenis Kegiatan (Kolom Terpisah) -->
+                                <td>
+                                    <?php if (!empty($proker['activity_type'])): ?>
+                                        <span class="badge" style="background:rgba(2, 132, 199, 0.1);color:#0284c7;border:1px solid rgba(2, 132, 199, 0.25);font-size:0.72rem;padding:0.25rem 0.5rem;font-weight:700;display:inline-block;">
+                                            <?= e($proker['activity_type']) ?>
+                                        </span>
+                                    <?php else: ?>
+                                        <span class="text-slate-400 text-xs italic">-</span>
+                                    <?php endif; ?>
+                                </td>
+
+                                <!-- Tujuan -->
+                                <td>
+                                    <div class="text-xs text-slate-700 leading-relaxed" style="max-height:140px;overflow-y:auto;">
+                                        <?= !empty($proker['objective']) ? nl2br(e($proker['objective'])) : '<span class="text-slate-400 italic">-</span>' ?>
+                                    </div>
+                                </td>
+
+                                <!-- Indikator -->
+                                <td>
+                                    <div class="text-xs text-slate-700 leading-relaxed" style="max-height:140px;overflow-y:auto;">
+                                        <?= !empty($proker['indicator']) ? nl2br(e($proker['indicator'])) : '<span class="text-slate-400 italic">-</span>' ?>
+                                    </div>
+                                </td>
+
+                                <!-- Waktu Pelaksanaan -->
+                                <td>
+                                    <div class="text-xs font-bold text-slate-800">
+                                        <?= !empty($proker['execution_time']) ? e($proker['execution_time']) : 'Selama masa bakti' ?>
+                                    </div>
+                                    <?php if (!empty($proker['target_date'])): ?>
+                                        <div class="text-2xs text-slate-400 mt-1">
+                                            Target: <?= format_date($proker['target_date'], 'd M Y') ?>
+                                        </div>
+                                    <?php endif; ?>
+                                </td>
+
+                                <!-- Status Berhasil (Iya / Tidak) -->
+                                <td style="text-align:center;">
+                                    <?php if ($achievedStatus === 'Iya'): ?>
+                                        <span class="badge badge-success" style="font-size:0.75rem;padding:0.35rem 0.65rem;border-radius:999px;">
+                                            ✓ Berhasil (Iya)
+                                        </span>
+                                    <?php elseif ($achievedStatus === 'Tidak'): ?>
+                                        <span class="badge badge-danger" style="font-size:0.75rem;padding:0.35rem 0.65rem;border-radius:999px;">
+                                            ✗ Belum Berhasil (Tidak)
+                                        </span>
+                                    <?php elseif ($achievedStatus === 'Proses'): ?>
+                                        <span class="badge badge-warning" style="font-size:0.75rem;padding:0.35rem 0.65rem;border-radius:999px;">
+                                            ⏳ Sedang Berjalan
+                                        </span>
+                                    <?php else: ?>
+                                        <span class="badge" style="background:#f1f5f9;color:#64748b;border:1px solid #cbd5e1;font-size:0.75rem;padding:0.35rem 0.65rem;border-radius:999px;">
+                                            📋 Rencana
+                                        </span>
+                                    <?php endif; ?>
+                                    <?php if (!empty($proker['notes'])): ?>
+                                        <div class="text-2xs text-slate-500 mt-1 italic" title="<?= e($proker['notes']) ?>">
+                                            "<?= e(mb_strimwidth($proker['notes'], 0, 30, '...')) ?>"
+                                        </div>
+                                    <?php endif; ?>
+                                </td>
+
+                                <!-- Aksi Edit / Hapus -->
+                                <?php if (can('strategy.manage')): ?>
+                                    <td style="text-align:center;">
+                                        <div class="flex items-center justify-center gap-1">
+                                            <button type="button" class="btn btn-outline btn-sm" style="padding:0.25rem 0.45rem;font-size:0.75rem;" title="Edit data program kerja" onclick='openEditProkerModal(<?= json_encode($proker, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>)'>
+                                                ✏️
+                                            </button>
+                                            <form method="POST" action="/ketcab/proker/<?= (int)$proker['id'] ?>/delete" data-confirm="Hapus pendataan program kerja ini?" style="display:inline;margin:0;">
+                                                <?= csrf_field() ?>
+                                                <button type="submit" class="btn btn-danger btn-sm" style="padding:0.25rem 0.45rem;font-size:0.75rem;" title="Hapus proker">
+                                                    🗑️
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                <?php endif; ?>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <tr>
+                            <td colspan="<?= can('strategy.manage') ? 10 : 9 ?>" class="text-center text-muted" style="padding:3rem 1.5rem;">
+                                <div style="font-size:2rem;margin-bottom:0.5rem;">📋</div>
+                                <div class="font-bold text-slate-700 text-sm">Belum Ada Program Kerja Sekfung yang Terdata</div>
+                                <div class="text-xs text-slate-400 mt-1 max-w-md mx-auto">
+                                    Silakan klik tombol <strong>"+ Tambah Pendataan Proker Baru"</strong> di atas untuk memasukkan program kerja para Sekretaris Fungsional BPC.
+                                </div>
+                            </td>
+                        </tr>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
     </div>
     <?= partial('partials.pagination', $pagination) ?>
+
+    <!-- 5. Modal Edit Proker Sekfung -->
+    <div id="modalEditProker" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(15, 23, 42, 0.65);z-index:9999;backdrop-filter:blur(3px);padding:1.5rem;overflow-y:auto;">
+        <div style="max-width:700px;margin:2rem auto;background:#ffffff;border-radius:16px;box-shadow:0 20px 25px -5px rgba(0,0,0,0.3);overflow:hidden;">
+            <div style="padding:1.25rem 1.5rem;background:#0f3d64;color:#ffffff;" class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <span style="font-size:1.25rem;">✏️</span>
+                    <h3 class="text-base font-extrabold text-white m-0">Edit Pendataan Program Kerja Sekfung</h3>
+                </div>
+                <button type="button" class="text-white hover:text-slate-300 font-bold text-xl" onclick="closeEditProkerModal()">✕</button>
+            </div>
+            <form method="POST" action="/ketcab/proker" style="padding:1.5rem;">
+                <?= csrf_field() ?>
+                <input type="hidden" id="editProkerId" name="id" value="0">
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Jabatan Sekfung: <span class="text-rose-500">*</span></label>
+                        <input type="text" id="editSekfungJabatan" name="sekfung_jabatan" class="form-control text-xs" required>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Nama Sekfung:</label>
+                        <input type="text" id="editSekfungName" name="sekfung_name" class="form-control text-xs">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">No. WhatsApp Sekfung:</label>
+                        <input type="text" id="editSekfungWa" name="sekfung_wa" class="form-control text-xs" placeholder="0812...">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Jenis Kegiatan:</label>
+                        <input type="text" id="editActivityType" name="activity_type" class="form-control text-xs" list="activityTypeSuggestions" placeholder="Ketik jenis kegiatan...">
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Nama Program Kerja: <span class="text-rose-500">*</span></label>
+                        <input type="text" id="editTitle" name="title" class="form-control text-xs" maxlength="255" required>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Dasar Pemikiran: <span class="text-rose-500">*</span></label>
+                        <textarea id="editDasarPemikiran" name="dasar_pemikiran" class="form-control text-xs" rows="3" required></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Tujuan: <span class="text-rose-500">*</span></label>
+                        <textarea id="editObjective" name="objective" class="form-control text-xs" rows="3" required></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Indikator Keberhasilan: <span class="text-rose-500">*</span></label>
+                        <textarea id="editIndicator" name="indicator" class="form-control text-xs" rows="3" required></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Waktu Pelaksanaan (Keterangan):</label>
+                        <input type="text" id="editExecutionTime" name="execution_time" class="form-control text-xs" placeholder="Contoh: Selama masa bakti / 1 kali selama masa bakti">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Status Berhasil (Iya / Tidak): <span class="text-rose-500">*</span></label>
+                        <select id="editIsAchieved" name="is_achieved" class="form-control text-xs font-bold">
+                            <option value="Iya">✅ Berhasil (Iya)</option>
+                            <option value="Tidak">❌ Belum Berhasil (Tidak)</option>
+                            <option value="Proses">⏳ Sedang Berjalan (Proses)</option>
+                            <option value="Rencana">📋 Direncanakan (Rencana)</option>
+                        </select>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Catatan &amp; Evaluasi Ketcab:</label>
+                        <input type="text" id="editNotes" name="notes" class="form-control text-xs">
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-end gap-2 mt-5 pt-3 border-t border-slate-200">
+                    <button type="button" class="btn btn-outline btn-sm text-xs" onclick="closeEditProkerModal()">Batal</button>
+                    <button type="submit" class="btn btn-primary btn-sm text-xs font-bold" style="background:#0f3d64;color:#ffffff;padding:0.6rem 1.25rem;">
+                        Simpan Perubahan Proker
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- JavaScript Logika UI Proker Sekfung -->
+    <script>
+    function toggleAddProkerForm() {
+        const c = document.getElementById('formAddProkerContainer');
+        if (!c) return;
+        if (c.style.display === 'none') {
+            c.style.display = 'block';
+            c.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        } else {
+            c.style.display = 'none';
+        }
+    }
+
+    function applySekfungPreset(sel) {
+        const opt = sel.options[sel.selectedIndex];
+        if (!opt || !opt.value) return;
+        const jbtInput = document.getElementById('inputSekfungJabatan');
+        const namaInput = document.getElementById('inputSekfungNama');
+        const waInput = document.getElementById('inputSekfungWa');
+
+        if (opt.value === 'CUSTOM') {
+            jbtInput.value = '';
+            namaInput.value = '';
+            waInput.value = '';
+            jbtInput.focus();
+            return;
+        }
+
+        jbtInput.value = opt.value;
+        namaInput.value = opt.getAttribute('data-nama') || '';
+        waInput.value = opt.getAttribute('data-wa') || '';
+    }
+
+    function handleWaktuPreset(sel) {
+        const input = document.getElementById('inputWaktuPelaksanaan');
+        if (sel.value === 'CUSTOM') {
+            input.value = '';
+            input.focus();
+        } else {
+            input.value = sel.value;
+        }
+    }
+
+    function openEditProkerModal(data) {
+        document.getElementById('editProkerId').value = data.id || 0;
+        document.getElementById('editTitle').value = data.title || '';
+        document.getElementById('editSekfungJabatan').value = data.sekfung_jabatan || '';
+        document.getElementById('editSekfungName').value = data.sekfung_name || '';
+        document.getElementById('editSekfungWa').value = data.sekfung_wa || '';
+        document.getElementById('editActivityType').value = data.activity_type || '';
+        document.getElementById('editDasarPemikiran').value = data.dasar_pemikiran || '';
+        document.getElementById('editObjective').value = data.objective || '';
+        document.getElementById('editIndicator').value = data.indicator || '';
+        document.getElementById('editExecutionTime').value = data.execution_time || '';
+        document.getElementById('editIsAchieved').value = data.is_achieved || 'Rencana';
+        document.getElementById('editNotes').value = data.notes || '';
+
+        document.getElementById('modalEditProker').style.display = 'block';
+    }
+
+    function closeEditProkerModal() {
+        document.getElementById('modalEditProker').style.display = 'none';
+    }
+    </script>
 
 <?php elseif ($section === 'coordination'): ?>
     <?php

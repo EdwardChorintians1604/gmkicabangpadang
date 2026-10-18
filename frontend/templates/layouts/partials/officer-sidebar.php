@@ -15,7 +15,7 @@ $navigation = [
     'ketcab' => [
         ['Pusat Pengawasan', [
             ['/ketcab/dashboard', 'dashboard', 'Dashboard Ketcab'],
-            ['/ketcab/strategi', 'chart', 'Strategi Organisasi'],
+            ['/ketcab/proker', 'chart', 'Program Kerja Sekfung'],
             ['/bencab/laporan', 'download', 'Laporan Keuangan'],
             ['/ruang-kerja/antrian', 'chart', 'Antrean Ekspor'],
             ['/admin/civitas', 'users', 'Data Civitas (Lihat & Unduh)'],
