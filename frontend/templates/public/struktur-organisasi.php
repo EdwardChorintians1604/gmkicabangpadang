@@ -174,10 +174,10 @@
                     data-tab="inti">👑 Pimpinan Harian (3)</button>
                 <button type="button" onclick="switchRoleTab('or')"
                     class="bpc-tab-btn flex-shrink-0 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition-all"
-                    data-tab="or">🧩 Organisasi &amp; Komunikasi (4)</button>
+                    data-tab="or">🧩 Organisasi &amp; Komunikasi (3)</button>
                 <button type="button" onclick="switchRoleTab('pkk')"
                     class="bpc-tab-btn flex-shrink-0 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition-all"
-                    data-tab="pkk">🎓 Kaderisasi &amp; Kerohanian (3)</button>
+                    data-tab="pkk">🎓 Kaderisasi &amp; Kerohanian (4)</button>
                 <button type="button" onclick="switchRoleTab('akspel')"
                     class="bpc-tab-btn flex-shrink-0 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition-all"
                     data-tab="akspel">🤝 Aksi &amp; Pelayanan (3)</button>
@@ -343,8 +343,7 @@
                                         class="mt-0.5 text-purple-400">▸</span>Menegakkan konstitusi AD/ART dan disiplin
                                     internal anggota.</li>
                                 <li class="flex items-start gap-1.5"><span
-                                        class="mt-0.5 text-purple-400">▸</span>Mengawasi fungsionaris Litbang, Medko,
-                                    dan Pemberdayaan Perempuan.</li>
+                                        class="mt-0.5 text-purple-400">▸</span>Mengawasi fungsionaris Litbang dan Medko.</li>
                                 <li class="flex items-start gap-1.5"><span
                                         class="mt-0.5 text-purple-400">▸</span>Menyusun grand design ekspansi dan
                                     pengembangan cabang.</li>
@@ -450,53 +449,7 @@
                     </div>
                 </div>
 
-                <!-- 7. SEKFUNG PEREMPUAN -->
-                <div class="bpc-role-card bpc-role-or rounded-2xl bg-white border border-slate-200/80 shadow-sm flex flex-col"
-                    data-category="or"
-                    data-search="sekfung pemberdayaan perempuan gender kader perempuan perlindungan anak">
-                    <div class="bpc-role-card-top bpc-top-or"></div>
-                    <div class="p-5 flex flex-col flex-1">
-                        <div class="flex items-start justify-between gap-3 mb-3">
-                            <span
-                                class="w-10 h-10 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center text-xl shadow-xs">🌸</span>
-                            <span
-                                class="px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-purple-50 text-purple-700 border border-purple-100 tracking-wide uppercase">Bid.
-                                Organisasi</span>
-                        </div>
-                        <h4 class="text-base font-extrabold text-slate-900 mb-0.5">Sekfung Pemberdayaan Perempuan</h4>
-                        <div class="text-[11px] font-bold text-amber-600 mb-3 uppercase tracking-wide">Advokasi
-                            Kesetaraan &amp; Kepemimpinan Perempuan</div>
-                        <p class="text-xs text-slate-500 leading-relaxed mb-4">Pengembang potensi kepemimpinan kader
-                            perempuan GMKI, pengawal ruang aman di kampus, serta penggerak advokasi kesetaraan gender
-                            dan perlindungan perempuan &amp; anak.</p>
-                        <div class="bpc-duty-box bpc-duty-or rounded-xl p-3 mb-4">
-                            <div class="text-[10px] font-extrabold text-slate-600 uppercase tracking-widest mb-2">Tugas
-                                &amp; Wewenang</div>
-                            <ul class="text-xs text-slate-600 space-y-1.5">
-                                <li class="flex items-start gap-1.5"><span
-                                        class="mt-0.5 text-purple-400">▸</span>Menyelenggarakan pelatihan kepemimpinan
-                                    khusus kader perempuan.</li>
-                                <li class="flex items-start gap-1.5"><span
-                                        class="mt-0.5 text-purple-400">▸</span>Mendorong ruang aman bebas pelecehan
-                                    &amp; kekerasan seksual di kampus.</li>
-                                <li class="flex items-start gap-1.5"><span
-                                        class="mt-0.5 text-purple-400">▸</span>Membangun jejaring advokasi perlindungan
-                                    perempuan di Sumbar.</li>
-                                <li class="flex items-start gap-1.5"><span
-                                        class="mt-0.5 text-purple-400">▸</span>Mendorong representasi aktif perempuan
-                                    dalam kepemimpinan publik.</li>
-                            </ul>
-                        </div>
-                        <div class="mt-auto pt-3 border-t border-slate-100">
-                            <span
-                                class="inline-flex items-center gap-1 text-[10px] font-bold text-slate-400 uppercase tracking-widest"><span
-                                    class="w-1.5 h-1.5 rounded-full bg-purple-300 inline-block"></span>SEKFUNG
-                                PEREMPUAN</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 8. KABID PKK -->
+                <!-- 7. KABID PKK -->
                 <div class="bpc-role-card bpc-role-pkk rounded-2xl bg-white border border-slate-200/80 shadow-sm flex flex-col"
                     data-category="pkk"
                     data-search="kabid pkk pendidikan kader kerohanian mabim lkko spiritualitas kurikulum">
@@ -529,8 +482,8 @@
                                         class="mt-0.5 text-emerald-500">▸</span>Menjaga mutu pembinaan kerohanian
                                     civitas yang inklusif dan kokoh.</li>
                                 <li class="flex items-start gap-1.5"><span
-                                        class="mt-0.5 text-emerald-500">▸</span>Memimpin koordinasi Sekfung Kader dan
-                                    Sekfung Kerohanian.</li>
+                                        class="mt-0.5 text-emerald-500">▸</span>Memimpin koordinasi Sekfung Kader,
+                                    Sekfung Kerohanian, dan Sekfung Ekonomi Kreatif (Ekraf).</li>
                             </ul>
                         </div>
                         <div class="mt-auto pt-3 border-t border-slate-100">
@@ -541,7 +494,7 @@
                     </div>
                 </div>
 
-                <!-- 9. SEKFUNG KADER -->
+                <!-- 8. SEKFUNG KADER -->
                 <div class="bpc-role-card bpc-role-pkk rounded-2xl bg-white border border-slate-200/80 shadow-sm flex flex-col"
                     data-category="pkk"
                     data-search="sekfung kader rekrutmen anggota baru pembinaan bimbingan mahasiswa baru">
@@ -587,7 +540,7 @@
                     </div>
                 </div>
 
-                <!-- 10. SEKFUNG KEROHANIAN -->
+                <!-- 9. SEKFUNG KEROHANIAN -->
                 <div class="bpc-role-card bpc-role-pkk rounded-2xl bg-white border border-slate-200/80 shadow-sm flex flex-col"
                     data-category="pkk"
                     data-search="sekfung kerohanian ibadah kebaktian persekutuan doa alkitab natal paskah">
@@ -633,6 +586,52 @@
                     </div>
                 </div>
 
+                <!-- 10. SEKFUNG EKRAF -->
+                <div class="bpc-role-card bpc-role-pkk rounded-2xl bg-white border border-slate-200/80 shadow-sm flex flex-col"
+                    data-category="pkk"
+                    data-search="sekfung ekraf ekonomi kreatif wirausaha kewirausahaan kemandirian merchandise">
+                    <div class="bpc-role-card-top bpc-top-pkk"></div>
+                    <div class="p-5 flex flex-col flex-1">
+                        <div class="flex items-start justify-between gap-3 mb-3">
+                            <span
+                                class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center text-xl shadow-xs">💡</span>
+                            <span
+                                class="px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-emerald-50 text-emerald-700 border border-emerald-100 tracking-wide uppercase">Bid.
+                                PKK</span>
+                        </div>
+                        <h4 class="text-base font-extrabold text-slate-900 mb-0.5">Sekfung Ekonomi Kreatif</h4>
+                        <div class="text-[11px] font-bold text-amber-600 mb-3 uppercase tracking-wide">Kemandirian
+                            Finansial &amp; Inkubasi Kewirausahaan</div>
+                        <p class="text-xs text-slate-500 leading-relaxed mb-4">Pengembang jiwa kewirausahaan sosial
+                            (socio-entrepreneurship), perintis unit merchandise resmi cabang, dan pembina literasi
+                            bisnis digital di kalangan mahasiswa Kristen.</p>
+                        <div class="bpc-duty-box bpc-duty-pkk rounded-xl p-3 mb-4">
+                            <div class="text-[10px] font-extrabold text-slate-600 uppercase tracking-widest mb-2">Tugas
+                                &amp; Wewenang</div>
+                            <ul class="text-xs text-slate-600 space-y-1.5">
+                                <li class="flex items-start gap-1.5"><span
+                                        class="mt-0.5 text-emerald-500">▸</span>Mengelola unit merchandise &amp; usaha
+                                    mandiri resmi GMKI Padang.</li>
+                                <li class="flex items-start gap-1.5"><span
+                                        class="mt-0.5 text-emerald-500">▸</span>Mengadakan workshop bisnis, literasi
+                                    finansial, dan ekonomi digital.</li>
+                                <li class="flex items-start gap-1.5"><span
+                                        class="mt-0.5 text-emerald-500">▸</span>Membangun jejaring kolaborasi dengan
+                                    pelaku UMKM dan wirausaha lokal.</li>
+                                <li class="flex items-start gap-1.5"><span
+                                        class="mt-0.5 text-emerald-500">▸</span>Mendorong kemandirian ekonomi kader
+                                    berbasis karya kreatif.</li>
+                            </ul>
+                        </div>
+                        <div class="mt-auto pt-3 border-t border-slate-100">
+                            <span
+                                class="inline-flex items-center gap-1 text-[10px] font-bold text-slate-400 uppercase tracking-widest"><span
+                                    class="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block"></span>SEKFUNG
+                                EKRAF</span>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- 11. KABID AKSPEL -->
                 <div class="bpc-role-card bpc-role-akspel rounded-2xl bg-white border border-slate-200/80 shadow-sm flex flex-col"
                     data-category="akspel"
@@ -667,7 +666,7 @@
                                     dan ormas pemuda se-Padang.</li>
                                 <li class="flex items-start gap-1.5"><span
                                         class="mt-0.5 text-amber-500">▸</span>Mengoordinasikan fungsionaris Akspel dan
-                                    Ekonomi Kreatif.</li>
+                                    Sekfung Pemberdayaan Perempuan.</li>
                             </ul>
                         </div>
                         <div class="mt-auto pt-3 border-t border-slate-100">
@@ -725,48 +724,48 @@
                     </div>
                 </div>
 
-                <!-- 13. SEKFUNG EKRAF -->
+                <!-- 13. SEKFUNG PEREMPUAN -->
                 <div class="bpc-role-card bpc-role-akspel rounded-2xl bg-white border border-slate-200/80 shadow-sm flex flex-col"
                     data-category="akspel"
-                    data-search="sekfung ekraf ekonomi kreatif wirausaha kewirausahaan kemandirian merchandise">
+                    data-search="sekfung pemberdayaan perempuan gender kader perempuan perlindungan anak">
                     <div class="bpc-role-card-top bpc-top-akspel"></div>
                     <div class="p-5 flex flex-col flex-1">
                         <div class="flex items-start justify-between gap-3 mb-3">
                             <span
-                                class="w-10 h-10 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center text-xl shadow-xs">💡</span>
+                                class="w-10 h-10 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center text-xl shadow-xs">🌸</span>
                             <span
                                 class="px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-amber-50 text-amber-700 border border-amber-100 tracking-wide uppercase">Bid.
                                 Akspel</span>
                         </div>
-                        <h4 class="text-base font-extrabold text-slate-900 mb-0.5">Sekfung Ekonomi Kreatif</h4>
-                        <div class="text-[11px] font-bold text-amber-600 mb-3 uppercase tracking-wide">Kemandirian
-                            Finansial &amp; Inkubasi Kewirausahaan</div>
-                        <p class="text-xs text-slate-500 leading-relaxed mb-4">Pengembang jiwa kewirausahaan sosial
-                            (socio-entrepreneurship), perintis unit merchandise resmi cabang, dan pembina literasi
-                            bisnis digital di kalangan mahasiswa Kristen.</p>
+                        <h4 class="text-base font-extrabold text-slate-900 mb-0.5">Sekfung Pemberdayaan Perempuan</h4>
+                        <div class="text-[11px] font-bold text-amber-600 mb-3 uppercase tracking-wide">Advokasi
+                            Kesetaraan &amp; Kepemimpinan Perempuan</div>
+                        <p class="text-xs text-slate-500 leading-relaxed mb-4">Pengembang potensi kepemimpinan kader
+                            perempuan GMKI, pengawal ruang aman di kampus, serta penggerak advokasi kesetaraan gender
+                            dan perlindungan perempuan &amp; anak.</p>
                         <div class="bpc-duty-box bpc-duty-akspel rounded-xl p-3 mb-4">
                             <div class="text-[10px] font-extrabold text-slate-600 uppercase tracking-widest mb-2">Tugas
                                 &amp; Wewenang</div>
                             <ul class="text-xs text-slate-600 space-y-1.5">
                                 <li class="flex items-start gap-1.5"><span
-                                        class="mt-0.5 text-amber-500">▸</span>Mengelola unit merchandise &amp; usaha
-                                    mandiri resmi GMKI Padang.</li>
+                                        class="mt-0.5 text-amber-500">▸</span>Menyelenggarakan pelatihan kepemimpinan
+                                    khusus kader perempuan.</li>
                                 <li class="flex items-start gap-1.5"><span
-                                        class="mt-0.5 text-amber-500">▸</span>Mengadakan workshop bisnis, literasi
-                                    finansial, dan ekonomi digital.</li>
+                                        class="mt-0.5 text-amber-500">▸</span>Mendorong ruang aman bebas pelecehan
+                                    &amp; kekerasan seksual di kampus.</li>
                                 <li class="flex items-start gap-1.5"><span
-                                        class="mt-0.5 text-amber-500">▸</span>Membangun jejaring kolaborasi dengan
-                                    pelaku UMKM dan wirausaha lokal.</li>
+                                        class="mt-0.5 text-amber-500">▸</span>Membangun jejaring advokasi perlindungan
+                                    perempuan di Sumbar.</li>
                                 <li class="flex items-start gap-1.5"><span
-                                        class="mt-0.5 text-amber-500">▸</span>Mendorong kemandirian ekonomi kader
-                                    berbasis karya kreatif.</li>
+                                        class="mt-0.5 text-amber-500">▸</span>Mendorong representasi aktif perempuan
+                                    dalam kepemimpinan publik.</li>
                             </ul>
                         </div>
                         <div class="mt-auto pt-3 border-t border-slate-100">
                             <span
                                 class="inline-flex items-center gap-1 text-[10px] font-bold text-slate-400 uppercase tracking-widest"><span
                                     class="w-1.5 h-1.5 rounded-full bg-amber-400 inline-block"></span>SEKFUNG
-                                EKRAF</span>
+                                PEREMPUAN</span>
                         </div>
                     </div>
                 </div>

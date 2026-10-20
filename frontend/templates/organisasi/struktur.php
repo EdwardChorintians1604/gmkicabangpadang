@@ -190,15 +190,15 @@ const daftarJabatan = [
     "Sekretaris Cabang",
     "Bendahara Cabang",
     "Kabid OR (Kepala Bidang)",
-    "KABID PKK",
-    "KABID AKSPEL",
     "SEKFUNG OR-LITBANG",
     "SEKFUNG MEDKO",
-    "SEKFUNG Pemberdayaan Perempuan",
-    "SEKFUNG AKSPEL",
-    "SEKFUNG EKRAF",
+    "KABID PKK",
     "SEKFUNG KADER",
     "SEKFUNG KEROHANIAN",
+    "SEKFUNG EKRAF",
+    "KABID AKSPEL",
+    "SEKFUNG AKSPEL",
+    "SEKFUNG Pemberdayaan Perempuan",
     "-- Ketik Jabatan Kustom --"
 ];
 
