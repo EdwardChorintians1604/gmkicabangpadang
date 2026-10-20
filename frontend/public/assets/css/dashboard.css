@@ -3,27 +3,54 @@
  * dashboard.css (Admin & Pengawas)
  */
 
-/* Dashboard Layout */
+/* Dashboard App Shell */
+body.dashboard-body {
+    height: 100vh !important;
+    height: 100dvh !important;
+    overflow: hidden !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background-color: var(--bg-page);
+}
+
 .dashboard-wrapper {
     display: flex;
-    min-height: 100vh;
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
     background-color: var(--bg-page);
+    position: relative;
 }
 
 /* Sidebar */
 .dashboard-sidebar {
     width: 260px;
+    height: 100vh;
+    height: 100dvh;
+    flex: 0 0 260px;
     background-color: #0a263f;
     color: #cbd5e1;
     display: flex;
     flex-direction: column;
-    flex-shrink: 0;
-    transition: var(--transition);
-    position: sticky;
-    top: 0;
-    height: 100vh;
     overflow-y: auto;
+    overflow-x: hidden;
     border-right: 1px solid rgba(255, 255, 255, 0.05);
+    z-index: 1020;
+    position: relative;
+}
+
+.dashboard-sidebar::-webkit-scrollbar {
+    width: 5px;
+}
+
+.dashboard-sidebar::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.15);
+}
+
+.dashboard-sidebar::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 4px;
 }
 
 .sidebar-brand {
@@ -101,24 +128,28 @@
 
 /* Main Dashboard Area */
 .dashboard-main {
-    flex-grow: 1;
+    flex: 1 1 0%;
+    min-width: 0;
+    height: 100vh;
+    height: 100dvh;
     display: flex;
     flex-direction: column;
-    min-width: 0;
+    overflow: hidden;
+    position: relative;
 }
 
 /* Dashboard Topbar */
 .dashboard-topbar {
-    height: 68px;
+    height: 64px;
+    flex-shrink: 0;
     background: #ffffff;
     border-bottom: 1px solid var(--border-color);
-    padding: 0 2rem;
+    padding: 0 1.5rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    position: sticky;
-    top: 0;
-    z-index: 100;
+    z-index: 30;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.03);
 }
 
 .topbar-left {
@@ -196,8 +227,28 @@
 
 /* Content Area */
 .dashboard-content {
-    padding: 2rem;
-    flex-grow: 1;
+    flex: 1 1 0%;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 1.5rem clamp(1rem, 2vw, 2rem);
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+    position: relative;
+}
+
+.dashboard-content::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+.dashboard-content::-webkit-scrollbar-track {
+    background: #f1f5f9;
+}
+
+.dashboard-content::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
 }
 
 /* Metrics Cards Grid */

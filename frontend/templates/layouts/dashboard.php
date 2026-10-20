@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="admin-html">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= isset($pageTitle) ? e($pageTitle) : 'Panel Sistem - GMKI Cabang Padang' ?></title>
     <link rel="icon" type="image/png" href="<?= asset('images/favicon.png') ?>">
     <link rel="stylesheet" href="<?= asset('vendor/animate.min.css') ?>">
-    <link rel="stylesheet" href="<?= asset('css/app.css') ?>?v=2">
-    <link rel="stylesheet" href="<?= asset('css/dashboard.css') ?>?v=2">
+    <link rel="stylesheet" href="<?= asset('css/app.css') ?>?v=3">
+    <link rel="stylesheet" href="<?= asset('css/dashboard.css') ?>?v=3">
     <?php if (($section ?? '') === 'coordination'): ?>
         <link rel="stylesheet" href="<?= asset('css/coordination.css') ?>?v=7">
     <?php endif; ?>
@@ -31,7 +31,7 @@
         }
     </script>
 </head>
-<body>
+<body class="dashboard-body">
 
     <div class="dashboard-wrapper">
         <?php if (in_array(auth()['role'] ?? '', ['ketcab', 'sekcab', 'bencab', 'sekfung_medko'], true)): ?>
