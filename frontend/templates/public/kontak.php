@@ -268,7 +268,7 @@
     </div>
 
     <!-- Interactive Leaflet Map Card -->
-    <div class="card animate__animated animate__fadeInUp"
+    <div class="card animate-on-scroll" data-animate="fadeInUp"
         style="overflow: hidden; border: 1px solid var(--border-color); box-shadow: var(--shadow-md);">
         <div class="card-header flex justify-between items-center"
             style="background: var(--bg-subtle); padding: 1.25rem 1.5rem;">

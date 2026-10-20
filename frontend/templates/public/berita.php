@@ -35,9 +35,10 @@
 
     <!-- Articles Grid -->
     <?php if (!empty($news)): ?>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12 animate__animated animate__fadeInUp">
-            <?php foreach ($news as $item): ?>
-                <article class="card news-card rounded-2xl shadow-sm hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 flex flex-col h-full bg-white border border-slate-200/80">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+            <?php foreach ($news as $idx => $item): ?>
+                <article class="card news-card rounded-2xl shadow-sm hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 flex flex-col h-full bg-white border border-slate-200/80 animate-on-scroll"
+                    data-animate="fadeInUp" data-delay="<?= (80 + (($idx % 6) * 120)) ?>ms">
                     <div class="news-card-thumb relative overflow-hidden rounded-t-2xl">
                         <?php if (!empty($item['gambar_sampul'])): ?>
                             <img src="/uploads/berita/<?= e($item['gambar_sampul']) ?>" alt="<?= e($item['judul']) ?>" class="w-full h-48 object-cover">

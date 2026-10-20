@@ -11,15 +11,9 @@
             </div>
             <span class="block h-px w-12 bg-gradient-to-l from-transparent to-amber-400 rounded-full"></span>
         </div>
-        <h1
-            style="color: #1e293b; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 45px; font-weight: bold;">
-            Struktur BPC<br class="sm:hidden">
-            <span
-                style="color: #1e293b; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 45px; font-weight: bold;">GMKI
-                Cabang
-                Padang</span>
+        <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight mb-3">
+            Struktur BPC <span style="color: var(--primary);">GMKI Cabang Padang</span>
         </h1>
-        <br>
         <p class="text-slate-500 max-w-xl mx-auto text-sm sm:text-base font-medium leading-relaxed">
             Badan Pengurus Cabang (BPC) — mengabdi dengan integritas,
             kerendahan hati, dan keteladanan di setiap medan pelayanan.
@@ -71,7 +65,7 @@
     <section class="mt-20 sm:mt-28" id="detail-bpc">
 
         <!-- Section divider -->
-        <div class="flex items-center gap-4 mb-12">
+        <div class="flex items-center gap-4 mb-12 animate-on-scroll" data-animate="fadeIn">
             <span class="flex-1 h-px bg-gradient-to-r from-slate-200 to-transparent"></span>
             <div
                 class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-extrabold uppercase tracking-widest bg-slate-900 text-white shadow-md">
@@ -82,14 +76,14 @@
         </div>
 
         <!-- Section Header -->
-        <div class="text-center max-w-3xl mx-auto mb-8 sm:mb-10">
+        <div class="text-center max-w-3xl mx-auto mb-8 sm:mb-10 animate-on-scroll" data-animate="fadeInDown">
             <h2
                 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-900 mb-2.5 tracking-tight leading-snug">
                 Mengenal Tugas, Fungsi &amp; Peran<br>
                 <span class="bg-gradient-to-r from-primary to-blue-500 bg-clip-text text-transparent">Fungsionaris
                     BPC</span>
             </h2>
-            <p class="text-slate-500 text-sm sm:text-base leading-relaxed" style="margin-top: -35px;">
+            <p class="text-slate-500 text-sm sm:text-base leading-relaxed mt-2">
                 Badan Pengurus Cabang (BPC) GMKI Cabang Padang adalah lembaga kepemimpinan eksekutif
                 tertinggi di tingkat cabang yang mengemban mandat <em>Konperensi Cabang</em> (Konpercab)
                 dan Pengurus Pusat (PP) GMKI. BPC memimpin dinamika organisasi, membina kader mahasiswa Kristen,
@@ -99,7 +93,7 @@
 
         <!-- TIGA MEDAN PELAYANAN -->
         <div class="mb-16">
-            <div class="text-center mb-8">
+            <div class="text-center mb-8 animate-on-scroll" data-animate="fadeInDown">
                 <span
                     class="inline-block px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-bold uppercase tracking-wider border border-blue-100 mb-3">Tri
                     Medan Layan GMKI</span>
@@ -109,7 +103,8 @@
             </div>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
                 <div
-                    class="bpc-medan-card group relative rounded-2xl overflow-hidden border border-blue-100 bg-gradient-to-br from-blue-50 via-white to-slate-50 p-6 shadow-sm hover:shadow-lg transition-all duration-300">
+                    class="bpc-medan-card group relative rounded-2xl overflow-hidden border border-blue-100 bg-gradient-to-br from-blue-50 via-white to-slate-50 p-6 shadow-sm hover:shadow-lg transition-all duration-300 animate-on-scroll"
+                    data-animate="fadeInUp" data-delay="100ms">
                     <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-blue-300"></div>
                     <div
                         class="w-12 h-12 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center text-2xl mb-4 shadow-sm group-hover:scale-110 transition-transform duration-300">
@@ -120,7 +115,8 @@
                         memperkokoh amanat Kristus <em>Ut Omnes Unum Sint</em> (Supaya Mereka Semua Menjadi Satu).</p>
                 </div>
                 <div
-                    class="bpc-medan-card group relative rounded-2xl overflow-hidden border border-amber-100 bg-gradient-to-br from-amber-50 via-white to-slate-50 p-6 shadow-sm hover:shadow-lg transition-all duration-300">
+                    class="bpc-medan-card group relative rounded-2xl overflow-hidden border border-amber-100 bg-gradient-to-br from-amber-50 via-white to-slate-50 p-6 shadow-sm hover:shadow-lg transition-all duration-300 animate-on-scroll"
+                    data-animate="fadeInUp" data-delay="250ms">
                     <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-amber-500 to-amber-300"></div>
                     <div
                         class="w-12 h-12 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center text-2xl mb-4 shadow-sm group-hover:scale-110 transition-transform duration-300">
@@ -131,7 +127,8 @@
                         mencetak pemimpin mahasiswa yang beretika, kritis, dan berwawasan luas.</p>
                 </div>
                 <div
-                    class="bpc-medan-card group relative rounded-2xl overflow-hidden border border-emerald-100 bg-gradient-to-br from-emerald-50 via-white to-slate-50 p-6 shadow-sm hover:shadow-lg transition-all duration-300">
+                    class="bpc-medan-card group relative rounded-2xl overflow-hidden border border-emerald-100 bg-gradient-to-br from-emerald-50 via-white to-slate-50 p-6 shadow-sm hover:shadow-lg transition-all duration-300 animate-on-scroll"
+                    data-animate="fadeInUp" data-delay="400ms">
                     <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-500 to-emerald-300">
                     </div>
                     <div
@@ -147,7 +144,7 @@
 
         <!-- EXPLORER PERAN FUNGSIONARIS -->
         <div class="mb-14">
-            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 animate-on-scroll" data-animate="fadeInDown">
                 <div>
                     <span class="inline-block text-xs font-bold uppercase tracking-wider text-primary mb-1">Direktori
                         Jabatan</span>
@@ -168,7 +165,7 @@
             </div>
 
             <!-- Tab Buttons -->
-            <div class="flex items-center gap-2 overflow-x-auto pb-2 mb-7 scrollbar-thin" id="roleCategoryTabs">
+            <div class="flex items-center gap-2 overflow-x-auto pb-2 mb-7 scrollbar-thin animate-on-scroll" data-animate="fadeIn" id="roleCategoryTabs">
                 <button type="button" onclick="switchRoleTab('all')"
                     class="bpc-tab-btn active flex-shrink-0 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition-all"
                     data-tab="all">Semua (13)</button>

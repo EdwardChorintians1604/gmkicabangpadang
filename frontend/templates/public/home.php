@@ -66,7 +66,7 @@
 <!-- Section: Visi, Misi, & Tri Panji -->
 <section class="section py-16">
     <div class="container">
-        <div class="section-title-wrap text-center max-w-2xl mx-auto mb-12">
+        <div class="section-title-wrap text-center max-w-2xl mx-auto mb-12 animate-on-scroll" data-animate="fadeInDown">
             <div class="section-tag uppercase text-amber-600 font-bold tracking-wider text-xs mb-2">Landasan Perjuangan
             </div>
             <h2 class="section-title text-2xl md:text-4xl font-extrabold mb-3">Tri Panji & Panca Kegiatan</h2>
@@ -75,7 +75,8 @@
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-            <div class="card rounded-2xl shadow-sm hover:shadow-xl transform hover:-translate-y-2 transition-all duration-300"
+            <div class="card rounded-2xl shadow-sm hover:shadow-xl transform hover:-translate-y-2 transition-all duration-300 animate-on-scroll"
+                data-animate="fadeInUp" data-delay="100ms"
                 style="border-top: 5px solid #0f3d64;">
                 <div class="card-body p-6">
                     <div style="font-size: 2.25rem; margin-bottom: 0.75rem;">⛪</div>
@@ -86,7 +87,8 @@
                     </p>
                 </div>
             </div>
-            <div class="card rounded-2xl shadow-sm hover:shadow-xl transform hover:-translate-y-2 transition-all duration-300"
+            <div class="card rounded-2xl shadow-sm hover:shadow-xl transform hover:-translate-y-2 transition-all duration-300 animate-on-scroll"
+                data-animate="fadeInUp" data-delay="250ms"
                 style="border-top: 5px solid #d97706;">
                 <div class="card-body p-6">
                     <div style="font-size: 2.25rem; margin-bottom: 0.75rem;">🎓</div>
@@ -97,7 +99,8 @@
                     </p>
                 </div>
             </div>
-            <div class="card rounded-2xl shadow-sm hover:shadow-xl transform hover:-translate-y-2 transition-all duration-300"
+            <div class="card rounded-2xl shadow-sm hover:shadow-xl transform hover:-translate-y-2 transition-all duration-300 animate-on-scroll"
+                data-animate="fadeInUp" data-delay="400ms"
                 style="border-top: 5px solid #10b981;">
                 <div class="card-body p-6">
                     <div style="font-size: 2.25rem; margin-bottom: 0.75rem;">🤝</div>
@@ -111,7 +114,8 @@
         </div>
 
         <!-- Visi & Misi Card -->
-        <div class="card rounded-2xl shadow-md overflow-hidden"
+        <div class="card rounded-2xl shadow-md overflow-hidden animate-on-scroll"
+            data-animate="fadeInUp" data-delay="150ms"
             style="background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); border-left: 6px solid var(--secondary);">
             <div class="card-body p-6 sm:p-10">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -142,7 +146,7 @@
 <!-- Section: Warta Terbaru -->
 <section class="section py-16" style="background: #f1f5f9;">
     <div class="container">
-        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-10 gap-4">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-10 gap-4 animate-on-scroll" data-animate="fadeInDown">
             <div>
                 <div class="section-tag uppercase text-amber-600 font-bold tracking-wider text-xs mb-1">Kabar &
                     Informasi</div>
@@ -154,9 +158,10 @@
 
         <?php if (!empty($latestNews)): ?>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <?php foreach ($latestNews as $item): ?>
+                <?php foreach ($latestNews as $idx => $item): ?>
                     <article
-                        class="card news-card rounded-2xl shadow-sm hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 flex flex-col h-full bg-white">
+                        class="card news-card rounded-2xl shadow-sm hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 flex flex-col h-full bg-white animate-on-scroll"
+                        data-animate="fadeInUp" data-delay="<?= (100 + ($idx * 150)) ?>ms">
                         <div class="news-card-thumb relative overflow-hidden rounded-t-2xl">
                             <?php if (!empty($item['gambar_sampul'])): ?>
                                 <img src="/uploads/berita/<?= e($item['gambar_sampul']) ?>" alt="<?= e($item['judul']) ?>"
@@ -195,7 +200,7 @@
                 <?php endforeach; ?>
             </div>
         <?php else: ?>
-            <div class="card text-center p-12 rounded-2xl bg-white shadow-sm">
+            <div class="card text-center p-12 rounded-2xl bg-white shadow-sm animate-on-scroll" data-animate="fadeInUp">
                 <p class="text-slate-500">Belum ada warta berita yang diterbitkan saat ini.</p>
             </div>
         <?php endif; ?>
@@ -205,7 +210,8 @@
 <!-- Call to Action Banner -->
 <section class="section py-16">
     <div class="container">
-        <div class="card rounded-3xl shadow-2xl p-8 sm:p-12 text-center border-none animate__animated animate__fadeInUp"
+        <div class="card rounded-3xl shadow-2xl p-8 sm:p-12 text-center border-none animate-on-scroll"
+            data-animate="fadeInUp"
             style="background: linear-gradient(135deg, #071e33 0%, #0f3d64 60%, #1e5687 100%); color: #ffffff;">
             <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white mb-4">Bergabung Bersama GMKI Cabang
                 Padang</h2>
@@ -213,12 +219,12 @@
                 Apakah kamu mahasiswa Kristen di Kota Padang? Ayo bergabung dalam persekutuan, bertumbuh dalam iman dan
                 pengetahuan melalui Masa Perkenalan Calon Anggota (Maperca).
             </p>
-            <div class="flex flex-wrap justify-center gap-4">
-                <a href="/kontak" style="width:350px; height: 50px; text-align: center;"
-                    class="btn btn-secondary btn-lg transform hover:-translate-y-1 transition-all duration-300">Hubungi
+            <div class="flex flex-col sm:flex-row justify-center items-center gap-4 max-w-xl mx-auto w-full">
+                <a href="/kontak"
+                    class="btn btn-secondary btn-lg w-full sm:w-auto min-w-[200px] text-center transform hover:-translate-y-1 transition-all duration-300">Hubungi
                     Sekretariat</a>
                 <a href="/struktur-organisasi"
-                    class="btn btn-secondary btn-lg greetings transform hover:-translate-y-1 transition-all duration-300">Kenali
+                    class="btn btn-secondary btn-lg greetings w-full sm:w-auto min-w-[200px] text-center transform hover:-translate-y-1 transition-all duration-300">Kenali
                     Pengurus BPC</a>
             </div>
         </div>
@@ -227,12 +233,12 @@
 
 <style>
     .greetings {
-        width: 350px;
-        height: 50px;
-        text-align: center;
-        color: #ffffff;
+        color: #ffffff !important;
         border-color: rgba(255, 255, 255, 0.4);
-        background-color: #b9be19ff;
+        background-color: #d97706;
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+    .greetings:hover {
+        background-color: #b45309;
     }
 </style>

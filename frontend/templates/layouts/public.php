@@ -39,7 +39,7 @@
     <header class="site-header">
         <div class="container">
             <nav class="navbar">
-                <a href="/" class="brand-link">
+                <a href="/" class="brand-link animate__animated animate__fadeInLeft">
                     <img src="<?= asset('images/GMKI-Logos.png') ?>" alt="Logo GMKI Padang" class="brand-logo">
                     <div>
                         <div>GMKI Cabang Padang</div>
@@ -118,7 +118,7 @@
     <!-- Public Footer -->
     <footer class="site-footer">
         <div class="container">
-            <div class="footer-grid">
+            <div class="footer-grid animate-on-scroll" data-animate="fadeInUp">
                 <div>
                     <div class="flex items-center gap-2" style="margin-bottom: 1rem;">
                         <img src="<?= asset('images/GMKI-Logos.png') ?>" alt="Logo GMKI"

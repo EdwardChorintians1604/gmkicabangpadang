@@ -622,13 +622,105 @@ body {
     box-shadow: var(--shadow-sm);
 }
 
+/* Animate CSS Utilities, Aliases & Scroll Trigger Engine */
+.animate-on-scroll {
+    opacity: 0;
+    will-change: transform, opacity;
+}
+
+.animate-on-scroll.animate__animated {
+    opacity: 1;
+}
+
+/* Common aliases matching Animate.css keyframes */
+.fadeUp, .animate__fadeUp { animation-name: fadeInUp; }
+.fadeDown, .animate__fadeDown { animation-name: fadeInDown; }
+.fadeLeft, .animate__fadeLeft { animation-name: fadeInLeft; }
+.fadeRight, .animate__fadeRight { animation-name: fadeInRight; }
+.zoomIn, .animate__zoomInCustom { animation-name: zoomIn; }
+
+/* Stagger & Duration Utilities */
+.delay-100 { animation-delay: 100ms !important; -webkit-animation-delay: 100ms !important; }
+.delay-150 { animation-delay: 150ms !important; -webkit-animation-delay: 150ms !important; }
+.delay-200 { animation-delay: 200ms !important; -webkit-animation-delay: 200ms !important; }
+.delay-300 { animation-delay: 300ms !important; -webkit-animation-delay: 300ms !important; }
+.delay-400 { animation-delay: 400ms !important; -webkit-animation-delay: 400ms !important; }
+.delay-500 { animation-delay: 500ms !important; -webkit-animation-delay: 500ms !important; }
+.delay-700 { animation-delay: 700ms !important; -webkit-animation-delay: 700ms !important; }
+
+.duration-fast { animation-duration: 0.5s !important; }
+.duration-normal { animation-duration: 0.8s !important; }
+.duration-slow { animation-duration: 1.2s !important; }
+
+/* =====================================================================
+ * Responsive Optimization & Cross-Device Sharpening
+ * ===================================================================== */
+html, body {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+@media (max-width: 1024px) {
+    .container {
+        padding-left: 1.25rem;
+        padding-right: 1.25rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .card-body {
+        padding: 1.25rem;
+    }
+
+    .table-responsive {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        margin-bottom: 1rem;
+    }
+}
+
 @media (max-width: 640px) {
     html {
         scroll-padding-top: 4rem;
     }
 
+    .container, .container-fluid {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
     .btn:not(.btn-sm) {
         min-height: 44px;
+        padding-left: 1.25rem;
+        padding-right: 1.25rem;
+    }
+
+    /* Prevent iOS auto-zoom on inputs */
+    .form-control, input[type="text"], input[type="password"], input[type="email"], select, textarea {
+        font-size: 16px !important;
+    }
+
+    .metrics-grid {
+        grid-template-columns: 1fr !important;
+        gap: 0.75rem !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .container, .container-fluid {
+        padding-left: 0.875rem;
+        padding-right: 0.875rem;
+    }
+
+    .card-body {
+        padding: 1rem;
+    }
+
+    .badge, .section-tag {
+        white-space: normal;
+        text-align: center;
+        line-height: 1.35;
     }
 }
 
@@ -640,5 +732,11 @@ body {
         animation-duration: .01ms !important;
         animation-iteration-count: 1 !important;
         transition-duration: .01ms !important;
+    }
+
+    .animate-on-scroll {
+        opacity: 1 !important;
+        transform: none !important;
+        animation: none !important;
     }
 }

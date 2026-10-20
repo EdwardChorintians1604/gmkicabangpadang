@@ -35,7 +35,7 @@ $roleMottos = [
 ?>
 
 <!-- 1. Executive Hero Header -->
-<div class="workspace-hero <?= e($heroClass) ?>">
+<div class="workspace-hero <?= e($heroClass) ?> animate__animated animate__fadeInDown">
     <div class="workspace-hero-content">
         <div>
             <div class="workspace-hero-badge">
@@ -82,7 +82,7 @@ $roleMottos = [
 </div>
 
 <!-- 2. Balanced 4-Stat Metric Grid -->
-<div class="metrics-grid">
+<div class="metrics-grid animate__animated animate__fadeInUp">
     <?php if ($role === 'bencab'): ?>
         <!-- Bencab Metric Set (4 Cards) -->
         <div class="metric-card">
@@ -227,7 +227,7 @@ $roleMottos = [
         <span class="badge badge-primary" style="font-size:0.75rem;">Otoritas Terverifikasi</span>
     </div>
 
-    <div class="launchpad-grid">
+    <div class="launchpad-grid animate__animated animate__fadeIn">
         <?php if ($role === 'bencab'): ?>
             <a href="/bencab/laporan" class="launchpad-card">
                 <div class="launchpad-icon" style="background:#dcfce7;color:#15803d;">💰</div>

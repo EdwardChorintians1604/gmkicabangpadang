@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>500 - Kesalahan Server | GMKI Cabang Padang</title>
     <link rel="icon" type="image/png" href="/assets/images/favicon.png">
+    <link rel="stylesheet" href="/assets/vendor/animate.min.css">
     <link rel="stylesheet" href="/assets/css/app.css">
     <style>
         .error-page {
@@ -37,7 +38,7 @@
 </head>
 <body>
     <div class="error-page">
-        <div class="error-card">
+        <div class="error-card animate__animated animate__zoomIn">
             <div class="error-code">500</div>
             <h2 style="margin-bottom: 0.75rem; color:#ffffff;">Terjadi Kesalahan Server</h2>
             <p style="color: #cbd5e1; margin-bottom: 2rem; font-size: 0.95rem;">

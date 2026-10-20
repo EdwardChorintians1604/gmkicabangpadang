@@ -179,4 +179,60 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     });
+
+    // 6. Animate.css Scroll Reveal Observer
+    window.initScrollAnimations = function () {
+        const animElements = document.querySelectorAll('.animate-on-scroll, [data-animate]');
+        if (!animElements.length) return;
+
+        // Respect prefers-reduced-motion
+        const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (prefersReduced) {
+            animElements.forEach(el => el.classList.remove('animate-on-scroll'));
+            return;
+        }
+
+        if (!('IntersectionObserver' in window)) {
+            animElements.forEach(el => {
+                let anim = el.getAttribute('data-animate') || 'fadeInUp';
+                if (anim === 'fadeUp') anim = 'fadeInUp';
+                if (anim === 'fadeDown') anim = 'fadeInDown';
+                if (anim === 'fadeLeft') anim = 'fadeInLeft';
+                if (anim === 'fadeRight') anim = 'fadeInRight';
+                el.classList.add('animate__animated', 'animate__' + anim);
+            });
+            return;
+        }
+
+        const observer = new IntersectionObserver((entries, obs) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const el = entry.target;
+                    let anim = el.getAttribute('data-animate') || 'fadeInUp';
+                    if (anim === 'fadeUp') anim = 'fadeInUp';
+                    if (anim === 'fadeDown') anim = 'fadeInDown';
+                    if (anim === 'fadeLeft') anim = 'fadeInLeft';
+                    if (anim === 'fadeRight') anim = 'fadeInRight';
+
+                    const delay = el.getAttribute('data-delay');
+                    if (delay) el.style.animationDelay = delay;
+
+                    const duration = el.getAttribute('data-duration');
+                    if (duration) el.style.animationDuration = duration;
+
+                    el.classList.add('animate__animated', 'animate__' + anim);
+                    obs.unobserve(el);
+                }
+            });
+        }, {
+            root: null,
+            rootMargin: '0px 0px -40px 0px',
+            threshold: 0.12
+        });
+
+        animElements.forEach(el => observer.observe(el));
+    };
+
+    window.initScrollAnimations();
 });
+

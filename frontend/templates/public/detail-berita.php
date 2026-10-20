@@ -45,11 +45,12 @@
 
         <!-- Related News -->
         <?php if (!empty($related)): ?>
-            <div>
+            <div class="animate-on-scroll" data-animate="fadeInUp">
                 <h3 class="text-xl sm:text-2xl font-bold mb-6 text-slate-900">Berita Terkait Lainnya</h3>
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                    <?php foreach ($related as $rel): ?>
-                        <div class="card news-card rounded-2xl shadow-sm hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300 bg-white border border-slate-200/80 flex flex-col">
+                    <?php foreach ($related as $relIdx => $rel): ?>
+                        <div class="card news-card rounded-2xl shadow-sm hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300 bg-white border border-slate-200/80 flex flex-col animate-on-scroll"
+                            data-animate="fadeInUp" data-delay="<?= (100 + ($relIdx * 150)) ?>ms">
                             <div class="news-card-thumb relative overflow-hidden rounded-t-2xl">
                                 <?php if (!empty($rel['gambar_sampul'])): ?>
                                     <img src="/uploads/berita/<?= e($rel['gambar_sampul']) ?>" alt="<?= e($rel['judul']) ?>" class="w-full h-36 object-cover">
