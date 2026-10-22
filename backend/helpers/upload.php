@@ -24,11 +24,33 @@ if (!function_exists('upload_file')) {
             return ['success' => false, 'error' => "Ukuran berkas melebihi batas maksimum {$maxMb} MB."];
         }
 
-        // Validasi MIME type sebenarnya dengan finfo
+        // 1. Periksa nama asli berkas dari upaya manipulasi double extension (misal: shell.php.jpg)
+        $originalFilename = strtolower($file['name'] ?? '');
+        if (preg_match('/\.(php[0-9]?|phtml|phar|inc|cgi|pl|py|sh|bash|exe|bat|cmd|dll|bin|shtml|asp|aspx|jsp|jspx|html|htm)(\.|$)/i', $originalFilename) || str_contains($originalFilename, "\0") || str_contains($originalFilename, '%00')) {
+            @unlink($file['tmp_name']);
+            if (function_exists('record_threat')) {
+                record_threat('PHP2Shell / Malicious Filename Tampering', $originalFilename, 'critical');
+            }
+            return ['success' => false, 'error' => 'Nama berkas mengandung ekstensi script berbahaya dan telah diblokir demi keamanan server.'];
+        }
+
+        // 2. Pemindaian Fisik Isi Berkas Mentah (Deep Content Scan Anti-WebShell)
+        if (function_exists('scan_content_for_php_code')) {
+            $detectedShell = scan_content_for_php_code($file['tmp_name']);
+            if ($detectedShell !== null) {
+                @unlink($file['tmp_name']);
+                if (function_exists('record_threat')) {
+                    record_threat('PHP2Shell / Web Shell Signature in Upload', $detectedShell . ' in ' . $originalFilename, 'critical');
+                }
+                return ['success' => false, 'error' => "Berkas ditolak oleh Perisai Siber: {$detectedShell}."];
+            }
+        }
+
+        // 3. Validasi MIME type sebenarnya dengan finfo
         $finfo = new finfo(FILEINFO_MIME_TYPE);
         $mimeType = $finfo->file($file['tmp_name']);
 
-        // Normalisasi JPEG MIME types
+        // Normalisasi JPEG & PNG MIME types
         $normalizedMime = match ($mimeType) {
             'image/pjpeg', 'image/jpg' => 'image/jpeg',
             'image/x-png' => 'image/png',
@@ -45,11 +67,25 @@ if (!function_exists('upload_file')) {
             }, $allowedMimes);
 
             if (!in_array($normalizedMime, $normalizedAllowed, true) && !in_array($mimeType, $allowedMimes, true)) {
+                @unlink($file['tmp_name']);
                 return ['success' => false, 'error' => "Format berkas tidak diizinkan ({$mimeType}). Hanya menerima gambar JPG, PNG, atau WebP."];
             }
         }
 
-        // Tentukan ekstensi aman dari MIME type
+        // 4. Jika format adalah gambar, pastikan struktur biner gambar benar-benar valid (bukan file palsu ber-header MIME fiktif)
+        $isImageMime = str_starts_with($normalizedMime, 'image/');
+        if ($isImageMime) {
+            $imageInfo = @getimagesize($file['tmp_name']);
+            if ($imageInfo === false || empty($imageInfo[0]) || empty($imageInfo[1])) {
+                @unlink($file['tmp_name']);
+                if (function_exists('record_threat')) {
+                    record_threat('Corrupted / Faked Image Payload Upload', $originalFilename, 'high');
+                }
+                return ['success' => false, 'error' => 'Berkas gambar rusak atau tidak valid secara visual.'];
+            }
+        }
+
+        // 5. Tentukan ekstensi aman HANYA dari MIME type terverifikasi
         $mimeExtensions = [
             'image/jpeg' => 'jpg',
             'image/pjpeg' => 'jpg',
@@ -63,18 +99,24 @@ if (!function_exists('upload_file')) {
             'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' => 'xlsx',
         ];
 
-        $extension = $mimeExtensions[$normalizedMime] ?? $mimeExtensions[$mimeType] ?? pathinfo($file['name'], PATHINFO_EXTENSION);
-        $extension = strtolower(preg_replace('/[^a-zA-Z0-9]/', '', $extension));
+        $extension = $mimeExtensions[$normalizedMime] ?? $mimeExtensions[$mimeType] ?? null;
+        if ($extension === null) {
+            @unlink($file['tmp_name']);
+            return ['success' => false, 'error' => 'Tipe berkas tidak dikenali dalam daftar aman server.'];
+        }
 
-        // Hindari ekstensi berbahaya
-        if (in_array($extension, ['php', 'phtml', 'phar', 'exe', 'sh', 'bat', 'js', 'html', 'htm'], true)) {
-            return ['success' => false, 'error' => 'Format berkas tidak aman dan ditolak.'];
+        // Whitelist ketat ekstensi yang diizinkan sistem
+        $strictAllowedExtensions = ['jpg', 'jpeg', 'png', 'webp', 'pdf', 'csv', 'xlsx', 'txt'];
+        if (!in_array($extension, $strictAllowedExtensions, true)) {
+            @unlink($file['tmp_name']);
+            return ['success' => false, 'error' => 'Format ekstensi ditolak oleh kebijakan keamanan.'];
         }
 
         if (!is_dir($targetDirectory)) {
-            @mkdir($targetDirectory, 0777, true);
+            @mkdir($targetDirectory, 0755, true);
         }
 
+        // Acak nama berkas secara kriptografis (tidak menggunakan nama asli dari pengunjung)
         $safeBase = bin2hex(random_bytes(16));
         $newFilename = sprintf('%s_%s.%s', date('Ymd_His'), $safeBase, $extension);
         $targetPath = rtrim($targetDirectory, '/\\') . DIRECTORY_SEPARATOR . $newFilename;

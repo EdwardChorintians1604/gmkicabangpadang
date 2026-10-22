@@ -25,8 +25,12 @@ if (php_sapi_name() === 'cli-server') {
     }
 }
 
-// Tetapkan batas error reporting berdasarkan konfigurasi
+// Tetapkan batas error reporting dan pengerasan runtime PHP (Anti-PHP2Shell)
 error_reporting(E_ALL);
+@ini_set('allow_url_include', '0');
+@ini_set('expose_php', '0');
+@ini_set('session.cookie_httponly', '1');
+@ini_set('session.use_strict_mode', '1');
 
 $rootDir = dirname(__DIR__, 2);
 

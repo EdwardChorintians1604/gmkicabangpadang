@@ -1,8 +1,34 @@
+Options -Indexes -ExecCGI
+
+# Hanya index.php yang boleh dieksekusi sebagai skrip PHP di public web root
+<FilesMatch "(?i)\.(php[0-9]?|phtml|phar|inc|cgi|pl|py|sh|bash|bat|exe)$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order deny,allow
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+<Files "index.php">
+    <IfModule mod_authz_core.c>
+        Require all granted
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Allow from all
+    </IfModule>
+</Files>
+
 <IfModule mod_rewrite.c>
     RewriteEngine On
 
-    # Cegah akses ke file tersembunyi
+    # Cegah akses ke file tersembunyi (.env, .git, dll)
     RewriteRule ^\.(.*)$ - [F]
+
+    # Blokir akses langsung ke file script di dalam folder uploads & assets
+    RewriteRule ^(uploads|assets)/.*\.(php[0-9]?|phtml|phar|cgi|pl|py|sh|bash|exe|bat)$ - [F,L]
 
     # Lewatkan berkas & direktori yang benar-benar ada secara fisik
     RewriteCond %{REQUEST_FILENAME} !-f

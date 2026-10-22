@@ -1,8 +1,8 @@
-# 1. Matikan daftar direktori (Directory Indexing)
-Options -Indexes
+# 1. Matikan daftar direktori dan eksekusi CGI sembarangan
+Options -Indexes -ExecCGI
 
-# 2. Blokir akses ke file sensitif dan tersembunyi (.env, .git, .sql, .log, .bat, .exe, composer, dll)
-<FilesMatch "(^\..*|\.(env.*|sql|log|bat|exe|cmd|sh|json|lock|md|docx))$">
+# 2. Blokir akses ke file sensitif, skrip eksekusi berbahaya, dan file cadangan (.env, .git, .sql, .phtml, .phar, dll)
+<FilesMatch "(^\..*|\.(env.*|sql|log|bat|exe|cmd|sh|bash|json|lock|md|docx|phtml|phar|inc|cgi|pl|py|pyc|bak|old|tmp))$">
     <IfModule mod_authz_core.c>
         Require all denied
     </IfModule>
