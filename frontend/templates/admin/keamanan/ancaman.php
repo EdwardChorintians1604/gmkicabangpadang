@@ -7,6 +7,23 @@
     </div>
 </div>
 
+<!-- Tab Navigasi Mode Audit -->
+<div class="flex items-center gap-2 mb-6 border-b border-slate-200 overflow-x-auto pb-1 text-sm font-semibold">
+    <a href="/admin/keamanan/audit-log" class="px-4 py-2.5 text-slate-500 hover:text-primary transition-colors flex items-center gap-2 border-b-2 border-transparent whitespace-nowrap">
+        <?= svg_icon('shield', 16) ?>
+        <span>Jejak Audit Aktivitas Data</span>
+    </a>
+    <a href="/admin/keamanan/akses-log" class="px-4 py-2.5 text-slate-500 hover:text-primary transition-colors flex items-center gap-2 border-b-2 border-transparent whitespace-nowrap">
+        <?= svg_icon('dashboard', 16) ?>
+        <span>Audit Akses & Perangkat Pengunjung</span>
+    </a>
+    <a href="/admin/keamanan/ancaman" class="px-4 py-2.5 text-primary border-b-2 border-primary transition-colors flex items-center gap-2 whitespace-nowrap">
+        <?= svg_icon('alert', 16) ?>
+        <span>Deteksi Ancaman & Keamanan</span>
+        <span class="bg-blue-100 text-blue-700 text-xs px-2 py-0.5 rounded-full font-bold">Aktif</span>
+    </a>
+</div>
+
 <!-- Security Health Status -->
 <h3 style="font-size: 1.15rem; margin-bottom: 1rem; color: var(--primary);">Kondisi Kesehatan Keamanan Sistem</h3>
 <div class="grid grid-cols-1 md:grid-cols-3 gap-4" style="margin-bottom: 2.5rem;">

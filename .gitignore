@@ -29,6 +29,8 @@ composer.phar
 /storage/backup/uploads/*
 !/storage/backup/uploads/.gitkeep
 !/storage/backup/uploads/manifest.csv
+/storage/backup/total/*
+!/storage/backup/total/.gitkeep
 /storage/logs/*
 !/storage/logs/.gitkeep
 /storage/sessions/*
@@ -44,8 +46,10 @@ composer.phar
 /frontend/public/uploads/organisasi/*
 !/frontend/public/uploads/organisasi/.gitkeep
 
-# Binary lokal
+# Binary & Arsip Lokal
 ngrok.exe
+dist/
+*.zip
 
 # IDE & OS
 .vscode/
