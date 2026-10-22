@@ -9,8 +9,8 @@
     <link rel="shortcut icon" href="/favicon.ico">
     <link rel="stylesheet" href="<?= asset('vendor/animate.min.css') ?>">
     <link rel="stylesheet" href="<?= asset('vendor/leaflet/leaflet.css') ?>">
-    <link rel="stylesheet" href="<?= asset('css/app.css') ?>?v=3">
-    <link rel="stylesheet" href="<?= asset('css/pengawas.css') ?>?v=3">
+    <link rel="stylesheet" href="<?= asset('css/app.css') ?>?v=5">
+    <link rel="stylesheet" href="<?= asset('css/pengawas.css') ?>?v=6">
     <!-- Tailwind CSS with custom GMKI palette -->
     <script defer src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -221,34 +221,34 @@
         <div class="dashboard-main">
             <!-- Top Navbar -->
             <header class="dashboard-header flex items-center justify-between gap-2 px-3 sm:px-6">
-                <div class="flex items-center gap-2 sm:gap-3 min-w-0">
+                <div class="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
                     <button type="button" class="navbar-sidebar-toggle sidebar-toggle-btn" id="navbarSidebarToggle"
                         aria-label="Buka / Tutup Sidebar" title="Buka / Tutup Sidebar (Ctrl+B)">
                         <?= svg_icon('menu', 20) ?>
                     </button>
                     <div
-                        class="header-breadcrumb flex items-center gap-1.5 text-xs sm:text-sm text-slate-500 overflow-hidden text-ellipsis whitespace-nowrap">
-                        <span class="font-medium text-slate-400 hidden sm:inline">GMKI Padang</span>
-                        <span class="text-slate-300 hidden sm:inline">/</span>
+                        class="header-breadcrumb flex items-center gap-1.5 text-xs sm:text-sm text-slate-500 overflow-hidden text-ellipsis whitespace-nowrap min-w-0 flex-1">
+                        <span class="header-breadcrumb-root font-medium text-slate-400 hidden sm:inline">GMKI Padang</span>
+                        <span class="header-breadcrumb-sep text-slate-300 hidden sm:inline">/</span>
                         <span class="badge badge-warning text-[10px] sm:text-xs hidden md:inline">Pengawas BPC</span>
                         <span class="text-slate-300 hidden md:inline">/</span>
                         <strong
-                            class="text-slate-800 font-bold overflow-hidden text-ellipsis whitespace-nowrap"><?= e(explode(' - ', $pageTitle ?? 'Panel Pengawas')[0]) ?></strong>
+                            class="text-slate-800 font-bold overflow-hidden text-ellipsis whitespace-nowrap block min-w-0 flex-1 text-xs sm:text-sm"><?= e(explode(' - ', $pageTitle ?? 'Panel Pengawas')[0]) ?></strong>
                     </div>
                 </div>
 
-                <div class="header-actions flex items-center gap-1.5 sm:gap-3 flex-shrink-0">
+                <div class="header-actions flex items-center gap-1.5 sm:gap-2.5 flex-shrink-0">
                     <a href="/" target="_blank" class="btn btn-outline btn-sm flex items-center gap-1 px-2 sm:px-3"
                         title="Lihat Portal Pengunjung">
                         <?= svg_icon('external', 14) ?>
-                        <span class="hidden sm:inline">Portal Web</span>
+                        <span class="btn-label hidden sm:inline">Portal Web</span>
                     </a>
 
                     <?php if (is_admin()): ?>
                         <a href="/admin/dashboard" class="btn btn-primary btn-sm flex items-center gap-1 px-2 sm:px-3"
                             title="Kembali ke Panel Pengelolaan Penuh">
                             <?= svg_icon('settings', 14) ?>
-                            <span class="hidden md:inline">Panel Admin</span>
+                            <span class="btn-label hidden md:inline">Panel Admin</span>
                         </a>
                     <?php endif; ?>
 
@@ -261,9 +261,9 @@
                     <form action="/logout" method="POST" style="margin: 0;"
                         onsubmit="return confirm('Apakah Anda yakin ingin keluar dari sistem?');">
                         <?= csrf_field() ?>
-                        <button type="submit" class="btn btn-danger btn-sm flex items-center gap-1 px-2 sm:px-3">
+                        <button type="submit" class="btn btn-danger btn-sm flex items-center gap-1 px-2 sm:px-3" title="Keluar dari sistem">
                             <?= svg_icon('logout', 14) ?>
-                            <span class="hidden sm:inline">Keluar</span>
+                            <span class="btn-label hidden sm:inline">Keluar</span>
                         </button>
                     </form>
                 </div>

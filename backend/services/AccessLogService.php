@@ -81,6 +81,11 @@ class AccessLogService
         return $this->accessRepo->getSummaryStats();
     }
 
+    public function getForExport(array $filters = []): array
+    {
+        return $this->accessRepo->getForExport($filters);
+    }
+
     /**
      * Dapatkan IP asli pengunjung termasuk dibelakang reverse proxy / Ngrok / Cloudflare
      */

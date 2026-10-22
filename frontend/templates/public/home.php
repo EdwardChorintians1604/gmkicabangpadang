@@ -8,21 +8,21 @@
                 <span><?= e($profile['tema_periode'] ?? 'Ut Omnes Unum Sint') ?></span>
             </div>
             <h1
-                class="hero-title animate__animated animate__fadeInUp text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight">
+                class="hero-title animate__animated animate__fadeInUp font-extrabold tracking-tight">
                 Mempersiapkan Pemimpin Berintegritas & Berkarakter Kristus
             </h1>
-            <p class="hero-subtitle animate__animated animate__fadeInUp text-base sm:text-lg text-slate-200">
+            <p class="hero-subtitle animate__animated animate__fadeInUp text-slate-200">
                 Selamat datang di portal resmi <strong>GMKI Cabang Padang</strong>. Wadah persekutuan dan kaderisasi
                 mahasiswa Kristen di Kota Padang untuk melayani di tiga medan layan: Gereja, Perguruan Tinggi, dan
                 Masyarakat.
             </p>
-            <div class="hero-actions animate__animated animate__fadeInUp flex flex-wrap gap-4">
+            <div class="hero-actions animate__animated animate__fadeInUp flex flex-wrap gap-3 sm:gap-4">
                 <a href="/profil"
-                    class="btn btn-secondary btn-lg transform hover:-translate-y-1 transition-all duration-300">
+                    class="btn btn-secondary btn-lg w-full sm:w-auto text-center transform hover:-translate-y-1 transition-all duration-300">
                     Pelajari Profil Cabang
                 </a>
                 <a href="/berita"
-                    class="btn btn-lg hero-btn-glass transform hover:-translate-y-1 transition-all duration-300">
+                    class="btn btn-lg hero-btn-glass w-full sm:w-auto text-center transform hover:-translate-y-1 transition-all duration-300">
                     <span>Warta Kegiatan</span>
                     <?= svg_icon('arrow-right', 16) ?>
                 </a>
@@ -34,7 +34,7 @@
 <!-- Stats Strip -->
 <div class="container">
     <div class="stats-strip animate__animated animate__fadeInUp shadow-2xl rounded-2xl">
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6 text-center">
             <div class="stat-item p-2">
                 <div class="stat-num text-3xl md:text-4xl font-extrabold text-amber-300">
                     <?= (int) ($summary['total_civitas'] ?? 0) ?>+
@@ -219,12 +219,12 @@
                 Apakah kamu mahasiswa Kristen di Kota Padang? Ayo bergabung dalam persekutuan, bertumbuh dalam iman dan
                 pengetahuan melalui Masa Perkenalan Calon Anggota (Maperca).
             </p>
-            <div class="flex flex-col sm:flex-row justify-center items-center gap-4 max-w-xl mx-auto w-full">
+            <div class="flex flex-col sm:flex-row justify-center items-center gap-3 sm:gap-4 max-w-xl mx-auto w-full">
                 <a href="/kontak"
-                    class="btn btn-secondary btn-lg w-full sm:w-auto min-w-[200px] text-center transform hover:-translate-y-1 transition-all duration-300">Hubungi
+                    class="btn btn-secondary btn-lg w-full sm:w-auto min-w-0 sm:min-w-[180px] text-center transform hover:-translate-y-1 transition-all duration-300">Hubungi
                     Sekretariat</a>
                 <a href="/struktur-organisasi"
-                    class="btn btn-secondary btn-lg greetings w-full sm:w-auto min-w-[200px] text-center transform hover:-translate-y-1 transition-all duration-300">Kenali
+                    class="btn btn-secondary btn-lg greetings w-full sm:w-auto min-w-0 sm:min-w-[180px] text-center transform hover:-translate-y-1 transition-all duration-300">Kenali
                     Pengurus BPC</a>
             </div>
         </div>

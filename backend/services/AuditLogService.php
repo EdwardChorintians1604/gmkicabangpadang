@@ -61,4 +61,14 @@ class AuditLogService
     {
         return $this->auditRepo->getRecent($limit);
     }
+
+    public function getSummaryStats(): array
+    {
+        return $this->auditRepo->getSummaryStats();
+    }
+
+    public function getForExport(array $filters = []): array
+    {
+        return $this->auditRepo->getForExport($filters);
+    }
 }

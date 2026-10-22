@@ -103,7 +103,9 @@ $router->post('/admin/users/{id}', 'Admin\UserController@update', ['auth', 'role
 $router->post('/admin/users/{id}/delete', 'Admin\UserController@delete', ['auth', 'role:admin', 'csrf']);
 
 // 7. Modul Keamanan, Audit Log & Cadangan Data
+$router->get('/admin/keamanan/audit-log/export', 'Admin\SecurityController@exportAuditLog', ['auth', 'role:admin,ketcab']);
 $router->get('/admin/keamanan/audit-log', 'Admin\SecurityController@auditLog', ['auth', 'role:admin,ketcab']);
+$router->get('/admin/keamanan/akses-log/export', 'Admin\SecurityController@exportAccessLog', ['auth', 'role:admin']);
 $router->get('/admin/keamanan/akses-log', 'Admin\SecurityController@accessLog', ['auth', 'role:admin']);
 $router->get('/admin/keamanan/ancaman', 'Admin\SecurityController@threats', ['auth', 'role:admin']);
 $router->post('/admin/keamanan/ancaman/{id}/resolve', 'Admin\SecurityController@resolveAncaman', ['auth', 'role:admin']);

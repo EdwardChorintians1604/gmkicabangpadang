@@ -55,7 +55,7 @@ $pctAlumni = max(0, 100 - ($pctMaperca + $pctAnggota + $pctKK));
 </div>
 
 <!-- 2. Executive KPI Metrics Grid (5 Responsive Cards) -->
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-6 animate__animated animate__fadeInUp">
+<div class="executive-kpi-grid animate__animated animate__fadeInUp">
     <!-- Card 1: Total Civitas -->
     <div class="executive-metric-card metric-card-blue">
         <div class="metric-header">

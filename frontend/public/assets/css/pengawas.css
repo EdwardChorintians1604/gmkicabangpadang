@@ -502,10 +502,13 @@
         padding-bottom: env(safe-area-inset-bottom);
         transform: translateX(-100%);
         transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+        overscroll-behavior: contain;
+        -webkit-overflow-scrolling: touch;
+        z-index: 1050;
+        box-shadow: 14px 0 40px rgba(7, 29, 50, .24);
     }
 
     .pengawas-sidebar.show {
-        left: 0 !important;
         transform: translateX(0);
     }
 
@@ -521,24 +524,58 @@
 
 @media (max-width: 480px) {
     .pengawas-body .dashboard-header {
-        min-height: 60px;
-        height: auto;
-        gap: 0.5rem;
-        padding-top: max(0.5rem, env(safe-area-inset-top));
-        padding-right: 0.625rem;
-        padding-bottom: 0.5rem;
-        padding-left: 0.625rem;
+        height: 56px !important;
+        min-height: 56px !important;
+        max-height: 56px !important;
+        padding: 0 0.5rem !important;
+        gap: 0.35rem !important;
+        flex-wrap: nowrap !important;
     }
 
     .pengawas-body .header-breadcrumb {
-        max-width: clamp(76px, 27vw, 120px);
+        min-width: 0 !important;
+        flex: 1 1 auto !important;
+        overflow: hidden !important;
+        display: flex !important;
+        align-items: center !important;
+    }
+
+    .pengawas-body .header-breadcrumb-root,
+    .pengawas-body .header-breadcrumb-sep,
+    .pengawas-body .header-breadcrumb > span:not(.badge) {
+        display: none !important;
+    }
+
+    .pengawas-body .header-breadcrumb strong {
+        display: block !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        font-size: 0.82rem !important;
+        max-width: 100% !important;
     }
 
     .pengawas-body .header-actions {
-        gap: 0.25rem;
+        gap: 0.25rem !important;
+        flex-shrink: 0 !important;
+    }
+
+    .pengawas-body .header-actions .btn-label,
+    .pengawas-body .header-actions .btn span:not(.icon) {
+        display: none !important;
+    }
+
+    .pengawas-body .header-actions .btn {
+        min-width: 34px !important;
+        height: 34px !important;
+        padding: 0 0.4rem !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        border-radius: 8px !important;
     }
 
     .pengawas-body .dashboard-content {
-        padding: 1rem 0.75rem;
+        padding: 0.85rem 0.65rem 1.5rem 0.65rem !important;
     }
 }

@@ -6,8 +6,8 @@
     <title><?= isset($pageTitle) ? e($pageTitle) : 'Panel Sistem - GMKI Cabang Padang' ?></title>
     <link rel="icon" type="image/png" href="<?= asset('images/favicon.png') ?>">
     <link rel="stylesheet" href="<?= asset('vendor/animate.min.css') ?>">
-    <link rel="stylesheet" href="<?= asset('css/app.css') ?>?v=3">
-    <link rel="stylesheet" href="<?= asset('css/dashboard.css') ?>?v=3">
+    <link rel="stylesheet" href="<?= asset('css/app.css') ?>?v=5">
+    <link rel="stylesheet" href="<?= asset('css/dashboard.css') ?>?v=6">
     <?php if (($section ?? '') === 'coordination'): ?>
         <link rel="stylesheet" href="<?= asset('css/coordination.css') ?>?v=7">
     <?php endif; ?>
@@ -222,7 +222,7 @@
         <div class="dashboard-main">
             <!-- Topbar -->
             <header class="dashboard-topbar">
-                <div class="topbar-left flex items-center gap-2 sm:gap-3 min-w-0">
+                <div class="topbar-left flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
                     <button type="button" class="navbar-sidebar-toggle sidebar-toggle-btn" id="navbarSidebarToggle" aria-label="Buka / Tutup Sidebar" title="Buka / Tutup Sidebar (Ctrl+B)">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <line x1="4" x2="20" y1="12" y2="12"></line>
@@ -230,15 +230,15 @@
                             <line x1="4" x2="20" y1="18" y2="18"></line>
                         </svg>
                     </button>
-                    <div class="topbar-title font-bold text-slate-800 overflow-hidden text-ellipsis whitespace-nowrap text-xs sm:text-sm md:text-base" style="max-width: clamp(120px, 35vw, 240px);">
+                    <div class="topbar-title font-bold text-slate-800 overflow-hidden text-ellipsis whitespace-nowrap flex-1 min-w-0 text-xs sm:text-sm md:text-base">
                         <?= e(explode(' - ', $pageTitle ?? 'GMKI Padang')[0]) ?>
                     </div>
                 </div>
 
-                <div class="topbar-right flex items-center gap-1.5 sm:gap-3 flex-shrink-0">
+                <div class="topbar-right flex items-center gap-1.5 sm:gap-2.5 flex-shrink-0">
                     <div class="user-profile-badge">
                         <img src="<?= asset('images/default-profile.png') ?>" alt="Foto Pengguna" class="user-avatar-sm">
-                        <div class="hidden md:block">
+                        <div class="user-meta-details hidden md:block">
                             <div style="font-weight: 700; line-height: 1.2; max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
                                 <?= e(auth()['nama_lengkap'] ?? auth()['username']) ?>
                             </div>
@@ -249,13 +249,14 @@
                     </div>
 
                     <a href="/ubah-password" class="btn btn-outline btn-sm px-2 sm:px-2.5" title="Ubah Kata Sandi">
-                        🔑 <span class="hidden sm:inline">Sandi</span>
+                        🔑 <span class="btn-label hidden sm:inline">Sandi</span>
                     </a>
 
                     <form action="/logout" method="POST" style="display: inline; margin: 0;" onsubmit="sessionStorage.clear(); return confirm('Apakah Anda yakin ingin keluar dari sistem?');">
                         <?= csrf_field() ?>
-                        <button type="submit" class="btn btn-danger btn-sm px-2 sm:px-3">
-                            <span>Keluar</span>
+                        <button type="submit" class="btn btn-danger btn-sm flex items-center gap-1 px-2 sm:px-3" title="Keluar dari sistem">
+                            <?= svg_icon('logout', 14) ?>
+                            <span class="btn-label hidden sm:inline">Keluar</span>
                         </button>
                     </form>
                 </div>
@@ -265,13 +266,13 @@
             <main class="dashboard-content">
                 <?php require dirname(__DIR__) . '/layouts/flash-message.php'; ?>
                 <?= $content ?>
-            </main>
 
-            <!-- Dashboard Footer -->
-            <footer class="dashboard-footer">
-                <div>&copy; 2026 BPC GMKI Cabang Padang. Sistem Informasi & Manajemen Keanggotaan Terintegrasi.</div>
-                <div class="text-muted">Amanat Pelayanan: Tinggi Iman, Tinggi Ilmu, Tinggi Pengabdian</div>
-            </footer>
+                <!-- Dashboard Footer -->
+                <footer class="dashboard-footer">
+                    <div>&copy; 2026 BPC GMKI Cabang Padang. Sistem Informasi & Manajemen Keanggotaan Terintegrasi.</div>
+                    <div class="text-muted">Amanat Pelayanan: Tinggi Iman, Tinggi Ilmu, Tinggi Pengabdian</div>
+                </footer>
+            </main>
         </div>
     </div>
 

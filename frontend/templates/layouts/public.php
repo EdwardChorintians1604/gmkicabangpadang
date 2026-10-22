@@ -11,8 +11,8 @@
     <link rel="shortcut icon" href="/favicon.ico">
     <link rel="stylesheet" href="<?= asset('vendor/animate.min.css') ?>">
     <link rel="stylesheet" href="<?= asset('vendor/leaflet/leaflet.css') ?>">
-    <link rel="stylesheet" href="<?= asset('css/app.css') ?>?v=2">
-    <link rel="stylesheet" href="<?= asset('css/public.css') ?>?v=7">
+    <link rel="stylesheet" href="<?= asset('css/app.css') ?>?v=12">
+    <link rel="stylesheet" href="<?= asset('css/public.css') ?>?v=12">
     <!-- Tailwind CSS with custom GMKI palette -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -49,12 +49,12 @@
                     </div>
                 </a>
 
-                <button class="nav-toggle" aria-label="Buka Menu Navigasi" id="navToggleBtn">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <line x1="3" y1="12" x2="21" y2="12"></line>
-                        <line x1="3" y1="6" x2="21" y2="6"></line>
-                        <line x1="3" y1="18" x2="21" y2="18"></line>
-                    </svg>
+                <button class="nav-toggle" aria-label="Buka Menu Navigasi" id="navToggleBtn" aria-expanded="false" aria-controls="publicNavMenu">
+                    <span class="nav-toggle-icon">
+                        <span class="nav-toggle-line"></span>
+                        <span class="nav-toggle-line"></span>
+                        <span class="nav-toggle-line"></span>
+                    </span>
                 </button>
 
                 <?php
@@ -104,6 +104,9 @@
             </nav>
         </div>
     </header>
+
+    <!-- Mobile Nav Backdrop Overlay -->
+    <div class="nav-backdrop" id="publicNavBackdrop"></div>
 
     <!-- Global Flash Message Container -->
     <div class="container" style="margin-top: 1.5rem;">
@@ -180,7 +183,7 @@
     <!-- Scripts: Vendor & Core -->
     <script src="<?= asset('vendor/chart.umd.min.js') ?>"></script>
     <script src="<?= asset('vendor/leaflet/leaflet.js') ?>"></script>
-    <script src="<?= asset('js/app.js') ?>"></script>
+    <script src="<?= asset('js/app.js') ?>?v=10"></script>
     <script src="<?= asset('js/validation.js') ?>"></script>
     <script src="<?= asset('js/statistik.js') ?>"></script>
     <script>
