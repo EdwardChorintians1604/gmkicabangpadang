@@ -1,25 +1,40 @@
 @echo off
+setlocal
 title GMKI Cabang Padang - Ngrok Online Tunnel
 cls
 echo =======================================================================
 echo          TUNNEL ONLINE NGROK - GMKI CABANG PADANG
 echo =======================================================================
 echo.
-echo  [INFO] Meneruskan port lokal 8000 ke internet publik (HTTPS).
-echo  Pastikan MoWeS dan Apache lokal (jalankan.bat) SUDAH BERJALAN!
-echo.
+
+set "TARGET_PORT=8000"
+netstat -ano | findstr "LISTENING" | findstr ":80\>" >nul 2>&1
+if not errorlevel 1 set "TARGET_PORT=80"
+
+echo  [INFO] Meneruskan port lokal %TARGET_PORT% ke internet publik (HTTPS).
 echo  Panel Status Ngrok : http://127.0.0.1:4040
 echo.
 echo  (Tekan CTRL + C untuk menutup akses tunnel online)
 echo =======================================================================
 echo.
 
-if exist "%~dp0ngrok.exe" (
-    "%~dp0ngrok.exe" http http://127.0.0.1:8000
-) else if exist "%~dp0..\ngrok.exe" (
-    "%~dp0..\ngrok.exe" http http://127.0.0.1:8000
+set "NGROK_BIN="
+if exist "%~dp0ngrok.exe" set "NGROK_BIN=%~dp0ngrok.exe"
+if not defined NGROK_BIN if exist "D:\laragon\bin\ngrok\ngrok.exe" set "NGROK_BIN=D:\laragon\bin\ngrok\ngrok.exe"
+if not defined NGROK_BIN where ngrok >nul 2>&1 && set "NGROK_BIN=ngrok"
+
+if "%NGROK_BIN%"=="" (
+    echo [ERROR] ngrok.exe tidak ditemukan.
+    pause
+    exit /b 1
+)
+
+if "%TARGET_PORT%"=="80" (
+    echo Menghubungkan Ngrok ke Virtual Host Laragon: gmkicabangpadang.test ...
+    "%NGROK_BIN%" http --host-header=gmkicabangpadang.test 80
 ) else (
-    ngrok http http://127.0.0.1:8000
+    echo Menghubungkan Ngrok ke Port 8000 ...
+    "%NGROK_BIN%" http 8000
 )
 
 pause

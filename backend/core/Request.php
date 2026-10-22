@@ -31,7 +31,10 @@ class Request
         $scriptName = str_replace('\\', '/', $_SERVER['SCRIPT_NAME'] ?? '');
         if (php_sapi_name() !== 'cli-server' && basename($scriptName) === 'index.php') {
             $scriptDir = dirname($scriptName);
-            if ($scriptDir !== '/' && $scriptDir !== '.' && $scriptDir !== '\\' && strpos($pathOnly, $scriptDir) === 0) {
+            if (str_ends_with($scriptDir, '/frontend/public')) {
+                $scriptDir = substr($scriptDir, 0, -strlen('/frontend/public'));
+            }
+            if ($scriptDir !== '' && $scriptDir !== '/' && $scriptDir !== '.' && $scriptDir !== '\\' && strpos($pathOnly, $scriptDir) === 0) {
                 $pathOnly = substr($pathOnly, strlen($scriptDir));
             }
         }

@@ -13,7 +13,7 @@ Membuat kode hash acak Bcrypt 60 karakter yang valid untuk kata sandi apa pun.
 **Cara Penggunaan:**
 ```bash
 # Membuat hash untuk kata sandi khusus:
-E:\WebProgBPNama\php8\php.exe tools/generate_hash.php KataSandiRahasia123
+php tools/generate_hash.php KataSandiRahasia123
 ```
 Jangan gunakan kata sandi aktual pada argumen perintah di lingkungan bersama; argumen dapat tersimpan pada riwayat terminal atau terlihat di daftar proses.
 
@@ -24,7 +24,7 @@ Melihat daftar seluruh akun di tabel `users`, mengecek status aktif/nonaktif, ha
 
 **Cara Penggunaan:**
 ```bash
-E:\WebProgBPNama\php8\php.exe tools/check_users.php
+php tools/check_users.php
 ```
 
 ---
@@ -34,5 +34,5 @@ Utilitas CLI lama ini menerima kata sandi sebagai argumen, sehingga nilai terseb
 
 **Cara Penggunaan:**
 ```bash
-E:\WebProgBPNama\php8\php.exe tools/update_user_password.php <username> <password_baru>
+php tools/update_user_password.php <username> <password_baru>
 ```
