@@ -121,7 +121,15 @@ if (!function_exists('upload_file')) {
         $newFilename = sprintf('%s_%s.%s', date('Ymd_His'), $safeBase, $extension);
         $targetPath = rtrim($targetDirectory, '/\\') . DIRECTORY_SEPARATOR . $newFilename;
 
-        if (!move_uploaded_file($file['tmp_name'], $targetPath)) {
+        $moved = @move_uploaded_file($file['tmp_name'], $targetPath);
+        if (!$moved) {
+            $moved = @copy($file['tmp_name'], $targetPath);
+            if ($moved) {
+                @unlink($file['tmp_name']);
+            }
+        }
+
+        if (!$moved) {
             return ['success' => false, 'error' => 'Gagal memindahkan berkas ke folder tujuan.'];
         }
 

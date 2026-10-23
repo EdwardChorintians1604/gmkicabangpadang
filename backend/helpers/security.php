@@ -242,13 +242,20 @@ if (!function_exists('scan_content_for_php_code')) {
 
         $lowerBuffer = strtolower($buffer);
 
-        // 1. Tag PHP eksplisit (Binary safe)
-        if (str_contains($lowerBuffer, '<?php') || str_contains($lowerBuffer, '<?=')) {
-            return 'Terdeteksi tag pembuka PHP (<?php atau <?=)';
+        // 1. Tag PHP standar <?php (Binary-safe 5 bytes)
+        if (str_contains($lowerBuffer, '<?php')) {
+            return 'Terdeteksi tag pembuka PHP (<?php)';
         }
 
+        // 2. Tag script PHP kuno (<script language=php)
         if (str_contains($lowerBuffer, '<script language="php"') || str_contains($lowerBuffer, "<script language='php'")) {
             return 'Terdeteksi tag script PHP kuno (<script language=php)';
+        }
+
+        // 3. Tag PHP pendek (<?= atau <? ) yang diikuti kode PHP valid (variabel $, pemanggilan fungsi(...), atau backtick)
+        // Hindari false positive dari deretan 3-byte acak (0x3C 0x3F 0x3D) pada stream kompresi biner (PNG/JPEG/WebP)
+        if (preg_match('/<\?(?:php|\s*=\s*|\s+)(?:[\$a-z_][a-z0-9_]*\s*\(|\$|_get|_post|_request|`)/i', $buffer)) {
+            return 'Terdeteksi kode PHP pendek terselubung (<?= atau <? )';
         }
 
         // 2. Fungsi eksekusi remote shell dalam string

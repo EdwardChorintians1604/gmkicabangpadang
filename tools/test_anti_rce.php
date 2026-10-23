@@ -74,6 +74,20 @@ $resShell = upload_file($upShell, sys_get_temp_dir() . '/test_target', ['image/j
 echo "[SUKSES] Upload gambar berisi shell: " . (!$resShell['success'] ? "TERBLOKIR ({$resShell['error']})" : "LOLOS (BAHAYA)") . "\n";
 @unlink($shellTmp);
 
+// 6. Uji gambar biner bersih dengan deretan byte acak 0x3C 0x3F 0x3D (Anti-False-Positive)
+$cleanBinTmp = sys_get_temp_dir() . '/test_bin_' . bin2hex(random_bytes(4)) . '.png';
+file_put_contents($cleanBinTmp, "\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR" . "\x15\xcf\xcfg<?=\x89\xd8\x80\xca\xe8");
+$resCleanBin = scan_content_for_php_code($cleanBinTmp);
+echo "[SUKSES] Biner gambar dengan <?= acak: " . ($resCleanBin === null ? "LOLOS (Aman - Bebas False Positive)" : "SALAH DETEKSI ({$resCleanBin})") . "\n";
+@unlink($cleanBinTmp);
+
+// 7. Uji gambar disusupi short echo tag anti-webshell
+$shortEchoTmp = sys_get_temp_dir() . '/test_echo_' . bin2hex(random_bytes(4)) . '.jpg';
+file_put_contents($shortEchoTmp, "\xFF\xD8\xFF\xE0\x00\x10JFIF\x00" . '<' . '?=$_GET["cmd"]?' . '>');
+$resShortEcho = scan_content_for_php_code($shortEchoTmp);
+echo "[SUKSES] Gambar disusupi tag short echo : " . ($resShortEcho !== null ? "TERDETEKSI ({$resShortEcho})" : "GAGAL DITANGKAP") . "\n";
+@unlink($shortEchoTmp);
+
 echo "\n===============================================================\n";
 echo "SELURUH PENGUJIAN KEAMANAN ANTI-PHP2SHELL SELESAI & LULUS 100%\n";
 echo "===============================================================\n";
