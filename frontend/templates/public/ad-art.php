@@ -434,6 +434,18 @@ if (!defined('GMKI_SECURE_ACCESS')) {
                     <div
                         class="p-3.5 sm:p-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/15 hover:bg-white/15 hover:border-indigo-400/40 transition-all duration-300 shadow-lg group">
                         <div class="flex items-center gap-2.5 mb-1.5">
+                            <span class="text-xl sm:text-2xl group-hover:scale-110 transition-transform"></span>
+                            <span class="text-xs font-extrabold text-purple-200 uppercase tracking-wider">Penjelasan
+                                Teknis</span>
+                        </div>
+                        <div class="text-lg sm:text-xl font-black text-white">Pembahasan Detail Mengenai Organisasi
+                        </div>
+                        <div class="text-[11px] text-slate-300 font-medium"></div>
+                    </div>
+                    <!-- Stat 3 -->
+                    <div
+                        class="p-3.5 sm:p-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/15 hover:bg-white/15 hover:border-indigo-400/40 transition-all duration-300 shadow-lg group">
+                        <div class="flex items-center gap-2.5 mb-1.5">
                             <span class="text-xl sm:text-2xl group-hover:scale-110 transition-transform">📑</span>
                             <span class="text-xs font-extrabold text-purple-200 uppercase tracking-wider">Pedoman
                                 Teknis</span>
@@ -1284,21 +1296,87 @@ if (!defined('GMKI_SECURE_ACCESS')) {
                                 <span>🔗</span>
                             </button>
                         </div>
-                        <ol
-                            class="list-decimal list-inside space-y-2 text-slate-700 text-sm sm:text-base leading-relaxed">
-                            <li>Pengurus pusat sekurang-kurangnya terdiri dari 5 orang, yaitu Ketua Umum, Sekretaris
-                                Umum, Bendahara Umum, dan 2 orang anggota.</li>
-                            <li>Anggota Pengurus Pusat adalah warga negara Indonesia dan beragama Kristen.</li>
-                            <li>Dipilih oleh Kongres dengan sistem pemilihan langsung dan/atau pemilihan formatur.</li>
-                            <li>Bertanggungjawab kepada Kongres dan mempersiapkan Kongres berikutnya.</li>
-                            <li>Ketua Umum dan Sekretaris Umum Pengurus Pusat mewakili organisasi ke dalam dan ke luar.
-                            </li>
-                            <li>Dapat membentuk dan membubarkan badan pembantu (komisi, panitia khusus) dan mengangkat
-                                staf.</li>
-                            <li>Pengurus Pusat bersidang sekurang-kurangnya dua kali dalam satu tahun.</li>
-                            <li>Pergantian Pengurus Pusat harus disertai dengan serah-terima yang selengkap-lengkapnya.
-                            </li>
-                        </ol>
+                        <div class="space-y-4 text-slate-700 text-sm sm:text-base leading-relaxed">
+                            <p><strong class="text-slate-900 font-bold">1.</strong> Pengurus Pusat sekurang-kurangnya
+                                terdiri dari <strong>5 (lima) orang</strong>, yaitu <strong>Ketua Umum</strong>,
+                                <strong>Sekretaris Umum</strong>, <strong>Bendahara Umum</strong>, dan <strong>2 (dua)
+                                    orang anggota</strong>.
+                            </p>
+
+                            <p><strong class="text-slate-900 font-bold">2.</strong> Anggota Pengurus Pusat adalah
+                                <strong>warga negara Indonesia</strong> dan <strong>beragama Kristen</strong>.
+                            </p>
+
+                            <p><strong class="text-slate-900 font-bold">3.</strong>
+                            <div
+                                class="rounded-2xl border border-amber-200/80 bg-gradient-to-br from-amber-50/50 via-white to-amber-50/20 p-4 sm:p-5 shadow-sm">
+                                <ul class="space-y-2.5">
+                                    <li
+                                        class="flex items-start gap-3 bg-white/90 p-3 rounded-xl border border-amber-200/60 shadow-xs hover:border-amber-300 transition-colors">
+                                        <span
+                                            class="flex-shrink-0 w-6 h-6 rounded-md bg-amber-100 text-amber-900 font-bold text-xs inline-flex items-center justify-center mt-0.5 shadow-2xs">a</span>
+                                        <span class="text-slate-700 leading-relaxed">Pengurus Pusat dipilih oleh Kongres
+                                            dengan <strong>sistem pemilihan langsung</strong> dan/atau <strong>pemilihan
+                                                formatur</strong>.</span>
+                                    </li>
+                                    <li
+                                        class="flex items-start gap-3 bg-white/90 p-3 rounded-xl border border-amber-200/60 shadow-xs hover:border-amber-300 transition-colors">
+                                        <span
+                                            class="flex-shrink-0 w-6 h-6 rounded-md bg-amber-100 text-amber-900 font-bold text-xs inline-flex items-center justify-center mt-0.5 shadow-2xs">b</span>
+                                        <span class="text-slate-700 leading-relaxed">Susunan Pengurus Pusat yang
+                                            dibentuk oleh formatur harus sudah dikirimkan kepada Cabang-Cabang
+                                            selambat-lambatnya <strong>dua bulan sesudah Kongres</strong>.</span>
+                                    </li>
+                                    <li
+                                        class="flex items-start gap-3 bg-white/90 p-3 rounded-xl border border-amber-200/60 shadow-xs hover:border-amber-300 transition-colors">
+                                        <span
+                                            class="flex-shrink-0 w-6 h-6 rounded-md bg-amber-100 text-amber-900 font-bold text-xs inline-flex items-center justify-center mt-0.5 shadow-2xs">c</span>
+                                        <span class="text-slate-700 leading-relaxed">Selama Pengurus Pusat yang baru
+                                            belum terbentuk, maka Pengurus Pusat yang lama <strong>tetap bertanggung
+                                                jawab</strong>.</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            </p>
+
+                            <p><strong class="text-slate-900 font-bold">4.</strong> Bertanggungjawab kepada Kongres dan
+                                mempersiapkan Kongres berikutnya.</p>
+
+                            <p><strong class="text-slate-900 font-bold">5.</strong> <strong>Ketua Umum</strong> dan
+                                <strong>Sekretaris Umum</strong> Pengurus Pusat mewakili organisasi ke dalam dan ke
+                                luar.
+                            </p>
+
+                            <!-- Poin 6: Pembentukan Badan Pembantu -->
+                            <p><strong class="text-slate-900 font-bold">6.</strong>
+                            <div class="rounded-2xl border border-slate-200 bg-slate-50/70 p-4 sm:p-5 shadow-sm">
+                                <ul class="space-y-2.5">
+                                    <li
+                                        class="flex items-start gap-3 bg-white p-3 rounded-xl border border-slate-200/80 shadow-xs hover:border-slate-300 transition-colors">
+                                        <span
+                                            class="flex-shrink-0 w-6 h-6 rounded-md bg-slate-100 text-slate-800 font-bold text-xs inline-flex items-center justify-center mt-0.5 shadow-2xs">a</span>
+                                        <span class="text-slate-700 leading-relaxed">Pengurus Pusat dapat membentuk dan
+                                            membubarkan badan pembantu yang berupa <strong>komisi atau panitia
+                                                khusus</strong> bagi kelancaran pekerjaannya.</span>
+                                    </li>
+                                    <li
+                                        class="flex items-start gap-3 bg-white p-3 rounded-xl border border-slate-200/80 shadow-xs hover:border-slate-300 transition-colors">
+                                        <span
+                                            class="flex-shrink-0 w-6 h-6 rounded-md bg-slate-100 text-slate-800 font-bold text-xs inline-flex items-center justify-center mt-0.5 shadow-2xs">b</span>
+                                        <span class="text-slate-700 leading-relaxed">Pengurus Pusat dapat mengangkat dan
+                                            membebaskan <strong>anggota dan staf</strong> yang ditempatkan dalam badan
+                                            pembantu tersebut.</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            </p>
+
+                            <p><strong class="text-slate-900 font-bold">7.</strong> Pengurus Pusat bersidang
+                                sekurang-kurangnya <strong>dua kali dalam satu tahun</strong>.</p>
+
+                            <p><strong class="text-slate-900 font-bold">8.</strong> Pergantian Pengurus Pusat harus
+                                disertai dengan <strong>serah-terima yang selengkap-lengkapnya</strong>.</p>
+                        </div>
                     </div>
 
                     <!-- Pasal 5 ART -->
@@ -1325,7 +1403,7 @@ if (!defined('GMKI_SECURE_ACCESS')) {
                                     Keputusan Pengurus Pusat, dan Keputusan Konperensi Cabang.</li>
                                 <li>Menyusun program kerja, menetapkan struktur, kebijaksanaan dan Anggaran Pendapatan
                                     dan Belanja cabang.</li>
-                                <li>Memilih Badan Pengurus Cabang.</li>
+                                <li>Menetapkan masa kerja kepengurusan dan memilih Badan Pengurus Cabang. </li>
                             </ul>
                             <p><strong>3.</strong> Konperensi Cabang bertanggungjawab kepada Pengurus Pusat melalui
                                 Badan Pengurus Cabang.</p>
@@ -1346,18 +1424,49 @@ if (!defined('GMKI_SECURE_ACCESS')) {
                                 <span>🔗</span>
                             </button>
                         </div>
-                        <ol
-                            class="list-decimal list-inside space-y-2 text-slate-700 text-sm sm:text-base leading-relaxed">
-                            <li>Badan Pengurus Cabang sekurang-kurangnya terdiri dari 3 orang yaitu Ketua, Sekretaris,
-                                dan Bendahara.</li>
-                            <li>Anggota Badan Pengurus Cabang adalah warga negara Indonesia dan beragama Kristen.</li>
-                            <li>Dipilih oleh Konpercab secara langsung atau formatur, dilantik dan disahkan oleh
-                                Pengurus Pusat selambat-lambatnya 2 bulan setelah pemilihan.</li>
-                            <li>Bertanggungjawab kepada Konperensi Cabang dan Pengurus Pusat, serta mempersiapkan
-                                Konperensi Cabang.</li>
-                            <li>Badan Pengurus Cabang bersidang sekurang-kurangnya 1 kali dalam 2 bulan.</li>
-                            <li>Penggantian BPC harus disertai serah-terima selengkap-lengkapnya.</li>
-                        </ol>
+                        <div class="space-y-4 text-slate-700 text-sm sm:text-base leading-relaxed">
+                            <p><strong class="text-slate-900 font-bold">1.</strong> Badan Pengurus Cabang sekurang-kurangnya terdiri dari <strong>3 (tiga) orang</strong> yaitu <strong>Ketua</strong>, <strong>Sekretaris</strong>, dan <strong>Bendahara</strong>.</p>
+
+                            <p><strong class="text-slate-900 font-bold">2.</strong> Anggota Badan Pengurus Cabang adalah <strong>warga negara Indonesia</strong> dan <strong>beragama Kristen</strong>.</p>
+
+                            <!-- Poin 3: Mekanisme Pemilihan & Pengesahan BPC -->
+                            <div>
+                                <p><strong class="text-slate-900 font-bold">3.</strong></p>
+                                <div class="rounded-2xl border border-amber-200/80 bg-gradient-to-br from-amber-50/50 via-white to-amber-50/20 p-4 sm:p-5 shadow-sm mt-2">
+                                    <ul class="space-y-2.5">
+                                        <li class="flex items-start gap-3 bg-white/90 p-3 rounded-xl border border-amber-200/60 shadow-xs hover:border-amber-300 transition-colors">
+                                            <span class="flex-shrink-0 w-6 h-6 rounded-md bg-amber-100 text-amber-900 font-bold text-xs inline-flex items-center justify-center mt-0.5 shadow-2xs">a</span>
+                                            <span class="text-slate-700 leading-relaxed">Badan Pengurus Cabang dipilih oleh Konperensi Cabang dengan <strong>sistem pemilihan langsung</strong> dan/atau <strong>formatur</strong>.</span>
+                                        </li>
+                                        <li class="flex items-start gap-3 bg-white/90 p-3 rounded-xl border border-amber-200/60 shadow-xs hover:border-amber-300 transition-colors">
+                                            <span class="flex-shrink-0 w-6 h-6 rounded-md bg-amber-100 text-amber-900 font-bold text-xs inline-flex items-center justify-center mt-0.5 shadow-2xs">b</span>
+                                            <span class="text-slate-700 leading-relaxed">Susunan Badan Pengurus Cabang yang telah terbentuk dilantik dan disahkan oleh Pengurus Pusat dan harus dikirimkan kepada anggota-anggota selambat-lambatnya <strong>dua bulan setelah pemilihan berlangsung</strong>.</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <!-- Poin 4: Pertanggungjawaban & Persiapan Konpercab -->
+                            <div>
+                                <p><strong class="text-slate-900 font-bold">4.</strong></p>
+                                <div class="rounded-2xl border border-slate-200 bg-slate-50/70 p-4 sm:p-5 shadow-sm mt-2">
+                                    <ul class="space-y-2.5">
+                                        <li class="flex items-start gap-3 bg-white p-3 rounded-xl border border-slate-200/80 shadow-xs hover:border-slate-300 transition-colors">
+                                            <span class="flex-shrink-0 w-6 h-6 rounded-md bg-slate-100 text-slate-800 font-bold text-xs inline-flex items-center justify-center mt-0.5 shadow-2xs">a</span>
+                                            <span class="text-slate-700 leading-relaxed">Badan Pengurus Cabang <strong>bertanggung jawab</strong> kepada Konperensi Cabang dan Pengurus Pusat.</span>
+                                        </li>
+                                        <li class="flex items-start gap-3 bg-white p-3 rounded-xl border border-slate-200/80 shadow-xs hover:border-slate-300 transition-colors">
+                                            <span class="flex-shrink-0 w-6 h-6 rounded-md bg-slate-100 text-slate-800 font-bold text-xs inline-flex items-center justify-center mt-0.5 shadow-2xs">b</span>
+                                            <span class="text-slate-700 leading-relaxed">Badan Pengurus Cabang <strong>mempersiapkan Konperensi Cabang</strong>.</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <p><strong class="text-slate-900 font-bold">5.</strong> Badan Pengurus Cabang bersidang sekurang-kurangnya <strong>1 (satu) kali dalam 2 (dua) bulan</strong>.</p>
+
+                            <p><strong class="text-slate-900 font-bold">6.</strong> Penggantian BPC harus disertai dengan <strong>serah-terima yang selengkap-lengkapnya</strong>.</p>
+                        </div>
                     </div>
 
                     <!-- Pasal 7 ART -->
