@@ -7,8 +7,14 @@
         </p>
     </div>
     <div class="flex gap-2">
-        <a href="/admin/civitas/create" class="btn btn-primary btn-sm">➕ Tambah Anggota</a>
-        <a href="/admin/berita/create" class="btn btn-secondary btn-sm">✍️ Tulis Berita</a>
+        <a href="/admin/civitas/create" class="btn btn-primary btn-sm inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl font-bold shadow-sm">
+            <i class="bi bi-person-plus-fill"></i>
+            <span>Tambah Anggota</span>
+        </a>
+        <a href="/admin/berita/create" class="btn btn-secondary btn-sm inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl font-bold shadow-sm">
+            <i class="bi bi-pencil-square"></i>
+            <span>Tulis Berita</span>
+        </a>
     </div>
 </div>
 
@@ -19,37 +25,48 @@
             <span class="metric-label">Total Civitas</span>
             <span class="metric-value"><?= (int)($summary['total_civitas'] ?? 0) ?></span>
         </div>
-        <div class="metric-icon-wrap metric-icon-primary">👥</div>
+        <div class="metric-icon-wrap metric-icon-primary flex items-center justify-center">
+            <i class="bi bi-people-fill text-2xl"></i>
+        </div>
     </div>
     <div class="metric-card">
         <div class="metric-info">
             <span class="metric-label">Anggota Aktif</span>
             <span class="metric-value"><?= (int)($summary['active_civitas'] ?? 0) ?></span>
         </div>
-        <div class="metric-icon-wrap metric-icon-success">🟢</div>
+        <div class="metric-icon-wrap metric-icon-success flex items-center justify-center">
+            <i class="bi bi-person-check-fill text-2xl"></i>
+        </div>
     </div>
     <div class="metric-card">
         <div class="metric-info">
             <span class="metric-label">Komisariat Kampus</span>
             <span class="metric-value"><?= (int)($summary['total_komisariat'] ?? 0) ?></span>
         </div>
-        <div class="metric-icon-wrap metric-icon-secondary">🏛️</div>
+        <div class="metric-icon-wrap metric-icon-secondary flex items-center justify-center">
+            <i class="bi bi-buildings-fill text-2xl"></i>
+        </div>
     </div>
     <div class="metric-card">
         <div class="metric-info">
-            <span class="metric-label">Warta & Berita</span>
+            <span class="metric-label">Warta &amp; Berita</span>
             <span class="metric-value"><?= (int)($summary['total_berita'] ?? 0) ?></span>
         </div>
-        <div class="metric-icon-wrap metric-icon-info">📰</div>
+        <div class="metric-icon-wrap metric-icon-info flex items-center justify-center">
+            <i class="bi bi-newspaper text-2xl"></i>
+        </div>
     </div>
 </div>
 
 <!-- Charts Row -->
 <div class="grid grid-cols-3 gap-6" style="margin-bottom: 2rem;">
     <div class="card" style="grid-column: span 2;">
-        <div class="table-header">
+        <div class="table-header flex items-center justify-between">
             <div class="table-title">Persebaran Civitas per Komisariat</div>
-            <a href="/admin/statistik" class="text-muted" style="font-size: 0.8125rem;">Lihat Detail &rarr;</a>
+            <a href="/admin/statistik" class="text-muted inline-flex items-center gap-1" style="font-size: 0.8125rem;">
+                <span>Lihat Detail</span>
+                <i class="bi bi-arrow-right"></i>
+            </a>
         </div>
         <div class="card-body">
             <canvas id="chartKomisariat" height="120"></canvas>
@@ -70,9 +87,15 @@
 
 <!-- Recent Activity / Audit Log Table -->
 <div class="table-card">
-    <div class="table-header">
-        <div class="table-title">Aktivitas Terakhir Sistem (Jejak Audit)</div>
-        <a href="/admin/keamanan/audit-log" class="btn btn-outline btn-sm">Semua Jejak Audit &rarr;</a>
+    <div class="table-header flex items-center justify-between">
+        <div class="table-title flex items-center gap-2">
+            <i class="bi bi-shield-lock-fill text-sky-700"></i>
+            <span>Aktivitas Terakhir Sistem (Jejak Audit)</span>
+        </div>
+        <a href="/admin/keamanan/audit-log" class="btn btn-outline btn-sm inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl font-bold">
+            <span>Semua Jejak Audit</span>
+            <i class="bi bi-arrow-right"></i>
+        </a>
     </div>
     <div class="table-responsive">
         <table class="data-table">

@@ -7,13 +7,13 @@
             Akses pemantauan pimpinan BPC (KETCAB, SEKCAB, BENCAB) & Majelis Pertimbangan / Pengawas Cabang (MPPC).
         </p>
     </div>
-    <div class="executive-dashboard-actions">
-        <a href="/pengawas/civitas/export" class="btn btn-secondary btn-sm flex items-center justify-center gap-1 shadow-sm hover:shadow transition-all w-full sm:w-auto">
-            <?= svg_icon('download', 16) ?>
+    <div class="executive-dashboard-actions flex flex-wrap gap-2">
+        <a href="/pengawas/civitas/export" class="btn btn-secondary btn-sm inline-flex items-center justify-center gap-1.5 shadow-sm hover:shadow transition-all w-full sm:w-auto px-3.5 py-2 rounded-xl font-bold">
+            <i class="bi bi-download"></i>
             <span>Ekspor Laporan Civitas</span>
         </a>
-        <a href="/pengawas/statistik" class="btn btn-outline btn-sm flex items-center justify-center gap-1 shadow-sm hover:shadow transition-all w-full sm:w-auto">
-            <?= svg_icon('chart', 16) ?>
+        <a href="/pengawas/statistik" class="btn btn-outline btn-sm inline-flex items-center justify-center gap-1.5 shadow-sm hover:shadow transition-all w-full sm:w-auto px-3.5 py-2 rounded-xl font-bold">
+            <i class="bi bi-bar-chart-line-fill"></i>
             <span>Analisis Grafik</span>
         </a>
     </div>
@@ -58,24 +58,24 @@
 <div class="card rounded-2xl shadow-sm border border-slate-200/80 mb-8 overflow-hidden animate__animated animate__fadeIn">
     <nav class="executive-tabs" aria-label="Bagian pemantauan eksekutif">
         <a href="?tab=ketcab" class="executive-tab-btn <?= ($activeTab === 'ketcab') ? 'active' : '' ?>" <?= ($activeTab === 'ketcab') ? 'aria-current="page"' : '' ?>>
-            <span class="executive-tab-icon" aria-hidden="true">🏛️</span>
+            <span class="executive-tab-icon flex items-center justify-center" aria-hidden="true"><i class="bi bi-bank2 text-xl"></i></span>
             <span class="executive-tab-copy">
                 <strong>KETUA CABANG</strong>
-                <small>Arah strategis & BPC</small>
+                <small>Arah strategis &amp; BPC</small>
             </span>
         </a>
         <a href="?tab=sekcab" class="executive-tab-btn <?= ($activeTab === 'sekcab') ? 'active' : '' ?>" <?= ($activeTab === 'sekcab') ? 'aria-current="page"' : '' ?>>
-            <span class="executive-tab-icon" aria-hidden="true">📋</span>
+            <span class="executive-tab-icon flex items-center justify-center" aria-hidden="true"><i class="bi bi-card-checklist text-xl"></i></span>
             <span class="executive-tab-copy">
                 <strong>SEKRETARIS CABANG</strong>
-                <small>Kaderisasi & administrasi</small>
+                <small>Kaderisasi &amp; administrasi</small>
             </span>
         </a>
         <a href="?tab=bencab" class="executive-tab-btn <?= ($activeTab === 'bencab') ? 'active' : '' ?>" <?= ($activeTab === 'bencab') ? 'aria-current="page"' : '' ?>>
-            <span class="executive-tab-icon" aria-hidden="true">💼</span>
+            <span class="executive-tab-icon flex items-center justify-center" aria-hidden="true"><i class="bi bi-wallet2 text-xl"></i></span>
             <span class="executive-tab-copy">
                 <strong>BENDAHARA CABANG</strong>
-                <small>Logistik & aset digital</small>
+                <small>Logistik &amp; aset digital</small>
             </span>
         </a>
     </nav>
@@ -120,12 +120,15 @@
 <div class="card table-card rounded-2xl shadow-sm border border-slate-200/80 executive-dashboard-audit animate__animated animate__fadeIn">
     <div class="table-header executive-dashboard-audit-header">
         <div>
-            <h3 class="executive-dashboard-audit-title">Pengawasan Jejak Audit Terakhir</h3>
+            <h3 class="executive-dashboard-audit-title flex items-center gap-2">
+                <i class="bi bi-shield-lock-fill text-sky-700"></i>
+                <span>Pengawasan Jejak Audit Terakhir</span>
+            </h3>
             <p class="executive-dashboard-audit-description">Pantauan transparansi dan integritas aktivitas pengguna sistem</p>
         </div>
-        <a href="/pengawas/pemantauan/audit-log" class="btn btn-outline btn-sm flex items-center justify-center gap-1 rounded-xl w-full sm:w-auto">
+        <a href="/pengawas/pemantauan/audit-log" class="btn btn-outline btn-sm inline-flex items-center justify-center gap-1.5 rounded-xl w-full sm:w-auto px-3 py-1.5 font-bold">
             <span>Seluruh Catatan Audit</span>
-            <?= svg_icon('chevron-right', 14) ?>
+            <i class="bi bi-arrow-right"></i>
         </a>
     </div>
     <div class="table-responsive">

@@ -11,6 +11,8 @@
     <link rel="stylesheet" href="<?= asset('vendor/leaflet/leaflet.css') ?>">
     <link rel="stylesheet" href="<?= asset('css/app.css') ?>?v=5">
     <link rel="stylesheet" href="<?= asset('css/admin.css') ?>?v=13">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <?php if (($section ?? '') === 'coordination'): ?>
         <link rel="stylesheet" href="<?= asset('css/coordination.css') ?>?v=7">
     <?php endif; ?>
@@ -60,140 +62,140 @@
             <ul class="sidebar-nav">
                 <li class="nav-category">Navigasi Utama</li>
                 <li class="sidebar-nav-item">
-                    <a href="/admin/dashboard" class="sidebar-nav-link <?= active_nav('/admin/dashboard') ?>">
-                        <span class="sidebar-nav-icon"><?= svg_icon('dashboard', 18) ?></span>
+                    <a href="/admin/dashboard" class="sidebar-nav-link <?= active_nav('/admin/dashboard') ?> flex items-center gap-2">
+                        <span class="sidebar-nav-icon flex items-center justify-center text-base"><i class="bi bi-speedometer2"></i></span>
                         <span>Dashboard</span>
                     </a>
                 </li>
                 <li class="sidebar-nav-item">
-                    <a href="/admin/koordinasi" class="sidebar-nav-link <?= active_nav('/admin/koordinasi') ?>">
-                        <span class="sidebar-nav-icon"><?= svg_icon('users', 18) ?></span>
+                    <a href="/admin/koordinasi" class="sidebar-nav-link <?= active_nav('/admin/koordinasi') ?> flex items-center gap-2">
+                        <span class="sidebar-nav-icon flex items-center justify-center text-base"><i class="bi bi-chat-dots-fill"></i></span>
                         <span>Chat Koordinasi BPC</span>
                     </a>
                 </li>
 
-                <li class="nav-category">Civitas & Kaderisasi</li>
+                <li class="nav-category">Civitas &amp; Kaderisasi</li>
                 <li class="sidebar-nav-item">
                     <a href="/admin/civitas"
-                        class="sidebar-nav-link <?= (active_nav('/admin/civitas') && !str_contains($_SERVER['REQUEST_URI'], '/create') && !str_contains($_SERVER['REQUEST_URI'], '/impor')) ? 'active' : '' ?>">
-                        <span class="sidebar-nav-icon"><?= svg_icon('users', 18) ?></span>
+                        class="sidebar-nav-link <?= (active_nav('/admin/civitas') && !str_contains($_SERVER['REQUEST_URI'], '/create') && !str_contains($_SERVER['REQUEST_URI'], '/impor')) ? 'active' : '' ?> flex items-center gap-2">
+                        <span class="sidebar-nav-icon flex items-center justify-center text-base"><i class="bi bi-people-fill"></i></span>
                         <span>Kelola Civitas</span>
                     </a>
                 </li>
                 <?php if (can('civitas.create')): ?>
                 <li class="sidebar-nav-item">
-                    <a href="/admin/civitas/create" class="sidebar-nav-link <?= active_nav('/admin/civitas/create') ?>">
-                        <span class="sidebar-nav-icon"><?= svg_icon('plus', 18) ?></span>
+                    <a href="/admin/civitas/create" class="sidebar-nav-link <?= active_nav('/admin/civitas/create') ?> flex items-center gap-2">
+                        <span class="sidebar-nav-icon flex items-center justify-center text-base"><i class="bi bi-person-plus-fill"></i></span>
                         <span>Tambah Anggota</span>
                     </a>
                 </li>
                 <?php endif; ?>
                 <li class="sidebar-nav-item">
                     <a href="/admin/maperca"
-                        class="sidebar-nav-link <?= (active_nav('/admin/maperca') && !str_contains($_SERVER['REQUEST_URI'], '/create')) ? 'active' : '' ?>">
-                        <span class="sidebar-nav-icon"><?= svg_icon('users', 18) ?></span>
+                        class="sidebar-nav-link <?= (active_nav('/admin/maperca') && !str_contains($_SERVER['REQUEST_URI'], '/create')) ? 'active' : '' ?> flex items-center gap-2">
+                        <span class="sidebar-nav-icon flex items-center justify-center text-base"><i class="bi bi-mortarboard-fill"></i></span>
                         <span>Kader Baru (Maperca)</span>
                     </a>
                 </li>
                 <?php if (can('civitas.create')): ?>
                 <li class="sidebar-nav-item">
-                    <a href="/admin/maperca/create" class="sidebar-nav-link <?= active_nav('/admin/maperca/create') ?>">
-                        <span class="sidebar-nav-icon"><?= svg_icon('plus', 18) ?></span>
+                    <a href="/admin/maperca/create" class="sidebar-nav-link <?= active_nav('/admin/maperca/create') ?> flex items-center gap-2">
+                        <span class="sidebar-nav-icon flex items-center justify-center text-base"><i class="bi bi-plus-circle-fill"></i></span>
                         <span>Tambah Kader Baru</span>
                     </a>
                 </li>
                 <?php endif; ?>
                 <li class="sidebar-nav-item">
-                    <a href="/admin/komisariat" class="sidebar-nav-link <?= active_nav('/admin/komisariat') ?>">
-                        <span class="sidebar-nav-icon"><?= svg_icon('organization', 18) ?></span>
+                    <a href="/admin/komisariat" class="sidebar-nav-link <?= active_nav('/admin/komisariat') ?> flex items-center gap-2">
+                        <span class="sidebar-nav-icon flex items-center justify-center text-base"><i class="bi bi-buildings-fill"></i></span>
                         <span>Komisariat</span>
                     </a>
                 </li>
                 <?php if (can('civitas.import')): ?>
                 <li class="sidebar-nav-item">
-                    <a href="/admin/civitas/impor" class="sidebar-nav-link <?= active_nav('/admin/civitas/impor') ?>">
-                        <span class="sidebar-nav-icon"><?= svg_icon('upload', 18) ?></span>
+                    <a href="/admin/civitas/impor" class="sidebar-nav-link <?= active_nav('/admin/civitas/impor') ?> flex items-center gap-2">
+                        <span class="sidebar-nav-icon flex items-center justify-center text-base"><i class="bi bi-file-earmark-excel-fill"></i></span>
                         <span>Impor Civitas (CSV/Excel)</span>
                     </a>
                 </li>
                 <?php endif; ?>
 
-                <li class="nav-category">Publikasi & Cabang</li>
+                <li class="nav-category">Publikasi &amp; Cabang</li>
                 <li class="sidebar-nav-item">
-                    <a href="/admin/berita" class="sidebar-nav-link <?= active_nav('/admin/berita') ?>">
-                        <span class="sidebar-nav-icon"><?= svg_icon('news', 18) ?></span>
-                        <span>Warta & Berita</span>
+                    <a href="/admin/berita" class="sidebar-nav-link <?= active_nav('/admin/berita') ?> flex items-center gap-2">
+                        <span class="sidebar-nav-icon flex items-center justify-center text-base"><i class="bi bi-newspaper"></i></span>
+                        <span>Warta &amp; Berita</span>
                     </a>
                 </li>
                 <li class="sidebar-nav-item">
                     <a href="/admin/organisasi/profil"
-                        class="sidebar-nav-link <?= active_nav('/admin/organisasi/profil') ?>">
-                        <span class="sidebar-nav-icon"><?= svg_icon('organization', 18) ?></span>
+                        class="sidebar-nav-link <?= active_nav('/admin/organisasi/profil') ?> flex items-center gap-2">
+                        <span class="sidebar-nav-icon flex items-center justify-center text-base"><i class="bi bi-building"></i></span>
                         <span>Profil Cabang</span>
                     </a>
                 </li>
                 <li class="sidebar-nav-item">
                     <a href="/admin/organisasi/struktur"
-                        class="sidebar-nav-link <?= active_nav('/admin/organisasi/struktur') ?>">
-                        <span class="sidebar-nav-icon"><?= svg_icon('users', 18) ?></span>
+                        class="sidebar-nav-link <?= active_nav('/admin/organisasi/struktur') ?> flex items-center gap-2">
+                        <span class="sidebar-nav-icon flex items-center justify-center text-base"><i class="bi bi-diagram-3-fill"></i></span>
                         <span>Struktur BPC</span>
                     </a>
                 </li>
                 <li class="sidebar-nav-item">
-                    <a href="/admin/statistik" class="sidebar-nav-link <?= active_nav('/admin/statistik') ?>">
-                        <span class="sidebar-nav-icon"><?= svg_icon('chart', 18) ?></span>
-                        <span>Statistik & Grafik</span>
+                    <a href="/admin/statistik" class="sidebar-nav-link <?= active_nav('/admin/statistik') ?> flex items-center gap-2">
+                        <span class="sidebar-nav-icon flex items-center justify-center text-base"><i class="bi bi-bar-chart-line-fill"></i></span>
+                        <span>Statistik &amp; Grafik</span>
                     </a>
                 </li>
 
-                <li class="nav-category">Sistem & Keamanan</li>
+                <li class="nav-category">Sistem &amp; Keamanan</li>
                 <li class="sidebar-nav-item">
-                    <a href="/admin/akun" class="sidebar-nav-link <?= active_nav('/admin/akun') ?>">
-                        <span class="sidebar-nav-icon"><?= svg_icon('user', 18) ?></span>
+                    <a href="/admin/akun" class="sidebar-nav-link <?= active_nav('/admin/akun') ?> flex items-center gap-2">
+                        <span class="sidebar-nav-icon flex items-center justify-center text-base"><i class="bi bi-person-gear"></i></span>
                         <span>Akun Pengguna</span>
                     </a>
                 </li>
                 <li class="sidebar-nav-item">
                     <a href="/admin/keamanan/audit-log"
-                        class="sidebar-nav-link <?= active_nav('/admin/keamanan/audit-log') ?>">
-                        <span class="sidebar-nav-icon"><?= svg_icon('shield', 18) ?></span>
+                        class="sidebar-nav-link <?= active_nav('/admin/keamanan/audit-log') ?> flex items-center gap-2">
+                        <span class="sidebar-nav-icon flex items-center justify-center text-base"><i class="bi bi-shield-lock-fill"></i></span>
                         <span>Jejak Audit</span>
                     </a>
                 </li>
                 <li class="sidebar-nav-item">
                     <a href="/admin/keamanan/akses-log"
-                        class="sidebar-nav-link <?= active_nav('/admin/keamanan/akses-log') ?>">
-                        <span class="sidebar-nav-icon"><?= svg_icon('dashboard', 18) ?></span>
+                        class="sidebar-nav-link <?= active_nav('/admin/keamanan/akses-log') ?> flex items-center gap-2">
+                        <span class="sidebar-nav-icon flex items-center justify-center text-base"><i class="bi bi-activity"></i></span>
                         <span>Audit Akses Web</span>
                     </a>
                 </li>
                 <li class="sidebar-nav-item">
                     <a href="/admin/keamanan/ancaman"
-                        class="sidebar-nav-link <?= active_nav('/admin/keamanan/ancaman') ?>">
-                        <span class="sidebar-nav-icon"><?= svg_icon('alert', 18) ?></span>
+                        class="sidebar-nav-link <?= active_nav('/admin/keamanan/ancaman') ?> flex items-center gap-2">
+                        <span class="sidebar-nav-icon flex items-center justify-center text-base"><i class="bi bi-shield-exclamation"></i></span>
                         <span>Deteksi Ancaman</span>
                     </a>
                 </li>
                 <li class="sidebar-nav-item">
                     <a href="/admin/keamanan/backup"
-                        class="sidebar-nav-link <?= active_nav('/admin/keamanan/backup') ?>">
-                        <span class="sidebar-nav-icon"><?= svg_icon('backup', 18) ?></span>
+                        class="sidebar-nav-link <?= active_nav('/admin/keamanan/backup') ?> flex items-center gap-2">
+                        <span class="sidebar-nav-icon flex items-center justify-center text-base"><i class="bi bi-database-fill-gear"></i></span>
                         <span>Cadangan Data</span>
                     </a>
                 </li>
 
-                <li class="nav-category">Tools & Berkas</li>
+                <li class="nav-category">Tools &amp; Berkas</li>
                 <li class="sidebar-nav-item">
                     <a href="/sekcab/berkas"
-                        class="sidebar-nav-link <?= active_nav('/sekcab/berkas') ?>">
-                        <span class="sidebar-nav-icon">📁</span>
+                        class="sidebar-nav-link <?= active_nav('/sekcab/berkas') ?> flex items-center gap-2">
+                        <span class="sidebar-nav-icon flex items-center justify-center text-base"><i class="bi bi-folder2-open"></i></span>
                         <span>Direktori Berkas Persuratan</span>
                     </a>
                 </li>
                 <li class="sidebar-nav-item">
                     <a href="/bencab/berkas"
-                        class="sidebar-nav-link <?= active_nav('/bencab/berkas') ?>">
-                        <span class="sidebar-nav-icon">📊</span>
+                        class="sidebar-nav-link <?= active_nav('/bencab/berkas') ?> flex items-center gap-2">
+                        <span class="sidebar-nav-icon flex items-center justify-center text-base"><i class="bi bi-file-earmark-spreadsheet-fill"></i></span>
                         <span>Direktori Berkas Keuangan</span>
                     </a>
                 </li>

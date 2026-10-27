@@ -14,46 +14,46 @@ $coordinationPath = match ($role) {
 $navigation = [
     'ketcab' => [
         ['Pusat Pengawasan', [
-            ['/ketcab/dashboard', 'dashboard', 'Dashboard Ketcab'],
-            ['/ketcab/proker', 'chart', 'Program Kerja Sekfung'],
-            ['/bencab/laporan', 'download', 'Laporan Keuangan'],
-            ['/ruang-kerja/antrian', 'chart', 'Antrean Ekspor'],
-            ['/admin/civitas', 'users', 'Data Civitas (Lihat & Unduh)'],
-            ['/admin/maperca', 'users', 'Data Maperca (Lihat & Unduh)'],
-            ['/admin/komisariat', 'organization', 'Data Komisariat (Lihat & Unduh)'],
-            ['/admin/statistik', 'chart', 'Statistik Cabang'],
+            ['/ketcab/dashboard', 'bi-speedometer2', 'Dashboard Ketcab'],
+            ['/ketcab/proker', 'bi-kanban', 'Program Kerja Sekfung'],
+            ['/bencab/laporan', 'bi-cash-stack', 'Laporan Keuangan'],
+            ['/ruang-kerja/antrian', 'bi-hourglass-split', 'Antrean Ekspor'],
+            ['/admin/civitas', 'bi-people-fill', 'Data Civitas (Lihat & Unduh)'],
+            ['/admin/maperca', 'bi-person-badge-fill', 'Data Maperca (Lihat & Unduh)'],
+            ['/admin/komisariat', 'bi-buildings-fill', 'Data Komisariat (Lihat & Unduh)'],
+            ['/admin/statistik', 'bi-bar-chart-line-fill', 'Statistik Cabang'],
         ]],
     ],
     'sekcab' => [
         ['Administrasi Cabang', [
-            ['/ruang-kerja', 'dashboard', 'Dashboard Sekcab'],
-            ['/admin/civitas', 'users', 'Data Civitas (Lihat & Unduh)'],
-            ['/admin/maperca', 'users', 'Data Maperca (Lihat & Unduh)'],
-            ['/admin/komisariat', 'organization', 'Data Komisariat (Lihat & Unduh)'],
-            ['/sekcab/inventaris', 'organization', 'Inventaris'],
-            ['/sekcab/arsip', 'backup', 'Arsip Surat'],
-            ['/admin/statistik', 'chart', 'Statistik Anggota'],
+            ['/ruang-kerja', 'bi-speedometer2', 'Dashboard Sekcab'],
+            ['/admin/civitas', 'bi-people-fill', 'Data Civitas (Lihat & Unduh)'],
+            ['/admin/maperca', 'bi-person-badge-fill', 'Data Maperca (Lihat & Unduh)'],
+            ['/admin/komisariat', 'bi-buildings-fill', 'Data Komisariat (Lihat & Unduh)'],
+            ['/sekcab/inventaris', 'bi-boxes', 'Inventaris'],
+            ['/sekcab/arsip', 'bi-archive-fill', 'Arsip Surat'],
+            ['/admin/statistik', 'bi-bar-chart-line-fill', 'Statistik Anggota'],
         ]],
         ['Tools & Berkas', [
-            ['/sekcab/berkas', 'search', 'Direktori Berkas Persuratan'],
+            ['/sekcab/berkas', 'bi-folder2-open', 'Direktori Berkas Persuratan'],
         ]],
     ],
     'bencab' => [
         ['Keuangan Cabang', [
-            ['/ruang-kerja', 'dashboard', 'Dashboard Bencab'],
-            ['/bencab/laporan', 'download', 'Laporan Keuangan'],
-            ['/ruang-kerja/antrian', 'chart', 'Antrean Ekspor'],
+            ['/ruang-kerja', 'bi-speedometer2', 'Dashboard Bencab'],
+            ['/bencab/laporan', 'bi-cash-stack', 'Laporan Keuangan'],
+            ['/ruang-kerja/antrian', 'bi-hourglass-split', 'Antrean Ekspor'],
         ]],
         ['Tools & Berkas', [
-            ['/bencab/berkas', 'search', 'Direktori Berkas Keuangan'],
+            ['/bencab/berkas', 'bi-folder2-open', 'Direktori Berkas Keuangan'],
         ]],
     ],
     'sekfung_medko' => [
         ['Media & Komunikasi', [
-            ['/ruang-kerja', 'dashboard', 'Dashboard Medko'],
-            ['/admin/berita', 'news', 'Kelola Warta'],
-            ['/admin/berita/create', 'plus', 'Tulis Warta'],
-            ['/admin/statistik', 'chart', 'Statistik Konten'],
+            ['/ruang-kerja', 'bi-speedometer2', 'Dashboard Medko'],
+            ['/admin/berita', 'bi-newspaper', 'Kelola Warta'],
+            ['/admin/berita/create', 'bi-pencil-square', 'Tulis Warta'],
+            ['/admin/statistik', 'bi-bar-chart-line-fill', 'Statistik Konten'],
         ]],
     ],
 ];
@@ -80,8 +80,8 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
                     || ($path === '/ruang-kerja' && $currentPath === '/ruang-kerja');
                 ?>
                 <li class="sidebar-nav-item">
-                    <a href="<?= e($path) ?>" class="sidebar-nav-link <?= $isActive ? 'active' : '' ?>">
-                        <span class="sidebar-nav-icon"><?= svg_icon($icon, 18) ?></span>
+                    <a href="<?= e($path) ?>" class="sidebar-nav-link <?= $isActive ? 'active' : '' ?> flex items-center gap-2">
+                        <span class="sidebar-nav-icon flex items-center justify-center text-base"><i class="bi <?= e($icon) ?>"></i></span>
                         <span><?= e($label) ?></span>
                     </a>
                 </li>
@@ -89,14 +89,14 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
         <?php endforeach; ?>
         <li class="nav-category">Koordinasi BPC</li>
         <li class="sidebar-nav-item">
-            <a href="<?= e($coordinationPath) ?>" class="sidebar-nav-link <?= str_contains($currentPath, '/koordinasi') ? 'active' : '' ?>">
-                <span class="sidebar-nav-icon"><?= svg_icon('users', 18) ?></span>
+            <a href="<?= e($coordinationPath) ?>" class="sidebar-nav-link <?= str_contains($currentPath, '/koordinasi') ? 'active' : '' ?> flex items-center gap-2">
+                <span class="sidebar-nav-icon flex items-center justify-center text-base"><i class="bi bi-chat-dots-fill"></i></span>
                 <span>Chat Koordinasi</span>
             </a>
         </li>
         <li class="sidebar-nav-item" style="margin-top:1.5rem;border-top:1px solid rgba(255,255,255,.08);padding-top:1rem;">
-            <a href="/ubah-password" class="sidebar-nav-link">
-                <span class="sidebar-nav-icon"><?= svg_icon('lock', 18) ?></span>
+            <a href="/ubah-password" class="sidebar-nav-link flex items-center gap-2">
+                <span class="sidebar-nav-icon flex items-center justify-center text-base"><i class="bi bi-shield-lock-fill"></i></span>
                 <span>Ubah Kata Sandi</span>
             </a>
         </li>

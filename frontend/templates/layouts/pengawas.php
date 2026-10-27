@@ -11,6 +11,8 @@
     <link rel="stylesheet" href="<?= asset('vendor/leaflet/leaflet.css') ?>">
     <link rel="stylesheet" href="<?= asset('css/app.css') ?>?v=5">
     <link rel="stylesheet" href="<?= asset('css/pengawas.css') ?>?v=6">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <!-- Tailwind CSS with custom GMKI palette -->
     <script defer src="https://cdn.tailwindcss.com"></script>
     <script>

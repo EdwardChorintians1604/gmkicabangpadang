@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="<?= asset('vendor/animate.min.css') ?>">
     <link rel="stylesheet" href="<?= asset('css/app.css') ?>?v=5">
     <link rel="stylesheet" href="<?= asset('css/dashboard.css') ?>?v=6">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <?php if (($section ?? '') === 'coordination'): ?>
         <link rel="stylesheet" href="<?= asset('css/coordination.css') ?>?v=7">
     <?php endif; ?>
@@ -57,8 +59,8 @@
                 
                 <?php if (can('dashboard.view')): ?>
                     <li class="sidebar-nav-item">
-                        <a href="/dashboard" class="sidebar-nav-link <?= ($_SERVER['REQUEST_URI'] === '/dashboard') ? 'active' : '' ?>">
-                            <span class="sidebar-nav-icon">📊</span>
+                        <a href="/dashboard" class="sidebar-nav-link <?= ($_SERVER['REQUEST_URI'] === '/dashboard') ? 'active' : '' ?> flex items-center gap-2">
+                            <span class="sidebar-nav-icon flex items-center justify-center text-base"><i class="bi bi-speedometer2"></i></span>
                             <span>Dashboard</span>
                         </a>
                     </li>
@@ -66,8 +68,8 @@
 
                 <?php if (can('dashboard.pengawas') && !in_array(auth()['role'] ?? '', ['admin', 'sekfung_medko'], true)): ?>
                     <li class="sidebar-nav-item">
-                        <a href="/ketcab/dashboard" class="sidebar-nav-link <?= (str_starts_with($_SERVER['REQUEST_URI'], '/ketcab/dashboard')) ? 'active' : '' ?>">
-                            <span class="sidebar-nav-icon">👁️</span>
+                        <a href="/ketcab/dashboard" class="sidebar-nav-link <?= (str_starts_with($_SERVER['REQUEST_URI'], '/ketcab/dashboard')) ? 'active' : '' ?> flex items-center gap-2">
+                            <span class="sidebar-nav-icon flex items-center justify-center text-base"><i class="bi bi-eye-fill"></i></span>
                             <span>Panel Ketcab</span>
                         </a>
                     </li>
@@ -76,33 +78,33 @@
                 <?php if (can('inventory.view') || can('archive.view') || can('finance.view') || can('reports.view') || can('strategy.view') || can('coordination.view')): ?>
                     <li class="nav-category">Ruang Kerja BPC</li>
                     <?php if (can('inventory.view')): ?>
-                        <li class="sidebar-nav-item"><a href="/sekcab/inventaris" class="sidebar-nav-link"><span class="sidebar-nav-icon">📦</span><span>Inventaris</span></a></li>
+                        <li class="sidebar-nav-item"><a href="/sekcab/inventaris" class="sidebar-nav-link flex items-center gap-2"><span class="sidebar-nav-icon flex items-center justify-center text-base"><i class="bi bi-boxes"></i></span><span>Inventaris</span></a></li>
                     <?php endif; ?>
                     <?php if (can('archive.view')): ?>
-                        <li class="sidebar-nav-item"><a href="/sekcab/arsip" class="sidebar-nav-link <?= active_nav('/sekcab/arsip') ?>"><span class="sidebar-nav-icon">🗂️</span><span>Arsip Surat</span></a></li>
-                        <li class="sidebar-nav-item"><a href="/sekcab/berkas" class="sidebar-nav-link <?= active_nav('/sekcab/berkas') ?>"><span class="sidebar-nav-icon">📁</span><span>Direktori Berkas Persuratan</span></a></li>
+                        <li class="sidebar-nav-item"><a href="/sekcab/arsip" class="sidebar-nav-link <?= active_nav('/sekcab/arsip') ?> flex items-center gap-2"><span class="sidebar-nav-icon flex items-center justify-center text-base"><i class="bi bi-archive-fill"></i></span><span>Arsip Surat</span></a></li>
+                        <li class="sidebar-nav-item"><a href="/sekcab/berkas" class="sidebar-nav-link <?= active_nav('/sekcab/berkas') ?> flex items-center gap-2"><span class="sidebar-nav-icon flex items-center justify-center text-base"><i class="bi bi-folder2-open"></i></span><span>Direktori Berkas Persuratan</span></a></li>
                     <?php endif; ?>
                     <?php if (can('finance.view') || can('reports.view')): ?>
-                        <li class="sidebar-nav-item"><a href="/bencab/laporan" class="sidebar-nav-link <?= active_nav('/bencab/laporan') ?>"><span class="sidebar-nav-icon">💰</span><span>Laporan Keuangan</span></a></li>
+                        <li class="sidebar-nav-item"><a href="/bencab/laporan" class="sidebar-nav-link <?= active_nav('/bencab/laporan') ?> flex items-center gap-2"><span class="sidebar-nav-icon flex items-center justify-center text-base"><i class="bi bi-cash-stack"></i></span><span>Laporan Keuangan</span></a></li>
                         <?php if (can('finance.view')): ?>
-                            <li class="sidebar-nav-item"><a href="/bencab/berkas" class="sidebar-nav-link <?= active_nav('/bencab/berkas') ?>"><span class="sidebar-nav-icon">📊</span><span>Direktori Berkas Keuangan</span></a></li>
+                            <li class="sidebar-nav-item"><a href="/bencab/berkas" class="sidebar-nav-link <?= active_nav('/bencab/berkas') ?> flex items-center gap-2"><span class="sidebar-nav-icon flex items-center justify-center text-base"><i class="bi bi-file-earmark-spreadsheet-fill"></i></span><span>Direktori Berkas Keuangan</span></a></li>
                         <?php endif; ?>
                     <?php endif; ?>
                     <?php if (can('strategy.view')): ?>
-                        <li class="sidebar-nav-item"><a href="/ketcab/proker" class="sidebar-nav-link <?= (active_nav('/ketcab/proker') || active_nav('/ketcab/strategi')) ?>"><span class="sidebar-nav-icon">📋</span><span>Program Kerja Sekfung</span></a></li>
+                        <li class="sidebar-nav-item"><a href="/ketcab/proker" class="sidebar-nav-link <?= (active_nav('/ketcab/proker') || active_nav('/ketcab/strategi')) ?> flex items-center gap-2"><span class="sidebar-nav-icon flex items-center justify-center text-base"><i class="bi bi-kanban"></i></span><span>Program Kerja Sekfung</span></a></li>
                     <?php endif; ?>
                     <?php if (can('coordination.view')): ?>
                         <?php $coordinationPath = (auth()['role'] ?? '') === 'admin' ? '/admin/koordinasi' : ((auth()['role'] ?? '') === 'ketcab' ? '/ketcab/koordinasi' : '/ruang-kerja/koordinasi'); ?>
-                        <li class="sidebar-nav-item"><a href="<?= e($coordinationPath) ?>" class="sidebar-nav-link"><span class="sidebar-nav-icon">💬</span><span>Koordinasi & Request</span></a></li>
+                        <li class="sidebar-nav-item"><a href="<?= e($coordinationPath) ?>" class="sidebar-nav-link flex items-center gap-2"><span class="sidebar-nav-icon flex items-center justify-center text-base"><i class="bi bi-chat-dots-fill"></i></span><span>Koordinasi &amp; Request</span></a></li>
                     <?php endif; ?>
                 <?php endif; ?>
 
-                <li class="nav-category">Database & Kaderisasi</li>
+                <li class="nav-category">Database &amp; Kaderisasi</li>
 
                 <?php if (can('civitas.view')): ?>
                     <li class="sidebar-nav-item">
-                        <a href="/admin/civitas" class="sidebar-nav-link <?= (str_starts_with($_SERVER['REQUEST_URI'], '/admin/civitas') && !str_contains($_SERVER['REQUEST_URI'], '/create') && !str_contains($_SERVER['REQUEST_URI'], '/impor')) ? 'active' : '' ?>">
-                            <span class="sidebar-nav-icon">👥</span>
+                        <a href="/admin/civitas" class="sidebar-nav-link <?= (str_starts_with($_SERVER['REQUEST_URI'], '/admin/civitas') && !str_contains($_SERVER['REQUEST_URI'], '/create') && !str_contains($_SERVER['REQUEST_URI'], '/impor')) ? 'active' : '' ?> flex items-center gap-2">
+                            <span class="sidebar-nav-icon flex items-center justify-center text-base"><i class="bi bi-people-fill"></i></span>
                             <span>Data Civitas</span>
                         </a>
                     </li>
@@ -110,8 +112,8 @@
 
                 <?php if (can('civitas.create')): ?>
                     <li class="sidebar-nav-item">
-                        <a href="/admin/civitas/create" class="sidebar-nav-link <?= (str_starts_with($_SERVER['REQUEST_URI'], '/admin/civitas/create')) ? 'active' : '' ?>">
-                            <span class="sidebar-nav-icon">➕</span>
+                        <a href="/admin/civitas/create" class="sidebar-nav-link <?= (str_starts_with($_SERVER['REQUEST_URI'], '/admin/civitas/create')) ? 'active' : '' ?> flex items-center gap-2">
+                            <span class="sidebar-nav-icon flex items-center justify-center text-base"><i class="bi bi-person-plus-fill"></i></span>
                             <span>Tambah Anggota</span>
                         </a>
                     </li>
@@ -119,8 +121,8 @@
 
                 <?php if (can('civitas.import')): ?>
                     <li class="sidebar-nav-item">
-                        <a href="/admin/civitas/impor" class="sidebar-nav-link <?= (str_starts_with($_SERVER['REQUEST_URI'], '/admin/civitas/impor')) ? 'active' : '' ?>">
-                            <span class="sidebar-nav-icon">📥</span>
+                        <a href="/admin/civitas/impor" class="sidebar-nav-link <?= (str_starts_with($_SERVER['REQUEST_URI'], '/admin/civitas/impor')) ? 'active' : '' ?> flex items-center gap-2">
+                            <span class="sidebar-nav-icon flex items-center justify-center text-base"><i class="bi bi-file-earmark-excel-fill"></i></span>
                             <span>Impor Data (CSV/Excel)</span>
                         </a>
                     </li>
@@ -128,21 +130,21 @@
 
                 <?php if (can('statistics.view')): ?>
                     <li class="sidebar-nav-item">
-                        <a href="/admin/statistik" class="sidebar-nav-link <?= (str_starts_with($_SERVER['REQUEST_URI'], '/admin/statistik')) ? 'active' : '' ?>">
-                            <span class="sidebar-nav-icon">📈</span>
-                            <span>Statistik & Grafik</span>
+                        <a href="/admin/statistik" class="sidebar-nav-link <?= (str_starts_with($_SERVER['REQUEST_URI'], '/admin/statistik')) ? 'active' : '' ?> flex items-center gap-2">
+                            <span class="sidebar-nav-icon flex items-center justify-center text-base"><i class="bi bi-bar-chart-line-fill"></i></span>
+                            <span>Statistik &amp; Grafik</span>
                         </a>
                     </li>
                 <?php endif; ?>
 
-                <li class="nav-category">Publikasi & Cabang</li>
+                <li class="nav-category">Publikasi &amp; Cabang</li>
 
                 <?php if (can('news.view')): ?>
                     <li class="sidebar-nav-item">
                         <?php $newsPath = (auth()['role'] ?? '') === 'ketcab' ? '/pengawas/berita' : '/admin/berita'; ?>
-                        <a href="<?= e($newsPath) ?>" class="sidebar-nav-link <?= (str_starts_with($_SERVER['REQUEST_URI'], '/admin/berita') || str_starts_with($_SERVER['REQUEST_URI'], '/pengawas/berita')) ? 'active' : '' ?>">
-                            <span class="sidebar-nav-icon">📰</span>
-                            <span>Warta & Berita</span>
+                        <a href="<?= e($newsPath) ?>" class="sidebar-nav-link <?= (str_starts_with($_SERVER['REQUEST_URI'], '/admin/berita') || str_starts_with($_SERVER['REQUEST_URI'], '/pengawas/berita')) ? 'active' : '' ?> flex items-center gap-2">
+                            <span class="sidebar-nav-icon flex items-center justify-center text-base"><i class="bi bi-newspaper"></i></span>
+                            <span>Warta &amp; Berita</span>
                         </a>
                     </li>
                 <?php endif; ?>
@@ -150,26 +152,26 @@
                 <?php if (can('organization.view')): ?>
                     <li class="sidebar-nav-item">
                         <?php $organizationPath = (auth()['role'] ?? '') === 'ketcab' ? '/pengawas/organisasi/profil' : '/admin/organisasi/profil'; ?>
-                        <a href="<?= e($organizationPath) ?>" class="sidebar-nav-link <?= (str_starts_with($_SERVER['REQUEST_URI'], '/admin/organisasi/profil') || str_starts_with($_SERVER['REQUEST_URI'], '/pengawas/organisasi/profil')) ? 'active' : '' ?>">
-                            <span class="sidebar-nav-icon">🏛️</span>
+                        <a href="<?= e($organizationPath) ?>" class="sidebar-nav-link <?= (str_starts_with($_SERVER['REQUEST_URI'], '/admin/organisasi/profil') || str_starts_with($_SERVER['REQUEST_URI'], '/pengawas/organisasi/profil')) ? 'active' : '' ?> flex items-center gap-2">
+                            <span class="sidebar-nav-icon flex items-center justify-center text-base"><i class="bi bi-building"></i></span>
                             <span>Profil Cabang</span>
                         </a>
                     </li>
                     <li class="sidebar-nav-item">
                         <?php $structurePath = (auth()['role'] ?? '') === 'ketcab' ? '/pengawas/organisasi/struktur' : '/admin/organisasi/struktur'; ?>
-                        <a href="<?= e($structurePath) ?>" class="sidebar-nav-link <?= (str_starts_with($_SERVER['REQUEST_URI'], '/admin/organisasi/struktur') || str_starts_with($_SERVER['REQUEST_URI'], '/pengawas/organisasi/struktur')) ? 'active' : '' ?>">
-                            <span class="sidebar-nav-icon">🪪</span>
+                        <a href="<?= e($structurePath) ?>" class="sidebar-nav-link <?= (str_starts_with($_SERVER['REQUEST_URI'], '/admin/organisasi/struktur') || str_starts_with($_SERVER['REQUEST_URI'], '/pengawas/organisasi/struktur')) ? 'active' : '' ?> flex items-center gap-2">
+                            <span class="sidebar-nav-icon flex items-center justify-center text-base"><i class="bi bi-diagram-3-fill"></i></span>
                             <span>Struktur BPC</span>
                         </a>
                     </li>
                 <?php endif; ?>
 
-                <li class="nav-category">Sistem & Keamanan</li>
+                <li class="nav-category">Sistem &amp; Keamanan</li>
 
                 <?php if (can('users.view')): ?>
                     <li class="sidebar-nav-item">
-                        <a href="/admin/users" class="sidebar-nav-link <?= (str_starts_with($_SERVER['REQUEST_URI'], '/admin/users')) ? 'active' : '' ?>">
-                            <span class="sidebar-nav-icon">👤</span>
+                        <a href="/admin/users" class="sidebar-nav-link <?= (str_starts_with($_SERVER['REQUEST_URI'], '/admin/users')) ? 'active' : '' ?> flex items-center gap-2">
+                            <span class="sidebar-nav-icon flex items-center justify-center text-base"><i class="bi bi-person-gear"></i></span>
                             <span>Kelola Pengguna</span>
                         </a>
                     </li>
@@ -177,14 +179,14 @@
 
                 <?php if (can('security.audit_log')): ?>
                     <li class="sidebar-nav-item">
-                        <a href="/admin/keamanan/audit-log" class="sidebar-nav-link <?= (str_starts_with($_SERVER['REQUEST_URI'], '/admin/keamanan/audit-log')) ? 'active' : '' ?>">
-                            <span class="sidebar-nav-icon">📋</span>
+                        <a href="/admin/keamanan/audit-log" class="sidebar-nav-link <?= (str_starts_with($_SERVER['REQUEST_URI'], '/admin/keamanan/audit-log')) ? 'active' : '' ?> flex items-center gap-2">
+                            <span class="sidebar-nav-icon flex items-center justify-center text-base"><i class="bi bi-shield-lock-fill"></i></span>
                             <span>Jejak Audit</span>
                         </a>
                     </li>
                     <li class="sidebar-nav-item">
-                        <a href="/admin/keamanan/akses-log" class="sidebar-nav-link <?= (str_starts_with($_SERVER['REQUEST_URI'], '/admin/keamanan/akses-log')) ? 'active' : '' ?>">
-                            <span class="sidebar-nav-icon">🌐</span>
+                        <a href="/admin/keamanan/akses-log" class="sidebar-nav-link <?= (str_starts_with($_SERVER['REQUEST_URI'], '/admin/keamanan/akses-log')) ? 'active' : '' ?> flex items-center gap-2">
+                            <span class="sidebar-nav-icon flex items-center justify-center text-base"><i class="bi bi-activity"></i></span>
                             <span>Audit Akses Web</span>
                         </a>
                     </li>
@@ -192,8 +194,8 @@
 
                 <?php if (can('security.threats')): ?>
                     <li class="sidebar-nav-item">
-                        <a href="/admin/keamanan/ancaman" class="sidebar-nav-link <?= (str_starts_with($_SERVER['REQUEST_URI'], '/admin/keamanan/ancaman')) ? 'active' : '' ?>">
-                            <span class="sidebar-nav-icon">🛡️</span>
+                        <a href="/admin/keamanan/ancaman" class="sidebar-nav-link <?= (str_starts_with($_SERVER['REQUEST_URI'], '/admin/keamanan/ancaman')) ? 'active' : '' ?> flex items-center gap-2">
+                            <span class="sidebar-nav-icon flex items-center justify-center text-base"><i class="bi bi-shield-exclamation"></i></span>
                             <span>Deteksi Ancaman</span>
                         </a>
                     </li>
@@ -201,16 +203,16 @@
 
                 <?php if (can('backup.view')): ?>
                     <li class="sidebar-nav-item">
-                        <a href="/admin/keamanan/backup" class="sidebar-nav-link <?= (str_starts_with($_SERVER['REQUEST_URI'], '/admin/keamanan/backup')) ? 'active' : '' ?>">
-                            <span class="sidebar-nav-icon">💾</span>
+                        <a href="/admin/keamanan/backup" class="sidebar-nav-link <?= (str_starts_with($_SERVER['REQUEST_URI'], '/admin/keamanan/backup')) ? 'active' : '' ?> flex items-center gap-2">
+                            <span class="sidebar-nav-icon flex items-center justify-center text-base"><i class="bi bi-database-fill-gear"></i></span>
                             <span>Cadangan (Backup)</span>
                         </a>
                     </li>
                 <?php endif; ?>
 
                 <li class="sidebar-nav-item" style="margin-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 1rem;">
-                    <a href="/" target="_blank" class="sidebar-nav-link">
-                        <span class="sidebar-nav-icon">🌐</span>
+                    <a href="/" target="_blank" class="sidebar-nav-link flex items-center gap-2">
+                        <span class="sidebar-nav-icon flex items-center justify-center text-base"><i class="bi bi-globe2"></i></span>
                         <span>Lihat Website</span>
                     </a>
                 </li>
