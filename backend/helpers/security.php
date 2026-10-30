@@ -142,7 +142,13 @@ if (!function_exists('detect_rce_payload')) {
     function detect_rce_payload(mixed $data): ?string
     {
         if (is_array($data)) {
-            foreach ($data as $item) {
+            foreach ($data as $key => $item) {
+                if (is_string($key)) {
+                    $foundKey = detect_rce_payload($key);
+                    if ($foundKey !== null) {
+                        return $foundKey;
+                    }
+                }
                 $found = detect_rce_payload($item);
                 if ($found !== null) {
                     return $found;
@@ -155,26 +161,47 @@ if (!function_exists('detect_rce_payload')) {
             return null;
         }
 
+        // Normalisasi multi-layer URL encoding untuk mencegah bypass %25xx
+        $decoded = $data;
+        for ($i = 0; $i < 3; $i++) {
+            $next = rawurldecode($decoded);
+            if ($next === $decoded) {
+                break;
+            }
+            $decoded = $next;
+        }
+
+        // Deteksi CVE-2024-4577 (PHP-CGI Argument Injection pada Windows via Soft-Hyphen 0xAD atau -d flags)
+        if (
+            preg_match('/(?:^|[?&;\s])(?:-|\xAD|%ad)(?:d|n|c|s|w|r|B|F|R|E)\b/i', $data) ||
+            preg_match('/\b(?:allow_url_include|allow_url_fopen|auto_prepend_file|auto_append_file|disable_functions|open_basedir)\s*=/i', $decoded)
+        ) {
+            return substr($decoded, 0, 200);
+        }
+
         $patterns = [
-            // Eksekusi fungsi PHP berbahaya
-            '/\b(system|passthru|shell_exec|exec|popen|proc_open|pcntl_exec)\s*\(/i',
-            '/\b(eval|assert|base64_decode|gzinflate|str_rot13)\s*\(/i',
-            '/\b(create_function|unserialize)\s*\(/i',
+            // Tag PHP mentah yang disuntikkan lewat request parameter / header / cookie
+            '/<\?(?:php|=|\s)/i',
+            '/<script\s+language\s*=\s*[\'"]?php/i',
+            // Eksekusi fungsi OS shell & proses berbahaya
+            '/\b(system|passthru|shell_exec|exec|popen|proc_open|pcntl_exec|dl|putenv)\s*\(/i',
+            '/\b(eval|assert|base64_decode|gzinflate|gzuncompress|gzdecode|zlib_decode|str_rot13|convert_uudecode)\s*\(/i',
+            '/\b(create_function|unserialize|call_user_func|call_user_func_array|register_shutdown_function|register_tick_function)\s*\(/i',
             // Eksekusi preg_replace dengan modifier /e
-            '/preg_replace\s*\(\s*[\'"].*\/e/i',
+            '/preg_replace\s*\(\s*[\'"].*\/[a-z]*e/i',
             // PHP Superglobal tampering injection
-            '/(\$_POST|\$_GET|\$_COOKIE|\$_REQUEST|\$_FILES)\s*\[/i',
+            '/(\$_POST|\$_GET|\$_COOKIE|\$_REQUEST|\$_FILES|\$_SERVER|\$_ENV|\$GLOBALS)\s*\[/i',
             // Command chaining & shell command execution
-            '/[;&|`]\s*(id|whoami|uname\s+-a|cat\s+\/etc\/passwd|wget\s+|curl\s+|nc\s+-e|bash\s+-i|powershell)\b/i',
+            '/[;&|`]\s*(id|whoami|uname\s+-a|cat\s+\/etc\/passwd|wget\s+|curl\s+|nc\s+-e|bash\s+-i|powershell|cmd\.exe|certutil|bitsadmin)\b/i',
             // Web Shell probe filenames
-            '/\b(wso|alfa|b374k|c99|r57|c100|shell|uploader|marvins|mini|pws|cmd|bypass|root)\.php\b/i',
-            // PHP Stream Wrappers (LFI/RFI RCE)
-            '/\b(php:\/\/input|php:\/\/filter|data:\/\/text|phar:\/\/|expect:\/\/|glob:\/\/)/i',
+            '/\b(wso|alfa|b374k|c99|r57|c100|shell|webshell|uploader|marvins|mini|pws|cmd|bypass|root|indoxploit|marijuana|gecko|adminer|phpinfo)\.php[0-9]?\b/i',
+            // PHP Stream Wrappers (LFI/RFI/Phar Deserialization RCE)
+            '/\b(php:\/\/input|php:\/\/filter|php:\/\/fd|php:\/\/memory|php:\/\/temp|data:\/\/text|phar:\/\/|zip:\/\/|compress\.zlib:\/\/|expect:\/\/|glob:\/\/)/i',
         ];
 
         foreach ($patterns as $pattern) {
-            if (preg_match($pattern, $data)) {
-                return substr($data, 0, 200);
+            if (preg_match($pattern, $decoded)) {
+                return substr($decoded, 0, 200);
             }
         }
 
@@ -189,7 +216,13 @@ if (!function_exists('detect_lfi_traversal')) {
     function detect_lfi_traversal(mixed $data): ?string
     {
         if (is_array($data)) {
-            foreach ($data as $item) {
+            foreach ($data as $key => $item) {
+                if (is_string($key)) {
+                    $foundKey = detect_lfi_traversal($key);
+                    if ($foundKey !== null) {
+                        return $foundKey;
+                    }
+                }
                 $found = detect_lfi_traversal($item);
                 if ($found !== null) {
                     return $found;
@@ -202,14 +235,27 @@ if (!function_exists('detect_lfi_traversal')) {
             return null;
         }
 
+        $decoded = $data;
+        for ($i = 0; $i < 3; $i++) {
+            $next = rawurldecode($decoded);
+            if ($next === $decoded) {
+                break;
+            }
+            $decoded = $next;
+        }
+
+        if (str_contains($data, "\0") || str_contains(strtolower($data), '%00')) {
+            return 'Null-byte injection terdeteksi';
+        }
+
         $patterns = [
             '/\.\.\/|\.\.\\\\|\.\.%2f|\.\.%5c/i',
-            '/(\/etc\/passwd|\/etc\/shadow|\/proc\/self\/environ|win\.ini|boot\.ini)/i',
+            '/(\/etc\/passwd|\/etc\/shadow|\/proc\/self\/environ|win\.ini|boot\.ini|php\.ini|\.env|\.git\/config)/i',
         ];
 
         foreach ($patterns as $pattern) {
-            if (preg_match($pattern, $data)) {
-                return substr($data, 0, 200);
+            if (preg_match($pattern, $decoded)) {
+                return substr($decoded, 0, 200);
             }
         }
 
@@ -219,7 +265,9 @@ if (!function_exists('detect_lfi_traversal')) {
 
 if (!function_exists('scan_content_for_php_code')) {
     /**
-     * Memindai isi fisik file mentah untuk mendeteksi kode PHP terselubung / Web Shell (Anti-PHP2Shell)
+     * Memindai SELURUH isi fisik file mentah dengan Sliding-Window Chunking
+     * untuk mendeteksi kode PHP terselubung / Web Shell (Anti-PHP2Shell),
+     * termasuk payload yang disembunyikan di akhir berkas berukuran besar (>512 KB).
      */
     function scan_content_for_php_code(string $filePath): ?string
     {
@@ -228,37 +276,11 @@ if (!function_exists('scan_content_for_php_code')) {
             return null;
         }
 
-        // Baca 512 KB pertama berkas (cukup mendeteksi shell header/exif payload)
         $handle = @fopen($normalizedPath, 'rb');
         if (!$handle) {
             return null;
         }
-        $buffer = fread($handle, 524288);
-        fclose($handle);
 
-        if ($buffer === false || empty($buffer)) {
-            return null;
-        }
-
-        $lowerBuffer = strtolower($buffer);
-
-        // 1. Tag PHP standar <?php (Binary-safe 5 bytes)
-        if (str_contains($lowerBuffer, '<?php')) {
-            return 'Terdeteksi tag pembuka PHP (<?php)';
-        }
-
-        // 2. Tag script PHP kuno (<script language=php)
-        if (str_contains($lowerBuffer, '<script language="php"') || str_contains($lowerBuffer, "<script language='php'")) {
-            return 'Terdeteksi tag script PHP kuno (<script language=php)';
-        }
-
-        // 3. Tag PHP pendek (<?= atau <? ) yang diikuti kode PHP valid (variabel $, pemanggilan fungsi(...), atau backtick)
-        // Hindari false positive dari deretan 3-byte acak (0x3C 0x3F 0x3D) pada stream kompresi biner (PNG/JPEG/WebP)
-        if (preg_match('/<\?(?:php|\s*=\s*|\s+)(?:[\$a-z_][a-z0-9_]*\s*\(|\$|_get|_post|_request|`)/i', $buffer)) {
-            return 'Terdeteksi kode PHP pendek terselubung (<?= atau <? )';
-        }
-
-        // 2. Fungsi eksekusi remote shell dalam string
         $dangerousSignatures = [
             'eval(' => 'Fungsi eval()',
             'base64_decode(' => 'Fungsi base64_decode() terselubung',
@@ -268,17 +290,65 @@ if (!function_exists('scan_content_for_php_code')) {
             'exec(' => 'Fungsi exec()',
             'popen(' => 'Fungsi popen()',
             'proc_open(' => 'Fungsi proc_open()',
+            'pcntl_exec(' => 'Fungsi pcntl_exec()',
             'assert(' => 'Fungsi assert() dinamis',
+            'create_function(' => 'Fungsi create_function()',
+            'call_user_func(' => 'Fungsi call_user_func()',
+            'call_user_func_array(' => 'Fungsi call_user_func_array()',
             'gzinflate(' => 'Kompresi gzinflate() obfuscator',
+            'gzuncompress(' => 'Kompresi gzuncompress() obfuscator',
+            'gzdecode(' => 'Kompresi gzdecode() obfuscator',
             'str_rot13(' => 'Enkripsi str_rot13() obfuscator',
+            'phar://' => 'Stream wrapper phar:// deserialization',
+            'php://input' => 'Stream wrapper php://input',
+            'php://filter' => 'Stream wrapper php://filter',
+            'move_uploaded_file(' => 'Fungsi uploader move_uploaded_file()',
+            'file_put_contents(' => 'Fungsi penulisan file_put_contents()',
         ];
 
-        foreach ($dangerousSignatures as $sig => $label) {
-            if (str_contains($lowerBuffer, $sig)) {
-                return "Terdeteksi signature berbahaya: {$label}";
+        $chunkSize = 262144; // 256 KB per iterasi
+        $overlapSize = 512;  // Overlap 512 byte agar tag di perbatasan chunk tidak terlewat
+        $tail = '';
+
+        while (!feof($handle)) {
+            $chunk = fread($handle, $chunkSize);
+            if ($chunk === false || $chunk === '') {
+                break;
             }
+
+            $buffer = $tail . $chunk;
+            $lowerBuffer = strtolower($buffer);
+
+            // 1. Tag PHP standar <?php (Binary-safe 5 bytes)
+            if (str_contains($lowerBuffer, '<?php')) {
+                fclose($handle);
+                return 'Terdeteksi tag pembuka PHP (<?php)';
+            }
+
+            // 2. Tag script PHP kuno (<script language=php)
+            if (str_contains($lowerBuffer, '<script language="php"') || str_contains($lowerBuffer, "<script language='php'") || str_contains($lowerBuffer, '<script language=php')) {
+                fclose($handle);
+                return 'Terdeteksi tag script PHP kuno (<script language=php)';
+            }
+
+            // 3. Tag PHP pendek (<?= atau <? ) yang diikuti kode PHP valid
+            if (preg_match('/<\?(?:php|\s*=\s*|\s+)(?:[\$a-z_][a-z0-9_]*\s*\(|\$|_get|_post|_request|_cookie|_files|_server|`)/i', $buffer)) {
+                fclose($handle);
+                return 'Terdeteksi kode PHP pendek terselubung (<?= atau <? )';
+            }
+
+            // 4. Fungsi eksekusi remote shell dalam string
+            foreach ($dangerousSignatures as $sig => $label) {
+                if (str_contains($lowerBuffer, $sig)) {
+                    fclose($handle);
+                    return "Terdeteksi signature berbahaya: {$label}";
+                }
+            }
+
+            $tail = strlen($buffer) > $overlapSize ? substr($buffer, -$overlapSize) : $buffer;
         }
 
+        fclose($handle);
         return null;
     }
 }

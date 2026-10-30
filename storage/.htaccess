@@ -1,4 +1,23 @@
-# Blokir seluruh akses HTTP langsung ke folder storage (log, backup database, dll)
+# =====================================================================
+# GMKI CABANG PADANG - PERISAI STORAGE PRIVAT & BACKUP (LOCKDOWN TOTAL)
+# File: storage/.htaccess
+# =====================================================================
+
+Options -Indexes -ExecCGI
+
+<IfModule mod_php.c>
+    php_flag engine off
+</IfModule>
+<IfModule mod_php7.c>
+    php_flag engine off
+</IfModule>
+<IfModule mod_php8.c>
+    php_flag engine off
+</IfModule>
+
+RemoveHandler .php .phtml .php3 .php4 .php5 .php7 .php8 .phps .phar .inc .cgi .pl .asp .aspx .shtml
+SetHandler default-handler
+
 <IfModule mod_authz_core.c>
     Require all denied
 </IfModule>

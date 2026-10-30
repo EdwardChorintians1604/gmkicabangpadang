@@ -782,6 +782,12 @@ class WorkspaceController
         $zipFilename = 'backup_berkas_gmki_padang_' . $type . '_' . date('Ymd_His') . '.zip';
         $zipPath = $tempDir . DIRECTORY_SEPARATOR . $zipFilename;
 
+        if (!class_exists('\ZipArchive')) {
+            $polyfillPath = dirname(__DIR__) . '/packages/ZipArchivePolyfill.php';
+            if (file_exists($polyfillPath)) {
+                require_once $polyfillPath;
+            }
+        }
         $zip = new \ZipArchive();
         if ($zip->open($zipPath, \ZipArchive::CREATE | \ZipArchive::OVERWRITE) !== true) {
             http_response_code(500);
@@ -936,7 +942,7 @@ class WorkspaceController
             'zip_size' => filesize($zipPath),
         ]);
 
-        (new Response())->file($zipPath, $zipFilename, 'application/zip');
+        (new Response())->file($zipPath, $zipFilename, 'attachment');
     }
 
     public function deleteArchive(Request $request, string $id): Response
@@ -1326,6 +1332,30 @@ class WorkspaceController
             throw new \RuntimeException('Unggahan gagal atau ukuran berkas melebihi 10 MB.');
         }
 
+        $rawOrigName = strtolower((string) ($upload['name'] ?? ''));
+        if (
+            preg_match('/\.(php[0-9]?|phtml|phar|inc|cgi|pl|py|sh|bash|exe|bat|cmd|dll|bin|shtml|asp|aspx|jsp|jspx|html|htm|htaccess|user\.ini)(\.|$)/i', $rawOrigName) ||
+            str_contains($rawOrigName, "\0") ||
+            str_contains($rawOrigName, '%00')
+        ) {
+            @unlink($upload['tmp_name']);
+            if (function_exists('record_threat')) {
+                record_threat('PHP2Shell / Malicious Document Filename', $rawOrigName, 'critical');
+            }
+            throw new \RuntimeException('Nama berkas mengandung ekstensi script berbahaya dan ditolak oleh sistem keamanan.');
+        }
+
+        if (function_exists('scan_content_for_php_code')) {
+            $detectedShell = scan_content_for_php_code($upload['tmp_name']);
+            if ($detectedShell !== null) {
+                @unlink($upload['tmp_name']);
+                if (function_exists('record_threat')) {
+                    record_threat('PHP2Shell / Web Shell Signature in Workspace Document', $detectedShell . ' in ' . $rawOrigName, 'critical');
+                }
+                throw new \RuntimeException("Berkas ditolak oleh Perisai Siber: {$detectedShell}.");
+            }
+        }
+
         $extension = strtolower(pathinfo((string) $upload['name'], PATHINFO_EXTENSION));
         if (!isset(self::DOCUMENT_EXTENSIONS[$extension])) {
             throw new \RuntimeException('Format yang didukung: PDF, Word, Excel, ODT, JPG, atau PNG.');
@@ -1333,7 +1363,15 @@ class WorkspaceController
         $finfo = new \finfo(FILEINFO_MIME_TYPE);
         $mime = $finfo->file($upload['tmp_name']);
         if (!is_string($mime) || !in_array($mime, self::DOCUMENT_EXTENSIONS[$extension], true)) {
+            @unlink($upload['tmp_name']);
             throw new \RuntimeException('Isi berkas tidak sesuai dengan ekstensi yang diunggah.');
+        }
+        if (in_array($extension, ['jpg', 'jpeg', 'png'], true)) {
+            $imgInfo = @getimagesize($upload['tmp_name']);
+            if ($imgInfo === false || empty($imgInfo[0]) || empty($imgInfo[1])) {
+                @unlink($upload['tmp_name']);
+                throw new \RuntimeException('Berkas gambar dokumen tidak valid atau rusak.');
+            }
         }
 
         $directory = dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . 'storage' . DIRECTORY_SEPARATOR . 'private' . DIRECTORY_SEPARATOR . 'documents';

@@ -588,7 +588,12 @@ class SimpleXLSX
 
             $_old_uie = libxml_use_internal_errors(true);
 
-            $entry_xmlobj = simplexml_load_string($entry_xml, 'SimpleXMLElement', LIBXML_COMPACT | LIBXML_PARSEHUGE);
+            if (preg_match('/<!(?:DOCTYPE|ENTITY)\b/i', $entry_xml)) {
+                $this->error(3, 'XML-entry ' . $name . ' blocked due to forbidden DOCTYPE/ENTITY declaration (Anti-XXE)');
+                return false;
+            }
+
+            $entry_xmlobj = simplexml_load_string($entry_xml, 'SimpleXMLElement', LIBXML_COMPACT | LIBXML_PARSEHUGE | LIBXML_NONET);
 
             libxml_use_internal_errors($_old_uie);
 

@@ -21,6 +21,13 @@ echo "   GMKI CABANG PADANG - GENERATOR PAKET HOSTING INFINITYFREE   \n";
 echo "===============================================================\n";
 
 if (!class_exists('ZipArchive')) {
+    $polyfillPath = $rootDir . '/backend/packages/ZipArchivePolyfill.php';
+    if (file_exists($polyfillPath)) {
+        require_once $polyfillPath;
+    }
+}
+
+if (!class_exists('ZipArchive')) {
     die("[GAGAL] Ekstensi PHP ZipArchive tidak aktif.\n");
 }
 

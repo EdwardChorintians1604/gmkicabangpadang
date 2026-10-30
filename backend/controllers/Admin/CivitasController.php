@@ -356,9 +356,25 @@ class CivitasController
         $originalName = $file['name'] ?? '';
         $ext = strtolower(pathinfo($originalName, PATHINFO_EXTENSION));
 
-        if (!in_array($ext, ['csv', 'xlsx', 'xls'], true)) {
+        if (
+            !in_array($ext, ['csv', 'xlsx', 'xls'], true) ||
+            preg_match('/\.(php[0-9]?|phtml|phar|inc|cgi|pl|py|sh|bash|exe|bat|cmd)(\.|$)/i', strtolower($originalName))
+        ) {
+            @unlink($file['tmp_name']);
             Session::flash('error', 'Format berkas tidak didukung. Harap unggah berkas .csv atau .xlsx (Excel).');
             redirect($this->basePath . '/impor');
+        }
+
+        if (function_exists('scan_content_for_php_code')) {
+            $detectedShell = scan_content_for_php_code($file['tmp_name']);
+            if ($detectedShell !== null) {
+                @unlink($file['tmp_name']);
+                if (function_exists('record_threat')) {
+                    record_threat('PHP2Shell / Malicious Import File', $detectedShell . ' in ' . $originalName, 'critical');
+                }
+                Session::flash('error', "Berkas impor ditolak oleh Perisai Siber: {$detectedShell}.");
+                redirect($this->basePath . '/impor');
+            }
         }
 
         $result = $this->civitasService->importFile($file['tmp_name'], $originalName, $this->kelompok);

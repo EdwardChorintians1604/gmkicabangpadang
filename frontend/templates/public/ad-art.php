@@ -180,9 +180,12 @@ if (!defined('GMKI_SECURE_ACCESS')) {
     }
 
     @keyframes pulseCardTarget {
-        0%, 100% {
+
+        0%,
+        100% {
             transform: translateY(-3px) scale(1);
         }
+
         50% {
             transform: translateY(-3px) scale(1.006);
         }
@@ -322,6 +325,7 @@ if (!defined('GMKI_SECURE_ACCESS')) {
             from {
                 transform: translateX(-100%);
             }
+
             to {
                 transform: translateX(0);
             }
@@ -481,7 +485,8 @@ if (!defined('GMKI_SECURE_ACCESS')) {
     <span id="copyToastText">Tautan pasal berhasil disalin ke papan klip!</span>
 </div>
 
-<div class="min-w-full pb-24" style="background-color: #fcfbf7; background-image: radial-gradient(rgba(197, 155, 39, 0.15) 1px, transparent 1px), linear-gradient(to bottom, #fcfbf7 0%, #f7f2e5 50%, #f2ebd9 100%); background-size: 28px 28px, 100% 100%;">
+<div class="min-w-full pb-24"
+    style="background-color: #fcfbf7; background-image: radial-gradient(rgba(197, 155, 39, 0.15) 1px, transparent 1px), linear-gradient(to bottom, #fcfbf7 0%, #f7f2e5 50%, #f2ebd9 100%); background-size: 28px 28px, 100% 100%;">
     <!-- Top Hero Section -->
     <section
         class="relative bg-gradient-to-br from-[#051324] via-[#0a263f] to-[#0f3d64] text-white pt-14 pb-20 overflow-hidden shadow-md">
@@ -519,13 +524,16 @@ if (!defined('GMKI_SECURE_ACCESS')) {
                 </h1>
 
                 <!-- Christian Ecumenical Motto Ribbon & Tri Panji -->
-                <div class="flex flex-col sm:flex-row items-center justify-center gap-2 mb-6 animate__animated animate__fadeIn">
-                    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 text-amber-300 border border-amber-400/30 text-xs font-classical font-semibold tracking-wider shadow-sm backdrop-blur-md">
+                <div
+                    class="flex flex-col sm:flex-row items-center justify-center gap-2 mb-6 animate__animated animate__fadeIn">
+                    <div
+                        class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 text-amber-300 border border-amber-400/30 text-xs font-classical font-semibold tracking-wider shadow-sm backdrop-blur-md">
                         <span>✝</span>
                         <span>"Ut Omnes Unum Sint" — Yohanes 17:21</span>
                         <span>✝</span>
                     </div>
-                    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/20 text-amber-200 border border-amber-400/30 text-xs font-classical font-semibold tracking-wider shadow-sm backdrop-blur-md">
+                    <div
+                        class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/20 text-amber-200 border border-amber-400/30 text-xs font-classical font-semibold tracking-wider shadow-sm backdrop-blur-md">
                         <span>☩</span>
                         <span>Tinggi Iman • Tinggi Ilmu • Tinggi Pengabdian</span>
                         <span>☩</span>
@@ -547,7 +555,9 @@ if (!defined('GMKI_SECURE_ACCESS')) {
                         class="cursor-pointer p-3.5 sm:p-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/15 hover:bg-white/20 hover:border-blue-400/60 hover:-translate-y-1 transition-all duration-300 shadow-lg group">
                         <div class="flex items-center justify-between mb-1.5">
                             <span class="text-xl sm:text-2xl group-hover:scale-110 transition-transform">📜</span>
-                            <span class="text-[10px] font-bold text-blue-200 group-hover:text-amber-300 flex items-center gap-1 transition-colors">Baca ➔</span>
+                            <span
+                                class="text-[10px] font-bold text-blue-200 group-hover:text-amber-300 flex items-center gap-1 transition-colors">Baca
+                                ➔</span>
                         </div>
                         <div class="text-xs font-extrabold text-blue-200 uppercase tracking-wider">Hukum Pokok</div>
                         <div class="text-lg sm:text-xl font-black text-white">12 Pasal</div>
@@ -558,7 +568,9 @@ if (!defined('GMKI_SECURE_ACCESS')) {
                         class="cursor-pointer p-3.5 sm:p-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/15 hover:bg-white/20 hover:border-amber-400/60 hover:-translate-y-1 transition-all duration-300 shadow-lg group">
                         <div class="flex items-center justify-between mb-1.5">
                             <span class="text-xl sm:text-2xl group-hover:scale-110 transition-transform">⚖️</span>
-                            <span class="text-[10px] font-bold text-amber-200 group-hover:text-amber-300 flex items-center gap-1 transition-colors">Baca ➔</span>
+                            <span
+                                class="text-[10px] font-bold text-amber-200 group-hover:text-amber-300 flex items-center gap-1 transition-colors">Baca
+                                ➔</span>
                         </div>
                         <div class="text-xs font-extrabold text-amber-300 uppercase tracking-wider">Tata Laksana</div>
                         <div class="text-lg sm:text-xl font-black text-white">12 Pasal</div>
@@ -569,9 +581,12 @@ if (!defined('GMKI_SECURE_ACCESS')) {
                         class="cursor-pointer p-3.5 sm:p-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/15 hover:bg-white/20 hover:border-indigo-400/60 hover:-translate-y-1 transition-all duration-300 shadow-lg group">
                         <div class="flex items-center justify-between mb-1.5">
                             <span class="text-xl sm:text-2xl group-hover:scale-110 transition-transform">📑</span>
-                            <span class="text-[10px] font-bold text-purple-200 group-hover:text-amber-300 flex items-center gap-1 transition-colors">Baca ➔</span>
+                            <span
+                                class="text-[10px] font-bold text-purple-200 group-hover:text-amber-300 flex items-center gap-1 transition-colors">Baca
+                                ➔</span>
                         </div>
-                        <div class="text-xs font-extrabold text-purple-200 uppercase tracking-wider">Pedoman Teknis</div>
+                        <div class="text-xs font-extrabold text-purple-200 uppercase tracking-wider">Pedoman Teknis
+                        </div>
                         <div class="text-lg sm:text-xl font-black text-white">11 Pasal</div>
                         <div class="text-[11px] text-slate-300 font-medium">Peraturan Organisasi (PO)</div>
                     </div>
@@ -580,7 +595,9 @@ if (!defined('GMKI_SECURE_ACCESS')) {
                         class="cursor-pointer p-3.5 sm:p-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/15 hover:bg-white/20 hover:border-teal-400/60 hover:-translate-y-1 transition-all duration-300 shadow-lg group">
                         <div class="flex items-center justify-between mb-1.5">
                             <span class="text-xl sm:text-2xl group-hover:scale-110 transition-transform">💡</span>
-                            <span class="text-[10px] font-bold text-teal-200 group-hover:text-amber-300 flex items-center gap-1 transition-colors">Baca ➔</span>
+                            <span
+                                class="text-[10px] font-bold text-teal-200 group-hover:text-amber-300 flex items-center gap-1 transition-colors">Baca
+                                ➔</span>
                         </div>
                         <div class="text-xs font-extrabold text-teal-200 uppercase tracking-wider">Doktrin Hukum</div>
                         <div class="text-lg sm:text-xl font-black text-white">Penjelasan Resmi</div>
@@ -603,8 +620,7 @@ if (!defined('GMKI_SECURE_ACCESS')) {
                             autocomplete="off">
                         <div class="absolute inset-y-0 right-0 flex items-center pr-3 gap-1.5">
                             <button type="button" id="clearSearchBtn"
-                                class="hidden text-slate-400 hover:text-slate-600 text-sm p-1"
-                                title="Hapus Pencarian">
+                                class="hidden text-slate-400 hover:text-slate-600 text-sm p-1" title="Hapus Pencarian">
                                 ✕
                             </button>
                             <kbd
@@ -627,13 +643,16 @@ if (!defined('GMKI_SECURE_ACCESS')) {
                                 title="Perkecil Ukuran Huruf (A-)">A-</button>
                             <button type="button" id="fontReset"
                                 class="font-size-btn active px-3 sm:px-3.5 py-1.5 rounded-lg bg-[#0f3d64] text-amber-200 shadow-xs transition text-xs font-classical font-bold"
-                                title="Ukuran Huruf Standar (Normal)">A <span class="hidden md:inline text-[10px] font-normal opacity-85">(Normal)</span></button>
+                                title="Ukuran Huruf Standar (Normal)">A <span
+                                    class="hidden md:inline text-[10px] font-normal opacity-85">(Normal)</span></button>
                             <button type="button" id="fontIncrease"
                                 class="font-size-btn px-2.5 sm:px-3 py-1.5 rounded-lg text-slate-700 hover:text-[#0f3d64] hover:bg-white transition text-xs font-bold"
-                                title="Perbesar Ukuran Huruf (A+)">A+ <span class="hidden md:inline text-[10px] font-normal opacity-85">(Besar)</span></button>
+                                title="Perbesar Ukuran Huruf (A+)">A+ <span
+                                    class="hidden md:inline text-[10px] font-normal opacity-85">(Besar)</span></button>
                             <button type="button" id="fontIncreaseMax"
                                 class="font-size-btn px-2.5 sm:px-3 py-1.5 rounded-lg text-slate-700 hover:text-[#0f3d64] hover:bg-white transition text-xs font-bold"
-                                title="Perbesar Ukuran Huruf Maksimal (A++)">A++ <span class="hidden md:inline text-[10px] font-normal opacity-85">(Ekstra)</span></button>
+                                title="Perbesar Ukuran Huruf Maksimal (A++)">A++ <span
+                                    class="hidden md:inline text-[10px] font-normal opacity-85">(Ekstra)</span></button>
                         </div>
                     </div>
                 </div>
@@ -642,12 +661,14 @@ if (!defined('GMKI_SECURE_ACCESS')) {
     </section>
 
     <!-- Main Navigation Tabs & Control Center (Segmented Sticky Navigation) -->
-    <div class="sticky top-[72px] z-30 bg-[#fdfcf9]/95 backdrop-blur-md border-b border-[#e5dac6] shadow-xs no-print transition-all">
+    <div
+        class="sticky top-[72px] z-30 bg-[#fdfcf9]/95 backdrop-blur-md border-b border-[#e5dac6] shadow-xs no-print transition-all">
         <div class="container px-3 sm:px-6">
             <div class="flex items-center justify-between py-2 sm:py-2.5 gap-2 sm:gap-4 flex-wrap sm:flex-nowrap">
-                
+
                 <!-- Flexible Responsive Segmented Tabs Container -->
-                <div class="flex items-center p-1 sm:p-1.5 rounded-2xl bg-slate-100/95 border border-[#dfd4c0] overflow-x-auto no-scrollbar gap-1 sm:gap-1.5 max-w-full flex-1 shadow-inner">
+                <div
+                    class="flex items-center p-1 sm:p-1.5 rounded-2xl bg-slate-100/95 border border-[#dfd4c0] overflow-x-auto no-scrollbar gap-1 sm:gap-1.5 max-w-full flex-1 shadow-inner">
                     <button type="button" onclick="switchSection('ad')"
                         class="tab-btn active px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold flex items-center gap-1.5 sm:gap-2 whitespace-nowrap transition-all cursor-pointer"
                         id="tab-ad">
@@ -696,7 +717,8 @@ if (!defined('GMKI_SECURE_ACCESS')) {
                         title="Tampilkan atau Sembunyikan Daftar Isi (Mode Baca Penuh)">
                         <span id="toggleTocIcon" class="text-sm sm:text-base">📖</span>
                         <span id="toggleTocLabel" class="hidden sm:inline">Daftar Isi</span>
-                        <span id="toggleTocBadge" class="text-[10px] font-sans px-1.5 py-0.5 rounded-md bg-amber-100 text-amber-900 border border-amber-300/60 font-bold">Muncul</span>
+                        <span id="toggleTocBadge"
+                            class="text-[10px] font-sans px-1.5 py-0.5 rounded-md bg-amber-100 text-amber-900 border border-amber-300/60 font-bold">Muncul</span>
                     </button>
                 </div>
             </div>
@@ -724,7 +746,8 @@ if (!defined('GMKI_SECURE_ACCESS')) {
                         </span>
                     </div>
                     <div class="flex items-center gap-2">
-                        <span class="font-classical text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-900 border border-amber-300/60"
+                        <span
+                            class="font-classical text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-900 border border-amber-300/60"
                             id="tocCountBadge">
                             12 Pasal
                         </span>
@@ -732,7 +755,10 @@ if (!defined('GMKI_SECURE_ACCESS')) {
                         <button type="button" onclick="toggleToc(false)"
                             class="text-slate-400 hover:text-slate-700 p-1 rounded-lg hover:bg-slate-200/60 transition cursor-pointer"
                             title="Tutup / Sembunyikan Daftar Isi">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                    d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
                         </button>
                     </div>
                 </div>
@@ -752,14 +778,17 @@ if (!defined('GMKI_SECURE_ACCESS')) {
                 <!-- Constitutional Hierarchy Widget (Corpus Iuris) -->
                 <div
                     class="mt-4 pt-3 border-t border-[#e8dfcf] text-[11px] text-slate-600 bg-gradient-to-b from-[#faf6ee] to-[#f4ede0] p-3 rounded-xl border border-[#dccbb0] shadow-2xs">
-                    <div class="font-classical font-bold text-[#0a263f] flex items-center justify-between mb-1.5 pb-1 border-b border-[#e2d7c3]">
+                    <div
+                        class="font-classical font-bold text-[#0a263f] flex items-center justify-between mb-1.5 pb-1 border-b border-[#e2d7c3]">
                         <span class="flex items-center gap-1.5 text-xs">
                             <span class="text-amber-700">✝</span> Hierarki Hukum GMKI
                         </span>
-                        <span class="text-[9px] uppercase tracking-widest text-amber-800 font-semibold italic">Corpus Iuris</span>
+                        <span class="text-[9px] uppercase tracking-widest text-amber-800 font-semibold italic">Corpus
+                            Iuris</span>
                     </div>
                     <ol class="list-decimal list-inside space-y-1 text-[11px] text-[#42392e] leading-snug font-sacred">
-                        <li><strong>Anggaran Dasar (AD)</strong> <span class="text-[10px] text-slate-500">— Lex Suprema</span></li>
+                        <li><strong>Anggaran Dasar (AD)</strong> <span class="text-[10px] text-slate-500">— Lex
+                                Suprema</span></li>
                         <li><strong>Anggaran Rumah Tangga (ART)</strong></li>
                         <li><strong>Peraturan Organisasi (PO)</strong></li>
                         <li><strong>Ketetapan Kongres / Konpercab</strong></li>
@@ -768,7 +797,8 @@ if (!defined('GMKI_SECURE_ACCESS')) {
             </aside>
 
             <!-- Main Legal Body Content -->
-            <main class="lg:col-span-9 space-y-8 ad-reading-container transition-all duration-300" id="adContentContainer">
+            <main class="lg:col-span-9 space-y-8 ad-reading-container transition-all duration-300"
+                id="adContentContainer">
 
                 <!-- ================================================================= -->
                 <!-- 1. ANGGARAN DASAR (AD) -->
@@ -776,34 +806,51 @@ if (!defined('GMKI_SECURE_ACCESS')) {
                 <div id="section-ad" class="tab-pane space-y-6">
 
                     <!-- Preambule / Pembukaan Special Card (Classical Christian Parchment Charter) -->
-                    <div id="ad-pembukaan"
-                        class="ad-card parchment-charter p-6 sm:p-12 relative overflow-hidden"
+                    <div id="ad-pembukaan" class="ad-card parchment-charter p-6 sm:p-12 relative overflow-hidden"
                         data-searchable>
 
                         <!-- 4 Corner Classical Cross Motifs -->
-                        <div class="absolute top-3.5 left-3.5 text-amber-700/40 text-xs font-classical select-none pointer-events-none">✝</div>
-                        <div class="absolute top-3.5 right-3.5 text-amber-700/40 text-xs font-classical select-none pointer-events-none">✝</div>
-                        <div class="absolute bottom-3.5 left-3.5 text-amber-700/40 text-xs font-classical select-none pointer-events-none">✝</div>
-                        <div class="absolute bottom-3.5 right-3.5 text-amber-700/40 text-xs font-classical select-none pointer-events-none">✝</div>
+                        <div
+                            class="absolute top-3.5 left-3.5 text-amber-700/40 text-xs font-classical select-none pointer-events-none">
+                            ✝</div>
+                        <div
+                            class="absolute top-3.5 right-3.5 text-amber-700/40 text-xs font-classical select-none pointer-events-none">
+                            ✝</div>
+                        <div
+                            class="absolute bottom-3.5 left-3.5 text-amber-700/40 text-xs font-classical select-none pointer-events-none">
+                            ✝</div>
+                        <div
+                            class="absolute bottom-3.5 right-3.5 text-amber-700/40 text-xs font-classical select-none pointer-events-none">
+                            ✝</div>
 
                         <!-- Classical Latin Ecumenical Motto Ribbon -->
-                        <div class="flex items-center justify-center gap-2 sm:gap-3 py-1.5 px-4 mb-6 rounded-lg bg-amber-950/5 border border-amber-300/50 text-amber-900 text-center shadow-2xs">
+                        <div
+                            class="flex items-center justify-center gap-2 sm:gap-3 py-1.5 px-4 mb-6 rounded-lg bg-amber-950/5 border border-amber-300/50 text-amber-900 text-center shadow-2xs">
                             <span class="text-amber-700 text-xs sm:text-sm">✝</span>
-                            <span class="font-classical text-[10px] sm:text-xs font-bold tracking-[0.22em] uppercase">In Nomine Domini • Ut Omnes Unum Sint</span>
+                            <span class="font-classical text-[10px] sm:text-xs font-bold tracking-[0.22em] uppercase">In
+                                Nomine Domini • Ut Omnes Unum Sint</span>
                             <span class="text-amber-700 text-xs sm:text-sm">✝</span>
                         </div>
 
                         <!-- Card Header -->
                         <div class="flex items-center justify-between mb-8 pb-5 border-b-2 border-[#e2d5bc]">
                             <div class="flex items-center gap-3.5">
-                                <span class="flex items-center justify-center w-11 h-11 rounded-xl bg-gradient-to-br from-[#0a263f] to-[#0f3d64] text-amber-300 font-classical font-extrabold text-xl shadow-sm border border-amber-400/40">☩</span>
+                                <span
+                                    class="flex items-center justify-center w-11 h-11 rounded-xl bg-gradient-to-br from-[#0a263f] to-[#0f3d64] text-amber-300 font-classical font-extrabold text-xl shadow-sm border border-amber-400/40">☩</span>
                                 <div>
                                     <div class="flex items-center gap-2">
-                                        <span class="font-classical text-xs font-extrabold uppercase tracking-[0.16em] text-amber-800">Mukadimah Konstitusi</span>
-                                        <span class="hidden sm:inline-block w-1.5 h-1.5 rounded-full bg-amber-500"></span>
-                                        <span class="hidden sm:inline-block font-sacred text-xs font-semibold text-slate-600 italic">Dasar Teologis &amp; Pengutusan GMKI</span>
+                                        <span
+                                            class="font-classical text-xs font-extrabold uppercase tracking-[0.16em] text-amber-800">Mukadimah
+                                            Konstitusi</span>
+                                        <span
+                                            class="hidden sm:inline-block w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                                        <span
+                                            class="hidden sm:inline-block font-sacred text-xs font-semibold text-slate-600 italic">Dasar
+                                            Teologis &amp; Pengutusan GMKI</span>
                                     </div>
-                                    <h2 class="font-classical text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#091b2e] tracking-tight mt-0.5">Pembukaan Anggaran Dasar</h2>
+                                    <h2
+                                        class="font-classical text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#091b2e] tracking-tight mt-0.5">
+                                        Pembukaan Anggaran Dasar</h2>
                                 </div>
                             </div>
                             <button type="button" onclick="copyPasalLink('ad-pembukaan')"
@@ -815,12 +862,14 @@ if (!defined('GMKI_SECURE_ACCESS')) {
 
                         <!-- 4 Alinea Teologis Pembukaan (Classic Christian Liturgical Typography) -->
                         <div class="space-y-6">
-                            <div class="border-l-2 sm:border-l-3 border-[#c9a96e] pl-4 sm:pl-8 space-y-6 sm:space-y-7 text-[#231e19] font-sacred text-base sm:text-[18px] md:text-[19px] leading-relaxed sm:leading-[2.05] text-left">
+                            <div
+                                class="border-l-2 sm:border-l-3 border-[#c9a96e] pl-4 sm:pl-8 space-y-6 sm:space-y-7 text-[#231e19] font-sacred text-base sm:text-[18px] md:text-[19px] leading-relaxed sm:leading-[2.05] text-left">
                                 <!-- Alinea 1: Kristologis & Karya Keselamatan -->
                                 <p class="dropcap-ecclesiastical">
                                     <strong>Sesungguhnya Yesus Kristus</strong>, Anak Allah dan Juruselamat, ialah Tuhan
                                     manusia dan alam semesta. Kehadiran-Nya dalam sejarah ialah perbuatan Allah untuk
-                                    menebus dan menyelamatkan manusia melalui kematian dan kebangkitan-Nya yang menjadikan
+                                    menebus dan menyelamatkan manusia melalui kematian dan kebangkitan-Nya yang
+                                    menjadikan
                                     semuanya baru dan sempurna.
                                 </p>
 
@@ -833,7 +882,8 @@ if (!defined('GMKI_SECURE_ACCESS')) {
 
                                 <!-- Alinea 2: Panggilan Iman & Penatalayanan -->
                                 <p>
-                                    <strong>Anugerah-Nya</strong> yang dinyatakan dalam karya-Nya memanggil manusia untuk
+                                    <strong>Anugerah-Nya</strong> yang dinyatakan dalam karya-Nya memanggil manusia
+                                    untuk
                                     percaya dan mengucap syukur dalam penatalayanan alam semesta, mewujudkan iman,
                                     pengharapan dan cinta kasih dalam kehidupan sehari-hari.
                                 </p>
@@ -848,7 +898,8 @@ if (!defined('GMKI_SECURE_ACCESS')) {
                                 <!-- Alinea 3: Pneumatologis & Gereja yang Esa -->
                                 <p>
                                     <strong>Roh Kudus</strong> menghidupkan persekutuan orang beriman selaku gereja yang
-                                    Esa, Am dan Rasuli, yang diutus untuk menyampaikan kabar keselamatan dan pembebasan bagi
+                                    Esa, Am dan Rasuli, yang diutus untuk menyampaikan kabar keselamatan dan pembebasan
+                                    bagi
                                     pembaharuan manusia dan alam semesta.
                                 </p>
 
@@ -862,42 +913,63 @@ if (!defined('GMKI_SECURE_ACCESS')) {
                                 <!-- Alinea 4: Panggilan & Pengutusan di Indonesia -->
                                 <p>
                                     <strong>Maka menjadi panggilan dan pengutusan</strong> setiap warga gereja yang
-                                    ditempatkan oleh Tuhan di dalam perjalanan sejarah bangsa dan negara Indonesia, untuk
+                                    ditempatkan oleh Tuhan di dalam perjalanan sejarah bangsa dan negara Indonesia,
+                                    untuk
                                     menyatakan kehadiran-Nya dan kehidupan yang bertanggungjawab bersumber pada Alkitab,
-                                    yang menyaksikan Yesus Kristus ialah Tuhan dan Juruselamat di dalam keesaan Allah Bapa,
-                                    Anak dan Roh Kudus yang mengerjakan keselamatan manusia untuk mewujudkan kesejahteraan
+                                    yang menyaksikan Yesus Kristus ialah Tuhan dan Juruselamat di dalam keesaan Allah
+                                    Bapa,
+                                    Anak dan Roh Kudus yang mengerjakan keselamatan manusia untuk mewujudkan
+                                    kesejahteraan
                                     perdamaian, keadilan dan kebenaran di tengah-tengah masyarakat, bangsa dan negara.
                                 </p>
                             </div>
 
                             <!-- Showcase Card: Piagam Kelahiran Gerakan (Historis - 9 Februari 1950) -->
-                            <div class="mt-10 rounded-2xl border-2 border-[#c9a96e] bg-[#faf6ee] p-6 sm:p-8 shadow-sm space-y-4 relative">
-                                <div class="flex items-center justify-between flex-wrap gap-2 border-b border-[#e2d5bc] pb-3">
+                            <div
+                                class="mt-10 rounded-2xl border-2 border-[#c9a96e] bg-[#faf6ee] p-6 sm:p-8 shadow-sm space-y-4 relative">
+                                <div
+                                    class="flex items-center justify-between flex-wrap gap-2 border-b border-[#e2d5bc] pb-3">
                                     <div class="flex items-center gap-2.5">
-                                        <span class="flex items-center justify-center w-8 h-8 rounded-lg bg-[#0f3d64] text-amber-300 font-classical font-bold text-sm shadow-xs">✝</span>
+                                        <span
+                                            class="flex items-center justify-center w-8 h-8 rounded-lg bg-[#0f3d64] text-amber-300 font-classical font-bold text-sm shadow-xs">✝</span>
                                         <div>
-                                            <h3 class="font-classical font-extrabold text-slate-900 text-sm sm:text-base tracking-wide">Piagam Kelahiran Gerakan</h3>
-                                            <p class="font-sacred text-xs text-amber-900 italic">Peleburan Persekutuan Oikumenis Mahasiswa Kristen di Indonesia</p>
+                                            <h3
+                                                class="font-classical font-extrabold text-slate-900 text-sm sm:text-base tracking-wide">
+                                                Piagam Kelahiran Gerakan</h3>
+                                            <p class="font-sacred text-xs text-amber-900 italic">Peleburan Persekutuan
+                                                Oikumenis Mahasiswa Kristen di Indonesia</p>
                                         </div>
                                     </div>
                                     <div class="flex items-center gap-1.5 flex-wrap">
-                                        <span class="font-classical px-3 py-1 rounded-full bg-[#0f3d64] text-amber-300 font-bold text-xs tracking-wider border border-amber-400/40">📅 9 Februari 1950</span>
-                                        <span class="font-classical px-2.5 py-1 rounded-md bg-amber-100 text-amber-950 font-bold text-[11px] border border-amber-300">WSCF</span>
+                                        <span
+                                            class="font-classical px-3 py-1 rounded-full bg-[#0f3d64] text-amber-300 font-bold text-xs tracking-wider border border-amber-400/40">📅
+                                            9 Februari 1950</span>
+                                        <span
+                                            class="font-classical px-2.5 py-1 rounded-md bg-amber-100 text-amber-950 font-bold text-[11px] border border-amber-300">WSCF</span>
                                     </div>
                                 </div>
 
                                 <!-- Alur Sejarah Peleburan GMKI -->
-                                <div class="flex items-center gap-1.5 sm:gap-2 flex-wrap text-xs font-semibold text-slate-700 bg-white/90 p-3 rounded-xl border border-[#e2d5bc] shadow-2xs">
-                                    <span class="px-2.5 py-1 rounded-md bg-slate-100 text-slate-800 border border-slate-200">CSV op Java (1932)</span>
+                                <div
+                                    class="flex items-center gap-1.5 sm:gap-2 flex-wrap text-xs font-semibold text-slate-700 bg-white/90 p-3 rounded-xl border border-[#e2d5bc] shadow-2xs">
+                                    <span
+                                        class="px-2.5 py-1 rounded-md bg-slate-100 text-slate-800 border border-slate-200">CSV
+                                        op Java (1932)</span>
                                     <span class="text-amber-600 font-bold text-sm">+</span>
-                                    <span class="px-2.5 py-1 rounded-md bg-slate-100 text-slate-800 border border-slate-200">PMKI</span>
+                                    <span
+                                        class="px-2.5 py-1 rounded-md bg-slate-100 text-slate-800 border border-slate-200">PMKI</span>
                                     <span class="text-amber-600 font-bold text-sm">➔</span>
-                                    <span class="px-3 py-1 rounded-md bg-[#0f3d64] text-amber-300 font-extrabold tracking-wide border border-amber-400/30">GMKI (1950)</span>
+                                    <span
+                                        class="px-3 py-1 rounded-md bg-[#0f3d64] text-amber-300 font-extrabold tracking-wide border border-amber-400/30">GMKI
+                                        (1950)</span>
                                     <span class="text-amber-600 font-bold text-sm">➔</span>
-                                    <span class="px-2.5 py-1 rounded-md bg-blue-100 text-blue-900 font-bold border border-blue-200">WSCF Affiliated</span>
+                                    <span
+                                        class="px-2.5 py-1 rounded-md bg-blue-100 text-blue-900 font-bold border border-blue-200">WSCF
+                                        Affiliated</span>
                                 </div>
 
-                                <p class="font-sacred text-sm sm:text-base text-slate-800 leading-relaxed sm:leading-[1.95]">
+                                <p
+                                    class="font-sacred text-sm sm:text-base text-slate-800 leading-relaxed sm:leading-[1.95]">
                                     Untuk mewujudkan panggilan dan pengutusan dalam kehidupan dan perkembangan Perguruan
                                     Tinggi dan mahasiswa, maka pada tanggal <strong>9 Februari 1950</strong> Mahasiswa
                                     Kristen Indonesia yang melanjutkan usaha <em>Christelijke Studenten Vereeniging op
@@ -916,8 +988,10 @@ if (!defined('GMKI_SECURE_ACCESS')) {
                         <div class="flex items-center justify-between mb-4 pb-3 border-b border-[#e8dfcf]">
                             <div class="flex items-center gap-3">
                                 <span
-                                    class="px-2.5 py-1 rounded-md bg-[#0f3d64] text-amber-200 text-xs font-classical font-extrabold shadow-xs">PASAL 1</span>
-                                <h3 class="font-classical text-lg sm:text-xl font-bold text-[#0a263f] tracking-wide">Nama, Tempat dan Waktu</h3>
+                                    class="px-2.5 py-1 rounded-md bg-[#0f3d64] text-amber-200 text-xs font-classical font-extrabold shadow-xs">PASAL
+                                    1</span>
+                                <h3 class="font-classical text-lg sm:text-xl font-bold text-[#0a263f] tracking-wide">
+                                    Nama, Tempat dan Waktu</h3>
                             </div>
                             <button type="button" onclick="copyPasalLink('ad-pasal-1')"
                                 class="text-slate-400 hover:text-slate-600 text-xs flex items-center gap-1"
@@ -925,8 +999,7 @@ if (!defined('GMKI_SECURE_ACCESS')) {
                                 <span>🔗</span>
                             </button>
                         </div>
-                        <ol
-                            class="list-decimal list-inside space-y-2 text-[#2c241b] text-base leading-relaxed">
+                        <ol class="list-decimal list-inside space-y-2 text-[#2c241b] text-base leading-relaxed">
                             <li>Organisasi ini bernama <strong>Gerakan Mahasiswa Kristen Indonesia</strong>, disingkat
                                 <strong>GMKI</strong>.
                             </li>
@@ -936,15 +1009,19 @@ if (!defined('GMKI_SECURE_ACCESS')) {
                     </div>
 
                     <!-- Pasal 2 AD (Illuminated Covenant Frame) -->
-                    <div id="ad-pasal-2" class="ad-card theological-covenant-box p-6 sm:p-8"
-                        data-searchable>
+                    <div id="ad-pasal-2" class="ad-card theological-covenant-box p-6 sm:p-8" data-searchable>
                         <div class="flex items-center justify-between mb-4 pb-3 border-b border-[#dfcfb0]">
                             <div class="flex items-center gap-3">
                                 <span
-                                    class="px-2.5 py-1 rounded-md bg-[#0f3d64] text-amber-200 text-xs font-classical font-extrabold shadow-xs">PASAL 2</span>
+                                    class="px-2.5 py-1 rounded-md bg-[#0f3d64] text-amber-200 text-xs font-classical font-extrabold shadow-xs">PASAL
+                                    2</span>
                                 <div>
-                                    <div class="font-classical text-[10px] uppercase tracking-widest text-amber-800 font-bold">Pactum Fundamenti</div>
-                                    <h3 class="font-classical text-lg sm:text-xl font-bold text-[#0a263f] tracking-wide">Asas Organisasi</h3>
+                                    <div
+                                        class="font-classical text-[10px] uppercase tracking-widest text-amber-800 font-bold">
+                                        Pactum Fundamenti</div>
+                                    <h3
+                                        class="font-classical text-lg sm:text-xl font-bold text-[#0a263f] tracking-wide">
+                                        Asas Organisasi</h3>
                                 </div>
                             </div>
                             <button type="button" onclick="copyPasalLink('ad-pasal-2')"
@@ -957,9 +1034,11 @@ if (!defined('GMKI_SECURE_ACCESS')) {
                         <!-- Classical Latin & Indonesian Covenant Banner -->
                         <div
                             class="p-5 sm:p-6 rounded-xl bg-white/95 border-2 border-[#c59b27] text-[#1e1914] text-base sm:text-lg font-sacred font-semibold italic shadow-sm relative overflow-hidden">
-                            <div class="absolute top-2 right-3 text-amber-600/30 text-2xl font-classical select-none">✝</div>
+                            <div class="absolute top-2 right-3 text-amber-600/30 text-2xl font-classical select-none">✝
+                            </div>
                             <p class="leading-relaxed">
-                                "Dalam kehidupan bermasyarakat, berbangsa dan bernegara, organisasi ini berasaskan Pancasila
+                                "Dalam kehidupan bermasyarakat, berbangsa dan bernegara, organisasi ini berasaskan
+                                Pancasila
                                 sebagai satu-satunya ASAS."
                             </p>
                         </div>
@@ -970,10 +1049,15 @@ if (!defined('GMKI_SECURE_ACCESS')) {
                         <div class="flex items-center justify-between mb-4 pb-3 border-b border-[#e8dfcf]">
                             <div class="flex items-center gap-3">
                                 <span
-                                    class="px-2.5 py-1 rounded-md bg-[#0f3d64] text-amber-200 text-xs font-classical font-extrabold shadow-xs">PASAL 3</span>
+                                    class="px-2.5 py-1 rounded-md bg-[#0f3d64] text-amber-200 text-xs font-classical font-extrabold shadow-xs">PASAL
+                                    3</span>
                                 <div>
-                                    <div class="font-classical text-[10px] uppercase tracking-widest text-blue-900/70 font-bold">Visio et Missio Dei</div>
-                                    <h3 class="font-classical text-lg sm:text-xl font-bold text-[#0a263f] tracking-wide">Visi dan Misi</h3>
+                                    <div
+                                        class="font-classical text-[10px] uppercase tracking-widest text-blue-900/70 font-bold">
+                                        Visio et Missio Dei</div>
+                                    <h3
+                                        class="font-classical text-lg sm:text-xl font-bold text-[#0a263f] tracking-wide">
+                                        Visi dan Misi</h3>
                                 </div>
                             </div>
                             <button type="button" onclick="copyPasalLink('ad-pasal-3')"
@@ -983,38 +1067,48 @@ if (!defined('GMKI_SECURE_ACCESS')) {
                             </button>
                         </div>
                         <div class="space-y-4 text-[#2c241b] text-base leading-relaxed">
-                            <div class="p-4 sm:p-5 rounded-xl bg-gradient-to-r from-blue-50/90 via-amber-50/40 to-blue-50/60 border border-[#c59b27]/40 shadow-2xs">
-                                <div class="font-classical font-bold text-[#0f3d64] mb-1 flex items-center gap-2 text-sm sm:text-base">
+                            <div
+                                class="p-4 sm:p-5 rounded-xl bg-gradient-to-r from-blue-50/90 via-amber-50/40 to-blue-50/60 border border-[#c59b27]/40 shadow-2xs">
+                                <div
+                                    class="font-classical font-bold text-[#0f3d64] mb-1 flex items-center gap-2 text-sm sm:text-base">
                                     <span class="text-amber-600 text-base">✝</span> 1. Visi Organisasi
                                 </div>
-                                <p class="text-[#0a263f] font-sacred text-base sm:text-[17px] font-medium leading-relaxed">
+                                <p
+                                    class="text-[#0a263f] font-sacred text-base sm:text-[17px] font-medium leading-relaxed">
                                     Terwujudnya kedamaian, kesejahteraan, keadilan, keutuhan ciptaan dan demokrasi di
                                     Indonesia berdasarkan kasih.
                                 </p>
                             </div>
                             <div>
-                                <div class="font-classical font-bold text-[#0a263f] mb-3 flex items-center gap-2 text-sm sm:text-base">
+                                <div
+                                    class="font-classical font-bold text-[#0a263f] mb-3 flex items-center gap-2 text-sm sm:text-base">
                                     <span class="text-amber-600 text-base">☩</span> 2. Misi Organisasi
                                 </div>
                                 <ul class="space-y-3 pl-1">
-                                    <li class="flex items-start gap-3 bg-[#fdfcf9] p-3.5 rounded-xl border border-[#e8dfcf]">
+                                    <li
+                                        class="flex items-start gap-3 bg-[#fdfcf9] p-3.5 rounded-xl border border-[#e8dfcf]">
                                         <span
                                             class="inline-flex items-center justify-center w-6 h-6 rounded-md bg-[#0f3d64] text-amber-200 text-xs font-classical font-bold shrink-0 mt-0.5 shadow-2xs">a</span>
-                                        <span class="text-[#2c241b] leading-relaxed">Mengajak mahasiswa dan warga Perguruan Tinggi lainnya kepada pengenalan
+                                        <span class="text-[#2c241b] leading-relaxed">Mengajak mahasiswa dan warga
+                                            Perguruan Tinggi lainnya kepada pengenalan
                                             akan Yesus Kristus selaku Tuhan dan Penebus dan memperdalam iman dalam
                                             kehidupan dan pekerjaan sehari-hari.</span>
                                     </li>
-                                    <li class="flex items-start gap-3 bg-[#fdfcf9] p-3.5 rounded-xl border border-[#e8dfcf]">
+                                    <li
+                                        class="flex items-start gap-3 bg-[#fdfcf9] p-3.5 rounded-xl border border-[#e8dfcf]">
                                         <span
                                             class="inline-flex items-center justify-center w-6 h-6 rounded-md bg-[#0f3d64] text-amber-200 text-xs font-classical font-bold shrink-0 mt-0.5 shadow-2xs">b</span>
-                                        <span class="text-[#2c241b] leading-relaxed">Membina kesadaran selaku warga gereja yang esa di tengah-tengah mahasiswa
+                                        <span class="text-[#2c241b] leading-relaxed">Membina kesadaran selaku warga
+                                            gereja yang esa di tengah-tengah mahasiswa
                                             dan Perguruan Tinggi dalam kesaksian memperbaharui masyarakat, manusia dan
                                             gereja.</span>
                                     </li>
-                                    <li class="flex items-start gap-3 bg-[#fdfcf9] p-3.5 rounded-xl border border-[#e8dfcf]">
+                                    <li
+                                        class="flex items-start gap-3 bg-[#fdfcf9] p-3.5 rounded-xl border border-[#e8dfcf]">
                                         <span
                                             class="inline-flex items-center justify-center w-6 h-6 rounded-md bg-[#0f3d64] text-amber-200 text-xs font-classical font-bold shrink-0 mt-0.5 shadow-2xs">c</span>
-                                        <span class="text-[#2c241b] leading-relaxed">Mempersiapkan pemimpin dan penggerak yang ahli dan bertanggungjawab dengan
+                                        <span class="text-[#2c241b] leading-relaxed">Mempersiapkan pemimpin dan
+                                            penggerak yang ahli dan bertanggungjawab dengan
                                             menjalankan panggilan di tengah-tengah masyarakat, negara, gereja, Perguruan
                                             Tinggi, dan mahasiswa, dan menjadi sarana bagi terwujudnya kesejahteraan,
                                             perdamaian, keadilan, kebenaran dan cinta kasih di tengah-tengah manusia dan
@@ -1030,8 +1124,10 @@ if (!defined('GMKI_SECURE_ACCESS')) {
                         <div class="flex items-center justify-between mb-4 pb-3 border-b border-[#e8dfcf]">
                             <div class="flex items-center gap-3">
                                 <span
-                                    class="px-2.5 py-1 rounded-md bg-[#0f3d64] text-amber-200 text-xs font-classical font-extrabold shadow-xs">PASAL 4</span>
-                                <h3 class="font-classical text-lg sm:text-xl font-bold text-[#0a263f] tracking-wide">Usaha</h3>
+                                    class="px-2.5 py-1 rounded-md bg-[#0f3d64] text-amber-200 text-xs font-classical font-extrabold shadow-xs">PASAL
+                                    4</span>
+                                <h3 class="font-classical text-lg sm:text-xl font-bold text-[#0a263f] tracking-wide">
+                                    Usaha</h3>
                             </div>
                             <button type="button" onclick="copyPasalLink('ad-pasal-4')"
                                 class="text-slate-400 hover:text-slate-600 text-xs flex items-center gap-1"
@@ -1049,10 +1145,15 @@ if (!defined('GMKI_SECURE_ACCESS')) {
                         <div class="flex items-center justify-between mb-4 pb-3 border-b border-[#e8dfcf]">
                             <div class="flex items-center gap-3">
                                 <span
-                                    class="px-2.5 py-1 rounded-md bg-[#0f3d64] text-amber-200 text-xs font-classical font-extrabold shadow-xs">PASAL 5</span>
+                                    class="px-2.5 py-1 rounded-md bg-[#0f3d64] text-amber-200 text-xs font-classical font-extrabold shadow-xs">PASAL
+                                    5</span>
                                 <div>
-                                    <div class="font-classical text-[10px] uppercase tracking-widest text-amber-800 font-bold">Ecclesia & Unitas</div>
-                                    <h3 class="font-classical text-lg sm:text-xl font-bold text-[#0a263f] tracking-wide">Status dan Bentuk Organisasi</h3>
+                                    <div
+                                        class="font-classical text-[10px] uppercase tracking-widest text-amber-800 font-bold">
+                                        Ecclesia & Unitas</div>
+                                    <h3
+                                        class="font-classical text-lg sm:text-xl font-bold text-[#0a263f] tracking-wide">
+                                        Status dan Bentuk Organisasi</h3>
                                 </div>
                             </div>
                             <button type="button" onclick="copyPasalLink('ad-pasal-5')"
@@ -1065,17 +1166,21 @@ if (!defined('GMKI_SECURE_ACCESS')) {
                             <div class="p-4 sm:p-5 rounded-xl bg-[#fdfcf9] border-2 border-[#d8c7a6] shadow-2xs">
                                 <div class="flex items-center gap-2 mb-1.5">
                                     <span class="text-amber-700 font-classical">✝</span>
-                                    <strong class="font-classical text-[#0a263f] text-sm sm:text-base">1. Status :</strong>
+                                    <strong class="font-classical text-[#0a263f] text-sm sm:text-base">1. Status
+                                        :</strong>
                                 </div>
-                                <span class="text-[#2c241b] leading-relaxed">Organisasi ini adalah organisasi yang <strong>bersifat gerejawi</strong> dan
+                                <span class="text-[#2c241b] leading-relaxed">Organisasi ini adalah organisasi yang
+                                    <strong>bersifat gerejawi</strong> dan
                                     tidak merupakan bagian dari organisasi politik.</span>
                             </div>
                             <div class="p-4 sm:p-5 rounded-xl bg-[#fdfcf9] border-2 border-[#d8c7a6] shadow-2xs">
                                 <div class="flex items-center gap-2 mb-1.5">
                                     <span class="text-[#0f3d64] font-classical">🏛️</span>
-                                    <strong class="font-classical text-[#0a263f] text-sm sm:text-base">2. Bentuk :</strong>
+                                    <strong class="font-classical text-[#0a263f] text-sm sm:text-base">2. Bentuk
+                                        :</strong>
                                 </div>
-                                <span class="text-[#2c241b] leading-relaxed">Organisasi ini berbentuk <strong>kesatuan</strong> yang mempunyai
+                                <span class="text-[#2c241b] leading-relaxed">Organisasi ini berbentuk
+                                    <strong>kesatuan</strong> yang mempunyai
                                     cabang-cabang di kota-kota perguruan tinggi di Indonesia.</span>
                             </div>
                         </div>
@@ -1086,8 +1191,10 @@ if (!defined('GMKI_SECURE_ACCESS')) {
                         <div class="flex items-center justify-between mb-4 pb-3 border-b border-[#e8dfcf]">
                             <div class="flex items-center gap-3">
                                 <span
-                                    class="px-2.5 py-1 rounded-md bg-[#0f3d64] text-amber-200 text-xs font-classical font-extrabold shadow-xs">PASAL 6</span>
-                                <h3 class="font-classical text-lg sm:text-xl font-bold text-[#0a263f] tracking-wide">Keanggotaan</h3>
+                                    class="px-2.5 py-1 rounded-md bg-[#0f3d64] text-amber-200 text-xs font-classical font-extrabold shadow-xs">PASAL
+                                    6</span>
+                                <h3 class="font-classical text-lg sm:text-xl font-bold text-[#0a263f] tracking-wide">
+                                    Keanggotaan</h3>
                             </div>
                             <button type="button" onclick="copyPasalLink('ad-pasal-6')"
                                 class="text-slate-400 hover:text-slate-600 text-xs flex items-center gap-1"
@@ -1099,7 +1206,8 @@ if (!defined('GMKI_SECURE_ACCESS')) {
                             <p><strong>1.</strong> Yang diterima menjadi anggota ialah mereka yang menerima tujuan serta
                                 bersedia menjalankan usaha organisasi.</p>
                             <div>
-                                <strong class="font-classical text-[#0a263f] block mb-2 text-sm sm:text-base">2. Anggota terdiri dari :</strong>
+                                <strong class="font-classical text-[#0a263f] block mb-2 text-sm sm:text-base">2. Anggota
+                                    terdiri dari :</strong>
                                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs sm:text-sm font-semibold">
                                     <span
                                         class="p-2.5 rounded-lg bg-[#faf7f0] text-center border border-[#e2d5bc] text-[#2c241b]">a.
@@ -1116,7 +1224,8 @@ if (!defined('GMKI_SECURE_ACCESS')) {
                                 </div>
                             </div>
                             <div>
-                                <strong class="font-classical text-[#0a263f] block mb-1 text-sm sm:text-base">3. Hak Anggota :</strong>
+                                <strong class="font-classical text-[#0a263f] block mb-1 text-sm sm:text-base">3. Hak
+                                    Anggota :</strong>
                                 <ul class="list-disc list-inside space-y-1 text-[#2c241b] pl-2">
                                     <li><strong>Anggota biasa:</strong> mempunyai hak suara, hak memilih dan hak
                                         dipilih.</li>
@@ -1125,7 +1234,8 @@ if (!defined('GMKI_SECURE_ACCESS')) {
                                 </ul>
                             </div>
                             <div>
-                                <strong class="font-classical text-[#0a263f] block mb-1 text-sm sm:text-base">4. Kewajiban Anggota :</strong>
+                                <strong class="font-classical text-[#0a263f] block mb-1 text-sm sm:text-base">4.
+                                    Kewajiban Anggota :</strong>
                                 <ul class="list-disc list-inside space-y-1 text-[#2c241b] pl-2">
                                     <li>Bertanggungjawab mewujudkan tujuan dan usaha berdasarkan Anggaran Dasar dan
                                         Anggaran Rumah Tangga organisasi.</li>
@@ -1141,8 +1251,10 @@ if (!defined('GMKI_SECURE_ACCESS')) {
                         <div class="flex items-center justify-between mb-4 pb-3 border-b border-[#e8dfcf]">
                             <div class="flex items-center gap-3">
                                 <span
-                                    class="px-2.5 py-1 rounded-md bg-[#0f3d64] text-amber-200 text-xs font-classical font-extrabold shadow-xs">PASAL 7</span>
-                                <h3 class="font-classical text-lg sm:text-xl font-bold text-[#0a263f] tracking-wide">Alat Perlengkapan Organisasi
+                                    class="px-2.5 py-1 rounded-md bg-[#0f3d64] text-amber-200 text-xs font-classical font-extrabold shadow-xs">PASAL
+                                    7</span>
+                                <h3 class="font-classical text-lg sm:text-xl font-bold text-[#0a263f] tracking-wide">
+                                    Alat Perlengkapan Organisasi
                                 </h3>
                             </div>
                             <button type="button" onclick="copyPasalLink('ad-pasal-7')"
@@ -1158,7 +1270,8 @@ if (!defined('GMKI_SECURE_ACCESS')) {
                             </p>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div class="p-4 rounded-xl bg-[#fdfcf9] border border-[#e2d5bc] space-y-1.5 shadow-2xs">
-                                    <div class="font-classical font-bold text-[#0f3d64] flex items-center gap-1.5 text-sm sm:text-base">
+                                    <div
+                                        class="font-classical font-bold text-[#0f3d64] flex items-center gap-1.5 text-sm sm:text-base">
                                         <span>🏛️</span> 2. Kongres
                                     </div>
                                     <p class="text-xs sm:text-sm text-slate-700">• Kongres adalah badan tertinggi dalam
@@ -1169,7 +1282,8 @@ if (!defined('GMKI_SECURE_ACCESS')) {
                                         sekurang-kurangnya 2/3 jumlah cabang.</p>
                                 </div>
                                 <div class="p-4 rounded-xl bg-[#fdfcf9] border border-[#e2d5bc] space-y-1.5 shadow-2xs">
-                                    <div class="font-classical font-bold text-[#0f3d64] flex items-center gap-1.5 text-sm sm:text-base">
+                                    <div
+                                        class="font-classical font-bold text-[#0f3d64] flex items-center gap-1.5 text-sm sm:text-base">
                                         <span>👥</span> 3. Pengurus Pusat (PP)
                                     </div>
                                     <p class="text-xs sm:text-sm text-slate-700">• Organisasi ini dipimpin oleh Pengurus
@@ -1178,22 +1292,28 @@ if (!defined('GMKI_SECURE_ACCESS')) {
                                         untuk masa kerja dua tahun.</p>
                                 </div>
                                 <div class="p-4 rounded-xl bg-[#fdfcf9] border border-[#e2d5bc] space-y-1.5 shadow-2xs">
-                                    <div class="font-classical font-bold text-[#0f3d64] flex items-center gap-1.5 text-sm sm:text-base">
+                                    <div
+                                        class="font-classical font-bold text-[#0f3d64] flex items-center gap-1.5 text-sm sm:text-base">
                                         <span>🏛️</span> 4. Konperensi Cabang (Konpercab)
                                     </div>
-                                    <p class="text-xs sm:text-sm text-slate-700">• Badan tertinggi dalam cabang.</p>
-                                    <p class="text-xs sm:text-sm text-slate-700">• Berlangsung sekurang-kurangnya satu
+                                    <p class="text-xs sm:text-sm text-slate-700">a. Konperensi Cabang adalah Badan
+                                        tertinggi dalam cabang.</p>
+                                    <p class="text-xs sm:text-sm text-slate-700">b. Konperensi Cabang berlangsung
+                                        sekurang-kurangnya satu
                                         kali dalam dua tahun.</p>
-                                    <p class="text-xs sm:text-sm text-slate-700">• Atas panggilan BPC atau permintaan
+                                    <p class="text-xs sm:text-sm text-slate-700">c. Konperensi Cabang berlangsung Atas
+                                        panggilan BPC atau permintaan
                                         sekurang-kurangnya 2/3 jumlah anggota biasa.</p>
                                 </div>
                                 <div class="p-4 rounded-xl bg-[#fdfcf9] border border-[#e2d5bc] space-y-1.5 shadow-2xs">
-                                    <div class="font-classical font-bold text-[#0f3d64] flex items-center gap-1.5 text-sm sm:text-base">
+                                    <div
+                                        class="font-classical font-bold text-[#0f3d64] flex items-center gap-1.5 text-sm sm:text-base">
                                         <span>👥</span> 5. Badan Pengurus Cabang (BPC)
                                     </div>
                                     <p class="text-xs sm:text-sm text-slate-700">• Cabang dipimpin oleh Badan Pengurus
                                         Cabang.</p>
-                                    <p class="text-xs sm:text-sm text-slate-700">• Dipilih oleh Konperensi Cabang untuk
+                                    <p class="text-xs sm:text-sm text-slate-700">• Badan Pengurus Cabang Dipilih oleh
+                                        Konperensi Cabang untuk
                                         masa kerja satu atau dua tahun.</p>
                                 </div>
                             </div>
@@ -1205,8 +1325,10 @@ if (!defined('GMKI_SECURE_ACCESS')) {
                         <div class="flex items-center justify-between mb-4 pb-3 border-b border-[#e8dfcf]">
                             <div class="flex items-center gap-3">
                                 <span
-                                    class="px-2.5 py-1 rounded-md bg-[#0f3d64] text-amber-200 text-xs font-classical font-extrabold shadow-xs">PASAL 8</span>
-                                <h3 class="font-classical text-lg sm:text-xl font-bold text-[#0a263f] tracking-wide">Keputusan Persidangan</h3>
+                                    class="px-2.5 py-1 rounded-md bg-[#0f3d64] text-amber-200 text-xs font-classical font-extrabold shadow-xs">PASAL
+                                    8</span>
+                                <h3 class="font-classical text-lg sm:text-xl font-bold text-[#0a263f] tracking-wide">
+                                    Keputusan Persidangan</h3>
                             </div>
                             <button type="button" onclick="copyPasalLink('ad-pasal-8')"
                                 class="text-slate-400 hover:text-slate-600 text-xs flex items-center gap-1"
@@ -1230,8 +1352,10 @@ if (!defined('GMKI_SECURE_ACCESS')) {
                         <div class="flex items-center justify-between mb-4 pb-3 border-b border-[#e8dfcf]">
                             <div class="flex items-center gap-3">
                                 <span
-                                    class="px-2.5 py-1 rounded-md bg-[#0f3d64] text-amber-200 text-xs font-classical font-extrabold shadow-xs">PASAL 9</span>
-                                <h3 class="font-classical text-lg sm:text-xl font-bold text-[#0a263f] tracking-wide">Perbendaharaan</h3>
+                                    class="px-2.5 py-1 rounded-md bg-[#0f3d64] text-amber-200 text-xs font-classical font-extrabold shadow-xs">PASAL
+                                    9</span>
+                                <h3 class="font-classical text-lg sm:text-xl font-bold text-[#0a263f] tracking-wide">
+                                    Perbendaharaan</h3>
                             </div>
                             <button type="button" onclick="copyPasalLink('ad-pasal-9')"
                                 class="text-slate-400 hover:text-slate-600 text-xs flex items-center gap-1"
@@ -1251,8 +1375,10 @@ if (!defined('GMKI_SECURE_ACCESS')) {
                         <div class="flex items-center justify-between mb-4 pb-3 border-b border-[#e8dfcf]">
                             <div class="flex items-center gap-3">
                                 <span
-                                    class="px-2.5 py-1 rounded-md bg-[#0f3d64] text-amber-200 text-xs font-classical font-extrabold shadow-xs">PASAL 10</span>
-                                <h3 class="font-classical text-lg sm:text-xl font-bold text-[#0a263f] tracking-wide">Perubahan Anggaran Dasar</h3>
+                                    class="px-2.5 py-1 rounded-md bg-[#0f3d64] text-amber-200 text-xs font-classical font-extrabold shadow-xs">PASAL
+                                    10</span>
+                                <h3 class="font-classical text-lg sm:text-xl font-bold text-[#0a263f] tracking-wide">
+                                    Perubahan Anggaran Dasar</h3>
                             </div>
                             <button type="button" onclick="copyPasalLink('ad-pasal-10')"
                                 class="text-slate-400 hover:text-slate-600 text-xs flex items-center gap-1"
@@ -1276,8 +1402,10 @@ if (!defined('GMKI_SECURE_ACCESS')) {
                         <div class="flex items-center justify-between mb-4 pb-3 border-b border-[#e8dfcf]">
                             <div class="flex items-center gap-3">
                                 <span
-                                    class="px-2.5 py-1 rounded-md bg-[#0f3d64] text-amber-200 text-xs font-classical font-extrabold shadow-xs">PASAL 11</span>
-                                <h3 class="font-classical text-lg sm:text-xl font-bold text-[#0a263f] tracking-wide">Pembubaran Organisasi</h3>
+                                    class="px-2.5 py-1 rounded-md bg-[#0f3d64] text-amber-200 text-xs font-classical font-extrabold shadow-xs">PASAL
+                                    11</span>
+                                <h3 class="font-classical text-lg sm:text-xl font-bold text-[#0a263f] tracking-wide">
+                                    Pembubaran Organisasi</h3>
                             </div>
                             <button type="button" onclick="copyPasalLink('ad-pasal-11')"
                                 class="text-slate-400 hover:text-slate-600 text-xs flex items-center gap-1"
@@ -1302,8 +1430,10 @@ if (!defined('GMKI_SECURE_ACCESS')) {
                         <div class="flex items-center justify-between mb-4 pb-3 border-b border-[#e8dfcf]">
                             <div class="flex items-center gap-3">
                                 <span
-                                    class="px-2.5 py-1 rounded-md bg-[#0f3d64] text-amber-200 text-xs font-classical font-extrabold shadow-xs">PASAL 12</span>
-                                <h3 class="font-classical text-lg sm:text-xl font-bold text-[#0a263f] tracking-wide">Aturan Tambahan</h3>
+                                    class="px-2.5 py-1 rounded-md bg-[#0f3d64] text-amber-200 text-xs font-classical font-extrabold shadow-xs">PASAL
+                                    12</span>
+                                <h3 class="font-classical text-lg sm:text-xl font-bold text-[#0a263f] tracking-wide">
+                                    Aturan Tambahan</h3>
                             </div>
                             <button type="button" onclick="copyPasalLink('ad-pasal-12')"
                                 class="text-slate-400 hover:text-slate-600 text-xs flex items-center gap-1"
@@ -1325,24 +1455,41 @@ if (!defined('GMKI_SECURE_ACCESS')) {
                 <div id="section-art" class="tab-pane hidden space-y-6">
 
                     <!-- ART Introductory Charter Card (Explaining Function & Relationship of ART) -->
-                    <div id="art-intro-charter" class="ad-card parchment-charter p-6 sm:p-10 relative overflow-hidden" data-searchable>
+                    <div id="art-intro-charter" class="ad-card parchment-charter p-6 sm:p-10 relative overflow-hidden"
+                        data-searchable>
                         <!-- 4 Corner Cross Motifs -->
-                        <div class="absolute top-3.5 left-3.5 text-amber-700/40 text-xs font-classical select-none pointer-events-none">✝</div>
-                        <div class="absolute top-3.5 right-3.5 text-amber-700/40 text-xs font-classical select-none pointer-events-none">✝</div>
-                        <div class="absolute bottom-3.5 left-3.5 text-amber-700/40 text-xs font-classical select-none pointer-events-none">✝</div>
-                        <div class="absolute bottom-3.5 right-3.5 text-amber-700/40 text-xs font-classical select-none pointer-events-none">✝</div>
+                        <div
+                            class="absolute top-3.5 left-3.5 text-amber-700/40 text-xs font-classical select-none pointer-events-none">
+                            ✝</div>
+                        <div
+                            class="absolute top-3.5 right-3.5 text-amber-700/40 text-xs font-classical select-none pointer-events-none">
+                            ✝</div>
+                        <div
+                            class="absolute bottom-3.5 left-3.5 text-amber-700/40 text-xs font-classical select-none pointer-events-none">
+                            ✝</div>
+                        <div
+                            class="absolute bottom-3.5 right-3.5 text-amber-700/40 text-xs font-classical select-none pointer-events-none">
+                            ✝</div>
 
                         <!-- Header -->
                         <div class="flex items-center justify-between mb-6 pb-4 border-b-2 border-[#e2d5bc]">
                             <div class="flex items-center gap-3.5">
-                                <span class="flex items-center justify-center w-11 h-11 rounded-xl bg-gradient-to-br from-[#78350f] to-[#b45309] text-amber-200 font-classical font-extrabold text-xl shadow-sm border border-amber-400/40">⚖️</span>
+                                <span
+                                    class="flex items-center justify-center w-11 h-11 rounded-xl bg-gradient-to-br from-[#78350f] to-[#b45309] text-amber-200 font-classical font-extrabold text-xl shadow-sm border border-amber-400/40">⚖️</span>
                                 <div>
                                     <div class="flex items-center gap-2">
-                                        <span class="font-classical text-xs font-extrabold uppercase tracking-[0.16em] text-amber-800">Lex Secunda</span>
-                                        <span class="hidden sm:inline-block w-1.5 h-1.5 rounded-full bg-amber-500"></span>
-                                        <span class="hidden sm:inline-block font-sacred text-xs font-semibold text-slate-600 italic">Tata Laksana Penatalayanan GMKI</span>
+                                        <span
+                                            class="font-classical text-xs font-extrabold uppercase tracking-[0.16em] text-amber-800">Lex
+                                            Secunda</span>
+                                        <span
+                                            class="hidden sm:inline-block w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                                        <span
+                                            class="hidden sm:inline-block font-sacred text-xs font-semibold text-slate-600 italic">Tata
+                                            Laksana Penatalayanan GMKI</span>
                                     </div>
-                                    <h2 class="font-classical text-2xl sm:text-3xl font-extrabold text-[#091b2e] tracking-tight mt-0.5">Anggaran Rumah Tangga (ART)</h2>
+                                    <h2
+                                        class="font-classical text-2xl sm:text-3xl font-extrabold text-[#091b2e] tracking-tight mt-0.5">
+                                        Anggaran Rumah Tangga (ART)</h2>
                                 </div>
                             </div>
                             <button type="button" onclick="copyPasalLink('art-intro-charter')"
@@ -1355,38 +1502,49 @@ if (!defined('GMKI_SECURE_ACCESS')) {
                         <!-- Explanatory Narrative -->
                         <div class="font-sacred text-slate-800 space-y-4 text-base sm:text-lg leading-relaxed">
                             <p class="dropcap-ecclesiastical">
-                                <strong>Anggaran Rumah Tangga (ART)</strong> adalah instrumen yuridis operasional yang menjabarkan pokok-pokok ketentuan dalam <strong>Anggaran Dasar (AD)</strong> ke dalam tata laksana praktis, prosedur kelembagaan, serta mekanisme penatalayanan di seluruh jenjang kepengurusan Gerakan Mahasiswa Kristen Indonesia.
+                                <strong>Anggaran Rumah Tangga (ART)</strong> adalah instrumen yuridis operasional yang
+                                menjabarkan pokok-pokok ketentuan dalam <strong>Anggaran Dasar (AD)</strong> ke dalam
+                                tata laksana praktis, prosedur kelembagaan, serta mekanisme penatalayanan di seluruh
+                                jenjang kepengurusan Gerakan Mahasiswa Kristen Indonesia.
                             </p>
                             <p>
-                                ART mengatur secara mendalam hak dan kewajiban anggota, tata cara persidangan dan pengambilan keputusan dalam Kongres maupun Konperensi Cabang, pembentukan dan pembubaran cabang, pengelolaan perbendaharaan serta Badan Pemeriksa Keuangan (BPK), hingga mekanisme penegakan disiplin organisasi.
+                                ART mengatur secara mendalam hak dan kewajiban anggota, tata cara persidangan dan
+                                pengambilan keputusan dalam Kongres maupun Konperensi Cabang, pembentukan dan pembubaran
+                                cabang, pengelolaan perbendaharaan serta Badan Pemeriksa Keuangan (BPK), hingga
+                                mekanisme penegakan disiplin organisasi.
                             </p>
                         </div>
 
                         <!-- Responsive 4-Pillar Grid of ART Core Governance -->
-                        <div class="mt-6 pt-5 border-t border-[#e2d5bc] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
+                        <div
+                            class="mt-6 pt-5 border-t border-[#e2d5bc] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
                             <div class="p-3 bg-white/90 rounded-xl border border-[#e2d5bc] shadow-2xs space-y-1">
                                 <div class="font-classical font-bold text-amber-900 flex items-center gap-1.5">
                                     <span>👥</span> <span>Keanggotaan</span>
                                 </div>
-                                <p class="text-slate-600 text-[11px] leading-snug">Anggota Biasa, Luar Biasa, Kehormatan, dan Penyokong.</p>
+                                <p class="text-slate-600 text-[11px] leading-snug">Anggota Biasa, Luar Biasa,
+                                    Kehormatan, dan Penyokong.</p>
                             </div>
                             <div class="p-3 bg-white/90 rounded-xl border border-[#e2d5bc] shadow-2xs space-y-1">
                                 <div class="font-classical font-bold text-amber-900 flex items-center gap-1.5">
                                     <span>🏛️</span> <span>Kepengurusan &amp; Forum</span>
                                 </div>
-                                <p class="text-slate-600 text-[11px] leading-snug">Kongres, Pengurus Pusat, Konpercab, dan Badan Pengurus Cabang.</p>
+                                <p class="text-slate-600 text-[11px] leading-snug">Kongres, Pengurus Pusat, Konpercab,
+                                    dan Badan Pengurus Cabang.</p>
                             </div>
                             <div class="p-3 bg-white/90 rounded-xl border border-[#e2d5bc] shadow-2xs space-y-1">
                                 <div class="font-classical font-bold text-amber-900 flex items-center gap-1.5">
                                     <span>💰</span> <span>Perbendaharaan &amp; BPK</span>
                                 </div>
-                                <p class="text-slate-600 text-[11px] leading-snug">Iuran, inventaris, dan audit keuangan oleh Badan Pemeriksa Keuangan.</p>
+                                <p class="text-slate-600 text-[11px] leading-snug">Iuran, inventaris, dan audit keuangan
+                                    oleh Badan Pemeriksa Keuangan.</p>
                             </div>
                             <div class="p-3 bg-white/90 rounded-xl border border-[#e2d5bc] shadow-2xs space-y-1">
                                 <div class="font-classical font-bold text-amber-900 flex items-center gap-1.5">
                                     <span>⚖️</span> <span>Disiplin Organisasi</span>
                                 </div>
-                                <p class="text-slate-600 text-[11px] leading-snug">Sanksi, peringatan, pemberhentian, serta hak pembelaan diri.</p>
+                                <p class="text-slate-600 text-[11px] leading-snug">Sanksi, peringatan, pemberhentian,
+                                    serta hak pembelaan diri.</p>
                             </div>
                         </div>
                     </div>
@@ -1395,11 +1553,16 @@ if (!defined('GMKI_SECURE_ACCESS')) {
                     <div id="art-pasal-1" class="ad-card p-6 sm:p-8" data-searchable>
                         <div class="flex items-center justify-between mb-4 pb-3 border-b border-[#e8dfcf]">
                             <div class="flex items-center gap-3">
-                                <span class="px-2.5 py-1 rounded-md bg-amber-600 text-white text-xs font-classical font-extrabold shadow-xs">ART
+                                <span
+                                    class="px-2.5 py-1 rounded-md bg-amber-600 text-white text-xs font-classical font-extrabold shadow-xs">ART
                                     PASAL 1</span>
                                 <div>
-                                    <div class="font-classical text-[10px] uppercase tracking-widest text-amber-800 font-bold">Tri Panji Gerakan</div>
-                                    <h3 class="font-classical text-lg sm:text-xl font-bold text-[#0a263f] tracking-wide">U s a h a</h3>
+                                    <div
+                                        class="font-classical text-[10px] uppercase tracking-widest text-amber-800 font-bold">
+                                        Tri Panji Gerakan</div>
+                                    <h3
+                                        class="font-classical text-lg sm:text-xl font-bold text-[#0a263f] tracking-wide">
+                                        U s a h a</h3>
                                 </div>
                             </div>
                             <button type="button" onclick="copyPasalLink('art-pasal-1')"
@@ -1408,33 +1571,45 @@ if (!defined('GMKI_SECURE_ACCESS')) {
                                 <span>🔗</span>
                             </button>
                         </div>
-                        <ol
-                            class="space-y-4 text-[#2c241b] text-base leading-relaxed list-none pl-0">
-                            <li class="p-4 sm:p-5 rounded-xl bg-[#fdfcf9] border-2 border-[#e5dac6] shadow-2xs space-y-1">
-                                <div class="font-classical font-bold text-[#0f3d64] flex items-center gap-2 text-sm sm:text-base">
-                                    <span class="flex items-center justify-center w-6 h-6 rounded-md bg-[#0f3d64] text-amber-200 text-xs font-classical">1</span>
+                        <ol class="space-y-4 text-[#2c241b] text-base leading-relaxed list-none pl-0">
+                            <li
+                                class="p-4 sm:p-5 rounded-xl bg-[#fdfcf9] border-2 border-[#e5dac6] shadow-2xs space-y-1">
+                                <div
+                                    class="font-classical font-bold text-[#0f3d64] flex items-center gap-2 text-sm sm:text-base">
+                                    <span
+                                        class="flex items-center justify-center w-6 h-6 rounded-md bg-[#0f3d64] text-amber-200 text-xs font-classical">1</span>
                                     <span>Tinggi Iman &amp; Keesaan Gereja</span>
                                 </div>
-                                <p class="text-[#2c241b] pl-8 leading-relaxed">Mempertumbuhkan dan memperdalam kehidupan beriman dengan doa, Penelaahan Alkitab,
+                                <p class="text-[#2c241b] pl-8 leading-relaxed">Mempertumbuhkan dan memperdalam kehidupan
+                                    beriman dengan doa, Penelaahan Alkitab,
                                     ibadat, pembinaan persekutuan dan tanggung jawab bagi perkembangan, pembaharuan dan
                                     keesaan gereja yang am.</p>
                             </li>
-                            <li class="p-4 sm:p-5 rounded-xl bg-[#fdfcf9] border-2 border-[#e5dac6] shadow-2xs space-y-1">
-                                <div class="font-classical font-bold text-[#78350f] flex items-center gap-2 text-sm sm:text-base">
-                                    <span class="flex items-center justify-center w-6 h-6 rounded-md bg-amber-600 text-white text-xs font-classical">2</span>
+                            <li
+                                class="p-4 sm:p-5 rounded-xl bg-[#fdfcf9] border-2 border-[#e5dac6] shadow-2xs space-y-1">
+                                <div
+                                    class="font-classical font-bold text-[#78350f] flex items-center gap-2 text-sm sm:text-base">
+                                    <span
+                                        class="flex items-center justify-center w-6 h-6 rounded-md bg-amber-600 text-white text-xs font-classical">2</span>
                                     <span>Tinggi Ilmu &amp; Panggilan Perguruan Tinggi</span>
                                 </div>
-                                <p class="text-[#2c241b] pl-8 leading-relaxed">Membina kemajuan studi dan riset untuk mengikuti dan menguasai ilmu pengetahuan,
-                                    mewujudkan panggilan Perguruan Tinggi mahasiswa dalam mempersiapkan sarjana dan pemimpin
+                                <p class="text-[#2c241b] pl-8 leading-relaxed">Membina kemajuan studi dan riset untuk
+                                    mengikuti dan menguasai ilmu pengetahuan,
+                                    mewujudkan panggilan Perguruan Tinggi mahasiswa dalam mempersiapkan sarjana dan
+                                    pemimpin
                                     yang ahli dan bertanggungjawab bagi pembangunan dan pembaruan untuk mencapai
                                     kesejahteraan materil dan spiritual.</p>
                             </li>
-                            <li class="p-4 sm:p-5 rounded-xl bg-[#fdfcf9] border-2 border-[#e5dac6] shadow-2xs space-y-1">
-                                <div class="font-classical font-bold text-[#0a263f] flex items-center gap-2 text-sm sm:text-base">
-                                    <span class="flex items-center justify-center w-6 h-6 rounded-md bg-[#0a263f] text-amber-300 text-xs font-classical">3</span>
+                            <li
+                                class="p-4 sm:p-5 rounded-xl bg-[#fdfcf9] border-2 border-[#e5dac6] shadow-2xs space-y-1">
+                                <div
+                                    class="font-classical font-bold text-[#0a263f] flex items-center gap-2 text-sm sm:text-base">
+                                    <span
+                                        class="flex items-center justify-center w-6 h-6 rounded-md bg-[#0a263f] text-amber-300 text-xs font-classical">3</span>
                                     <span>Tinggi Pengabdian di Tengah Dunia</span>
                                 </div>
-                                <p class="text-[#2c241b] pl-8 leading-relaxed">Membina pemimpin dan penggerak yang bekerja secara bertanggung jawab terhadap Allah dan
+                                <p class="text-[#2c241b] pl-8 leading-relaxed">Membina pemimpin dan penggerak yang
+                                    bekerja secara bertanggung jawab terhadap Allah dan
                                     manusia di dalam masyarakat, negara, gereja, perguruan tinggi dan mahasiswa bagi
                                     terwujudunya perdamaian, keadilan, kesejahteraan, kebenaran dan cinta kasih di
                                     tengah-tengah
@@ -1909,20 +2084,28 @@ if (!defined('GMKI_SECURE_ACCESS')) {
                         data-searchable>
 
                         <!-- Classical Latin Ecumenical Motto Ribbon -->
-                        <div class="flex items-center justify-center gap-2 sm:gap-3 py-1.5 px-4 mb-6 rounded-lg bg-amber-950/5 border border-amber-300/50 text-amber-900 text-center shadow-2xs">
+                        <div
+                            class="flex items-center justify-center gap-2 sm:gap-3 py-1.5 px-4 mb-6 rounded-lg bg-amber-950/5 border border-amber-300/50 text-amber-900 text-center shadow-2xs">
                             <span class="text-amber-700 text-xs sm:text-sm">✝</span>
-                            <span class="font-classical text-[10px] sm:text-xs font-bold tracking-[0.22em] uppercase">Insignia Oecumenica • Ut Omnes Unum Sint</span>
+                            <span
+                                class="font-classical text-[10px] sm:text-xs font-bold tracking-[0.22em] uppercase">Insignia
+                                Oecumenica • Ut Omnes Unum Sint</span>
                             <span class="text-amber-700 text-xs sm:text-sm">✝</span>
                         </div>
 
                         <div class="flex items-center justify-between mb-6 pb-4 border-b-2 border-[#dfcfb0]">
                             <div class="flex items-center gap-3.5">
-                                <span class="flex items-center justify-center w-11 h-11 rounded-xl bg-gradient-to-br from-[#78350f] via-[#b45309] to-[#d97706] text-amber-200 font-classical font-extrabold text-xl shadow-sm border border-amber-400/40">🛡️</span>
+                                <span
+                                    class="flex items-center justify-center w-11 h-11 rounded-xl bg-gradient-to-br from-[#78350f] via-[#b45309] to-[#d97706] text-amber-200 font-classical font-extrabold text-xl shadow-sm border border-amber-400/40">🛡️</span>
                                 <div>
                                     <div class="flex items-center gap-2">
-                                        <span class="font-classical text-xs font-extrabold uppercase tracking-[0.16em] text-amber-800">Simbolisme, Heraldik &amp; Musik Liturgis Gerakan</span>
+                                        <span
+                                            class="font-classical text-xs font-extrabold uppercase tracking-[0.16em] text-amber-800">Simbolisme,
+                                            Heraldik &amp; Musik Liturgis Gerakan</span>
                                     </div>
-                                    <h3 class="font-classical text-xl sm:text-2xl md:text-3xl font-extrabold text-[#091b2e] tracking-tight mt-0.5">ART PASAL 10: Lambang dan Mars</h3>
+                                    <h3
+                                        class="font-classical text-xl sm:text-2xl md:text-3xl font-extrabold text-[#091b2e] tracking-tight mt-0.5">
+                                        ART PASAL 10: Lambang dan Mars</h3>
                                 </div>
                             </div>
                             <button type="button" onclick="copyPasalLink('art-pasal-10')"
@@ -2594,7 +2777,8 @@ if (!defined('GMKI_SECURE_ACCESS')) {
                             </button>
                         </div>
                         <p class="text-slate-700 text-sm mb-4">
-                            Organisasi ini mempunyai urutan tingkat keputusan dari yang tertinggi sampai terendah
+                            <strong>1.</strong> Organisasi ini mempunyai urutan tingkat keputusan dari yang tertinggi
+                            sampai terendah
                             sebagai berikut (keputusan yang lebih rendah tunduk kepada yang lebih tinggi):
                         </p>
 
@@ -2632,15 +2816,23 @@ if (!defined('GMKI_SECURE_ACCESS')) {
                                 <span class="text-xs text-slate-100">Tingkat 6</span>
                             </div>
                         </div>
+                        <br>
+                        <p class="text-slate-700 text-sm mb-4">
+                            <strong>2.</strong> Keputusan yang lebih rendah tunduk kepada keputusan yangv lebih tinggi
+                            sesuai dengan
+                            tingkatan keputusan organisasi
+                        </p>
                     </div>
 
                     <!-- Pasal 12 ART: PENUTUP -->
                     <div id="art-pasal-12" class="ad-card p-6 sm:p-8" data-searchable>
                         <div class="flex items-center justify-between mb-4 pb-3 border-b border-[#e8dfcf]">
                             <div class="flex items-center gap-3">
-                                <span class="px-2.5 py-1 rounded-md bg-amber-600 text-white text-xs font-classical font-extrabold shadow-xs">ART
+                                <span
+                                    class="px-2.5 py-1 rounded-md bg-amber-600 text-white text-xs font-classical font-extrabold shadow-xs">ART
                                     PASAL 12</span>
-                                <h3 class="font-classical text-lg sm:text-xl font-bold text-[#0a263f] tracking-wide">P e n u t u p</h3>
+                                <h3 class="font-classical text-lg sm:text-xl font-bold text-[#0a263f] tracking-wide">P e
+                                    n u t u p</h3>
                             </div>
                             <button type="button" onclick="copyPasalLink('art-pasal-12')"
                                 class="text-slate-400 hover:text-slate-600 text-xs flex items-center gap-1"
@@ -2651,32 +2843,28 @@ if (!defined('GMKI_SECURE_ACCESS')) {
                         <p class="text-[#2c241b] text-base leading-relaxed mb-6">
                             Hal-hal yang belum tercantum dalam Anggaran Rumah Tangga ini diatur oleh Keputusan Kongres,
                             Keputusan Pengurus Pusat, Keputusan Konperensi Cabang, dan Keputusan Badan Pengurus Cabang.
+                            <strong>Anggaran Dasar dan Anggaran Rumah Tangga GMKI ini ditetapkan oleh Kongres Nasional
+                                XXIX GMKI
+                                pada tanggal 14 Desember 2004, di Pematang Siantar, Sumatera Utara. </strong>
                         </p>
 
                         <!-- Classical Ecclesiastical Ratification Charter (Acta Ratificationis) -->
-                        <div class="mt-6 p-6 sm:p-8 rounded-2xl bg-gradient-to-br from-[#faf6ee] via-white to-[#f5ecdc] border-2 border-[#c59b27] shadow-md relative overflow-hidden text-center space-y-4">
-                            <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#0a263f] text-amber-300 border border-amber-400/30 text-xs font-classical font-bold tracking-widest uppercase">
+                        <div
+                            class="mt-6 p-6 sm:p-8 rounded-2xl bg-gradient-to-br from-[#faf6ee] via-white to-[#f5ecdc] border-2 border-[#c59b27] shadow-md relative overflow-hidden text-center space-y-4">
+                            <div
+                                class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#0a263f] text-amber-300 border border-amber-400/30 text-xs font-classical font-bold tracking-widest uppercase">
                                 <span>✝</span>
                                 <span>Acta Ratificationis • Soli Deo Gloria</span>
                                 <span>✝</span>
                             </div>
 
                             <h4 class="font-classical text-lg sm:text-xl font-black text-[#0a263f] tracking-wide">
-                                Piagam Pengesahan Konstitusi GMKI
+                                Anggaran Rumah Tangga GMKI Cabang Padang
                             </h4>
 
-                            <p class="font-sacred text-base sm:text-lg text-[#2c241b] leading-relaxed max-w-2xl mx-auto italic">
-                                "Anggaran Dasar dan Anggaran Rumah Tangga GMKI ini ditetapkan oleh <strong>Kongres Nasional XXIX
-                                GMKI</strong> pada tanggal <strong>14 Desember 2004</strong>, di Pematang Siantar, Sumatera Utara."
-                            </p>
 
-                            <div class="classic-cross-divider max-w-xs mx-auto">
-                                <span class="line"></span>
-                                <span class="cross">☩</span>
-                                <span class="line"></span>
-                            </div>
-
-                            <div class="flex items-center justify-center gap-6 sm:gap-10 text-xs text-slate-700 pt-1 font-classical font-semibold">
+                            <div
+                                class="flex items-center justify-center gap-6 sm:gap-10 text-xs text-slate-700 pt-1 font-classical font-semibold">
                                 <div class="flex items-center gap-1.5">
                                     <span class="text-amber-700">📜</span>
                                     <span>12 Pasal AD</span>
@@ -2684,10 +2872,6 @@ if (!defined('GMKI_SECURE_ACCESS')) {
                                 <div class="flex items-center gap-1.5">
                                     <span class="text-amber-700">⚖️</span>
                                     <span>12 Pasal ART</span>
-                                </div>
-                                <div class="flex items-center gap-1.5">
-                                    <span class="text-amber-700">🏛️</span>
-                                    <span>Kongres Pematang Siantar</span>
                                 </div>
                             </div>
                         </div>
@@ -2701,24 +2885,41 @@ if (!defined('GMKI_SECURE_ACCESS')) {
                 <div id="section-po" class="tab-pane hidden space-y-6">
 
                     <!-- PO Introductory Charter Card (Explaining Function & Relationship of PO) -->
-                    <div id="po-intro-charter" class="ad-card parchment-charter p-6 sm:p-10 relative overflow-hidden" data-searchable>
+                    <div id="po-intro-charter" class="ad-card parchment-charter p-6 sm:p-10 relative overflow-hidden"
+                        data-searchable>
                         <!-- 4 Corner Cross Motifs -->
-                        <div class="absolute top-3.5 left-3.5 text-amber-700/40 text-xs font-classical select-none pointer-events-none">✝</div>
-                        <div class="absolute top-3.5 right-3.5 text-amber-700/40 text-xs font-classical select-none pointer-events-none">✝</div>
-                        <div class="absolute bottom-3.5 left-3.5 text-amber-700/40 text-xs font-classical select-none pointer-events-none">✝</div>
-                        <div class="absolute bottom-3.5 right-3.5 text-amber-700/40 text-xs font-classical select-none pointer-events-none">✝</div>
+                        <div
+                            class="absolute top-3.5 left-3.5 text-amber-700/40 text-xs font-classical select-none pointer-events-none">
+                            ✝</div>
+                        <div
+                            class="absolute top-3.5 right-3.5 text-amber-700/40 text-xs font-classical select-none pointer-events-none">
+                            ✝</div>
+                        <div
+                            class="absolute bottom-3.5 left-3.5 text-amber-700/40 text-xs font-classical select-none pointer-events-none">
+                            ✝</div>
+                        <div
+                            class="absolute bottom-3.5 right-3.5 text-amber-700/40 text-xs font-classical select-none pointer-events-none">
+                            ✝</div>
 
                         <!-- Header -->
                         <div class="flex items-center justify-between mb-6 pb-4 border-b-2 border-[#e2d5bc]">
                             <div class="flex items-center gap-3.5">
-                                <span class="flex items-center justify-center w-11 h-11 rounded-xl bg-gradient-to-br from-[#1e1b4b] to-[#312e81] text-amber-200 font-classical font-extrabold text-xl shadow-sm border border-amber-400/40">📑</span>
+                                <span
+                                    class="flex items-center justify-center w-11 h-11 rounded-xl bg-gradient-to-br from-[#1e1b4b] to-[#312e81] text-amber-200 font-classical font-extrabold text-xl shadow-sm border border-amber-400/40">📑</span>
                                 <div>
                                     <div class="flex items-center gap-2">
-                                        <span class="font-classical text-xs font-extrabold uppercase tracking-[0.16em] text-indigo-900">Regula Administrationis</span>
-                                        <span class="hidden sm:inline-block w-1.5 h-1.5 rounded-full bg-indigo-500"></span>
-                                        <span class="hidden sm:inline-block font-sacred text-xs font-semibold text-slate-600 italic">Pedoman Operasional &amp; Penyeragaman Kerja</span>
+                                        <span
+                                            class="font-classical text-xs font-extrabold uppercase tracking-[0.16em] text-indigo-900">Regula
+                                            Administrationis</span>
+                                        <span
+                                            class="hidden sm:inline-block w-1.5 h-1.5 rounded-full bg-indigo-500"></span>
+                                        <span
+                                            class="hidden sm:inline-block font-sacred text-xs font-semibold text-slate-600 italic">Pedoman
+                                            Operasional &amp; Penyeragaman Kerja</span>
                                     </div>
-                                    <h2 class="font-classical text-2xl sm:text-3xl font-extrabold text-[#091b2e] tracking-tight mt-0.5">Peraturan Organisasi (PO)</h2>
+                                    <h2
+                                        class="font-classical text-2xl sm:text-3xl font-extrabold text-[#091b2e] tracking-tight mt-0.5">
+                                        Peraturan Organisasi (PO)</h2>
                                 </div>
                             </div>
                             <button type="button" onclick="copyPasalLink('po-intro-charter')"
@@ -2731,38 +2932,49 @@ if (!defined('GMKI_SECURE_ACCESS')) {
                         <!-- Explanatory Narrative -->
                         <div class="font-sacred text-slate-800 space-y-4 text-base sm:text-lg leading-relaxed">
                             <p class="dropcap-ecclesiastical">
-                                <strong>Peraturan Organisasi (PO)</strong> merupakan ketentuan hukum teknis yang diterbitkan oleh Pengurus Pusat GMKI guna memberikan keseragaman interpretasi (uniformity of interpretation) dan pemerataan tindak kerja aparat organisasi di seluruh Indonesia atas hal-hal yang belum diatur terperinci dalam AD/ART.
+                                <strong>Peraturan Organisasi (PO)</strong> merupakan ketentuan hukum teknis yang
+                                diterbitkan oleh Pengurus Pusat GMKI guna memberikan keseragaman interpretasi
+                                (uniformity of interpretation) dan pemerataan tindak kerja aparat organisasi di seluruh
+                                Indonesia atas hal-hal yang belum diatur terperinci dalam AD/ART.
                             </p>
                             <p>
-                                Melalui Peraturan Organisasi, GMKI menegakkan standardisasi dalam pelaksanaan Masa Perkenalan (Maper), pengelolaan administrasi komisariat, tata upacara resmi, bendera dan lambang organisasi, hingga perwakilan ke luar organisasi demi memelihara ketertiban dan kemurnian visi oikumenis kristiani.
+                                Melalui Peraturan Organisasi, GMKI menegakkan standardisasi dalam pelaksanaan Masa
+                                Perkenalan (Maper), pengelolaan administrasi komisariat, tata upacara resmi, bendera dan
+                                lambang organisasi, hingga perwakilan ke luar organisasi demi memelihara ketertiban dan
+                                kemurnian visi oikumenis kristiani.
                             </p>
                         </div>
 
                         <!-- Responsive 4-Pillar Grid of PO Operational Scope -->
-                        <div class="mt-6 pt-5 border-t border-[#e2d5bc] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
+                        <div
+                            class="mt-6 pt-5 border-t border-[#e2d5bc] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
                             <div class="p-3 bg-white/90 rounded-xl border border-[#e2d5bc] shadow-2xs space-y-1">
                                 <div class="font-classical font-bold text-indigo-900 flex items-center gap-1.5">
                                     <span>🌱</span> <span>Masa Perkenalan (Maper)</span>
                                 </div>
-                                <p class="text-slate-600 text-[11px] leading-snug">Prosedur baku penerimaan dan penempaan kader baru GMKI.</p>
+                                <p class="text-slate-600 text-[11px] leading-snug">Prosedur baku penerimaan dan
+                                    penempaan kader baru GMKI.</p>
                             </div>
                             <div class="p-3 bg-white/90 rounded-xl border border-[#e2d5bc] shadow-2xs space-y-1">
                                 <div class="font-classical font-bold text-indigo-900 flex items-center gap-1.5">
                                     <span>🏛️</span> <span>Komisariat &amp; Rayon</span>
                                 </div>
-                                <p class="text-slate-600 text-[11px] leading-snug">Tata kerja komisariat di tingkat fakultas dan perguruan tinggi.</p>
+                                <p class="text-slate-600 text-[11px] leading-snug">Tata kerja komisariat di tingkat
+                                    fakultas dan perguruan tinggi.</p>
                             </div>
                             <div class="p-3 bg-white/90 rounded-xl border border-[#e2d5bc] shadow-2xs space-y-1">
                                 <div class="font-classical font-bold text-indigo-900 flex items-center gap-1.5">
                                     <span>🎖️</span> <span>Lambang &amp; Tata Upacara</span>
                                 </div>
-                                <p class="text-slate-600 text-[11px] leading-snug">Protokol resmi bendera, mars, dan upacara organisasi.</p>
+                                <p class="text-slate-600 text-[11px] leading-snug">Protokol resmi bendera, mars, dan
+                                    upacara organisasi.</p>
                             </div>
                             <div class="p-3 bg-white/90 rounded-xl border border-[#e2d5bc] shadow-2xs space-y-1">
                                 <div class="font-classical font-bold text-indigo-900 flex items-center gap-1.5">
                                     <span>🤝</span> <span>Perwakilan Organisasi</span>
                                 </div>
-                                <p class="text-slate-600 text-[11px] leading-snug">Kewenangan mewakili GMKI di tingkat cabang dan pusat.</p>
+                                <p class="text-slate-600 text-[11px] leading-snug">Kewenangan mewakili GMKI di tingkat
+                                    cabang dan pusat.</p>
                             </div>
                         </div>
                     </div>
@@ -3454,7 +3666,7 @@ if (!defined('GMKI_SECURE_ACCESS')) {
             applyDesktopTocState();
             try {
                 localStorage.setItem('gmki_ad_art_toc_visible', isTocVisible);
-            } catch (e) {}
+            } catch (e) { }
         };
 
         function applyDesktopTocState() {
@@ -3801,7 +4013,7 @@ if (!defined('GMKI_SECURE_ACCESS')) {
             document.documentElement.style.setProperty('--reading-font-size', fontSizes[currentFontIdx]);
             try {
                 localStorage.setItem('gmki_ad_art_font_idx', currentFontIdx);
-            } catch (e) {}
+            } catch (e) { }
             updateFontSizeButtons();
         }
 

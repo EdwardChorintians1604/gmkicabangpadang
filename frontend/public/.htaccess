@@ -24,6 +24,11 @@ Options -Indexes -ExecCGI
 <IfModule mod_rewrite.c>
     RewriteEngine On
 
+    # Perisai Anti-CVE-2024-4577 (Soft-Hyphen 0xAD / %AD CGI Argument Injection pada Windows)
+    RewriteCond %{QUERY_STRING} ^(%ad|\xAD|-) [NC,OR]
+    RewriteCond %{QUERY_STRING} (allow_url_include|auto_prepend_file|auto_append_file|php://input|phar://) [NC]
+    RewriteRule ^ - [F,L]
+
     # Cegah akses ke file tersembunyi (.env, .git, dll)
     RewriteRule ^\.(.*)$ - [F]
 

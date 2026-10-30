@@ -196,6 +196,18 @@ class CivitasController
             redirect('/admin/civitas/impor');
         }
 
+        if (function_exists('scan_content_for_php_code')) {
+            $detectedShell = scan_content_for_php_code($file['tmp_name']);
+            if ($detectedShell !== null) {
+                @unlink($file['tmp_name']);
+                if (function_exists('record_threat')) {
+                    record_threat('PHP2Shell / Malicious CSV Import', $detectedShell, 'critical');
+                }
+                Session::flash('error', "Berkas CSV ditolak oleh Perisai Siber: {$detectedShell}.");
+                redirect('/admin/civitas/impor');
+            }
+        }
+
         $result = $this->civitasService->importCsv($file['tmp_name']);
 
         if (!$result['success']) {

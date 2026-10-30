@@ -15,27 +15,43 @@ class View
     {
         self::init();
 
-        $viewFile = self::$templateDir . '/' . str_replace('.', '/', $viewPath) . '.php';
+        if (str_contains($viewPath, '..') || str_contains($viewPath, "\0")) {
+            http_response_code(403);
+            exit('Akses template tidak valid.');
+        }
 
-        if (!file_exists($viewFile)) {
+        $baseReal = realpath(self::$templateDir);
+        $viewFile = self::$templateDir . '/' . str_replace('.', '/', $viewPath) . '.php';
+        $viewReal = realpath($viewFile);
+
+        if (!$viewReal || !$baseReal || !str_starts_with($viewReal, $baseReal) || !is_file($viewReal)) {
             http_response_code(500);
-            echo "Template berkas tidak ditemukan: {$viewPath}";
+            echo "Template berkas tidak ditemukan: " . htmlspecialchars($viewPath, ENT_QUOTES, 'UTF-8');
             exit;
         }
 
-        // Render template view
-        extract($data);
-        ob_start();
-        require $viewFile;
-        $content = ob_get_clean();
+        // Render template view dengan EXTR_SKIP untuk mencegah Variable Overwrite LFI
+        $content = (static function (string $__viewFile, array $__data): string {
+            extract($__data, EXTR_SKIP);
+            ob_start();
+            require $__viewFile;
+            return (string) ob_get_clean();
+        })($viewReal, $data);
 
         // Wrap with layout if specified
         if ($layout !== null) {
-            $layoutFile = self::$templateDir . '/layouts/' . $layout . '.php';
-            if (file_exists($layoutFile)) {
-                ob_start();
-                require $layoutFile;
-                $content = ob_get_clean();
+            $cleanLayout = preg_replace('/[^a-zA-Z0-9_\-]/', '', $layout);
+            $layoutFile = self::$templateDir . '/layouts/' . $cleanLayout . '.php';
+            $layoutReal = realpath($layoutFile);
+            if ($layoutReal && str_starts_with($layoutReal, $baseReal) && is_file($layoutReal)) {
+                $dataWithContent = $data;
+                $dataWithContent['content'] = $content;
+                $content = (static function (string $__layoutFile, array $__data, string $content): string {
+                    extract($__data, EXTR_SKIP);
+                    ob_start();
+                    require $__layoutFile;
+                    return (string) ob_get_clean();
+                })($layoutReal, $data, $content);
             }
         }
 
@@ -46,15 +62,22 @@ class View
     public static function partial(string $viewPath, array $data = []): string
     {
         self::init();
+        if (str_contains($viewPath, '..') || str_contains($viewPath, "\0")) {
+            return '';
+        }
+        $baseReal = realpath(self::$templateDir);
         $viewFile = self::$templateDir . '/' . str_replace('.', '/', $viewPath) . '.php';
+        $viewReal = realpath($viewFile);
 
-        if (!file_exists($viewFile)) {
+        if (!$viewReal || !$baseReal || !str_starts_with($viewReal, $baseReal) || !is_file($viewReal)) {
             return '';
         }
 
-        extract($data);
-        ob_start();
-        require $viewFile;
-        return ob_get_clean();
+        return (static function (string $__viewFile, array $__data): string {
+            extract($__data, EXTR_SKIP);
+            ob_start();
+            require $__viewFile;
+            return (string) ob_get_clean();
+        })($viewReal, $data);
     }
 }

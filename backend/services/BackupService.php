@@ -306,6 +306,13 @@ class BackupService
     public function createTotalBackup(): array
     {
         if (!class_exists('\ZipArchive')) {
+            $polyfillPath = dirname(__DIR__) . '/packages/ZipArchivePolyfill.php';
+            if (file_exists($polyfillPath)) {
+                require_once $polyfillPath;
+            }
+        }
+
+        if (!class_exists('\ZipArchive')) {
             return [
                 'success' => false,
                 'message' => 'Ekstensi PHP ZipArchive tidak aktif pada server.',

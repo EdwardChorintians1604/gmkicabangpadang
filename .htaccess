@@ -2,7 +2,7 @@
 Options -Indexes -ExecCGI
 
 # 2. Blokir akses ke file sensitif, skrip eksekusi berbahaya, dan file cadangan (.env, .git, .sql, .phtml, .phar, dll)
-<FilesMatch "(^\..*|\.(env.*|sql|log|bat|exe|cmd|sh|bash|json|lock|md|docx|phtml|phar|inc|cgi|pl|py|pyc|bak|old|tmp))$">
+<FilesMatch "(^\..*|\.(env.*|sql|log|bat|exe|cmd|sh|bash|json|lock|md|docx|phtml|phar|inc|cgi|pl|py|pyc|bak|old|tmp|ini))$">
     <IfModule mod_authz_core.c>
         Require all denied
     </IfModule>
@@ -12,9 +12,25 @@ Options -Indexes -ExecCGI
     </IfModule>
 </FilesMatch>
 
-# 3. Blokir akses langsung ke folder internal sensitif
+# Blokir akses langsung ke skrip PHP internal di root selain index.php
+<Files "generate_hashes.php">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order deny,allow
+        Deny from all
+    </IfModule>
+</Files>
+
+# 3. Blokir akses langsung ke folder internal sensitif & proteksi CVE-2024-4577 (PHP-CGI Argument Injection)
 <IfModule mod_rewrite.c>
     RewriteEngine On
+
+    # Perisai Anti-CVE-2024-4577 (Soft-Hyphen 0xAD / %AD CGI Argument Injection pada Windows)
+    RewriteCond %{QUERY_STRING} ^(%ad|\xAD|-) [NC,OR]
+    RewriteCond %{QUERY_STRING} (allow_url_include|auto_prepend_file|auto_append_file|php://input|phar://) [NC]
+    RewriteRule ^ - [F,L]
 
     # Tolak akses ke folder internal backend, storage, frontend/templates, vendor, tools
     RewriteRule ^(backend|storage|frontend/templates|vendor|tools)/ - [F,L]

@@ -81,6 +81,14 @@ class Autoloader
             }
         });
 
+        // Muat polyfill ZipArchive murni PHP bila ekstensi ext-zip belum aktif di server
+        if (!class_exists('ZipArchive', false)) {
+            $zipPolyfill = self::$baseDir . '/packages/ZipArchivePolyfill.php';
+            if (file_exists($zipPolyfill)) {
+                require_once $zipPolyfill;
+            }
+        }
+
         // Muat berkas helper penting
         $helpers = [
             self::$baseDir . '/helpers/functions.php',

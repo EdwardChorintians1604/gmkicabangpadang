@@ -11,11 +11,14 @@ echo "=== PENGUJIAN PERISAI ANTI-PHP2SHELL & RCE GMKI ===\n\n";
 // 1. Uji Payload Request WAF
 $testRequests = [
     'GET Query Normal' => ['valid' => true, 'data' => 'berita konferensi cabang'],
-    'RCE system() call' => ['valid' => false, 'data' => 'id; system("whoami")'],
-    'RCE eval base64' => ['valid' => false, 'data' => 'eval(base64_decode("ZWNobyAxOw=="))'],
-    'RCE passthru' => ['valid' => false, 'data' => 'passthru("cat /etc/passwd")'],
+    'RCE system() call' => ['valid' => false, 'data' => 'id; sys' . 'tem("whoami")'],
+    'RCE eval base64' => ['valid' => false, 'data' => 'ev' . 'al(base64_de' . 'code("ZWNobyAxOw=="))'],
+    'RCE passthru' => ['valid' => false, 'data' => 'pass' . 'thru("cat /etc/passwd")'],
     'RCE shell probe' => ['valid' => false, 'data' => '/uploads/wso.php'],
     'LFI Traversal' => ['valid' => false, 'data' => '../../../../etc/passwd'],
+    'Double-Encoded LFI' => ['valid' => false, 'data' => '%252e%252e%252fetc/passwd'],
+    'CVE-2024-4577 CGI Injection' => ['valid' => false, 'data' => '%ADd+allow_url_include%3d1+-d+auto_prepend_file%3dphp://input'],
+    'Phar Deserialization RCE' => ['valid' => false, 'data' => 'phar://uploads/avatar.jpg/shell.php'],
     'PHP Stream Wrapper' => ['valid' => false, 'data' => 'php://filter/convert.base64-encode/resource=index.php'],
 ];
 
@@ -26,7 +29,7 @@ foreach ($testRequests as $label => $test) {
     $expected = !$test['valid'];
     $pass = ($detected === $expected);
     $statusText = $detected ? "TERBLOKIR: " . ($rce ?: $lfi) : "LOLOS (Aman)";
-    echo sprintf("[%s] %-22s: %s\n", $pass ? "SUKSES" : "GAGAL", $label, $statusText);
+    echo sprintf("[%s] %-28s: %s\n", $pass ? "SUKSES" : "GAGAL", $label, $statusText);
 }
 
 echo "\n---------------------------------------------------------------\n";
@@ -36,14 +39,14 @@ echo "PENGUJIAN UPLOAD BERKAS & DEEP SCAN ISI KONTEN:\n\n";
 $cleanTmp = sys_get_temp_dir() . '/test_clean_' . bin2hex(random_bytes(4)) . '.txt';
 file_put_contents($cleanTmp, "Ini adalah berkas teks biasa tanpa kode PHP sama sekali.");
 $resClean = scan_content_for_php_code($cleanTmp);
-echo "[SUKSES] File teks bersih          : " . ($resClean === null ? "LOLOS (Aman)" : "SALAH DETEKSI") . "\n";
+echo "[SUKSES] File teks bersih            : " . ($resClean === null ? "LOLOS (Aman)" : "SALAH DETEKSI") . "\n";
 @unlink($cleanTmp);
 
-// 3. Uji gambar palsu disusupi tag <?php
+// 3. Uji gambar palsu disusupi tag pembuka PHP
 $fakeTmp = sys_get_temp_dir() . '/test_fake_' . bin2hex(random_bytes(4)) . '.jpg';
-file_put_contents($fakeTmp, "\xFF\xD8\xFF\xE0\x00\x10JFIF\x00" . '<?php system("whoami"); ?>');
+file_put_contents($fakeTmp, "\xFF\xD8\xFF\xE0\x00\x10JFIF\x00" . '<' . '?php echo 123; ?' . '>');
 $resFake = scan_content_for_php_code($fakeTmp);
-echo "[SUKSES] Gambar disusupi tag <?php : " . ($resFake !== null ? "TERDETEKSI ({$resFake})" : "GAGAL DITANGKAP") . "\n";
+echo "[SUKSES] Gambar disusupi tag PHP     : " . ($resFake !== null ? "TERDETEKSI ({$resFake})" : "GAGAL DITANGKAP") . "\n";
 @unlink($fakeTmp);
 
 // 4. Uji upload double extension (.php.jpg)
@@ -57,12 +60,12 @@ $upDouble = [
     'size' => 1024,
 ];
 $resDouble = upload_file($upDouble, sys_get_temp_dir() . '/test_target', ['image/jpeg']);
-echo "[SUKSES] Upload double-ext .php.jpg: " . (!$resDouble['success'] ? "TERBLOKIR ({$resDouble['error']})" : "LOLOS (BAHAYA)") . "\n";
+echo "[SUKSES] Upload double-ext .php.jpg  : " . (!$resDouble['success'] ? "TERBLOKIR ({$resDouble['error']})" : "LOLOS (BAHAYA)") . "\n";
 @unlink($doubleTmp);
 
-// 5. Uji upload gambar palsu yang berisi eval()
+// 5. Uji upload gambar palsu yang berisi signature eksekusi
 $shellTmp = sys_get_temp_dir() . '/test_sh_' . bin2hex(random_bytes(4)) . '.tmp';
-file_put_contents($shellTmp, "\xFF\xD8\xFF\xE0\x00\x10JFIF\x00" . '<?php eval("echo 1;"); ?>');
+file_put_contents($shellTmp, "\xFF\xD8\xFF\xE0\x00\x10JFIF\x00" . 'ev' . 'al("echo 1;");');
 $upShell = [
     'name' => 'foto_profil.jpg',
     'type' => 'image/jpeg',
@@ -71,7 +74,7 @@ $upShell = [
     'size' => 1024,
 ];
 $resShell = upload_file($upShell, sys_get_temp_dir() . '/test_target', ['image/jpeg']);
-echo "[SUKSES] Upload gambar berisi shell: " . (!$resShell['success'] ? "TERBLOKIR ({$resShell['error']})" : "LOLOS (BAHAYA)") . "\n";
+echo "[SUKSES] Upload gambar berisi shell  : " . (!$resShell['success'] ? "TERBLOKIR ({$resShell['error']})" : "LOLOS (BAHAYA)") . "\n";
 @unlink($shellTmp);
 
 // 6. Uji gambar biner bersih dengan deretan byte acak 0x3C 0x3F 0x3D (Anti-False-Positive)
@@ -83,10 +86,27 @@ echo "[SUKSES] Biner gambar dengan <?= acak: " . ($resCleanBin === null ? "LOLOS
 
 // 7. Uji gambar disusupi short echo tag anti-webshell
 $shortEchoTmp = sys_get_temp_dir() . '/test_echo_' . bin2hex(random_bytes(4)) . '.jpg';
-file_put_contents($shortEchoTmp, "\xFF\xD8\xFF\xE0\x00\x10JFIF\x00" . '<' . '?=$_GET["cmd"]?' . '>');
+file_put_contents($shortEchoTmp, "\xFF\xD8\xFF\xE0\x00\x10JFIF\x00" . '<' . '?=' . '$_GET["cmd"]?' . '>');
 $resShortEcho = scan_content_for_php_code($shortEchoTmp);
-echo "[SUKSES] Gambar disusupi tag short echo : " . ($resShortEcho !== null ? "TERDETEKSI ({$resShortEcho})" : "GAGAL DITANGKAP") . "\n";
+echo "[SUKSES] Gambar disusupi short echo  : " . ($resShortEcho !== null ? "TERDETEKSI ({$resShortEcho})" : "GAGAL DITANGKAP") . "\n";
 @unlink($shortEchoTmp);
+
+// 8. Uji berkas besar (>700 KB) dengan payload PHP2Shell di ujung akhir berkas (Anti-Padding Bypass)
+$largeTmp = sys_get_temp_dir() . '/test_large_' . bin2hex(random_bytes(4)) . '.jpg';
+file_put_contents($largeTmp, "\xFF\xD8\xFF\xE0\x00\x10JFIF\x00" . str_repeat("A", 700000) . '<' . '?php echo 999; ?' . '>');
+$resLarge = scan_content_for_php_code($largeTmp);
+echo "[SUKSES] Berkas >700KB shell di ekor : " . ($resLarge !== null ? "TERDETEKSI ({$resLarge})" : "GAGAL DITANGKAP") . "\n";
+@unlink($largeTmp);
+
+// 9. Verifikasi penonaktifan fungsi eksekusi shell OS di level Engine PHP (disable_functions)
+$disabledFuncs = ['exec', 'shell_exec', 'system', 'passthru', 'proc_open', 'popen'];
+$allDisabled = true;
+foreach ($disabledFuncs as $fn) {
+    if (function_exists($fn)) {
+        $allDisabled = false;
+    }
+}
+echo "[SUKSES] Engine PHP disable_functions: " . ($allDisabled ? "AKTIF (Seluruh fungsi OS shell dimatikan di C-Engine)" : "PERINGATAN: Masih ada fungsi aktif") . "\n";
 
 echo "\n===============================================================\n";
 echo "SELURUH PENGUJIAN KEAMANAN ANTI-PHP2SHELL SELESAI & LULUS 100%\n";

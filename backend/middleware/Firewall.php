@@ -20,17 +20,29 @@ class Firewall implements Middleware
 {
     public function handle(Request $request, ?string $param = null): ?Response
     {
-        $uri = rawurldecode($_SERVER['REQUEST_URI'] ?? '');
+        $rawUri = $_SERVER['REQUEST_URI'] ?? '';
+        $rawQuery = $_SERVER['QUERY_STRING'] ?? '';
+        $uri = rawurldecode($rawUri);
+        $postBody = $request->post();
 
-        // 1. Perisai Anti-PHP2Shell / Anti-RCE (Remote Code Execution)
+        // 0. Perisai Anti-CVE-2024-4577 (PHP-CGI Argument Injection pada Windows)
+        if (
+            str_contains(strtolower($rawQuery), '%ad') ||
+            str_contains($rawQuery, "\xAD") ||
+            preg_match('/(?:^|[?&;\s])(?:-|\xAD|%ad)(?:d|n|c|s|w|r|B|F|R|E)\b/i', $rawQuery)
+        ) {
+            return $this->blockAttack('CVE-2024-4577 PHP-CGI Argument Injection', substr($rawQuery, 0, 200));
+        }
+
+        // 1. Perisai Anti-PHP2Shell / Anti-RCE (Remote Code Execution) pada GET, POST/JSON, URI, Cookie & Header
         $rceGet = detect_rce_payload($_GET);
         if ($rceGet !== null) {
             return $this->blockAttack('PHP2Shell / RCE Attempt (GET)', $rceGet);
         }
 
-        $rcePost = detect_rce_payload($_POST);
+        $rcePost = detect_rce_payload($postBody);
         if ($rcePost !== null) {
-            return $this->blockAttack('PHP2Shell / RCE Attempt (POST)', $rcePost);
+            return $this->blockAttack('PHP2Shell / RCE Attempt (POST/JSON)', $rcePost);
         }
 
         $rceUri = detect_rce_payload($uri);
@@ -38,10 +50,38 @@ class Firewall implements Middleware
             return $this->blockAttack('PHP2Shell / Web Shell Probe (URI)', $rceUri);
         }
 
-        // 2. Perisai Anti-LFI & Directory Traversal
+        if (!empty($_COOKIE)) {
+            $rceCookie = detect_rce_payload($_COOKIE);
+            if ($rceCookie !== null) {
+                return $this->blockAttack('PHP2Shell / RCE Attempt (COOKIE)', $rceCookie);
+            }
+        }
+
+        // Cek Header dari injeksi kode PHP / Log Poisoning (User-Agent, Referer, X-Forwarded-For, Client-IP)
+        $inspectedHeaders = [
+            'User-Agent' => $_SERVER['HTTP_USER_AGENT'] ?? '',
+            'Referer' => $_SERVER['HTTP_REFERER'] ?? '',
+            'X-Forwarded-For' => $_SERVER['HTTP_X_FORWARDED_FOR'] ?? '',
+            'Client-IP' => $_SERVER['HTTP_CLIENT_IP'] ?? '',
+        ];
+        foreach ($inspectedHeaders as $headerName => $headerVal) {
+            if ($headerVal !== '') {
+                $rceHdr = detect_rce_payload($headerVal);
+                if ($rceHdr !== null) {
+                    return $this->blockAttack("PHP2Shell / Header Injection ({$headerName})", $rceHdr);
+                }
+            }
+        }
+
+        // 2. Perisai Anti-LFI & Directory Traversal pada GET, POST/JSON, URI & Cookie
         $lfiGet = detect_lfi_traversal($_GET);
         if ($lfiGet !== null) {
             return $this->blockAttack('Directory Traversal / LFI (GET)', $lfiGet);
+        }
+
+        $lfiPost = detect_lfi_traversal($postBody);
+        if ($lfiPost !== null) {
+            return $this->blockAttack('Directory Traversal / LFI (POST/JSON)', $lfiPost);
         }
 
         $lfiUri = detect_lfi_traversal($uri);
@@ -49,20 +89,110 @@ class Firewall implements Middleware
             return $this->blockAttack('Directory Traversal / LFI (URI)', $lfiUri);
         }
 
-        // 3. Perisai Anti-SQL Injection
+        if (!empty($_COOKIE)) {
+            $lfiCookie = detect_lfi_traversal($_COOKIE);
+            if ($lfiCookie !== null) {
+                return $this->blockAttack('Directory Traversal / LFI (COOKIE)', $lfiCookie);
+            }
+        }
+
+        // 3. Perisai Global Anti-WebShell pada Seluruh Berkas Unggahan ($_FILES)
+        if (!empty($_FILES)) {
+            $maliciousUpload = $this->inspectUploadedFiles($_FILES);
+            if ($maliciousUpload !== null) {
+                return $this->blockAttack('PHP2Shell / Malicious File Upload Blocked', $maliciousUpload);
+            }
+        }
+
+        // 4. Perisai Anti-SQL Injection pada GET, POST/JSON, URI & Cookie
         $queryPayload = detect_sql_injection($_GET);
         if ($queryPayload !== null) {
             return $this->blockAttack('SQL Injection (GET Query)', $queryPayload);
         }
 
-        $postPayload = detect_sql_injection($_POST);
+        $postPayload = detect_sql_injection($postBody);
         if ($postPayload !== null) {
-            return $this->blockAttack('SQL Injection (POST Body)', $postPayload);
+            return $this->blockAttack('SQL Injection (POST/JSON Body)', $postPayload);
         }
 
         $uriPayload = detect_sql_injection($uri);
         if ($uriPayload !== null) {
             return $this->blockAttack('SQL Injection (URI Path)', $uriPayload);
+        }
+
+        if (!empty($_COOKIE)) {
+            $cookieSql = detect_sql_injection($_COOKIE);
+            if ($cookieSql !== null) {
+                return $this->blockAttack('SQL Injection (COOKIE)', $cookieSql);
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Inspeksi mendalam seluruh berkas di $_FILES pada gerbang utama WAF
+     */
+    protected function inspectUploadedFiles(array $files): ?string
+    {
+        foreach ($files as $file) {
+            if (!is_array($file)) {
+                continue;
+            }
+
+            // Tangani struktur multi-file array
+            if (isset($file['name']) && is_array($file['name'])) {
+                foreach ($file['name'] as $idx => $name) {
+                    $single = [
+                        'name' => $name,
+                        'tmp_name' => $file['tmp_name'][$idx] ?? '',
+                        'error' => $file['error'][$idx] ?? UPLOAD_ERR_NO_FILE,
+                    ];
+                    $res = $this->inspectSingleFile($single);
+                    if ($res !== null) {
+                        return $res;
+                    }
+                }
+            } else {
+                $res = $this->inspectSingleFile($file);
+                if ($res !== null) {
+                    return $res;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    protected function inspectSingleFile(array $file): ?string
+    {
+        if (($file['error'] ?? UPLOAD_ERR_NO_FILE) === UPLOAD_ERR_NO_FILE) {
+            return null;
+        }
+
+        $originalName = strtolower((string) ($file['name'] ?? ''));
+        $tmpName = (string) ($file['tmp_name'] ?? '');
+
+        if ($originalName !== '') {
+            if (
+                preg_match('/\.(php[0-9]?|phtml|phar|inc|cgi|pl|py|sh|bash|exe|bat|cmd|dll|bin|shtml|asp|aspx|jsp|jspx|htaccess|htpasswd|user\.ini)(\.|$)/i', $originalName) ||
+                str_contains($originalName, "\0") ||
+                str_contains($originalName, '%00') ||
+                str_contains($originalName, '..')
+            ) {
+                if ($tmpName !== '' && file_exists($tmpName)) {
+                    @unlink($tmpName);
+                }
+                return "Ekstensi berbahaya pada berkas: {$originalName}";
+            }
+        }
+
+        if ($tmpName !== '' && is_file($tmpName) && function_exists('scan_content_for_php_code')) {
+            $detected = scan_content_for_php_code($tmpName);
+            if ($detected !== null) {
+                @unlink($tmpName);
+                return "{$detected} pada berkas: {$originalName}";
+            }
         }
 
         return null;
