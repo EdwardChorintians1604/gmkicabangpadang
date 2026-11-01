@@ -93,7 +93,20 @@ class CivitasController
         $foto = $request->file('foto_anggota');
         $kta = $request->file('file_kta');
 
-        $res = $this->civitasService->create($request->post(), $foto, $kta);
+        $postPayload = $request->post();
+        if (array_key_exists('asal_civitas', $postPayload) || array_key_exists('alamat_asal', $postPayload)) {
+            $postPayload['asal_civitas'] = trim((string)($postPayload['asal_civitas'] ?? $postPayload['alamat_asal'] ?? ''));
+            unset($postPayload['alamat_asal']);
+        }
+        $rawStatus = trim((string)($postPayload['status_keanggotaan'] ?? 'Aktif'));
+        if ($rawStatus === 'Alumni/Senior') {
+            $rawStatus = 'Alumni';
+        } elseif (!in_array($rawStatus, ['Aktif', 'Pasif', 'Alumni', 'Senior'], true)) {
+            $rawStatus = 'Aktif';
+        }
+        $postPayload['status_keanggotaan'] = $rawStatus;
+
+        $res = $this->civitasService->create($postPayload, $foto);
 
         if (!$res['success']) {
             Session::flash('error', 'Gagal menyimpan data anggota.');
@@ -162,7 +175,20 @@ class CivitasController
         $foto = $request->file('foto_anggota');
         $kta = $request->file('file_kta');
 
-        $this->civitasService->update((int)$id, $request->post(), $foto, $kta);
+        $postPayload = $request->post();
+        if (array_key_exists('asal_civitas', $postPayload) || array_key_exists('alamat_asal', $postPayload)) {
+            $postPayload['asal_civitas'] = trim((string)($postPayload['asal_civitas'] ?? $postPayload['alamat_asal'] ?? ''));
+            unset($postPayload['alamat_asal']);
+        }
+        $rawStatus = trim((string)($postPayload['status_keanggotaan'] ?? 'Aktif'));
+        if ($rawStatus === 'Alumni/Senior') {
+            $rawStatus = 'Alumni';
+        } elseif (!in_array($rawStatus, ['Aktif', 'Pasif', 'Alumni', 'Senior'], true)) {
+            $rawStatus = 'Aktif';
+        }
+        $postPayload['status_keanggotaan'] = $rawStatus;
+
+        $this->civitasService->update((int)$id, $postPayload, $foto);
 
         Session::flash('success', 'Perubahan data civitas berhasil disimpan.');
         redirect("/admin/civitas/{$id}");

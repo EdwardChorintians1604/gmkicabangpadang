@@ -191,7 +191,7 @@ $pctAlumni = max(0, 100 - ($pctMaperca + $pctAnggota + $pctKK));
                 <div style="width: <?= $pctMaperca ?>%;" class="bg-amber-400 transition-all duration-500" title="Maperca: <?= $mapercaCount ?>"></div>
                 <div style="width: <?= $pctAnggota ?>%;" class="bg-sky-500 transition-all duration-500" title="Anggota: <?= $anggotaCount ?>"></div>
                 <div style="width: <?= $pctKK ?>%;" class="bg-indigo-600 transition-all duration-500" title="Kader Konsultan: <?= $kkCount ?>"></div>
-                <div style="width: <?= $pctAlumni ?>%;" class="bg-slate-400 transition-all duration-500" title="Alumni/Senior: <?= $alumniCount ?>"></div>
+                <div style="width: <?= $pctAlumni ?>%;" class="bg-slate-400 transition-all duration-500" title="Alumni &amp; Senior: <?= $alumniCount ?>"></div>
             </div>
 
             <!-- Step Grid -->

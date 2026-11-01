@@ -74,9 +74,9 @@ $deskripsi = $isMaperca
                 <div
                     style="background:#ffffff; padding:0.75rem; border-radius:var(--radius-sm); font-size:0.75rem; overflow-x:auto; border: 1px solid #e2e8f0; font-family: monospace; color: #334155;">
                     <?php if ($isMaperca): ?>
-                    ID / NIM, Nama Lengkap, Jenis Kelamin, Tempat Lahir, Tanggal Lahir, Telepon / WA, Email, Perguruan Tinggi, Fakultas, Jurusan, Tahun Maperca, Status Keanggotaan, Alamat Padang, Alamat Asal
+                    ID / NIM, Nama Lengkap, Jenis Kelamin, Tempat Lahir, Tanggal Lahir, Telepon / WA, Email, Perguruan Tinggi, Fakultas, Jurusan, Tahun Maperca, Status Keanggotaan, Alamat Padang, Asal Civitas
                     <?php else: ?>
-                    ID / NIM, Nama Lengkap, Jenis Kelamin, Tempat Lahir, Tanggal Lahir, Telepon / WA, Email, Perguruan Tinggi, Fakultas, Jurusan, Komisariat, Tahun Maperca, Tingkat Kaderisasi, Status Keanggotaan, Alamat Padang, Alamat Asal
+                    ID / NIM, Nama Lengkap, Jenis Kelamin, Tempat Lahir, Tanggal Lahir, Telepon / WA, Email, Perguruan Tinggi, Fakultas, Jurusan, Komisariat, Tahun Maperca, Tingkat Kaderisasi, Status Keanggotaan, Alamat Padang, Asal Civitas
                     <?php endif; ?>
                 </div>
                 <ul
@@ -89,6 +89,8 @@ $deskripsi = $isMaperca
                         (Perempuan / Wanita).</li>
                     <li><strong>Tanggal Lahir:</strong> Format teks tanggal standar (<code>YYYY-MM-DD</code> atau
                         <code>DD/MM/YYYY</code>) maupun format cell tanggal Excel bawaan didukung otomatis.</li>
+                    <li><strong>Status Keanggotaan:</strong> Pilihan: <code>Aktif</code>, <code>Pasif</code>, <code>Alumni</code>, atau <code>Senior</code> (default <code>Aktif</code>).</li>
+                    <li><strong>Asal Civitas:</strong> Kota atau daerah asal anggota (misal: Mentawai, Bengkulu, Solok, Medan, Sidikalang, Jakarta, dsb.).</li>
                     <?php if ($isMaperca): ?>
                         <li><strong>Khusus Calon Kader Baru (Maperca):</strong> Pendaftar kader baru belum terafiliasi dengan komisariat tertentu sampai mereka resmi dilantik, sehingga kolom Komisariat dan Tingkat Kaderisasi tidak perlu diisi (otomatis diatur sebagai kader baru).</li>
                     <?php else: ?>

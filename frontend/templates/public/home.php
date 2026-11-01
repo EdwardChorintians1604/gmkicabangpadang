@@ -7,9 +7,8 @@
                 <i class="bi bi-peace text-base sm:text-lg text-amber-300 flex-shrink-0"></i>
                 <span><?= e($profile['tema_periode'] ?? 'Ut Omnes Unum Sint') ?></span>
             </div>
-            <h1
-                class="hero-title animate__animated animate__fadeInUp font-extrabold tracking-tight">
-                Mempersiapkan Pemimpin Berintegritas & Berkarakter Kristus
+            <h1 class="hero-title animate__animated animate__fadeInUp font-extrabold tracking-tight">
+                Melahirkan Pemimpin Berintegritas & Berkarakter Kristus
             </h1>
             <p class="hero-subtitle animate__animated animate__fadeInUp text-slate-200">
                 Selamat datang di portal resmi <strong>GMKI Cabang Padang</strong>. Wadah persekutuan dan kaderisasi
@@ -25,7 +24,8 @@
                 <a href="/berita"
                     class="btn btn-lg hero-btn-glass w-full sm:w-auto text-center transform hover:-translate-y-1 transition-all duration-300 inline-flex items-center justify-center gap-2 group">
                     <span>Warta Kegiatan</span>
-                    <i class="bi bi-arrow-right text-base transition-transform duration-200 group-hover:translate-x-1"></i>
+                    <i
+                        class="bi bi-arrow-right text-base transition-transform duration-200 group-hover:translate-x-1"></i>
                 </a>
             </div>
         </div>
@@ -37,7 +37,8 @@
     <div class="stats-strip animate__animated animate__fadeInUp shadow-2xl rounded-2xl">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6 text-center">
             <div class="stat-item p-2 sm:p-3 flex flex-col items-center justify-center">
-                <div class="w-10 h-10 rounded-xl bg-amber-400/20 text-amber-300 flex items-center justify-center mb-2 shadow-inner">
+                <div
+                    class="w-10 h-10 rounded-xl bg-amber-400/20 text-amber-300 flex items-center justify-center mb-2 shadow-inner">
                     <i class="bi bi-people-fill text-xl"></i>
                 </div>
                 <div class="stat-num text-3xl md:text-4xl font-extrabold text-amber-300">
@@ -46,7 +47,8 @@
                 <div class="stat-label text-xs sm:text-sm font-semibold text-slate-200 mt-1">Total Civitas & Kader</div>
             </div>
             <div class="stat-item p-2 sm:p-3 flex flex-col items-center justify-center">
-                <div class="w-10 h-10 rounded-xl bg-emerald-400/20 text-emerald-400 flex items-center justify-center mb-2 shadow-inner">
+                <div
+                    class="w-10 h-10 rounded-xl bg-emerald-400/20 text-emerald-400 flex items-center justify-center mb-2 shadow-inner">
                     <i class="bi bi-person-check-fill text-xl"></i>
                 </div>
                 <div class="stat-num text-3xl md:text-4xl font-extrabold text-emerald-400">
@@ -55,7 +57,8 @@
                 <div class="stat-label text-xs sm:text-sm font-semibold text-slate-200 mt-1">Anggota Aktif</div>
             </div>
             <div class="stat-item p-2 sm:p-3 flex flex-col items-center justify-center">
-                <div class="w-10 h-10 rounded-xl bg-sky-400/20 text-sky-300 flex items-center justify-center mb-2 shadow-inner">
+                <div
+                    class="w-10 h-10 rounded-xl bg-sky-400/20 text-sky-300 flex items-center justify-center mb-2 shadow-inner">
                     <i class="bi bi-buildings-fill text-xl"></i>
                 </div>
                 <div class="stat-num text-3xl md:text-4xl font-extrabold text-sky-300">
@@ -64,7 +67,8 @@
                 <div class="stat-label text-xs sm:text-sm font-semibold text-slate-200 mt-1">Komisariat Kampus</div>
             </div>
             <div class="stat-item p-2 sm:p-3 flex flex-col items-center justify-center">
-                <div class="w-10 h-10 rounded-xl bg-amber-400/20 text-amber-300 flex items-center justify-center mb-2 shadow-inner">
+                <div
+                    class="w-10 h-10 rounded-xl bg-amber-400/20 text-amber-300 flex items-center justify-center mb-2 shadow-inner">
                     <i class="bi bi-newspaper text-xl"></i>
                 </div>
                 <div class="stat-num text-3xl md:text-4xl font-extrabold text-amber-300">
@@ -80,7 +84,8 @@
 <section class="section py-16">
     <div class="container">
         <div class="section-title-wrap text-center max-w-2xl mx-auto mb-12 animate-on-scroll" data-animate="fadeInDown">
-            <div class="section-tag uppercase text-amber-600 font-bold tracking-wider text-xs mb-2 inline-flex items-center gap-1.5">
+            <div
+                class="section-tag uppercase text-amber-600 font-bold tracking-wider text-xs mb-2 inline-flex items-center gap-1.5">
                 <i class="bi bi-shield-shaded"></i>
                 <span>Landasan Perjuangan</span>
             </div>
@@ -91,10 +96,10 @@
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
             <div class="card rounded-2xl shadow-sm hover:shadow-xl transform hover:-translate-y-2 transition-all duration-300 animate-on-scroll group"
-                data-animate="fadeInUp" data-delay="100ms"
-                style="border-top: 5px solid #0f3d64;">
+                data-animate="fadeInUp" data-delay="100ms" style="border-top: 5px solid #0f3d64;">
                 <div class="card-body p-6">
-                    <div class="w-12 h-12 rounded-2xl bg-blue-50 text-[#0f3d64] border border-blue-200 flex items-center justify-center mb-3 shadow-xs group-hover:bg-[#0f3d64] group-hover:text-amber-300 transition-all duration-300">
+                    <div
+                        class="w-12 h-12 rounded-2xl bg-blue-50 text-[#0f3d64] border border-blue-200 flex items-center justify-center mb-3 shadow-xs group-hover:bg-[#0f3d64] group-hover:text-amber-300 transition-all duration-300">
                         <i class="bi bi-book-half text-2xl"></i>
                     </div>
                     <h3 class="text-xl font-bold text-slate-800 mb-2">Tinggi Iman</h3>
@@ -105,10 +110,10 @@
                 </div>
             </div>
             <div class="card rounded-2xl shadow-sm hover:shadow-xl transform hover:-translate-y-2 transition-all duration-300 animate-on-scroll group"
-                data-animate="fadeInUp" data-delay="250ms"
-                style="border-top: 5px solid #d97706;">
+                data-animate="fadeInUp" data-delay="250ms" style="border-top: 5px solid #d97706;">
                 <div class="card-body p-6">
-                    <div class="w-12 h-12 rounded-2xl bg-amber-50 text-[#d97706] border border-amber-200 flex items-center justify-center mb-3 shadow-xs group-hover:bg-[#d97706] group-hover:text-white transition-all duration-300">
+                    <div
+                        class="w-12 h-12 rounded-2xl bg-amber-50 text-[#d97706] border border-amber-200 flex items-center justify-center mb-3 shadow-xs group-hover:bg-[#d97706] group-hover:text-white transition-all duration-300">
                         <i class="bi bi-mortarboard-fill text-2xl"></i>
                     </div>
                     <h3 class="text-xl font-bold text-slate-800 mb-2">Tinggi Ilmu</h3>
@@ -119,10 +124,10 @@
                 </div>
             </div>
             <div class="card rounded-2xl shadow-sm hover:shadow-xl transform hover:-translate-y-2 transition-all duration-300 animate-on-scroll group"
-                data-animate="fadeInUp" data-delay="400ms"
-                style="border-top: 5px solid #10b981;">
+                data-animate="fadeInUp" data-delay="400ms" style="border-top: 5px solid #10b981;">
                 <div class="card-body p-6">
-                    <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-[#10b981] border border-emerald-200 flex items-center justify-center mb-3 shadow-xs group-hover:bg-[#10b981] group-hover:text-white transition-all duration-300">
+                    <div
+                        class="w-12 h-12 rounded-2xl bg-emerald-50 text-[#10b981] border border-emerald-200 flex items-center justify-center mb-3 shadow-xs group-hover:bg-[#10b981] group-hover:text-white transition-all duration-300">
                         <i class="bi bi-globe2 text-2xl"></i>
                     </div>
                     <h3 class="text-xl font-bold text-slate-800 mb-2">Tinggi Pengabdian</h3>
@@ -135,14 +140,15 @@
         </div>
 
         <!-- Visi & Misi Card -->
-        <div class="card rounded-2xl shadow-md overflow-hidden animate-on-scroll"
-            data-animate="fadeInUp" data-delay="150ms"
+        <div class="card rounded-2xl shadow-md overflow-hidden animate-on-scroll" data-animate="fadeInUp"
+            data-delay="150ms"
             style="background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); border-left: 6px solid var(--secondary);">
             <div class="card-body p-6 sm:p-10">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div>
                         <div class="flex items-center gap-3 mb-3">
-                            <div class="w-10 h-10 rounded-xl bg-blue-100 text-[#0f3d64] flex items-center justify-center shadow-xs">
+                            <div
+                                class="w-10 h-10 rounded-xl bg-blue-100 text-[#0f3d64] flex items-center justify-center shadow-xs">
                                 <i class="bi bi-bullseye text-xl"></i>
                             </div>
                             <h3 class="text-xl font-bold text-[#0f3d64]">Visi GMKI</h3>
@@ -153,7 +159,8 @@
                     </div>
                     <div>
                         <div class="flex items-center gap-3 mb-3">
-                            <div class="w-10 h-10 rounded-xl bg-amber-100 text-[#d97706] flex items-center justify-center shadow-xs">
+                            <div
+                                class="w-10 h-10 rounded-xl bg-amber-100 text-[#d97706] flex items-center justify-center shadow-xs">
                                 <i class="bi bi-rocket-takeoff-fill text-xl"></i>
                             </div>
                             <h3 class="text-xl font-bold text-[#0f3d64]">Misi GMKI Cabang Padang</h3>
@@ -171,15 +178,18 @@
 <!-- Section: Warta Terbaru -->
 <section class="section py-16" style="background: #f1f5f9;">
     <div class="container">
-        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-10 gap-4 animate-on-scroll" data-animate="fadeInDown">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-10 gap-4 animate-on-scroll"
+            data-animate="fadeInDown">
             <div>
-                <div class="section-tag uppercase text-amber-600 font-bold tracking-wider text-xs mb-1 inline-flex items-center gap-1.5">
+                <div
+                    class="section-tag uppercase text-amber-600 font-bold tracking-wider text-xs mb-1 inline-flex items-center gap-1.5">
                     <i class="bi bi-broadcast"></i>
                     <span>Kabar & Informasi</span>
                 </div>
                 <h2 class="text-2xl md:text-3xl font-extrabold text-slate-900">Warta Cabang Terbaru</h2>
             </div>
-            <a href="/berita" class="btn btn-outline hover:bg-slate-200 transition-all duration-200 inline-flex items-center gap-2 group">
+            <a href="/berita"
+                class="btn btn-outline hover:bg-slate-200 transition-all duration-200 inline-flex items-center gap-2 group">
                 <span>Lihat Semua Berita</span>
                 <i class="bi bi-arrow-right transition-transform duration-200 group-hover:translate-x-1"></i>
             </a>
@@ -229,9 +239,11 @@
                                 <?= e($item['ringkasan']) ?>
                             </p>
                             <div class="mt-auto pt-2">
-                                <a href="/berita/<?= e($item['slug']) ?>" class="btn btn-outline btn-sm w-full sm:w-auto inline-flex items-center justify-center gap-1.5 group">
+                                <a href="/berita/<?= e($item['slug']) ?>"
+                                    class="btn btn-outline btn-sm w-full sm:w-auto inline-flex items-center justify-center gap-1.5 group">
                                     <span>Baca Selengkapnya</span>
-                                    <i class="bi bi-arrow-right text-xs transition-transform duration-200 group-hover:translate-x-1"></i>
+                                    <i
+                                        class="bi bi-arrow-right text-xs transition-transform duration-200 group-hover:translate-x-1"></i>
                                 </a>
                             </div>
                         </div>
@@ -240,7 +252,8 @@
             </div>
         <?php else: ?>
             <div class="card text-center p-12 rounded-2xl bg-white shadow-sm animate-on-scroll" data-animate="fadeInUp">
-                <div class="w-16 h-16 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center mx-auto mb-3">
+                <div
+                    class="w-16 h-16 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center mx-auto mb-3">
                     <i class="bi bi-newspaper text-3xl"></i>
                 </div>
                 <p class="text-slate-500">Belum ada warta berita yang diterbitkan saat ini.</p>
@@ -255,7 +268,8 @@
         <div class="card rounded-3xl shadow-2xl p-8 sm:p-12 text-center border-none animate-on-scroll"
             data-animate="fadeInUp"
             style="background: linear-gradient(135deg, #071e33 0%, #0f3d64 60%, #1e5687 100%); color: #ffffff;">
-            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 text-amber-300 border border-white/15 text-xs font-semibold mb-4 backdrop-blur-md">
+            <div
+                class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 text-amber-300 border border-white/15 text-xs font-semibold mb-4 backdrop-blur-md">
                 <i class="bi bi-stars text-sm"></i>
                 <span>Panggilan Pelayanan</span>
             </div>
@@ -288,6 +302,7 @@
         background-color: #d97706;
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     }
+
     .greetings:hover {
         background-color: #b45309;
     }

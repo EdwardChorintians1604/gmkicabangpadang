@@ -13,7 +13,7 @@ class CivitasRepository
 
         $sql = "SELECT `id`, `nim`, `nama_lengkap`, `jenis_kelamin`, `tempat_lahir`, `tanggal_lahir`, 
                        `telepon`, `email`, `perguruan_tinggi`, `fakultas`, `jurusan`, `komisariat`, `anggota_komisariat`,
-                       `tahun_maperca`, `tingkat_kaderisasi`, `status_keanggotaan`, `foto_anggota`, `file_kta`, `created_at`
+                       `tahun_maperca`, `tingkat_kaderisasi`, `status_keanggotaan`, `asal_civitas`, `foto_anggota`, `file_kta`, `created_at`
                 FROM `civitas`
                 {$whereClause}
                 ORDER BY `tahun_maperca` DESC, `nama_lengkap` ASC
@@ -143,13 +143,13 @@ class CivitasRepository
                         `id`, `nim`, `nama_lengkap`, `jenis_kelamin`, `tempat_lahir`, `tanggal_lahir`,
                         `telepon`, `email`, `perguruan_tinggi`, `fakultas`, `jurusan`,
                         `komisariat`, `anggota_komisariat`, `tahun_maperca`, `tingkat_kaderisasi`, `status_keanggotaan`,
-                        `alamat_padang`, `alamat_asal`, `foto_anggota`, `file_kta`, `catatan`,
+                        `alamat_padang`, `asal_civitas`, `foto_anggota`, `file_kta`, `catatan`,
                         `created_by`, `created_at`
                     ) VALUES (
                         :id, :nim, :nama_lengkap, :jenis_kelamin, :tempat_lahir, :tanggal_lahir,
                         :telepon, :email, :perguruan_tinggi, :fakultas, :jurusan,
                         :komisariat, :anggota_komisariat, :tahun_maperca, :tingkat_kaderisasi, :status_keanggotaan,
-                        :alamat_padang, :alamat_asal, :foto_anggota, :file_kta, :catatan,
+                        :alamat_padang, :asal_civitas, :foto_anggota, :file_kta, :catatan,
                         :created_by, NOW()
                     )";
             Database::execute($sql, [
@@ -170,7 +170,7 @@ class CivitasRepository
                 ':tingkat_kaderisasi' => $data['tingkat_kaderisasi'] ?? 'Maperca',
                 ':status_keanggotaan' => $data['status_keanggotaan'] ?? 'Aktif',
                 ':alamat_padang' => $data['alamat_padang'] ?? null,
-                ':alamat_asal' => $data['alamat_asal'] ?? null,
+                ':asal_civitas' => $data['asal_civitas'] ?? $data['alamat_asal'] ?? null,
                 ':foto_anggota' => $data['foto_anggota'] ?? null,
                 ':file_kta' => $data['file_kta'] ?? null,
                 ':catatan' => $data['catatan'] ?? null,
@@ -183,13 +183,13 @@ class CivitasRepository
                     `nim`, `nama_lengkap`, `jenis_kelamin`, `tempat_lahir`, `tanggal_lahir`,
                     `telepon`, `email`, `perguruan_tinggi`, `fakultas`, `jurusan`,
                     `komisariat`, `anggota_komisariat`, `tahun_maperca`, `tingkat_kaderisasi`, `status_keanggotaan`,
-                    `alamat_padang`, `alamat_asal`, `foto_anggota`, `file_kta`, `catatan`,
+                    `alamat_padang`, `asal_civitas`, `foto_anggota`, `file_kta`, `catatan`,
                     `created_by`, `created_at`
                 ) VALUES (
                     :nim, :nama_lengkap, :jenis_kelamin, :tempat_lahir, :tanggal_lahir,
                     :telepon, :email, :perguruan_tinggi, :fakultas, :jurusan,
                     :komisariat, :anggota_komisariat, :tahun_maperca, :tingkat_kaderisasi, :status_keanggotaan,
-                    :alamat_padang, :alamat_asal, :foto_anggota, :file_kta, :catatan,
+                    :alamat_padang, :asal_civitas, :foto_anggota, :file_kta, :catatan,
                     :created_by, NOW()
                 )";
 
@@ -210,7 +210,7 @@ class CivitasRepository
             ':tingkat_kaderisasi' => $data['tingkat_kaderisasi'] ?? 'Maperca',
             ':status_keanggotaan' => $data['status_keanggotaan'] ?? 'Aktif',
             ':alamat_padang' => $data['alamat_padang'] ?? null,
-            ':alamat_asal' => $data['alamat_asal'] ?? null,
+            ':asal_civitas' => $data['asal_civitas'] ?? $data['alamat_asal'] ?? null,
             ':foto_anggota' => $data['foto_anggota'] ?? null,
             ':file_kta' => $data['file_kta'] ?? null,
             ':catatan' => $data['catatan'] ?? null,
@@ -222,6 +222,10 @@ class CivitasRepository
 
     public function update(int $id, array $data): bool
     {
+        if (array_key_exists('alamat_asal', $data) && !array_key_exists('asal_civitas', $data)) {
+            $data['asal_civitas'] = $data['alamat_asal'];
+        }
+
         $fields = [];
         $params = [':id' => $id];
 
@@ -229,7 +233,7 @@ class CivitasRepository
             'nim', 'nama_lengkap', 'jenis_kelamin', 'tempat_lahir', 'tanggal_lahir',
             'telepon', 'email', 'perguruan_tinggi', 'fakultas', 'jurusan',
             'komisariat', 'anggota_komisariat', 'tahun_maperca', 'tingkat_kaderisasi', 'status_keanggotaan',
-            'alamat_padang', 'alamat_asal', 'foto_anggota', 'file_kta', 'catatan'
+            'alamat_padang', 'asal_civitas', 'foto_anggota', 'file_kta', 'catatan'
         ];
 
         foreach ($allowedColumns as $col) {
@@ -258,7 +262,7 @@ class CivitasRepository
         [$whereClause, $params] = $this->buildFilterConditions($filters);
         $sql = "SELECT `nim`, `nama_lengkap`, `jenis_kelamin`, `tempat_lahir`, `tanggal_lahir`, 
                        `telepon`, `email`, `perguruan_tinggi`, `fakultas`, `jurusan`, `komisariat`, `anggota_komisariat`,
-                       `tahun_maperca`, `tingkat_kaderisasi`, `status_keanggotaan`, `alamat_padang`, `alamat_asal`
+                       `tahun_maperca`, `tingkat_kaderisasi`, `status_keanggotaan`, `alamat_padang`, `asal_civitas`
                 FROM `civitas` {$whereClause}
                 ORDER BY `komisariat` ASC, `nama_lengkap` ASC";
 

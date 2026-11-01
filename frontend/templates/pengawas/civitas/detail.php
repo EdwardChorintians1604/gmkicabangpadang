@@ -36,8 +36,12 @@
                     <div>
                         <?php if ($member['status_keanggotaan'] === 'Aktif'): ?>
                             <span class="badge badge-success">Anggota Aktif</span>
-                        <?php elseif ($member['status_keanggotaan'] === 'Alumni/Senior'): ?>
-                            <span class="badge badge-warning">Senior / Alumni</span>
+                        <?php elseif ($member['status_keanggotaan'] === 'Pasif'): ?>
+                            <span class="badge" style="background: #fef3c7; color: #92400e; border: 1px solid #fde68a;">Pasif (Jarang Aktif)</span>
+                        <?php elseif ($member['status_keanggotaan'] === 'Alumni' || $member['status_keanggotaan'] === 'Alumni/Senior'): ?>
+                            <span class="badge badge-warning">Alumni</span>
+                        <?php elseif ($member['status_keanggotaan'] === 'Senior'): ?>
+                            <span class="badge" style="background: #ede9fe; color: #5b21b6; border: 1px solid #ddd6fe;">Senior</span>
                         <?php else: ?>
                             <span class="badge badge-neutral"><?= e($member['status_keanggotaan']) ?></span>
                         <?php endif; ?>
@@ -140,7 +144,7 @@
             </div>
             <div class="card-body">
                 <p><strong>Alamat di Padang:</strong> <?= e($member['alamat_padang'] ?? '-') ?></p>
-                <p><strong>Alamat Asal:</strong> <?= e($member['alamat_asal'] ?? '-') ?></p>
+                <p><strong>Asal Civitas:</strong> <?= e($member['asal_civitas'] ?? $member['alamat_asal'] ?? '-') ?></p>
                 <p><strong>Nama Gereja / Denominasi:</strong> <?= e($member['gereja_asal'] ?? '-') ?></p>
             </div>
         </div>

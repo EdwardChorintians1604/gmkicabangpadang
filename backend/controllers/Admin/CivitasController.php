@@ -54,9 +54,23 @@ class CivitasController
     {
         unset($data['file_kta']);
 
+        // Normalisasi Asal Civitas (menggantikan alamat_asal)
+        if (array_key_exists('asal_civitas', $data) || array_key_exists('alamat_asal', $data)) {
+            $data['asal_civitas'] = trim((string) ($data['asal_civitas'] ?? $data['alamat_asal'] ?? ''));
+            unset($data['alamat_asal']);
+        }
+
+        // Normalisasi Status Keanggotaan: hanya Aktif, Pasif, Alumni, Senior
+        $rawStatus = trim((string) ($data['status_keanggotaan'] ?? 'Aktif'));
+        if ($rawStatus === 'Alumni/Senior') {
+            $rawStatus = 'Alumni';
+        } elseif (!in_array($rawStatus, ['Aktif', 'Pasif', 'Alumni', 'Senior'], true)) {
+            $rawStatus = 'Aktif';
+        }
+        $data['status_keanggotaan'] = $rawStatus;
+
         if ($this->kelompok === 'maperca') {
             $data['tingkat_kaderisasi'] = 'Maperca';
-            $data['status_keanggotaan'] = $data['status_keanggotaan'] ?? 'Aktif';
             $data['anggota_komisariat'] = 0;
             $data['komisariat'] = null;
             $data['tahun_maperca'] = !empty($data['tahun_maperca']) ? (int) $data['tahun_maperca'] : null;

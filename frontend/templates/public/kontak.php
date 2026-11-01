@@ -49,7 +49,8 @@
                         <div>
                             <strong>Email Resmi:</strong>
                             <div class="text-muted" style="font-size: 0.95rem; margin-top: 0.25rem;">
-                                <a href="mailto:gmkipadang2425@gmail.com" style="color: inherit; text-decoration: none;">gmkipadang2425@gmail.com</a>
+                                <a href="mailto:gmkipadang2425@gmail.com"
+                                    style="color: inherit; text-decoration: none;">gmkipadang2425@gmail.com</a>
                             </div>
                         </div>
                     </div>
@@ -213,7 +214,8 @@
                     <form id="formKontakPublic" action="/kontak" method="POST" novalidate>
                         <?= csrf_field() ?>
 
-                        <div id="contactFormAlert" style="display: none; margin-bottom: 1rem;" class="animate__animated animate__fadeIn"></div>
+                        <div id="contactFormAlert" style="display: none; margin-bottom: 1rem;"
+                            class="animate__animated animate__fadeIn"></div>
 
                         <div class="form-group">
                             <label class="form-label" for="nama">Nama Lengkap</label>
@@ -240,22 +242,28 @@
                         </button>
 
                         <!-- Pilihan Kirim Cepat / Direct Integration -->
-                        <div style="margin-top: 1.25rem; padding-top: 1rem; border-top: 1px dashed var(--border-color); text-align: center;">
-                            <div class="text-muted" style="font-size: 0.8rem; font-weight: 600; margin-bottom: 0.65rem;">
+                        <div
+                            style="margin-top: 1.25rem; padding-top: 1rem; border-top: 1px dashed var(--border-color); text-align: center;">
+                            <div class="text-muted"
+                                style="font-size: 0.8rem; font-weight: 600; margin-bottom: 0.65rem;">
                                 Terkoneksi langsung ke email resmi:
                             </div>
                             <div class="grid grid-cols-2 gap-2" style="font-size: 0.825rem;">
-                                <button type="button" id="btnDirectGmail" class="btn btn-outline flex items-center justify-center gap-1.5"
+                                <button type="button" id="btnDirectGmail"
+                                    class="btn btn-outline flex items-center justify-center gap-1.5"
                                     style="padding: 0.55rem 0.75rem; border-color: #fca5a5; color: #dc2626; background: #fff5f5; font-weight: 600; cursor: pointer;">
                                     <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-                                        <path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z"/>
+                                        <path
+                                            d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z" />
                                     </svg>
                                     <span>Gmail Web</span>
                                 </button>
-                                <button type="button" id="btnDirectMailto" class="btn btn-outline flex items-center justify-center gap-1.5"
+                                <button type="button" id="btnDirectMailto"
+                                    class="btn btn-outline flex items-center justify-center gap-1.5"
                                     style="padding: 0.55rem 0.75rem; border-color: #93c5fd; color: #2563eb; background: #eff6ff; font-weight: 600; cursor: pointer;">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                                     </svg>
                                     <span>Aplikasi Mail</span>
                                 </button>
@@ -274,8 +282,8 @@
             style="background: var(--bg-subtle); padding: 1.25rem 1.5rem;">
             <div class="flex items-center gap-2">
                 <span style="font-size: 1.25rem;">🗺️</span>
-                <strong style="color: var(--primary); font-size: 1.05rem;">Peta Interaktif Lokasi Sekretariat (Leaflet &
-                    OpenStreetMap)</strong>
+                <strong style="color: var(--primary); font-size: 1.05rem;">Peta Interaktif Lokasi Sekretariat
+                    (Sementara)</strong>
             </div>
             <span class="badge badge-info">Belakang Tangsi, Padang Barat</span>
         </div>
@@ -283,27 +291,37 @@
     </div>
 
     <!-- Modal Konfirmasi & Pilihan Pengiriman Email -->
-    <div id="emailSenderModal" style="display: none; position: fixed; inset: 0; z-index: 99999; align-items: center; justify-content: center; padding: 1rem; background-color: rgba(15, 23, 42, 0.65); backdrop-filter: blur(4px);">
-        <div class="animate__animated animate__zoomIn animate__faster" style="background: #ffffff; border-radius: 1rem; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); max-width: 520px; width: 100%; overflow: hidden; border: 1px solid #e2e8f0;">
+    <div id="emailSenderModal"
+        style="display: none; position: fixed; inset: 0; z-index: 99999; align-items: center; justify-content: center; padding: 1rem; background-color: rgba(15, 23, 42, 0.65); backdrop-filter: blur(4px);">
+        <div class="animate__animated animate__zoomIn animate__faster"
+            style="background: #ffffff; border-radius: 1rem; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); max-width: 520px; width: 100%; overflow: hidden; border: 1px solid #e2e8f0;">
             <!-- Modal Header -->
-            <div style="background: linear-gradient(135deg, #0f3d64 0%, #1e5687 100%); padding: 1.25rem 1.5rem; color: #ffffff; display: flex; justify-content: space-between; align-items: center;">
+            <div
+                style="background: linear-gradient(135deg, #0f3d64 0%, #1e5687 100%); padding: 1.25rem 1.5rem; color: #ffffff; display: flex; justify-content: space-between; align-items: center;">
                 <div style="display: flex; align-items: center; gap: 0.75rem;">
                     <span style="font-size: 1.6rem;">✉️</span>
                     <div>
-                        <h4 style="margin: 0; font-size: 1.1rem; font-weight: 700; color: #ffffff;">Kirim Pesan ke Email Resmi</h4>
-                        <p style="margin: 0.15rem 0 0; font-size: 0.8rem; color: #cbd5e1;">Tujuan: <strong style="color: #fde047;">gmkipadang2425@gmail.com</strong></p>
+                        <h4 style="margin: 0; font-size: 1.1rem; font-weight: 700; color: #ffffff;">Kirim Pesan ke Email
+                            Resmi</h4>
+                        <p style="margin: 0.15rem 0 0; font-size: 0.8rem; color: #cbd5e1;">Tujuan: <strong
+                                style="color: #fde047;">gmkipadang2425@gmail.com</strong></p>
                     </div>
                 </div>
-                <button type="button" id="btnCloseEmailModal" aria-label="Tutup" style="background: transparent; border: none; color: #ffffff; font-size: 1.6rem; cursor: pointer; line-height: 1; padding: 0.25rem;">&times;</button>
+                <button type="button" id="btnCloseEmailModal" aria-label="Tutup"
+                    style="background: transparent; border: none; color: #ffffff; font-size: 1.6rem; cursor: pointer; line-height: 1; padding: 0.25rem;">&times;</button>
             </div>
 
             <!-- Modal Body -->
             <div style="padding: 1.5rem;">
                 <!-- Summary Card -->
-                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 0.75rem; padding: 0.85rem 1rem; margin-bottom: 1.25rem; font-size: 0.85rem;">
-                    <div style="font-weight: 700; color: #0f3d64; margin-bottom: 0.25rem;" id="modalPreviewSubject"></div>
-                    <div class="text-muted" style="font-size: 0.8rem; margin-bottom: 0.5rem;" id="modalPreviewSender"></div>
-                    <div style="white-space: pre-wrap; word-break: break-word; color: #334155; max-height: 100px; overflow-y: auto; background: #ffffff; padding: 0.65rem 0.75rem; border-radius: 0.5rem; border: 1px solid #cbd5e1; font-size: 0.825rem; line-height: 1.45;" id="modalPreviewPesan"></div>
+                <div
+                    style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 0.75rem; padding: 0.85rem 1rem; margin-bottom: 1.25rem; font-size: 0.85rem;">
+                    <div style="font-weight: 700; color: #0f3d64; margin-bottom: 0.25rem;" id="modalPreviewSubject">
+                    </div>
+                    <div class="text-muted" style="font-size: 0.8rem; margin-bottom: 0.5rem;" id="modalPreviewSender">
+                    </div>
+                    <div style="white-space: pre-wrap; word-break: break-word; color: #334155; max-height: 100px; overflow-y: auto; background: #ffffff; padding: 0.65rem 0.75rem; border-radius: 0.5rem; border: 1px solid #cbd5e1; font-size: 0.825rem; line-height: 1.45;"
+                        id="modalPreviewPesan"></div>
                 </div>
 
                 <div style="font-weight: 700; font-size: 0.875rem; margin-bottom: 0.75rem; color: #0f172a;">
@@ -312,56 +330,80 @@
 
                 <div style="display: flex; flex-direction: column; gap: 0.65rem;">
                     <!-- Option 1: Gmail Web -->
-                    <button type="button" id="btnModalGmail" style="display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1rem; border-radius: 0.75rem; border: 1px solid #fca5a5; background: #fff5f5; text-align: left; cursor: pointer; transition: all 0.2s;">
+                    <button type="button" id="btnModalGmail"
+                        style="display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1rem; border-radius: 0.75rem; border: 1px solid #fca5a5; background: #fff5f5; text-align: left; cursor: pointer; transition: all 0.2s;">
                         <div style="display: flex; align-items: center; gap: 0.75rem;">
-                            <div style="width: 2.5rem; height: 2.5rem; border-radius: 0.65rem; background: #dc2626; display: flex; align-items: center; justify-content: center; color: white; flex-shrink: 0; box-shadow: 0 2px 4px rgba(220, 38, 38, 0.2);">
+                            <div
+                                style="width: 2.5rem; height: 2.5rem; border-radius: 0.65rem; background: #dc2626; display: flex; align-items: center; justify-content: center; color: white; flex-shrink: 0; box-shadow: 0 2px 4px rgba(220, 38, 38, 0.2);">
                                 <svg style="width: 1.25rem; height: 1.25rem;" viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z"/>
+                                    <path
+                                        d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z" />
                                 </svg>
                             </div>
                             <div>
-                                <div style="font-weight: 700; font-size: 0.925rem; color: #991b1b;">Buka di Gmail Web (Rekomendasi)</div>
-                                <div style="font-size: 0.75rem; color: #64748b;">Membuka Google Mail langsung di browser dengan draf siap kirim</div>
+                                <div style="font-weight: 700; font-size: 0.925rem; color: #991b1b;">Buka di Gmail Web
+                                    (Rekomendasi)</div>
+                                <div style="font-size: 0.75rem; color: #64748b;">Membuka Google Mail langsung di browser
+                                    dengan draf siap kirim</div>
                             </div>
                         </div>
-                        <span style="font-size: 0.75rem; background: #dc2626; color: white; padding: 3px 10px; border-radius: 9999px; font-weight: 700; white-space: nowrap;">Buka ↗</span>
+                        <span
+                            style="font-size: 0.75rem; background: #dc2626; color: white; padding: 3px 10px; border-radius: 9999px; font-weight: 700; white-space: nowrap;">Buka
+                            ↗</span>
                     </button>
 
                     <!-- Option 2: Default Mail Client (Mailto) -->
-                    <button type="button" id="btnModalMailto" style="display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1rem; border-radius: 0.75rem; border: 1px solid #93c5fd; background: #eff6ff; text-align: left; cursor: pointer; transition: all 0.2s;">
+                    <button type="button" id="btnModalMailto"
+                        style="display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1rem; border-radius: 0.75rem; border: 1px solid #93c5fd; background: #eff6ff; text-align: left; cursor: pointer; transition: all 0.2s;">
                         <div style="display: flex; align-items: center; gap: 0.75rem;">
-                            <div style="width: 2.5rem; height: 2.5rem; border-radius: 0.65rem; background: #2563eb; display: flex; align-items: center; justify-content: center; color: white; flex-shrink: 0; box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);">
-                                <svg style="width: 1.25rem; height: 1.25rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                            <div
+                                style="width: 2.5rem; height: 2.5rem; border-radius: 0.65rem; background: #2563eb; display: flex; align-items: center; justify-content: center; color: white; flex-shrink: 0; box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);">
+                                <svg style="width: 1.25rem; height: 1.25rem;" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                                 </svg>
                             </div>
                             <div>
-                                <div style="font-weight: 700; font-size: 0.925rem; color: #1e40af;">Aplikasi Email Perangkat</div>
-                                <div style="font-size: 0.75rem; color: #64748b;">Membuka Outlook, Thunderbird, atau Apple Mail</div>
+                                <div style="font-weight: 700; font-size: 0.925rem; color: #1e40af;">Aplikasi Email
+                                    Perangkat</div>
+                                <div style="font-size: 0.75rem; color: #64748b;">Membuka Outlook, Thunderbird, atau
+                                    Apple Mail</div>
                             </div>
                         </div>
-                        <span style="font-size: 0.75rem; background: #2563eb; color: white; padding: 3px 10px; border-radius: 9999px; font-weight: 700; white-space: nowrap;">Buka ↗</span>
+                        <span
+                            style="font-size: 0.75rem; background: #2563eb; color: white; padding: 3px 10px; border-radius: 9999px; font-weight: 700; white-space: nowrap;">Buka
+                            ↗</span>
                     </button>
 
                     <!-- Option 3: WhatsApp Resmi -->
-                    <button type="button" id="btnModalWhatsApp" style="display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1rem; border-radius: 0.75rem; border: 1px solid #a7f3d0; background: #f0fdf4; text-align: left; cursor: pointer; transition: all 0.2s;">
+                    <button type="button" id="btnModalWhatsApp"
+                        style="display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1rem; border-radius: 0.75rem; border: 1px solid #a7f3d0; background: #f0fdf4; text-align: left; cursor: pointer; transition: all 0.2s;">
                         <div style="display: flex; align-items: center; gap: 0.75rem;">
-                            <div style="width: 2.5rem; height: 2.5rem; border-radius: 0.65rem; background: #059669; display: flex; align-items: center; justify-content: center; color: white; flex-shrink: 0; box-shadow: 0 2px 4px rgba(5, 150, 105, 0.2);">
+                            <div
+                                style="width: 2.5rem; height: 2.5rem; border-radius: 0.65rem; background: #059669; display: flex; align-items: center; justify-content: center; color: white; flex-shrink: 0; box-shadow: 0 2px 4px rgba(5, 150, 105, 0.2);">
                                 <svg style="width: 1.25rem; height: 1.25rem;" viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.312.045-.694.076-2.121-.497-1.809-.728-2.957-2.58-3.047-2.7-.091-.121-.735-.977-.735-1.86 0-.884.464-1.319.629-1.498.165-.178.36-.223.48-.223.12 0 .24.002.345.006.11.004.258-.042.404.308.15.361.51 1.246.555 1.337.045.09.075.196.015.316-.06.12-.09.196-.18.301-.09.106-.19.236-.271.317-.091.091-.186.19-.08.372.105.182.467.771 1.001 1.247.688.613 1.269.803 1.45.894.18.09.286.076.391-.045.105-.121.45-.526.57-.706.12-.18.24-.15.405-.09.165.06 1.05.496 1.23.586.18.09.3.136.345.211.045.075.045.436-.099.841z"/>
+                                    <path
+                                        d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.312.045-.694.076-2.121-.497-1.809-.728-2.957-2.58-3.047-2.7-.091-.121-.735-.977-.735-1.86 0-.884.464-1.319.629-1.498.165-.178.36-.223.48-.223.12 0 .24.002.345.006.11.004.258-.042.404.308.15.361.51 1.246.555 1.337.045.09.075.196.015.316-.06.12-.09.196-.18.301-.09.106-.19.236-.271.317-.091.091-.186.19-.08.372.105.182.467.771 1.001 1.247.688.613 1.269.803 1.45.894.18.09.286.076.391-.045.105-.121.45-.526.57-.706.12-.18.24-.15.405-.09.165.06 1.05.496 1.23.586.18.09.3.136.345.211.045.075.045.436-.099.841z" />
                                 </svg>
                             </div>
                             <div>
-                                <div style="font-weight: 700; font-size: 0.925rem; color: #065f46;">Kirim via WhatsApp Resmi</div>
-                                <div style="font-size: 0.75rem; color: #64748b;">Langsung kirim pesan ke kontak WhatsApp BPC GMKI Padang</div>
+                                <div style="font-weight: 700; font-size: 0.925rem; color: #065f46;">Kirim via WhatsApp
+                                    Resmi</div>
+                                <div style="font-size: 0.75rem; color: #64748b;">Langsung kirim pesan ke kontak WhatsApp
+                                    BPC GMKI Padang</div>
                             </div>
                         </div>
-                        <span style="font-size: 0.75rem; background: #059669; color: white; padding: 3px 10px; border-radius: 9999px; font-weight: 700; white-space: nowrap;">Chat ↗</span>
+                        <span
+                            style="font-size: 0.75rem; background: #059669; color: white; padding: 3px 10px; border-radius: 9999px; font-weight: 700; white-space: nowrap;">Chat
+                            ↗</span>
                     </button>
                 </div>
 
-                <div style="margin-top: 1.25rem; display: flex; justify-content: space-between; align-items: center; padding-top: 0.75rem; border-top: 1px solid #f1f5f9;">
-                    <button type="button" id="btnCopyMessage" style="background: none; border: none; cursor: pointer; color: #475569; font-size: 0.775rem; font-weight: 600; display: flex; align-items: center; gap: 0.35rem; padding: 0.25rem 0.5rem; border-radius: 0.35rem;">
+                <div
+                    style="margin-top: 1.25rem; display: flex; justify-content: space-between; align-items: center; padding-top: 0.75rem; border-top: 1px solid #f1f5f9;">
+                    <button type="button" id="btnCopyMessage"
+                        style="background: none; border: none; cursor: pointer; color: #475569; font-size: 0.775rem; font-weight: 600; display: flex; align-items: center; gap: 0.35rem; padding: 0.25rem 0.5rem; border-radius: 0.35rem;">
                         📋 <span id="copyBtnText">Salin Teks Pesan</span>
                     </button>
                     <span style="font-size: 0.75rem; color: #059669; font-weight: 600;">

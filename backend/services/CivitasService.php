@@ -202,7 +202,7 @@ class CivitasService
             'tingkat_kaderisasi' => ['tingkat_kaderisasi', 'tingkat', 'jenjang', 'kaderisasi', 'tingkat kaderisasi'],
             'status_keanggotaan' => ['status_keanggotaan', 'status', 'status keanggotaan'],
             'alamat_padang' => ['alamat_padang', 'alamat', 'alamat di padang', 'domisili', 'alamat_domisili', 'alamat padang'],
-            'alamat_asal' => ['alamat_asal', 'alamat asal', 'asal', 'alamat_rumah'],
+            'asal_civitas' => ['asal_civitas', 'asal civitas', 'asal', 'daerah_asal', 'daerah asal', 'kota_asal', 'kota asal', 'alamat_asal', 'alamat asal', 'alamat_rumah'],
         ];
 
         $mappedHeaders = [];
@@ -311,19 +311,28 @@ class CivitasService
                 ? (int) $rowData['tahun_maperca']
                 : (int) date('Y');
 
+            // Normalisasi Status Keanggotaan (hanya Aktif, Pasif, Alumni, Senior)
+            $rawStatusLower = strtolower(trim((string) ($rowData['status_keanggotaan'] ?? '')));
+            $statusKeanggotaan = 'Aktif';
+            if ($rawStatusLower === 'senior') {
+                $statusKeanggotaan = 'Senior';
+            } elseif (str_contains($rawStatusLower, 'alumni')) {
+                $statusKeanggotaan = 'Alumni';
+            } elseif (str_contains($rawStatusLower, 'pasif') || str_contains($rawStatusLower, 'nonaktif')) {
+                $statusKeanggotaan = 'Pasif';
+            }
+
             // Aturan Tingkat Kaderisasi & Komisariat sesuai kelompok modul
             if ($kelompok === 'maperca') {
                 $tingkatKaderisasi = 'Maperca';
                 $isCommissionMember = false;
                 $komisariat = null;
-                $statusKeanggotaan = !empty($rowData['status_keanggotaan']) ? $rowData['status_keanggotaan'] : 'Aktif';
             } else {
                 $tk = $rowData['tingkat_kaderisasi'] ?? '';
                 $tingkatKaderisasi = in_array($tk, ['Anggota', 'KK', 'Alumni'], true) ? $tk : 'Anggota';
                 $komisariatInput = trim($rowData['komisariat'] ?? 'Komisariat Umum');
                 $isCommissionMember = !in_array(mb_strtolower($komisariatInput), ['tidak', 'bukan anggota komisariat', '', '-'], true);
                 $komisariat = $isCommissionMember ? $komisariatInput : null;
-                $statusKeanggotaan = !empty($rowData['status_keanggotaan']) ? $rowData['status_keanggotaan'] : 'Aktif';
             }
 
             $dataToSave = [
@@ -342,7 +351,7 @@ class CivitasService
                 'tingkat_kaderisasi' => $tingkatKaderisasi,
                 'status_keanggotaan' => $statusKeanggotaan,
                 'alamat_padang' => $rowData['alamat_padang'] ?? '',
-                'alamat_asal' => $rowData['alamat_asal'] ?? '',
+                'asal_civitas' => $rowData['asal_civitas'] ?? '',
                 'created_by' => Auth::id(),
             ];
 
@@ -410,7 +419,7 @@ class CivitasService
                 'Tahun Maperca',
                 'Status Keanggotaan',
                 'Alamat Padang',
-                'Alamat Asal'
+                'Asal Civitas'
             ];
 
             $sampleRow = [
@@ -427,7 +436,7 @@ class CivitasService
                 date('Y'),
                 'Aktif',
                 'Jl. Belimbing No. 12, Padang',
-                'Tapanuli Tengah'
+                'Mentawai'
             ];
         } else {
             $headers = [
@@ -446,7 +455,7 @@ class CivitasService
                 'Tingkat Kaderisasi',
                 'Status Keanggotaan',
                 'Alamat Padang',
-                'Alamat Asal'
+                'Asal Civitas'
             ];
 
             $sampleRow = [
@@ -465,7 +474,7 @@ class CivitasService
                 'Anggota',
                 'Aktif',
                 'Jl. Belimbing No. 12, Padang',
-                'Tapanuli Tengah'
+                'Mentawai'
             ];
         }
 
@@ -518,7 +527,7 @@ class CivitasService
                 'Tahun Maperca',
                 'Status Pendaftaran',
                 'Alamat di Padang',
-                'Alamat Asal'
+                'Asal Civitas'
             ]);
 
             foreach ($members as $row) {
@@ -536,7 +545,7 @@ class CivitasService
                     $row['tahun_maperca'] ?? '',
                     $row['status_keanggotaan'] ?? '',
                     $row['alamat_padang'] ?? '',
-                    $row['alamat_asal'] ?? '',
+                    $row['asal_civitas'] ?? $row['alamat_asal'] ?? '',
                 ]);
             }
         } else {
@@ -556,7 +565,7 @@ class CivitasService
                 'Tingkat Kaderisasi',
                 'Status Keanggotaan',
                 'Alamat di Padang',
-                'Alamat Asal'
+                'Asal Civitas'
             ]);
 
             foreach ($members as $row) {
@@ -576,7 +585,7 @@ class CivitasService
                     $row['tingkat_kaderisasi'],
                     $row['status_keanggotaan'],
                     $row['alamat_padang'] ?? '',
-                    $row['alamat_asal'] ?? '',
+                    $row['asal_civitas'] ?? $row['alamat_asal'] ?? '',
                 ]);
             }
         }
@@ -608,7 +617,7 @@ class CivitasService
                 'Tahun Maperca',
                 'Status Pendaftaran',
                 'Alamat di Padang',
-                'Alamat Asal'
+                'Asal Civitas'
             ];
 
             foreach ($members as $row) {
@@ -626,7 +635,7 @@ class CivitasService
                     $row['tahun_maperca'] ? (int)$row['tahun_maperca'] : '',
                     $row['status_keanggotaan'] ?? '',
                     $row['alamat_padang'] ?? '',
-                    $row['alamat_asal'] ?? '',
+                    $row['asal_civitas'] ?? $row['alamat_asal'] ?? '',
                 ];
             }
         } else {
@@ -646,7 +655,7 @@ class CivitasService
                 'Tingkat Kaderisasi',
                 'Status Keanggotaan',
                 'Alamat di Padang',
-                'Alamat Asal'
+                'Asal Civitas'
             ];
 
             foreach ($members as $row) {
@@ -666,7 +675,7 @@ class CivitasService
                     $row['tingkat_kaderisasi'] ?? '',
                     $row['status_keanggotaan'] ?? '',
                     $row['alamat_padang'] ?? '',
-                    $row['alamat_asal'] ?? '',
+                    $row['asal_civitas'] ?? $row['alamat_asal'] ?? '',
                 ];
             }
         }

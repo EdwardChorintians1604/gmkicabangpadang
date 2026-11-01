@@ -100,6 +100,12 @@
                             <td>
                                 <?php if ($c['status_keanggotaan'] === 'Aktif'): ?>
                                     <span class="badge badge-success">Aktif</span>
+                                <?php elseif ($c['status_keanggotaan'] === 'Pasif'): ?>
+                                    <span class="badge" style="background: #fef3c7; color: #92400e; border: 1px solid #fde68a;">Pasif</span>
+                                <?php elseif ($c['status_keanggotaan'] === 'Alumni' || $c['status_keanggotaan'] === 'Alumni/Senior'): ?>
+                                    <span class="badge badge-warning">Alumni</span>
+                                <?php elseif ($c['status_keanggotaan'] === 'Senior'): ?>
+                                    <span class="badge" style="background: #ede9fe; color: #5b21b6; border: 1px solid #ddd6fe;">Senior</span>
                                 <?php else: ?>
                                     <span class="badge badge-neutral"><?= e($c['status_keanggotaan']) ?></span>
                                 <?php endif; ?>

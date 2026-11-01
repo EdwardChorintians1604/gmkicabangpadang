@@ -99,10 +99,10 @@
             <!-- Sejarah Singkat -->
             <div>
                 <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--primary); margin-bottom: 0.75rem;">
-                    Sejarah Singkat GMKI Cabang Padang
+                    Sejarah Pembentukan GMKI Cabang Padang
                 </h3>
                 <div style="line-height: 1.8; color: var(--text-main); font-size: 0.95rem;">
-                    <?= nl2br(e($profile['sejarah'] ?? 'Gerakan Mahasiswa Kristen Indonesia (GMKI) Cabang Padang hadir sebagai wadah persekutuan, pembinaan, dan perjuangan bagi mahasiswa Kristen di Kota Padang untuk melayani Gereja, Perguruan Tinggi, dan Masyarakat.')) ?>
+                    Pembentukan GMKI Cabang Padang diinisiasi pada 11 Januari 1984 oleh 7 tokoh inisiator, dikukuhkan sebagai Tim Pembentukan Calon Cabang melalui SK PP GMKI Nomor 180348/SU/Int/IV/1984 (16 April 1984), dan disahkan secara resmi melalui SK PP GMKI Nomor 190244/SU/Int/III/1986 pada tanggal 15 Maret 1986 di Gedung Sasana Karya, Padang. Dokumentasi sejarah lengkap tertanam permanen di halaman publik <a href="/profil" target="_blank" style="color: var(--primary); font-weight: 600;">Profil &amp; Sejarah Cabang</a>.
                 </div>
             </div>
         </div>

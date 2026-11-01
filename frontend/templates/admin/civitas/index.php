@@ -68,10 +68,9 @@
             <select name="status" class="form-control">
                 <option value="">Semua Status</option>
                 <option value="Aktif" <?= ($selectedStatus === 'Aktif') ? 'selected' : '' ?>>Aktif</option>
-                <option value="Pasif" <?= ($selectedStatus === 'Pasif') ? 'selected' : '' ?>>Pasif (Jarang Aktif)</option>
-                <option value="Alumni/Senior" <?= ($selectedStatus === 'Alumni/Senior') ? 'selected' : '' ?>>Alumni / Senior</option>
-                <option value="Pindah Cabang" <?= ($selectedStatus === 'Pindah Cabang') ? 'selected' : '' ?>>Pindah Cabang</option>
-                <option value="Dicabut" <?= ($selectedStatus === 'Dicabut') ? 'selected' : '' ?>>Dicabut</option>
+                <option value="Pasif" <?= ($selectedStatus === 'Pasif') ? 'selected' : '' ?>>Pasif</option>
+                <option value="Alumni" <?= ($selectedStatus === 'Alumni') ? 'selected' : '' ?>>Alumni</option>
+                <option value="Senior" <?= ($selectedStatus === 'Senior') ? 'selected' : '' ?>>Senior</option>
             </select>
         </div>
         <?php endif; ?>
@@ -137,12 +136,10 @@
                                     <span class="badge badge-success">Aktif</span>
                                 <?php elseif ($row['status_keanggotaan'] === 'Pasif'): ?>
                                     <span class="badge" style="background: #fef3c7; color: #92400e; border: 1px solid #fde68a;">Pasif</span>
-                                <?php elseif ($row['status_keanggotaan'] === 'Alumni/Senior'): ?>
-                                    <span class="badge badge-warning">Alumni / Senior</span>
-                                <?php elseif ($row['status_keanggotaan'] === 'Pindah Cabang'): ?>
-                                    <span class="badge badge-neutral">Pindah Cabang</span>
-                                <?php elseif ($row['status_keanggotaan'] === 'Dicabut'): ?>
-                                    <span class="badge badge-danger">Dicabut</span>
+                                <?php elseif ($row['status_keanggotaan'] === 'Alumni' || $row['status_keanggotaan'] === 'Alumni/Senior'): ?>
+                                    <span class="badge badge-warning">Alumni</span>
+                                <?php elseif ($row['status_keanggotaan'] === 'Senior'): ?>
+                                    <span class="badge" style="background: #ede9fe; color: #5b21b6; border: 1px solid #ddd6fe;">Senior</span>
                                 <?php else: ?>
                                     <span class="badge badge-neutral"><?= e($row['status_keanggotaan']) ?></span>
                                 <?php endif; ?>

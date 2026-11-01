@@ -38,9 +38,11 @@
                 </div>
             </div>
 
-            <div class="form-group">
-                <label class="form-label" for="sejarah">Sejarah Singkat GMKI Cabang Padang</label>
-                <textarea id="sejarah" name="sejarah" class="form-control" rows="5"><?= e($profile['sejarah'] ?? '') ?></textarea>
+            <div class="form-group" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 1rem;">
+                <label class="form-label" style="margin-bottom: 0.25rem; color: var(--primary);">📜 Sejarah Pembentukan GMKI Cabang Padang (Permanen di Front-End)</label>
+                <p class="text-muted" style="font-size: 0.825rem; margin: 0;">
+                    Narasi sejarah resmi pembentukan GMKI Cabang Padang (1984&ndash;2017) berdasarkan arsip blog Bung Toni Indra Siahaan telah ditanamkan secara permanen di kode tampilan publik (<a href="/profil" target="_blank" style="color: var(--primary); font-weight: 600;">/profil</a>) dan tidak memerlukan pengaturan database.
+                </p>
             </div>
 
             <div class="grid grid-cols-2 gap-4">

@@ -39,7 +39,6 @@ class OrganizationController
             'slogan' => $request->post('slogan'),
             'tema_periode' => $request->post('tema_periode'),
             'sub_tema' => $request->post('sub_tema'),
-            'sejarah' => $request->post('sejarah'),
             'visi' => $request->post('visi'),
             'misi' => $request->post('misi'),
             'tri_panji' => $request->post('tri_panji'),

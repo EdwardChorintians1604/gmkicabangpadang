@@ -50,12 +50,10 @@
                             <span class="badge badge-success">Anggota Aktif</span>
                         <?php elseif ($member['status_keanggotaan'] === 'Pasif'): ?>
                             <span class="badge" style="background: #fef3c7; color: #92400e; border: 1px solid #fde68a;">Pasif (Jarang Aktif)</span>
-                        <?php elseif ($member['status_keanggotaan'] === 'Alumni/Senior'): ?>
-                            <span class="badge badge-warning">Senior / Alumni</span>
-                        <?php elseif ($member['status_keanggotaan'] === 'Pindah Cabang'): ?>
-                            <span class="badge badge-neutral">Pindah Cabang</span>
-                        <?php elseif ($member['status_keanggotaan'] === 'Dicabut'): ?>
-                            <span class="badge badge-danger">Keanggotaan Dicabut</span>
+                        <?php elseif ($member['status_keanggotaan'] === 'Alumni' || $member['status_keanggotaan'] === 'Alumni/Senior'): ?>
+                            <span class="badge badge-warning">Alumni</span>
+                        <?php elseif ($member['status_keanggotaan'] === 'Senior'): ?>
+                            <span class="badge" style="background: #ede9fe; color: #5b21b6; border: 1px solid #ddd6fe;">Senior</span>
                         <?php else: ?>
                             <span class="badge badge-neutral"><?= e($member['status_keanggotaan']) ?></span>
                         <?php endif; ?>
@@ -117,13 +115,11 @@
                                     <?php if ($member['status_keanggotaan'] === 'Aktif'): ?>
                                         <span class="badge badge-success">Aktif (Mahasiswa aktif berkegiatan)</span>
                                     <?php elseif ($member['status_keanggotaan'] === 'Pasif'): ?>
-                                        <span class="badge" style="background: #fef3c7; color: #92400e; border: 1px solid #fde68a;">Pasif (Tercatat, tetapi jarang/tidak aktif)</span>
-                                    <?php elseif ($member['status_keanggotaan'] === 'Alumni/Senior'): ?>
-                                        <span class="badge badge-warning">Alumni / Senior (Sudah wisuda/tamat)</span>
-                                    <?php elseif ($member['status_keanggotaan'] === 'Pindah Cabang'): ?>
-                                        <span class="badge badge-neutral">Pindah Cabang</span>
-                                    <?php elseif ($member['status_keanggotaan'] === 'Dicabut'): ?>
-                                        <span class="badge badge-danger">Keanggotaan Dicabut / Diberhentikan</span>
+                                        <span class="badge" style="background: #fef3c7; color: #92400e; border: 1px solid #fde68a;">Pasif (Tercatat anggota, tetapi jarang/tidak aktif)</span>
+                                    <?php elseif ($member['status_keanggotaan'] === 'Alumni' || $member['status_keanggotaan'] === 'Alumni/Senior'): ?>
+                                        <span class="badge badge-warning">Alumni (Sudah wisuda / tamat kuliah)</span>
+                                    <?php elseif ($member['status_keanggotaan'] === 'Senior'): ?>
+                                        <span class="badge" style="background: #ede9fe; color: #5b21b6; border: 1px solid #ddd6fe;">Senior (Anggota senior sesuai ketentuan organisasi)</span>
                                     <?php else: ?>
                                         <span class="badge badge-neutral"><?= e($member['status_keanggotaan']) ?></span>
                                     <?php endif; ?>
@@ -142,8 +138,8 @@
                                 <td><?= nl2br(e($member['alamat_padang'] ?? '-')) ?></td>
                             </tr>
                             <tr>
-                                <th style="background: none;">Alamat Asal</th>
-                                <td><?= nl2br(e($member['alamat_asal'] ?? '-')) ?></td>
+                                <th style="background: none;">Asal Civitas</th>
+                                <td><?= e($member['asal_civitas'] ?? $member['alamat_asal'] ?? '-') ?></td>
                             </tr>
                         </tbody>
                     </table>

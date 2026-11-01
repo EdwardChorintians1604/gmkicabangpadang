@@ -99,8 +99,12 @@
                             <td>
                                 <?php if ($row['status_keanggotaan'] === 'Aktif'): ?>
                                     <span class="badge badge-success">Aktif</span>
-                                <?php elseif ($row['status_keanggotaan'] === 'Alumni/Senior'): ?>
+                                <?php elseif ($row['status_keanggotaan'] === 'Pasif'): ?>
+                                    <span class="badge" style="background: #fef3c7; color: #92400e; border: 1px solid #fde68a;">Pasif</span>
+                                <?php elseif ($row['status_keanggotaan'] === 'Alumni' || $row['status_keanggotaan'] === 'Alumni/Senior'): ?>
                                     <span class="badge badge-warning">Alumni</span>
+                                <?php elseif ($row['status_keanggotaan'] === 'Senior'): ?>
+                                    <span class="badge" style="background: #ede9fe; color: #5b21b6; border: 1px solid #ddd6fe;">Senior</span>
                                 <?php else: ?>
                                     <span class="badge badge-neutral"><?= e($row['status_keanggotaan']) ?></span>
                                 <?php endif; ?>

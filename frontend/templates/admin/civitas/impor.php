@@ -67,9 +67,9 @@ $deskripsi = $isMaperca
                 </p>
                 <div style="background:#ffffff; padding:0.75rem; border-radius:var(--radius-sm); font-size:0.75rem; overflow-x:auto; border: 1px solid #e2e8f0; font-family: monospace; color: #334155;">
                     <?php if ($isMaperca): ?>
-                    ID / NIM, Nama Lengkap, Jenis Kelamin, Tempat Lahir, Tanggal Lahir, Telepon / WA, Email, Perguruan Tinggi, Fakultas, Jurusan, Tahun Maperca, Status Keanggotaan, Alamat Padang, Alamat Asal
+                    ID / NIM, Nama Lengkap, Jenis Kelamin, Tempat Lahir, Tanggal Lahir, Telepon / WA, Email, Perguruan Tinggi, Fakultas, Jurusan, Tahun Maperca, Status Keanggotaan, Alamat Padang, Asal Civitas
                     <?php else: ?>
-                    ID / NIM, Nama Lengkap, Jenis Kelamin, Tempat Lahir, Tanggal Lahir, Telepon / WA, Email, Perguruan Tinggi, Fakultas, Jurusan, Komisariat, Tahun Maperca, Tingkat Kaderisasi, Status Keanggotaan, Alamat Padang, Alamat Asal
+                    ID / NIM, Nama Lengkap, Jenis Kelamin, Tempat Lahir, Tanggal Lahir, Telepon / WA, Email, Perguruan Tinggi, Fakultas, Jurusan, Komisariat, Tahun Maperca, Tingkat Kaderisasi, Status Keanggotaan, Alamat Padang, Asal Civitas
                     <?php endif; ?>
                 </div>
                 <ul style="font-size: 0.8125rem; margin-top: 0.75rem; padding-left: 1.25rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 0;">
@@ -77,6 +77,8 @@ $deskripsi = $isMaperca
                     <li><strong>ID / NIM Fleksibel:</strong> Berapapun ID atau NIM yang dimasukkan (misal <code>1</code>, <code>12</code>, <code>100</code>, atau NIM kampus) otomatis terdeteksi. Jika kosong, sistem otomatis membuatkan ID urut unik.</li>
                     <li><strong>Jenis Kelamin:</strong> Diisi <code>L</code> (Laki-laki / Pria) atau <code>P</code> (Perempuan / Wanita).</li>
                     <li><strong>Tanggal Lahir:</strong> Format teks tanggal standar (<code>YYYY-MM-DD</code> atau <code>DD/MM/YYYY</code>) maupun format cell tanggal Excel bawaan didukung otomatis.</li>
+                    <li><strong>Status Keanggotaan:</strong> Pilihan: <code>Aktif</code>, <code>Pasif</code>, <code>Alumni</code>, atau <code>Senior</code> (default <code>Aktif</code>).</li>
+                    <li><strong>Asal Civitas:</strong> Kota atau daerah asal anggota (misal: Mentawai, Bengkulu, Solok, Medan, Sidikalang, Jakarta, dsb.).</li>
                     <?php if ($isMaperca): ?>
                         <li><strong>Khusus Calon Kader Baru (Maperca):</strong> Pendaftar kader baru belum terafiliasi dengan komisariat tertentu sampai mereka resmi dilantik, sehingga kolom Komisariat dan Tingkat Kaderisasi tidak perlu diisi (otomatis diatur sebagai kader baru).</li>
                     <?php else: ?>

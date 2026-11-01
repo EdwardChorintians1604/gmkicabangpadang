@@ -19,7 +19,6 @@ class OrganizationRepository
                 'slogan' => 'Ut Omnes Unum Sint - Syalom!',
                 'tema_periode' => 'Bangkitlah, Menjadi Teranglah! (Yesaya 60:1)',
                 'sub_tema' => 'Memperkokoh Ketahanan Civitas dan Pelayanan di Tiga Medan Layan GMKI',
-                'sejarah' => 'GMKI Cabang Padang berdiri untuk melayani gereja, perguruan tinggi, dan masyarakat.',
                 'visi' => 'Terwujudnya kedamaian, keadilan, kebenaran dan kesejahteraan bagi sesama manusia.',
                 'misi' => 'Mempersiapkan kader pemimpin yang berintegritas dan takut akan Tuhan.',
                 'tri_panji' => "1. Tinggi Iman\n2. Tinggi Ilmu\n3. Tinggi Pengabdian",
@@ -42,11 +41,11 @@ class OrganizationRepository
 
         if (!$existing) {
             $sql = "INSERT INTO `profil_organisasi` (
-                        `nama_organisasi`, `slogan`, `tema_periode`, `sub_tema`, `sejarah`,
+                        `nama_organisasi`, `slogan`, `tema_periode`, `sub_tema`,
                         `visi`, `misi`, `tri_panji`, `panca_kegiatan`, `alamat_sekretariat`,
                         `telepon`, `email`, `instagram`, `youtube`, `facebook`, `updated_at`
                     ) VALUES (
-                        :nama_organisasi, :slogan, :tema_periode, :sub_tema, :sejarah,
+                        :nama_organisasi, :slogan, :tema_periode, :sub_tema,
                         :visi, :misi, :tri_panji, :panca_kegiatan, :alamat_sekretariat,
                         :telepon, :email, :instagram, :youtube, :facebook, NOW()
                     )";
@@ -55,7 +54,6 @@ class OrganizationRepository
                 ':slogan' => $data['slogan'] ?? '',
                 ':tema_periode' => $data['tema_periode'] ?? '',
                 ':sub_tema' => $data['sub_tema'] ?? '',
-                ':sejarah' => $data['sejarah'] ?? '',
                 ':visi' => $data['visi'] ?? '',
                 ':misi' => $data['misi'] ?? '',
                 ':tri_panji' => $data['tri_panji'] ?? '',
@@ -74,7 +72,6 @@ class OrganizationRepository
                     `slogan` = :slogan,
                     `tema_periode` = :tema_periode,
                     `sub_tema` = :sub_tema,
-                    `sejarah` = :sejarah,
                     `visi` = :visi,
                     `misi` = :misi,
                     `tri_panji` = :tri_panji,
@@ -94,7 +91,6 @@ class OrganizationRepository
             ':slogan' => $data['slogan'],
             ':tema_periode' => $data['tema_periode'],
             ':sub_tema' => $data['sub_tema'],
-            ':sejarah' => $data['sejarah'],
             ':visi' => $data['visi'],
             ':misi' => $data['misi'],
             ':tri_panji' => $data['tri_panji'],

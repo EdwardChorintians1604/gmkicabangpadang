@@ -120,12 +120,19 @@
 
                 <div class="form-group">
                     <label class="form-label" for="status_keanggotaan">Status Keanggotaan</label>
-                    <?php $sk = $isEdit ? $member['status_keanggotaan'] : old('status_keanggotaan', 'Aktif'); ?>
+                    <?php
+                    $sk = $isEdit ? ($member['status_keanggotaan'] ?? 'Aktif') : old('status_keanggotaan', 'Aktif');
+                    if ($sk === 'Alumni/Senior') {
+                        $sk = 'Alumni';
+                    } elseif (!in_array($sk, ['Aktif', 'Pasif', 'Alumni', 'Senior'], true)) {
+                        $sk = 'Aktif';
+                    }
+                    ?>
                     <select id="status_keanggotaan" name="status_keanggotaan" class="form-control">
-                        <option value="Aktif" <?= ($sk === 'Aktif') ? 'selected' : '' ?>>Aktif</option>
-                        <option value="Alumni/Senior" <?= ($sk === 'Alumni/Senior') ? 'selected' : '' ?>>Alumni / Senior</option>
-                        <option value="Pindah Cabang" <?= ($sk === 'Pindah Cabang') ? 'selected' : '' ?>>Pindah Cabang</option>
-                        <option value="Nonaktif" <?= ($sk === 'Nonaktif') ? 'selected' : '' ?>>Nonaktif</option>
+                        <option value="Aktif" <?= ($sk === 'Aktif') ? 'selected' : '' ?>>Aktif &mdash; Mahasiswa aktif berkegiatan</option>
+                        <option value="Pasif" <?= ($sk === 'Pasif') ? 'selected' : '' ?>>Pasif &mdash; Tercatat anggota, tetapi jarang/tidak aktif</option>
+                        <option value="Alumni" <?= ($sk === 'Alumni') ? 'selected' : '' ?>>Alumni &mdash; Sudah wisuda / tamat kuliah</option>
+                        <option value="Senior" <?= ($sk === 'Senior') ? 'selected' : '' ?>>Senior &mdash; Anggota senior sesuai ketentuan organisasi</option>
                     </select>
                 </div>
             </div>
@@ -137,8 +144,11 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label" for="alamat_asal">Alamat Daerah Asal</label>
-                    <textarea id="alamat_asal" name="alamat_asal" class="form-control" rows="2"><?= e($isEdit ? $member['alamat_asal'] : old('alamat_asal')) ?></textarea>
+                    <label class="form-label" for="asal_civitas">Asal Civitas</label>
+                    <input type="text" id="asal_civitas" name="asal_civitas" class="form-control"
+                           placeholder="Contoh: Mentawai, Bengkulu, Solok, Medan, Sidikalang, Jakarta..."
+                           value="<?= e($isEdit ? ($member['asal_civitas'] ?? $member['alamat_asal'] ?? '') : old('asal_civitas', old('alamat_asal'))) ?>">
+                    <div class="form-help">Kota atau daerah asal civitas / anggota (misal: Mentawai, Bengkulu, Solok, Medan, Sidikalang, Jakarta, dsb.).</div>
                 </div>
             </div>
 
