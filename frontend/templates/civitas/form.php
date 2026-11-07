@@ -17,10 +17,14 @@
 
             <div class="grid grid-cols-2 gap-4">
                 <div class="form-group">
-                    <label class="form-label" for="nim">Nomor Induk Mahasiswa (NIM)</label>
+                    <label class="form-label" for="nim">ID Anggota / Civitas <span style="font-weight: normal; font-size: 0.78rem; color: var(--text-muted);">(Otomatis: TahunMaper-ThnLahir-Inisial)</span></label>
                     <input type="text" id="nim" name="nim" class="form-control" 
-                           placeholder="Contoh: 2110532001" 
-                           value="<?= e($isEdit ? $member['nim'] : old('nim')) ?>" required>
+                           placeholder="Otomatis (contoh: 2025-04-EPS)" 
+                           value="<?= e($isEdit ? $member['nim'] : old('nim')) ?>" readonly
+                           style="background-color: #f8fafc; font-family: monospace; font-weight: 700; color: var(--primary);">
+                    <div class="form-help" style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">
+                        Dibentuk otomatis dari <strong>Tahun Maper</strong> + <strong>2 angka Tahun Lahir</strong> + <strong>Inisial Nama</strong> (contoh: <code>2025-04-EPS</code>).
+                    </div>
                 </div>
 
                 <div class="form-group">
@@ -50,7 +54,7 @@
                 <div class="form-group">
                     <label class="form-label" for="tanggal_lahir">Tanggal Lahir</label>
                     <input type="date" id="tanggal_lahir" name="tanggal_lahir" class="form-control" 
-                           value="<?= e($isEdit ? $member['tanggal_lahir'] : old('tanggal_lahir')) ?>">
+                           value="<?= e($isEdit ? $member['tanggal_lahir'] : old('tanggal_lahir')) ?>" required>
                 </div>
             </div>
 
@@ -197,5 +201,46 @@
                 <a href="/admin/civitas" class="btn btn-outline">Batal</a>
             </div>
         </form>
+        <script>
+            (function() {
+                const namaInput = document.getElementById('nama_lengkap');
+                const tglLahirInput = document.getElementById('tanggal_lahir');
+                const thnMaperInput = document.getElementById('tahun_maperca');
+                const nimInput = document.getElementById('nim');
+
+                function computePreviewId() {
+                    if (!nimInput) return;
+                    const nama = (namaInput ? namaInput.value : '').trim();
+                    const tgl = (tglLahirInput ? tglLahirInput.value : '').trim();
+                    const thn = (thnMaperInput ? thnMaperInput.value : '').trim() || new Date().getFullYear().toString();
+
+                    if (!nama && !tgl) return;
+
+                    let yy = '00';
+                    const matchYear = tgl.match(/^(\d{4})/);
+                    if (matchYear) {
+                        yy = matchYear[1].slice(-2);
+                    }
+
+                    let initials = '';
+                    if (nama) {
+                        nama.split(/[\s\-]+/).forEach(function(word) {
+                            const clean = word.replace(/[^a-zA-Z]/g, '');
+                            if (clean.length > 0) {
+                                initials += clean.charAt(0).toUpperCase();
+                            }
+                        });
+                    }
+                    if (!initials) initials = 'XX';
+
+                    nimInput.value = thn + '-' + yy + '-' + initials;
+                }
+
+                if (namaInput) namaInput.addEventListener('input', computePreviewId);
+                if (tglLahirInput) tglLahirInput.addEventListener('change', computePreviewId);
+                if (thnMaperInput) thnMaperInput.addEventListener('input', computePreviewId);
+                computePreviewId();
+            })();
+        </script>
     </div>
 </div>

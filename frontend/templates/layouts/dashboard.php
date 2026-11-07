@@ -7,12 +7,10 @@
     <link rel="icon" type="image/png" href="<?= asset('images/favicon.png') ?>">
     <link rel="stylesheet" href="<?= asset('vendor/animate.min.css') ?>">
     <link rel="stylesheet" href="<?= asset('css/app.css') ?>?v=5">
-    <link rel="stylesheet" href="<?= asset('css/dashboard.css') ?>?v=6">
+    <link rel="stylesheet" href="<?= asset('css/dashboard.css') ?>?v=11">
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <?php if (($section ?? '') === 'coordination'): ?>
-        <link rel="stylesheet" href="<?= asset('css/coordination.css') ?>?v=7">
-    <?php endif; ?>
+
     <!-- Tailwind CSS with custom GMKI palette -->
     <script defer src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -75,7 +73,7 @@
                     </li>
                 <?php endif; ?>
 
-                <?php if (can('inventory.view') || can('archive.view') || can('finance.view') || can('reports.view') || can('strategy.view') || can('coordination.view')): ?>
+                <?php if (can('inventory.view') || can('archive.view') || can('finance.view') || can('reports.view') || can('strategy.view')): ?>
                     <li class="nav-category">Ruang Kerja BPC</li>
                     <?php if (can('inventory.view')): ?>
                         <li class="sidebar-nav-item"><a href="/sekcab/inventaris" class="sidebar-nav-link flex items-center gap-2"><span class="sidebar-nav-icon flex items-center justify-center text-base"><i class="bi bi-boxes"></i></span><span>Inventaris</span></a></li>
@@ -93,10 +91,7 @@
                     <?php if (can('strategy.view')): ?>
                         <li class="sidebar-nav-item"><a href="/ketcab/proker" class="sidebar-nav-link <?= (active_nav('/ketcab/proker') || active_nav('/ketcab/strategi')) ?> flex items-center gap-2"><span class="sidebar-nav-icon flex items-center justify-center text-base"><i class="bi bi-kanban"></i></span><span>Program Kerja Sekfung</span></a></li>
                     <?php endif; ?>
-                    <?php if (can('coordination.view')): ?>
-                        <?php $coordinationPath = (auth()['role'] ?? '') === 'admin' ? '/admin/koordinasi' : ((auth()['role'] ?? '') === 'ketcab' ? '/ketcab/koordinasi' : '/ruang-kerja/koordinasi'); ?>
-                        <li class="sidebar-nav-item"><a href="<?= e($coordinationPath) ?>" class="sidebar-nav-link flex items-center gap-2"><span class="sidebar-nav-icon flex items-center justify-center text-base"><i class="bi bi-chat-dots-fill"></i></span><span>Koordinasi &amp; Request</span></a></li>
-                    <?php endif; ?>
+
                 <?php endif; ?>
 
                 <li class="nav-category">Database &amp; Kaderisasi</li>
@@ -286,9 +281,7 @@
     <script src="<?= asset('js/app.js') ?>"></script>
     <script src="<?= asset('js/validation.js') ?>"></script>
     <script src="<?= asset('js/statistik.js') ?>"></script>
-    <?php if (($section ?? '') === 'coordination'): ?>
-        <script src="<?= asset('js/coordination.js') ?>?v=6"></script>
-    <?php endif; ?>
+
     <script>
         window.__AUTH_USER_ID__ = <?= !empty(auth()['id']) ? (int)auth()['id'] : 'null' ?>;
     </script>

@@ -56,7 +56,7 @@
         <table class="data-table">
             <thead>
                 <tr>
-                    <th style="min-width: 90px;">ID / NIM</th>
+                    <th style="min-width: 115px;">ID Anggota</th>
                     <th>Nama Anggota</th>
                     <th>Komisariat & Kampus</th>
                     <th>Maperca</th>
@@ -70,12 +70,7 @@
                     <?php foreach ($civitas as $c): ?>
                         <tr>
                             <td>
-                                <div class="flex items-center gap-1.5">
-                                    <span class="badge badge-neutral" style="font-weight: 700; font-size: 0.75rem;">#<?= (int)$c['id'] ?></span>
-                                    <?php if (!empty($c['nim']) && (string)$c['nim'] !== (string)$c['id']): ?>
-                                        <code style="font-size: 0.78rem;"><?= e($c['nim']) ?></code>
-                                    <?php endif; ?>
-                                </div>
+                                <code style="font-weight: 700; font-size: 0.82rem; color: var(--primary); background: rgba(13, 71, 161, 0.08); padding: 0.2rem 0.5rem; border-radius: 6px;"><?= e($c['nim']) ?></code>
                             </td>
                             <td>
                                 <strong><?= e($c['nama_lengkap']) ?></strong>

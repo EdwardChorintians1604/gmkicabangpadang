@@ -108,8 +108,14 @@ $router->get('/admin/keamanan/audit-log', 'Admin\SecurityController@auditLog', [
 $router->get('/admin/keamanan/akses-log/export', 'Admin\SecurityController@exportAccessLog', ['auth', 'role:admin']);
 $router->get('/admin/keamanan/akses-log', 'Admin\SecurityController@accessLog', ['auth', 'role:admin']);
 $router->get('/admin/keamanan/ancaman', 'Admin\SecurityController@threats', ['auth', 'role:admin']);
-$router->post('/admin/keamanan/ancaman/{id}/resolve', 'Admin\SecurityController@resolveAncaman', ['auth', 'role:admin']);
+$router->post('/admin/keamanan/ancaman/auto-fix', 'Admin\SecurityController@autoFix', ['auth', 'role:admin', 'csrf']);
+$router->post('/admin/keamanan/ancaman/deep-scan', 'Admin\SecurityController@deepScan', ['auth', 'role:admin', 'csrf']);
+$router->post('/admin/keamanan/ancaman/block-ip', 'Admin\SecurityController@blockIp', ['auth', 'role:admin', 'csrf']);
+$router->post('/admin/keamanan/ancaman/unblock-ip', 'Admin\SecurityController@unblockIp', ['auth', 'role:admin', 'csrf']);
+$router->post('/admin/keamanan/ancaman/resolve-all', 'Admin\SecurityController@resolveAll', ['auth', 'role:admin', 'csrf']);
+$router->post('/admin/keamanan/ancaman/{id}/resolve', 'Admin\SecurityController@resolveAncaman', ['auth', 'role:admin', 'csrf']);
 $router->get('/admin/keamanan/ancaman/{id}/resolve', 'Admin\SecurityController@resolveAncaman', ['auth', 'role:admin']);
+$router->post('/admin/keamanan/ancaman/{id}/delete', 'Admin\SecurityController@deleteAncaman', ['auth', 'role:admin', 'csrf']);
 $router->get('/admin/keamanan/backup', 'Admin\BackupController@index', ['auth', 'role:admin']);
 $router->post('/admin/keamanan/backup/database', 'Admin\BackupController@backupDatabase', ['auth', 'role:admin', 'csrf']);
 $router->post('/admin/keamanan/backup/total', 'Admin\BackupController@backupTotal', ['auth', 'role:admin', 'csrf']);

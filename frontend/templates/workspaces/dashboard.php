@@ -55,8 +55,8 @@ $roleMottos = [
                 <a href="/ketcab/proker" class="btn inline-flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-white bg-sky-600 hover:bg-sky-700 shadow-md transition-all">
                     <i class="bi bi-kanban"></i> <span>Pemantauan Proker Sekfung</span>
                 </a>
-                <a href="/ketcab/koordinasi" class="btn inline-flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-white bg-white/15 hover:bg-white/25 border border-white/30 backdrop-blur-sm transition-all">
-                    <i class="bi bi-chat-dots-fill"></i> <span>Ruang Koordinasi</span>
+                <a href="/bencab/laporan" class="btn inline-flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-white bg-white/15 hover:bg-white/25 border border-white/30 backdrop-blur-sm transition-all">
+                    <i class="bi bi-cash-stack"></i> <span>Laporan Keuangan</span>
                 </a>
             <?php elseif ($role === 'sekcab'): ?>
                 <a href="/sekcab/arsip" class="btn inline-flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-white bg-blue-600 hover:bg-blue-700 shadow-md transition-all">
@@ -73,8 +73,8 @@ $roleMottos = [
                     <i class="bi bi-hourglass-split"></i> <span>Antrean Ekspor</span>
                 </a>
             <?php else: ?>
-                <a href="/ruang-kerja/koordinasi" class="btn inline-flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-white bg-sky-600 hover:bg-sky-700 shadow-md transition-all">
-                    <i class="bi bi-chat-dots-fill"></i> <span>Koordinasi BPC</span>
+                <a href="/admin/berita/create" class="btn inline-flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-white bg-sky-600 hover:bg-sky-700 shadow-md transition-all">
+                    <i class="bi bi-pencil-square"></i> <span>Tulis Warta Baru</span>
                 </a>
             <?php endif; ?>
         </div>
@@ -105,11 +105,11 @@ $roleMottos = [
 
         <div class="metric-card">
             <div class="metric-info">
-                <span class="metric-label">Pesan Koordinasi</span>
-                <span class="metric-value"><?= (int)$counts['messages'] ?></span>
-                <span class="text-muted" style="font-size:0.8rem;margin-top:0.25rem;">Diskusi anggaran BPC</span>
+                <span class="metric-label">Antrean Ekspor</span>
+                <span class="metric-value" style="font-size:1.35rem;color:#0284c7;">Siap &amp; Aktif</span>
+                <span class="text-muted" style="font-size:0.8rem;margin-top:0.25rem;">Ekspor CSV latar belakang</span>
             </div>
-            <div class="metric-icon-wrap metric-icon-info flex items-center justify-center"><i class="bi bi-chat-dots-fill text-2xl"></i></div>
+            <div class="metric-icon-wrap flex items-center justify-center" style="background:#e0f2fe;color:#0284c7;"><i class="bi bi-hourglass-split text-2xl"></i></div>
         </div>
 
         <div class="metric-card">
@@ -143,11 +143,11 @@ $roleMottos = [
 
         <div class="metric-card">
             <div class="metric-info">
-                <span class="metric-label">Pesan Koordinasi</span>
-                <span class="metric-value"><?= (int)$counts['messages'] ?></span>
-                <span class="text-muted" style="font-size:0.8rem;margin-top:0.25rem;">Arahan pimpinan aktif</span>
+                <span class="metric-label">Inventaris Cabang</span>
+                <span class="metric-value"><?= (int)$counts['inventory'] ?></span>
+                <span class="text-muted" style="font-size:0.8rem;margin-top:0.25rem;">Logistik &amp; aset BPC</span>
             </div>
-            <div class="metric-icon-wrap metric-icon-info flex items-center justify-center"><i class="bi bi-chat-dots-fill text-2xl"></i></div>
+            <div class="metric-icon-wrap flex items-center justify-center" style="background:#fef3c7;color:#b45309;"><i class="bi bi-boxes text-2xl"></i></div>
         </div>
 
         <div class="metric-card">
@@ -190,11 +190,11 @@ $roleMottos = [
 
         <div class="metric-card">
             <div class="metric-info">
-                <span class="metric-label">Pesan Koordinasi</span>
-                <span class="metric-value"><?= (int)$counts['messages'] ?></span>
-                <span class="text-muted" style="font-size:0.8rem;margin-top:0.25rem;">Komunikasi dinas BPC</span>
+                <span class="metric-label">Laporan Keuangan</span>
+                <span class="metric-value"><?= (int)$counts['finance'] ?></span>
+                <span class="text-muted" style="font-size:0.8rem;margin-top:0.25rem;">Arsip kas resmi cabang</span>
             </div>
-            <div class="metric-icon-wrap metric-icon-info flex items-center justify-center"><i class="bi bi-chat-dots-fill text-2xl"></i></div>
+            <div class="metric-icon-wrap metric-icon-success flex items-center justify-center"><i class="bi bi-cash-coin text-2xl"></i></div>
         </div>
 
     <?php else: ?>
@@ -211,9 +211,7 @@ $roleMottos = [
         <?php if (can('finance.view') || can('reports.view')): ?>
             <div class="metric-card"><div class="metric-info"><span class="metric-label">Laporan keuangan</span><span class="metric-value"><?= (int)$counts['finance'] ?></span><span class="text-muted" style="font-size:0.8rem;margin-top:0.25rem;">Pembukuan kas</span></div><div class="metric-icon-wrap metric-icon-success flex items-center justify-center"><i class="bi bi-cash-coin text-2xl"></i></div></div>
         <?php endif; ?>
-        <?php if (can('coordination.view')): ?>
-            <div class="metric-card"><div class="metric-info"><span class="metric-label">Pesan koordinasi</span><span class="metric-value"><?= (int)$counts['messages'] ?></span><span class="text-muted" style="font-size:0.8rem;margin-top:0.25rem;">Komunikasi peran</span></div><div class="metric-icon-wrap metric-icon-info flex items-center justify-center"><i class="bi bi-chat-dots-fill text-2xl"></i></div></div>
-        <?php endif; ?>
+
     <?php endif; ?>
 </div>
 
@@ -258,15 +256,7 @@ $roleMottos = [
                     <p>Proses &amp; unduh rekapitulasi data keuangan cabang di latar belakang.</p>
                 </div>
             </a>
-            <a href="/ruang-kerja/koordinasi" class="launchpad-card group">
-                <div class="launchpad-icon flex items-center justify-center" style="background:#eff6ff;color:#2563eb;">
-                    <i class="bi bi-chat-dots-fill text-2xl"></i>
-                </div>
-                <div class="launchpad-info">
-                    <h4>Ruang Koordinasi BPC</h4>
-                    <p>Saluran komunikasi permohonan anggaran dan arahan bersama pimpinan.</p>
-                </div>
-            </a>
+
 
         <?php elseif ($role === 'ketcab'): ?>
             <a href="/ketcab/proker" class="launchpad-card group">
@@ -296,15 +286,7 @@ $roleMottos = [
                     <p>Tinjau persebaran kader, komisariat kampus, dan mutasi anggota.</p>
                 </div>
             </a>
-            <a href="/ketcab/koordinasi" class="launchpad-card group">
-                <div class="launchpad-icon flex items-center justify-center" style="background:#eff6ff;color:#2563eb;">
-                    <i class="bi bi-chat-dots-fill text-2xl"></i>
-                </div>
-                <div class="launchpad-info">
-                    <h4>Ruang Koordinasi BPC</h4>
-                    <p>Berikan instruksi langsung dan bimbingan lintas fungsionaris cabang.</p>
-                </div>
-            </a>
+
             <a href="/admin/statistik" class="launchpad-card group">
                 <div class="launchpad-icon flex items-center justify-center" style="background:#f3e8ff;color:#7e22ce;">
                     <i class="bi bi-graph-up text-2xl"></i>
@@ -370,15 +352,7 @@ $roleMottos = [
                     <p>Melihat persebaran komisariat di perguruan tinggi, pantau anggota, dan unduh data.</p>
                 </div>
             </a>
-            <a href="/ruang-kerja/koordinasi" class="launchpad-card group">
-                <div class="launchpad-icon flex items-center justify-center" style="background:#eff6ff;color:#2563eb;">
-                    <i class="bi bi-chat-dots-fill text-2xl"></i>
-                </div>
-                <div class="launchpad-info">
-                    <h4>Ruang Koordinasi BPC</h4>
-                    <p>Koordinasi dinas persuratan dan disposisi tugas bersama Ketcab &amp; Bencab.</p>
-                </div>
-            </a>
+
 
         <?php else: ?>
             <?php if (can('civitas.view')): ?>
@@ -405,98 +379,18 @@ $roleMottos = [
                     <div class="launchpad-info"><h4>Laporan Keuangan</h4><p>Dokumen kas dan transparansi keuangan cabang.</p></div>
                 </a>
             <?php endif; ?>
-            <?php if (can('coordination.view')): ?>
-                <?php $coordPath = $role === 'admin' ? '/admin/koordinasi' : ($role === 'ketcab' ? '/ketcab/koordinasi' : '/ruang-kerja/koordinasi'); ?>
-                <a href="<?= e($coordPath) ?>" class="launchpad-card group">
-                    <div class="launchpad-icon flex items-center justify-center" style="background:#eff6ff;color:#2563eb;"><i class="bi bi-chat-dots-fill text-2xl"></i></div>
-                    <div class="launchpad-info"><h4>Koordinasi BPC</h4><p>Diskusi dan permohonan antar fungsionaris.</p></div>
-                </a>
-            <?php endif; ?>
+
         <?php endif; ?>
     </div>
 </section>
 
-<!-- 4. Role-Specific Guidance & Status Panel -->
-<?php if ($role === 'ketcab'): ?>
-    <!-- Tri Panji GMKI Padang untuk Ketcab -->
-    <section style="margin-top: 2rem;">
-        <div class="card" style="border-top: 4px solid var(--secondary);">
-            <div class="card-body" style="padding: 1.5rem 1.75rem;">
-                <div class="flex items-center justify-between" style="flex-wrap: wrap; gap: 0.75rem; margin-bottom: 0.75rem;">
-                    <div>
-                        <h3 style="font-size: 1.15rem; font-weight: 800; color: var(--primary); margin: 0;">Pilar Tri Panji GMKI Cabang Padang</h3>
-                        <p class="text-muted" style="margin: 0.2rem 0 0; font-size: 0.85rem;">Landasan perarakan dan arah kepemimpinan di Gereja, Perguruan Tinggi, dan Masyarakat.</p>
-                    </div>
-                    <span class="badge badge-warning flex items-center gap-1" style="font-size: 0.75rem; font-weight: 700;">
-                        <i class="bi bi-award-fill"></i> <span>Amanat Pelayanan</span>
-                    </span>
-                </div>
-
-                <div class="tripanji-grid">
-                    <div class="card" style="background:#f8fafc;border:1px solid #e2e8f0;">
-                        <div class="card-body" style="padding:1.15rem;">
-                            <div style="font-weight:750;color:var(--primary);margin-bottom:0.35rem;display:flex;align-items:center;gap:0.4rem;">
-                                <i class="bi bi-shield-fill-check text-sky-700"></i> <span>Tinggi Iman</span>
-                            </div>
-                            <p class="text-muted" style="font-size:0.8rem;margin:0;line-height:1.5;">
-                                Spiritualitas yang teguh, keteladanan moral Kristiani, dan pemahaman firman kontekstual di tengah pergumulan kampus.
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="card" style="background:#f8fafc;border:1px solid #e2e8f0;">
-                        <div class="card-body" style="padding:1.15rem;">
-                            <div style="font-weight:750;color:var(--secondary);margin-bottom:0.35rem;display:flex;align-items:center;gap:0.4rem;">
-                                <i class="bi bi-book-half text-amber-600"></i> <span>Tinggi Ilmu</span>
-                            </div>
-                            <p class="text-muted" style="font-size:0.8rem;margin:0;line-height:1.5;">
-                                Nalar kritis, wawasan kebangsaan, keunggulan akademis, serta kesiapan memimpin masa depan gereja dan bangsa.
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="card" style="background:#f8fafc;border:1px solid #e2e8f0;">
-                        <div class="card-body" style="padding:1.15rem;">
-                            <div style="font-weight:750;color:#10b981;margin-bottom:0.35rem;display:flex;align-items:center;gap:0.4rem;">
-                                <i class="bi bi-heart-pulse-fill text-emerald-600"></i> <span>Tinggi Pengabdian</span>
-                            </div>
-                            <p class="text-muted" style="font-size:0.8rem;margin:0;line-height:1.5;">
-                                Advokasi keadilan sosial, aksi nyata pembelaan kaum marjinal, dan kesaksian hidup berintegritas di Kota Padang.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-<?php elseif ($role === 'sekcab'): ?>
-    <section style="margin-top: 2rem;">
-        <div class="card" style="border-left: 4px solid #3b82f6; background: #eff6ff;">
-            <div class="card-body" style="padding: 1.25rem 1.5rem;">
-                <div class="flex items-center gap-2" style="font-weight: 750; color: #1e40af; font-size: 0.95rem; margin-bottom: 0.35rem;">
-                    <i class="bi bi-shield-lock-fill text-blue-600 text-lg"></i>
-                    <span>Protokol Keamanan &amp; Perlindungan Duplikasi Arsip Sekcab</span>
-                </div>
-                <p style="margin: 0; font-size: 0.85rem; color: #1e3a8a; line-height: 1.55;">
-                    Setiap berkas surat yang diunggah otomatis digandakan menjadi <strong>Salinan Cadangan Redundan (Backup)</strong> dengan <em>checksum SHA-256 identik 100%</em> guna melindungi data resmi organisasi dari risiko kerusakan atau manipulasi file.
-                </p>
-            </div>
-        </div>
-    </section>
-
-<?php elseif ($role === 'bencab'): ?>
-    <section style="margin-top: 2rem;">
-        <div class="card" style="border-left: 4px solid #10b981; background: #ecfdf5;">
-            <div class="card-body" style="padding: 1.25rem 1.5rem;">
-                <div class="flex items-center gap-2" style="font-weight: 750; color: #065f46; font-size: 0.95rem; margin-bottom: 0.35rem;">
-                    <i class="bi bi-bank text-emerald-600 text-lg"></i>
-                    <span>Protokol Akuntabilitas &amp; Isolasi Dokumen Keuangan Bencab</span>
-                </div>
-                <p style="margin: 0; font-size: 0.85rem; color: #047857; line-height: 1.55;">
-                    Ruang kerja Bendahara Cabang memiliki isolasi penulisan penuh (hanya pembuat yang dapat mengedit/menghapus laporannya). Berkas dibagikan secara transparan kepada Ketua Cabang (Ketcab) dengan hak baca dan unduh. Pembuatan rekapitulasi data diproses melalui sistem antrean latar belakang.
-                </p>
-            </div>
-        </div>
-    </section>
-<?php endif; ?>
+<!-- 4. Role-Specific Executive Showcase Panel (_ketcab, _sekcab, _bencab) -->
+<section style="margin-top: 2rem;">
+    <?php if ($role === 'ketcab'): ?>
+        <?php require dirname(__DIR__) . '/pengawas/dashboard/_ketcab.php'; ?>
+    <?php elseif ($role === 'sekcab'): ?>
+        <?php require dirname(__DIR__) . '/pengawas/dashboard/_sekcab.php'; ?>
+    <?php elseif ($role === 'bencab'): ?>
+        <?php require dirname(__DIR__) . '/pengawas/dashboard/_bencab.php'; ?>
+    <?php endif; ?>
+</section>

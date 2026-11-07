@@ -5,7 +5,6 @@ $titles = [
     'archive' => 'Buku Agenda & Arsip Persuratan Sekcab',
     'finance' => 'Laporan Keuangan Cabang',
     'strategies' => 'Program Kerja Sekfung',
-    'coordination' => 'Ruang Koordinasi BPC',
 ];
 $backPath = match ($role) {
     'admin' => '/admin/dashboard',
@@ -14,12 +13,14 @@ $backPath = match ($role) {
 };
 $backLabel = $role === 'admin' ? 'Dashboard Admin' : 'Ruang kerja';
 ?>
+<?php if ($section !== 'archive'): ?>
 <header class="flex justify-between items-center" style="margin-bottom:1.25rem;flex-wrap:wrap;gap:1rem;">
     <div>
         <p class="text-muted" style="margin:0;"><a href="<?= e($backPath) ?>"><?= e($backLabel) ?></a> / <?= e($titles[$section] ?? '') ?></p>
         <h1 style="font-size:1.75rem;font-weight:800;color:var(--primary);margin:.25rem 0;"><?= e($titles[$section] ?? '') ?></h1>
     </div>
 </header>
+<?php endif; ?>
 
 <?php if ($section === 'inventory'): ?>
     <!-- Ringkasan Metrik Inventaris -->
@@ -413,199 +414,334 @@ $backLabel = $role === 'admin' ? 'Dashboard Admin' : 'Ruang kerja';
     </script>
 
 <?php elseif ($section === 'archive'): ?>
-    <!-- Banner Peringatan Keamanan & Duplikasi Dokumen untuk Sekcab -->
-    <div style="background: linear-gradient(135deg, rgba(239, 68, 68, 0.08) 0%, rgba(59, 130, 246, 0.08) 100%); border: 1.5px solid #3b82f6; border-left: 5px solid #ef4444; border-radius: 10px; padding: 1.15rem 1.35rem; margin-bottom: 1.5rem;">
-        <div class="flex items-start gap-3">
-            <div style="font-size: 1.75rem; line-height: 1;">🛡️</div>
-            <div style="flex: 1;">
-                <h3 style="margin: 0 0 0.35rem; font-size: 1.05rem; font-weight: 800; color: #1e3a8a; display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
-                    <span>Protokol Keamanan & Perlindungan Duplikasi Arsip Cabang</span>
-                    <span class="badge badge-danger" style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Wajib Sekcab</span>
-                </h3>
-                <p style="margin: 0; font-size: 0.85rem; line-height: 1.5; color: #334155;">
-                    <strong>Peringatan Integritas:</strong> Untuk menutup celah keamanan dari berbagai potensi serangan (seperti <em>SQL Injection</em>, peretasan <em>Brute Force</em>, atau manipulasi database), sistem <strong>mewajibkan dan secara otomatis menjalankan duplikasi berkas ganda</strong>. Setiap berkas ditandai dengan jelas antara <strong>Berkas Asli (Master)</strong> dan <strong>Salinan Duplikasi (Redundant Backup)</strong> dengan isi yang <strong>100% identik tanpa perbedaan</strong> (diverifikasi melalui <em>checksum SHA-256</em>). Selalu periksa sifat surat guna menentukan tingkat kerahasiaan dokumen penting organisasi.
-                </p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Ringkasan Metrik Arsip Persuratan -->
-    <div class="metrics-grid" style="margin-bottom: 1.5rem;">
-        <div class="metric-card">
-            <div class="metric-info">
-                <span class="metric-label">Total Arsip Terdaftar</span>
-                <span class="metric-value"><?= number_format((int)($summary['total_arsip'] ?? count($documents))) ?></span>
-                <span class="text-muted" style="font-size: 0.8rem; margin-top: 0.25rem;">
-                    Dokumen resmi di repositori
-                </span>
-            </div>
-            <div class="metric-icon-wrap metric-icon-primary">
-                📁
-            </div>
-        </div>
-
-        <div class="metric-card">
-            <div class="metric-info">
-                <span class="metric-label">Arsip Rahasia</span>
-                <span class="metric-value" style="color: #ef4444;"><?= number_format((int)($summary['total_rahasia'] ?? 0)) ?></span>
-                <span class="text-muted" style="font-size: 0.8rem; margin-top: 0.25rem;">Kerahasiaan khusus & terbatas</span>
-            </div>
-            <div class="metric-icon-wrap" style="background:#fee2e2; color:#ef4444;">
-                🔒
-            </div>
-        </div>
-
-        <div class="metric-card">
-            <div class="metric-info">
-                <span class="metric-label">Surat Penting & Segera</span>
-                <span class="metric-value" style="color: #f59e0b;"><?= number_format((int)($summary['total_penting'] ?? 0)) ?></span>
-                <span class="text-muted" style="font-size: 0.8rem; margin-top: 0.25rem;">Perlu prioritas tindak lanjut</span>
-            </div>
-            <div class="metric-icon-wrap metric-icon-secondary">
-                ⚠️
-            </div>
-        </div>
-
-        <div class="metric-card">
-            <div class="metric-info">
-                <span class="metric-label">Duplikasi Cadangan Aktif</span>
-                <span class="metric-value" style="color: #10b981;"><?= number_format((int)($summary['total_duplikasi'] ?? count($documents))) ?></span>
-                <span class="text-muted" style="font-size: 0.8rem; margin-top: 0.25rem;">Tersimpan ganda & SHA-256 match</span>
-            </div>
-            <div class="metric-icon-wrap metric-icon-success">
-                🛡️
-            </div>
-        </div>
-    </div>
-
-    <!-- Area Konten Utama Persuratan: Form Registrasi + Buku Agenda -->
-    <?php $isSekcab = ($role === 'sekcab'); ?>
-    <div class="grid grid-cols-1 <?= $isSekcab ? 'lg:grid-cols-3' : '' ?> gap-6" style="align-items: start;">
-        <?php if ($isSekcab): ?>
-            <!-- Kolom Form Registrasi / Edit Arsip (Kiri) -->
-            <div class="card sticky-form-card" id="formArchiveCard">
-                <div class="card-body">
-                    <div class="flex items-center justify-between" style="margin-bottom: 1rem;">
-                        <div>
-                            <h2 id="arcFormTitle" style="font-size: 1.15rem; font-weight: 700; color: var(--primary); margin: 0;">Registrasi Arsip Surat</h2>
-                            <p id="arcFormSubtitle" class="text-muted" style="font-size: 0.8rem; margin: 0.2rem 0 0;">Simpan dokumen dengan duplikasi otomatis</p>
-                        </div>
-                        <span id="arcModeBadge" class="badge badge-primary" style="font-size: 0.75rem;">Mode Baru</span>
+    <?php
+        $isSekcab = ($role === 'sekcab');
+        $totalArsipCount = (int)($summary['total_arsip'] ?? count($documents));
+        $totalRahasiaCount = (int)($summary['total_rahasia'] ?? 0);
+        $totalPentingCount = (int)($summary['total_penting'] ?? 0);
+        $totalDuplikasiCount = (int)($summary['total_duplikasi'] ?? count($documents));
+    ?>
+    <div class="ws-page-wrap">
+        <!-- 1. Executive Hero Banner Sekcab -->
+        <div class="exec-role-banner banner-sekcab">
+            <div class="exec-banner-inner">
+                <div>
+                    <div class="exec-banner-eyebrow">
+                        <i class="bi bi-journal-bookmark-fill"></i>
+                        <span>Tata Usaha &amp; Kearsipan Sekretariat Cabang</span>
                     </div>
-
-                    <form id="archiveForm" method="post" action="/sekcab/arsip" enctype="multipart/form-data" data-validate>
-                        <?= csrf_field() ?>
-                        <input type="hidden" name="id" id="arc_id" value="">
-
-                        <!-- Judul Surat -->
-                        <div class="form-group" style="margin-bottom: 0.85rem;">
-                            <label class="form-label" for="arc_title" style="font-size: 0.85rem; font-weight: 600;">Judul Surat / Dokumen <span style="color:#ef4444;">*</span></label>
-                            <input class="form-control" id="arc_title" name="title" maxlength="180" placeholder="Contoh: Surat Rekomendasi Beasiswa Kader / SK BPC" required>
-                        </div>
-
-                        <!-- Tanggal Surat Dimasukkan -->
-                        <div class="form-group" style="margin-bottom: 0.85rem;">
-                            <label class="form-label" for="arc_letter_date" style="font-size: 0.85rem; font-weight: 600;">Tanggal Surat Dimasukkan <span style="color:#ef4444;">*</span></label>
-                            <input class="form-control" id="arc_letter_date" name="letter_date" type="date" value="<?= date('Y-m-d') ?>" required>
-                        </div>
-
-                        <!-- Sifat Surat & Status Surat -->
-                        <div class="grid grid-cols-2 gap-3" style="margin-bottom: 0.85rem;">
-                            <div class="form-group">
-                                <label class="form-label" for="arc_nature" style="font-size: 0.85rem; font-weight: 600;">Sifat Surat <span style="color:#ef4444;">*</span></label>
-                                <select class="form-control" id="arc_nature" name="letter_nature" style="font-size: 0.85rem;">
-                                    <option value="Biasa">Biasa (Terbuka)</option>
-                                    <option value="Penting">Penting</option>
-                                    <option value="Segera">Segera</option>
-                                    <option value="Sangat Segera">Sangat Segera</option>
-                                    <option value="Rahasia">🔒 Rahasia (Terbatas)</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label" for="arc_status" style="font-size: 0.85rem; font-weight: 600;">Status Surat <span style="color:#ef4444;">*</span></label>
-                                <select class="form-control" id="arc_status" name="status" style="font-size: 0.85rem;">
-                                    <option value="Diarsipkan">Diarsipkan</option>
-                                    <option value="Menunggu Tindak Lanjut">Menunggu Tindak Lanjut</option>
-                                    <option value="Didisposisi">Didisposisi</option>
-                                    <option value="Selesai">Selesai</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <!-- Berkas Digital Dokumen (Opsional) -->
-                        <div class="form-group" style="margin-bottom: 0.85rem;">
-                            <label class="form-label" for="arc_document" style="font-size: 0.85rem; font-weight: 600;">
-                                Berkas Surat Digital <span class="text-muted" style="font-weight: 400; font-size: 0.8rem;">(Opsional)</span>
-                            </label>
-                            <input class="form-control" type="file" id="arc_document" name="document" accept=".pdf,.doc,.docx,.xls,.xlsx,.odt,.jpg,.jpeg,.png" style="padding: 0.4rem;">
-                            <div id="arc_file_help" style="margin-top: 0.35rem; font-size: 0.75rem; color: var(--text-muted);">
-                                🛡️ <em>Opsional. Jika diunggah, sistem otomatis menduplikasi berkas ke brankas cadangan dengan hash identik (SHA-256).</em>
-                            </div>
-                        </div>
-
-                        <!-- Ringkasan / Keterangan -->
-                        <div class="form-group" style="margin-bottom: 1.15rem;">
-                            <label class="form-label" for="arc_description" style="font-size: 0.85rem; font-weight: 600;">Ringkasan / Keterangan Surat</label>
-                            <textarea class="form-control" id="arc_description" name="description" rows="2" placeholder="Catatan perihal, alasan kerahasiaan, atau instruksi penanganan..."></textarea>
-                        </div>
-
-                        <!-- Tombol Aksi -->
-                        <div class="flex gap-2">
-                            <button id="btnSubmitArc" class="btn btn-primary" type="submit" style="flex: 1; justify-content: center;">
-                                💾 Simpan Arsip & Buat Duplikasi
-                            </button>
-                            <button id="btnCancelEditArc" class="btn btn-secondary" type="button" onclick="batalEditArc()" style="display: none;">
-                                ✖ Batal
-                            </button>
-                        </div>
-                    </form>
+                    <h1 class="exec-banner-title">Buku Agenda &amp; Arsip Persuratan Sekcab</h1>
+                    <p class="exec-banner-desc">
+                        Pusat registrasi surat resmi organisasi, klasifikasi kerahasiaan dokumen, serta perlindungan berlapis dengan sistem duplikasi cadangan otomatis berverifikasi <strong>Checksum SHA-256</strong>.
+                    </p>
+                    <div class="exec-banner-pills">
+                        <span class="exec-banner-pill">
+                            <i class="bi bi-shield-fill-check" style="color: #34d399;"></i>
+                            Redundansi Ganda: <code>Master + Backup Identik</code>
+                        </span>
+                        <span class="exec-banner-pill">
+                            <i class="bi bi-fingerprint" style="color: #38bdf8;"></i>
+                            Integritas Berkas: <code>SHA-256 Verified</code>
+                        </span>
+                        <span class="exec-banner-pill">
+                            <i class="bi bi-person-badge" style="color: #fde68a;"></i>
+                            Akses: <code><?= $isSekcab ? 'Mode Kelola Sekcab' : 'Mode Pantau (' . strtoupper(e($role)) . ')' ?></code>
+                        </span>
+                    </div>
+                </div>
+                <div class="exec-banner-actions">
+                    <a href="/sekcab/berkas" class="exec-btn exec-btn-sky">
+                        <i class="bi bi-folder2-open"></i>
+                        <span>Direktori Berkas</span>
+                    </a>
+                    <a href="/sekcab/inventaris" class="exec-btn exec-btn-glass">
+                        <i class="bi bi-box-seam"></i>
+                        <span>Inventaris Cabang</span>
+                    </a>
+                    <?php if ($role === 'admin'): ?>
+                        <a href="/admin/berkas/backup?type=archive" class="exec-btn exec-btn-gold">
+                            <i class="bi bi-file-earmark-zip-fill"></i>
+                            <span>Backup ZIP</span>
+                        </a>
+                    <?php else: ?>
+                        <a href="<?= e($backPath) ?>" class="exec-btn exec-btn-glass">
+                            <i class="bi bi-arrow-left"></i>
+                            <span><?= e($backLabel) ?></span>
+                        </a>
+                    <?php endif; ?>
                 </div>
             </div>
-        <?php endif; ?>
+        </div>
 
-        <!-- Kolom Tabel Buku Agenda & Verifikasi Duplikasi (Kanan) -->
-        <div class="<?= $isSekcab ? 'lg:col-span-2' : 'col-span-1' ?>">
-            <?php if ($role === 'admin'): ?>
-                <div class="card" style="margin-bottom: 1.25rem; border-left: 4px solid #3b82f6; background: #eff6ff;">
-                    <div class="card-body flex items-center justify-between" style="padding: 1rem 1.25rem; gap: 1rem; flex-wrap: wrap;">
+        <!-- 2. Ringkasan Metrik Arsip Persuratan (4 KPI Cards) -->
+        <div class="ws-kpi-grid">
+            <div class="ws-kpi-card accent-blue">
+                <div>
+                    <div class="ws-kpi-top">
                         <div>
-                            <div style="font-weight: 700; color: #1e40af; font-size: 0.95rem; display: flex; align-items: center; gap: 0.4rem;">
-                                <span>👁️ Mode Pantauan Administrator (Read-Only)</span>
+                            <div class="ws-kpi-label">Total Arsip Terdaftar</div>
+                            <span class="badge badge-primary" style="font-size: 0.66rem; margin-top: 0.25rem;">Buku Agenda</span>
+                        </div>
+                        <div class="ws-kpi-icon" style="background: #e0f2fe; color: #0284c7;">
+                            <i class="bi bi-journal-richtext"></i>
+                        </div>
+                    </div>
+                    <div class="ws-kpi-val"><?= number_format($totalArsipCount) ?></div>
+                </div>
+                <div class="ws-kpi-sub">
+                    <span>Dokumen resmi di repositori cabang</span>
+                    <i class="bi bi-check2-circle" style="color: #0284c7;"></i>
+                </div>
+            </div>
+
+            <div class="ws-kpi-card accent-rose">
+                <div>
+                    <div class="ws-kpi-top">
+                        <div>
+                            <div class="ws-kpi-label">Arsip Rahasia</div>
+                            <span class="badge badge-danger" style="font-size: 0.66rem; margin-top: 0.25rem;">Akses Terbatas</span>
+                        </div>
+                        <div class="ws-kpi-icon" style="background: #ffe4e6; color: #e11d48;">
+                            <i class="bi bi-shield-lock-fill"></i>
+                        </div>
+                    </div>
+                    <div class="ws-kpi-val" style="color: #e11d48;"><?= number_format($totalRahasiaCount) ?></div>
+                </div>
+                <div class="ws-kpi-sub">
+                    <span>Klasifikasi kerahasiaan khusus BPC</span>
+                    <i class="bi bi-lock-fill" style="color: #e11d48;"></i>
+                </div>
+            </div>
+
+            <div class="ws-kpi-card accent-amber">
+                <div>
+                    <div class="ws-kpi-top">
+                        <div>
+                            <div class="ws-kpi-label">Penting &amp; Segera</div>
+                            <span class="badge badge-warning" style="font-size: 0.66rem; margin-top: 0.25rem;">Prioritas Tinggi</span>
+                        </div>
+                        <div class="ws-kpi-icon" style="background: #fef3c7; color: #d97706;">
+                            <i class="bi bi-lightning-charge-fill"></i>
+                        </div>
+                    </div>
+                    <div class="ws-kpi-val" style="color: #d97706;"><?= number_format($totalPentingCount) ?></div>
+                </div>
+                <div class="ws-kpi-sub">
+                    <span>Memerlukan disposisi / tindak lanjut</span>
+                    <i class="bi bi-clock-history" style="color: #d97706;"></i>
+                </div>
+            </div>
+
+            <div class="ws-kpi-card accent-emerald">
+                <div>
+                    <div class="ws-kpi-top">
+                        <div>
+                            <div class="ws-kpi-label">Duplikasi Cadangan</div>
+                            <span class="badge badge-success" style="font-size: 0.66rem; margin-top: 0.25rem;">100% Identik</span>
+                        </div>
+                        <div class="ws-kpi-icon" style="background: #d1fae5; color: #059669;">
+                            <i class="bi bi-hdd-network-fill"></i>
+                        </div>
+                    </div>
+                    <div class="ws-kpi-val" style="color: #059669;"><?= number_format($totalDuplikasiCount) ?></div>
+                </div>
+                <div class="ws-kpi-sub">
+                    <span>Salinan redundan terverifikasi SHA-256</span>
+                    <i class="bi bi-shield-check" style="color: #059669;"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Banner Protokol Keamanan & Redundansi Berkas -->
+        <div class="ws-protocol-banner">
+            <div class="ws-protocol-left">
+                <div class="ws-protocol-icon">
+                    <i class="bi bi-shield-shaded"></i>
+                </div>
+                <div>
+                    <h3 class="ws-protocol-title">
+                        <span>Protokol Keamanan &amp; Redundansi Duplikasi Arsip Cabang</span>
+                        <span class="badge badge-primary" style="font-size: 0.68rem;">Otomatis Aktif</span>
+                    </h3>
+                    <p class="ws-protocol-desc">
+                        Setiap berkas surat digital yang diunggah otomatis disimpan ke dalam <strong>2 brankas terpisah</strong>: <strong>Berkas Asli (Master)</strong> dan <strong>Salinan Duplikasi (Redundant Backup)</strong> dengan validasi <em>checksum SHA-256</em> identik untuk melindungi arsip organisasi dari kerusakan maupun manipulasi data.
+                    </p>
+                </div>
+            </div>
+            <div class="ws-protocol-pills">
+                <span class="ws-protocol-pill">
+                    <i class="bi bi-file-earmark-check-fill" style="color: #0284c7;"></i>
+                    Master Storage
+                </span>
+                <span class="ws-protocol-pill">
+                    <i class="bi bi-files" style="color: #059669;"></i>
+                    Redundant Vault
+                </span>
+                <?php if ($role === 'admin'): ?>
+                    <a href="/admin/berkas/backup?type=archive" class="ws-protocol-pill" style="background: #eff6ff; border-color: #93c5fd; color: #1d4ed8; text-decoration: none;">
+                        <i class="bi bi-cloud-arrow-down-fill"></i>
+                        Unduh Paket ZIP Admin
+                    </a>
+                <?php endif; ?>
+            </div>
+        </div>
+
+        <!-- 4. Area Konten Utama Persuratan: Form Registrasi + Buku Agenda -->
+        <div class="ws-archive-layout <?= $isSekcab ? '' : 'ws-single-col' ?>">
+            <?php if ($isSekcab): ?>
+                <!-- Kolom Form Registrasi / Edit Arsip (Kiri) -->
+                <div class="ws-card sticky-form-card" id="formArchiveCard">
+                    <div class="ws-card-header">
+                        <div class="ws-card-header-left">
+                            <div class="ws-card-icon" style="background: #e0f2fe; color: #0284c7;">
+                                <i class="bi bi-file-earmark-plus-fill"></i>
                             </div>
-                            <p style="margin: 0.25rem 0 0; font-size: 0.825rem; color: #1e3a8a;">
-                                Buku agenda dan registrasi surat dikelola penuh oleh <strong>Sekretaris Cabang (Sekcab)</strong>. Tugas Admin adalah memantau dan mencadangkan data berkas secara berkala.
-                            </p>
+                            <div>
+                                <h2 id="arcFormTitle" class="ws-card-title">Registrasi Arsip Surat</h2>
+                                <p id="arcFormSubtitle" class="ws-card-subtitle">Simpan dokumen dengan duplikasi otomatis</p>
+                            </div>
                         </div>
-                        <div>
-                            <a href="/admin/berkas/backup?type=archive" class="btn btn-primary btn-sm flex items-center gap-1" style="font-size: 0.8rem; font-weight: 700; text-decoration: none;">
-                                <span>📦 Unduh Backup Seluruh Arsip (ZIP)</span>
-                            </a>
-                        </div>
+                        <span id="arcModeBadge" class="badge badge-primary" style="font-size: 0.72rem; font-weight: 700;">Mode Baru</span>
+                    </div>
+
+                    <div class="ws-card-body">
+                        <form id="archiveForm" method="post" action="/sekcab/arsip" enctype="multipart/form-data" data-validate>
+                            <?= csrf_field() ?>
+                            <input type="hidden" name="id" id="arc_id" value="">
+
+                            <!-- Judul Surat -->
+                            <div class="form-group" style="margin-bottom: 0.95rem;">
+                                <label class="form-label" for="arc_title" style="font-size: 0.82rem; font-weight: 700; color: #1e293b;">
+                                    Judul / Perihal Surat <span style="color:#ef4444;">*</span>
+                                </label>
+                                <input class="form-control" id="arc_title" name="title" maxlength="180" placeholder="Contoh: SK Kepanitiaan Maper / Surat Undangan BPC" required style="font-size: 0.85rem;">
+                            </div>
+
+                            <!-- Tanggal Surat Dimasukkan -->
+                            <div class="form-group" style="margin-bottom: 0.95rem;">
+                                <label class="form-label" for="arc_letter_date" style="font-size: 0.82rem; font-weight: 700; color: #1e293b;">
+                                    Tanggal Surat Dimasukkan <span style="color:#ef4444;">*</span>
+                                </label>
+                                <input class="form-control" id="arc_letter_date" name="letter_date" type="date" value="<?= date('Y-m-d') ?>" required style="font-size: 0.85rem;">
+                            </div>
+
+                            <!-- Sifat Surat & Status Surat -->
+                            <div class="grid grid-cols-2 gap-3" style="margin-bottom: 0.95rem;">
+                                <div class="form-group" style="margin-bottom: 0;">
+                                    <label class="form-label" for="arc_nature" style="font-size: 0.82rem; font-weight: 700; color: #1e293b;">
+                                        Sifat Surat <span style="color:#ef4444;">*</span>
+                                    </label>
+                                    <select class="form-control" id="arc_nature" name="letter_nature" style="font-size: 0.83rem;">
+                                        <option value="Biasa">Biasa (Terbuka)</option>
+                                        <option value="Penting">Penting</option>
+                                        <option value="Segera">Segera</option>
+                                        <option value="Sangat Segera">Sangat Segera</option>
+                                        <option value="Rahasia">Rahasia (Terbatas)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group" style="margin-bottom: 0;">
+                                    <label class="form-label" for="arc_status" style="font-size: 0.82rem; font-weight: 700; color: #1e293b;">
+                                        Status Surat <span style="color:#ef4444;">*</span>
+                                    </label>
+                                    <select class="form-control" id="arc_status" name="status" style="font-size: 0.83rem;">
+                                        <option value="Diarsipkan">Diarsipkan</option>
+                                        <option value="Menunggu Tindak Lanjut">Menunggu Tindak Lanjut</option>
+                                        <option value="Didisposisi">Didisposisi</option>
+                                        <option value="Selesai">Selesai</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Berkas Digital Dokumen (Opsional) -->
+                            <div class="form-group" style="margin-bottom: 0.95rem;">
+                                <label class="form-label" for="arc_document" style="font-size: 0.82rem; font-weight: 700; color: #1e293b;">
+                                    Unggah Berkas Digital <span class="text-muted" style="font-weight: 500; font-size: 0.76rem;">(Opsional)</span>
+                                </label>
+                                <div class="ws-upload-zone">
+                                    <div class="ws-upload-header">
+                                        <div class="ws-upload-icon">
+                                            <i class="bi bi-cloud-arrow-up-fill"></i>
+                                        </div>
+                                        <div style="font-size: 0.76rem; color: #334155; line-height: 1.35;">
+                                            <strong>Pilih dokumen surat</strong> untuk dienkripsi &amp; diduplikasi otomatis
+                                        </div>
+                                    </div>
+                                    <input class="form-control" type="file" id="arc_document" name="document" accept=".pdf,.doc,.docx,.xls,.xlsx,.odt,.jpg,.jpeg,.png" style="padding: 0.38rem; font-size: 0.8rem; background: #ffffff;">
+                                    <div id="arc_file_help" style="margin-top: 0.5rem; font-size: 0.73rem; color: #475569; line-height: 1.45;">
+                                        <i class="bi bi-shield-check" style="color: #059669;"></i>
+                                        <em>Jika diunggah, berkas otomatis disalin ke brankas cadangan dengan hash SHA-256 identik.</em>
+                                    </div>
+                                    <div class="ws-upload-tags">
+                                        <span class="ws-upload-tag">PDF</span>
+                                        <span class="ws-upload-tag">DOC / DOCX</span>
+                                        <span class="ws-upload-tag">XLS / XLSX</span>
+                                        <span class="ws-upload-tag">JPG / PNG</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Ringkasan / Keterangan -->
+                            <div class="form-group" style="margin-bottom: 1.15rem;">
+                                <label class="form-label" for="arc_description" style="font-size: 0.82rem; font-weight: 700; color: #1e293b;">
+                                    Ringkasan / Catatan Disposisi
+                                </label>
+                                <textarea class="form-control" id="arc_description" name="description" rows="3" placeholder="Tuliskan nomor surat, perihal ringkas, tujuan surat, atau catatan tindak lanjut..." style="font-size: 0.84rem;"></textarea>
+                            </div>
+
+                            <!-- Tombol Aksi -->
+                            <div class="flex gap-2">
+                                <button id="btnSubmitArc" class="btn btn-primary" type="submit" style="flex: 1; justify-content: center; padding: 0.65rem 1rem; font-weight: 700; border-radius: 11px;">
+                                    <i class="bi bi-hdd-stack-fill"></i>
+                                    <span>Simpan Arsip &amp; Duplikasi</span>
+                                </button>
+                                <button id="btnCancelEditArc" class="btn btn-secondary" type="button" onclick="batalEditArc()" style="display: none; border-radius: 11px; font-weight: 700;">
+                                    <i class="bi bi-x-lg"></i>
+                                    <span>Batal</span>
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             <?php endif; ?>
-            <div class="table-card" style="margin-bottom: 1.5rem;">
-                <div class="table-header flex items-center justify-between" style="gap: 1rem; flex-wrap: wrap;">
-                    <div>
-                        <h2 class="table-title" style="margin: 0; font-size: 1.15rem; color: var(--primary);">Buku Agenda Arsip Surat Cabang</h2>
-                        <span class="text-muted" style="font-size: 0.8rem;">Daftar surat resmi terdaftar beserta status verifikasi duplikasi redundan</span>
-                    </div>
 
-                    <!-- Toolbar Pencarian & Filter Cepat -->
-                    <div class="flex items-center gap-2" style="flex-wrap: wrap;">
-                        <div style="position: relative; min-width: 220px;">
-                            <input type="text" id="arcSearchInput" onkeyup="filterArchiveTable()" placeholder="Cari judul surat atau keterangan..." class="form-control" style="font-size: 0.85rem; padding-left: 2rem; height: 38px;">
-                            <span style="position: absolute; left: 0.65rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.85rem;">🔍</span>
+            <!-- Kolom Tabel Buku Agenda & Verifikasi Duplikasi (Kanan) -->
+            <div class="ws-card">
+                <div class="ws-card-header">
+                    <div class="ws-card-header-left">
+                        <div class="ws-card-icon" style="background: #f0f9ff; color: #0f3d64;">
+                            <i class="bi bi-table"></i>
                         </div>
-                        <select id="arcNatureFilter" onchange="filterArchiveTable()" class="form-control" style="font-size: 0.85rem; height: 38px; width: auto;">
+                        <div>
+                            <h2 class="ws-card-title">Buku Agenda Arsip Surat Cabang</h2>
+                            <p class="ws-card-subtitle">Daftar surat resmi beserta status verifikasi berkas asli &amp; salinan cadangan</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2" style="flex-wrap: wrap;">
+                        <span class="badge badge-neutral" style="font-size: 0.74rem; font-weight: 700;">
+                            <i class="bi bi-collection"></i> <?= number_format(count($documents)) ?> Baris Ditampilkan
+                        </span>
+                        <a href="/sekcab/berkas" class="btn btn-outline btn-sm" style="font-size: 0.76rem; font-weight: 700; border-radius: 9px; text-decoration: none;">
+                            <i class="bi bi-search"></i> Pencarian Lanjutan
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Toolbar Pencarian & Filter Cepat -->
+                <div class="ws-filter-bar">
+                    <div class="ws-search-wrap">
+                        <i class="bi bi-search"></i>
+                        <input type="text" id="arcSearchInput" onkeyup="filterArchiveTable()" placeholder="Cari judul surat, nomor, atau keterangan..." class="ws-search-input">
+                    </div>
+                    <div class="ws-filter-group">
+                        <select id="arcNatureFilter" onchange="filterArchiveTable()" class="ws-filter-select">
                             <option value="">Semua Sifat Surat</option>
-                            <option value="Rahasia">🔒 Rahasia</option>
+                            <option value="Rahasia">Rahasia</option>
                             <option value="Sangat Segera">Sangat Segera</option>
                             <option value="Penting">Penting</option>
                             <option value="Segera">Segera</option>
                             <option value="Biasa">Biasa</option>
                         </select>
-                        <select id="arcStatusFilter" onchange="filterArchiveTable()" class="form-control" style="font-size: 0.85rem; height: 38px; width: auto;">
+                        <select id="arcStatusFilter" onchange="filterArchiveTable()" class="ws-filter-select">
                             <option value="">Semua Status</option>
                             <option value="Diarsipkan">Diarsipkan</option>
                             <option value="Menunggu Tindak Lanjut">Menunggu Tindak Lanjut</option>
@@ -615,17 +751,17 @@ $backLabel = $role === 'admin' ? 'Dashboard Admin' : 'Ruang kerja';
                     </div>
                 </div>
 
-                <div class="table-responsive">
-                    <table class="data-table" id="archiveTable">
+                <div class="ws-table-wrap">
+                    <table class="ws-table" id="archiveTable">
                         <thead>
                             <tr>
-                                <th style="width: 45px; text-align: center;">No</th>
-                                <th style="min-width: 220px;">Judul Surat & Keterangan</th>
-                                <th style="min-width: 110px; text-align: center;">Tanggal Dimasukkan</th>
-                                <th style="min-width: 100px; text-align: center;">Sifat Surat</th>
-                                <th style="min-width: 200px; text-align: center;">Marking & Duplikasi Berkas</th>
-                                <th style="min-width: 110px; text-align: center;">Status</th>
-                                <th style="width: 90px; text-align: center;">Aksi</th>
+                                <th style="width: 48px; text-align: center;">No</th>
+                                <th style="min-width: 230px;">Perihal Surat &amp; Keterangan</th>
+                                <th style="min-width: 118px; text-align: center;">Tgl Registrasi</th>
+                                <th style="min-width: 110px; text-align: center;">Sifat Surat</th>
+                                <th style="min-width: 215px; text-align: center;">Brankas Berkas &amp; Duplikasi</th>
+                                <th style="min-width: 120px; text-align: center;">Status</th>
+                                <th style="width: 105px; text-align: right;">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -633,7 +769,6 @@ $backLabel = $role === 'admin' ? 'Dashboard Admin' : 'Ruang kerja';
                                 <?php $no = 1; foreach ($documents as $doc): ?>
                                     <?php
                                         $nature = $doc['letter_nature'] ?? 'Biasa';
-                                        $isSecret = in_array($nature, ['Rahasia', 'Sangat Segera'], true);
                                         $natureBadge = match ($nature) {
                                             'Rahasia' => 'badge-danger',
                                             'Sangat Segera' => 'badge-danger',
@@ -642,11 +777,11 @@ $backLabel = $role === 'admin' ? 'Dashboard Admin' : 'Ruang kerja';
                                             default => 'badge-neutral',
                                         };
                                         $natureIcon = match ($nature) {
-                                            'Rahasia' => '🔒',
-                                            'Sangat Segera' => '🚨',
-                                            'Penting' => '⚠️',
-                                            'Segera' => '⚡',
-                                            default => '📄',
+                                            'Rahasia' => 'bi-shield-lock-fill',
+                                            'Sangat Segera' => 'bi-exclamation-octagon-fill',
+                                            'Penting' => 'bi-exclamation-triangle-fill',
+                                            'Segera' => 'bi-lightning-charge-fill',
+                                            default => 'bi-file-earmark-text',
                                         };
                                         $status = $doc['status'] ?? 'Diarsipkan';
                                         $statusBadge = match ($status) {
@@ -656,15 +791,9 @@ $backLabel = $role === 'admin' ? 'Dashboard Admin' : 'Ruang kerja';
                                             'Selesai' => 'badge-neutral',
                                             default => 'badge-secondary',
                                         };
-                                        $ext = strtolower(pathinfo($doc['original_name'] ?? '', PATHINFO_EXTENSION));
-                                        $fileIcon = match ($ext) {
-                                            'pdf' => '📄',
-                                            'doc', 'docx' => '📝',
-                                            'xls', 'xlsx' => '📊',
-                                            'jpg', 'jpeg', 'png' => '🖼️',
-                                            default => '📎',
-                                        };
+                                        $ext = strtoupper(pathinfo($doc['original_name'] ?? '', PATHINFO_EXTENSION));
                                         $hasDuplicate = !empty($doc['backup_stored_name']) || !empty($doc['is_duplicated']);
+                                        $shortHash = !empty($doc['file_hash']) ? substr((string)$doc['file_hash'], 0, 10) . '…' : 'SHA-256 OK';
                                     ?>
                                     <tr class="arc-row" 
                                         data-id="<?= (int)$doc['id'] ?>"
@@ -674,95 +803,108 @@ $backLabel = $role === 'admin' ? 'Dashboard Admin' : 'Ruang kerja';
                                         data-status="<?= e($status) ?>"
                                         data-description="<?= e($doc['description'] ?? '') ?>"
                                         data-filename="<?= e($doc['original_name']) ?>">
-                                        <td style="text-align: center; color: var(--text-muted); font-weight: 600;">
+                                        <td style="text-align: center; color: #64748b; font-weight: 700;">
                                             <?= $no++ ?>
                                         </td>
                                         <td>
-                                            <div style="font-weight: 700; color: var(--text-main); font-size: 0.95rem; margin-bottom: 0.25rem; line-height: 1.35;">
+                                            <div style="font-weight: 800; color: #0f172a; font-size: 0.9rem; margin-bottom: 0.22rem; line-height: 1.35;">
                                                 <?= e($doc['title']) ?>
                                             </div>
                                             <?php if (!empty($doc['description'])): ?>
-                                                <div style="font-size: 0.8rem; color: var(--text-muted); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;" title="<?= e($doc['description']) ?>">
+                                                <div style="font-size: 0.77rem; color: #64748b; line-height: 1.45; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;" title="<?= e($doc['description']) ?>">
                                                     <?= e($doc['description']) ?>
                                                 </div>
                                             <?php endif; ?>
+                                            <?php if (!empty($doc['original_name'])): ?>
+                                                <div style="margin-top: 0.35rem; font-size: 0.7rem; color: #0284c7; font-weight: 600; display: inline-flex; align-items: center; gap: 0.3rem;">
+                                                    <i class="bi bi-paperclip"></i>
+                                                    <span><?= e($doc['original_name']) ?></span>
+                                                    <?php if ($ext !== ''): ?>
+                                                        <span style="padding: 0.05rem 0.35rem; border-radius: 4px; background: #e0f2fe; color: #0369a1; font-size: 0.63rem; font-weight: 800;"><?= e($ext) ?></span>
+                                                    <?php endif; ?>
+                                                </div>
+                                            <?php endif; ?>
                                         </td>
-                                        <td style="text-align: center;">
-                                            <div style="font-size: 0.85rem; font-weight: 600; color: var(--text-main);">
-                                                📅 <?= !empty($doc['letter_date']) ? date('d M Y', strtotime($doc['letter_date'])) : date('d M Y', strtotime($doc['created_at'])) ?>
+                                        <td style="text-align: center; white-space: nowrap;">
+                                            <div style="display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.79rem; font-weight: 700; color: #1e293b; background: #f8fafc; border: 1px solid #e2e8f0; padding: 0.25rem 0.6rem; border-radius: 8px;">
+                                                <i class="bi bi-calendar3" style="color: #0284c7;"></i>
+                                                <span><?= !empty($doc['letter_date']) ? date('d M Y', strtotime($doc['letter_date'])) : date('d M Y', strtotime($doc['created_at'])) ?></span>
                                             </div>
                                         </td>
                                         <td style="text-align: center;">
-                                            <span class="badge <?= $natureBadge ?>" style="font-size: 0.775rem; font-weight: 700; gap: 0.25rem;">
-                                                <?= $natureIcon ?> <?= e($nature) ?>
+                                            <span class="badge <?= $natureBadge ?>" style="font-size: 0.73rem; font-weight: 700; display: inline-flex; align-items: center; gap: 0.3rem;">
+                                                <i class="bi <?= $natureIcon ?>"></i>
+                                                <span><?= e($nature) ?></span>
                                             </span>
                                         </td>
                                         <td style="text-align: center;">
                                             <?php if (!empty($doc['stored_name'])): ?>
-                                                <div style="display: flex; flex-direction: column; align-items: center; gap: 0.35rem;">
-                                                    <!-- Marking Asli & Duplikasi dengan tombol unduh masing-masing -->
-                                                    <div class="flex items-center justify-center gap-1" style="flex-wrap: wrap;">
+                                                <div style="display: flex; flex-direction: column; align-items: center;">
+                                                    <div class="ws-doc-pills" style="justify-content: center;">
                                                         <a href="/dokumen/<?= (int)$doc['id'] ?>/unduh" 
-                                                           class="btn btn-outline btn-sm" 
-                                                           style="padding: 0.2rem 0.45rem; font-size: 0.75rem; border-color: #3b82f6; color: #1d4ed8; font-weight: 600;"
+                                                           class="ws-doc-pill ws-doc-primary"
                                                            title="Unduh Berkas Asli (Master)">
-                                                            ⭐ Asli
+                                                            <i class="bi bi-download"></i>
+                                                            <span>Asli</span>
                                                         </a>
                                                         <?php if ($hasDuplicate): ?>
                                                             <a href="/dokumen/<?= (int)$doc['id'] ?>/unduh?salinan=1" 
-                                                               class="btn btn-outline btn-sm" 
-                                                               style="padding: 0.2rem 0.45rem; font-size: 0.75rem; border-color: #10b981; color: #047857; font-weight: 600;"
+                                                               class="ws-doc-pill ws-doc-backup"
                                                                title="Unduh Salinan Duplikasi (Identik 100%)">
-                                                                🛡️ Duplikasi
+                                                                <i class="bi bi-shield-check"></i>
+                                                                <span>Duplikasi</span>
                                                             </a>
                                                         <?php endif; ?>
                                                     </div>
-                                                    <span class="badge badge-success" style="font-size: 0.7rem; padding: 0.15rem 0.4rem; font-weight: 600;">
-                                                        ✓ SHA-256 Identik
-                                                    </span>
+                                                    <div class="ws-hash-badge" title="Checksum SHA-256: <?= e($doc['file_hash'] ?? 'Terverifikasi Identik') ?>">
+                                                        <i class="bi bi-patch-check-fill"></i>
+                                                        <span><?= e($shortHash) ?></span>
+                                                    </div>
                                                 </div>
                                             <?php else: ?>
-                                                <div style="display: flex; flex-direction: column; align-items: center; gap: 0.25rem;">
-                                                    <span class="badge badge-warning" style="font-size: 0.72rem; padding: 0.2rem 0.45rem;">
-                                                        📄 Belum ada berkas
+                                                <div style="display: flex; flex-direction: column; align-items: center; gap: 0.3rem;">
+                                                    <span class="badge badge-warning" style="font-size: 0.7rem; padding: 0.22rem 0.55rem;">
+                                                        <i class="bi bi-file-earmark-excel"></i> Tanpa Lampiran
                                                     </span>
                                                     <?php if ($isSekcab): ?>
                                                         <button type="button" 
-                                                                class="btn btn-outline btn-sm" 
-                                                                style="padding: 0.15rem 0.45rem; font-size: 0.7rem; border-style: dashed;" 
+                                                                class="ws-icon-btn ws-btn-edit" 
+                                                                style="font-size: 0.68rem; padding: 0.2rem 0.5rem; border-style: dashed;" 
                                                                 onclick="editArcFromRow(this)"
                                                                 title="Unggah berkas untuk surat ini">
-                                                            + Unggah Berkas
+                                                            <i class="bi bi-cloud-upload"></i> Unggah
                                                         </button>
                                                     <?php endif; ?>
                                                 </div>
                                             <?php endif; ?>
                                         </td>
                                         <td style="text-align: center;">
-                                            <span class="badge <?= $statusBadge ?>" style="font-size: 0.775rem;">
+                                            <span class="badge <?= $statusBadge ?>" style="font-size: 0.73rem; font-weight: 700;">
                                                 <?= e($status) ?>
                                             </span>
                                         </td>
-                                        <td style="text-align: center;">
-                                            <div class="flex items-center justify-center gap-1">
+                                        <td style="text-align: right;">
+                                            <div class="ws-action-group">
                                                 <?php if ($isSekcab): ?>
                                                     <button type="button" 
-                                                            class="btn btn-secondary btn-sm" 
-                                                            style="padding: 0.25rem 0.5rem; font-size: 0.8rem;"
+                                                            class="ws-icon-btn ws-btn-edit" 
                                                             title="Edit data surat ini"
-                                                            onclick='editArcFromRow(this)'>
-                                                        ✏️
+                                                            onclick="editArcFromRow(this)">
+                                                        <i class="bi bi-pencil-square"></i>
                                                     </button>
                                                     <form method="post" action="/sekcab/arsip/<?= (int)$doc['id'] ?>/delete" data-confirm="Hapus surat '<?= e($doc['title']) ?>' beserta seluruh duplikasi cadangannya?" style="margin: 0; display: inline;">
                                                         <?= csrf_field() ?>
-                                                        <button class="btn btn-danger btn-sm" style="padding: 0.25rem 0.5rem; font-size: 0.8rem;" type="submit" title="Hapus arsip ini">
-                                                            🗑️
+                                                        <button class="ws-icon-btn ws-btn-delete" type="submit" title="Hapus arsip ini">
+                                                            <i class="bi bi-trash3"></i>
                                                         </button>
                                                     </form>
-                                                <?php else: ?>
-                                                    <a href="/dokumen/<?= (int)$doc['id'] ?>/unduh" class="btn btn-outline btn-sm" style="padding: 0.25rem 0.5rem; font-size: 0.8rem;" title="Unduh Berkas Master">
-                                                        ⬇️
+                                                <?php elseif (!empty($doc['stored_name'])): ?>
+                                                    <a href="/dokumen/<?= (int)$doc['id'] ?>/unduh" class="ws-icon-btn ws-btn-edit" style="text-decoration: none;" title="Unduh Berkas Master">
+                                                        <i class="bi bi-cloud-arrow-down-fill"></i>
+                                                        <span>Unduh</span>
                                                     </a>
+                                                <?php else: ?>
+                                                    <span style="font-size: 0.72rem; color: #94a3b8;">—</span>
                                                 <?php endif; ?>
                                             </div>
                                         </td>
@@ -770,16 +912,21 @@ $backLabel = $role === 'admin' ? 'Dashboard Admin' : 'Ruang kerja';
                                 <?php endforeach; ?>
                             <?php else: ?>
                                 <tr id="noDataArcRow">
-                                    <td colspan="7" style="text-align: center; padding: 3rem 1.5rem;">
-                                        <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🗂️</div>
-                                        <div style="font-weight: 700; color: var(--text-main); margin-bottom: 0.25rem;">Belum ada arsip surat yang tersimpan</div>
-                                        <div class="text-muted" style="font-size: 0.875rem;">Gunakan form di samping untuk mulai meregistrasi arsip surat baru.</div>
+                                    <td colspan="7" style="text-align: center; padding: 3.5rem 1.5rem;">
+                                        <div style="width: 56px; height: 56px; border-radius: 16px; background: #f0f9ff; color: #0284c7; display: inline-flex; align-items: center; justify-content: center; font-size: 1.65rem; margin-bottom: 0.75rem;">
+                                            <i class="bi bi-folder2-open"></i>
+                                        </div>
+                                        <div style="font-weight: 800; color: #0f172a; font-size: 0.98rem; margin-bottom: 0.25rem;">Belum ada arsip surat yang tersimpan</div>
+                                        <div class="text-muted" style="font-size: 0.82rem;">Gunakan formulir registrasi untuk mulai mengarsipkan surat resmi organisasi.</div>
                                     </td>
                                 </tr>
                             <?php endif; ?>
                             <tr id="noMatchArcRow" style="display: none;">
-                                <td colspan="7" style="text-align: center; padding: 2rem 1.5rem;">
-                                    <div class="text-muted" style="font-size: 0.9rem;">Tidak ditemukan arsip persuratan yang sesuai dengan filter pencarian.</div>
+                                <td colspan="7" style="text-align: center; padding: 2.5rem 1.5rem;">
+                                    <div style="color: #64748b; font-size: 0.86rem; font-weight: 600;">
+                                        <i class="bi bi-search" style="margin-right: 0.35rem;"></i>
+                                        Tidak ditemukan arsip persuratan yang sesuai dengan kata kunci atau filter.
+                                    </div>
                                 </td>
                             </tr>
                         </tbody>
@@ -787,7 +934,7 @@ $backLabel = $role === 'admin' ? 'Dashboard Admin' : 'Ruang kerja';
                 </div>
 
                 <?php if (!empty($pagination)): ?>
-                    <div style="padding: 0.75rem 1rem; border-top: 1px solid var(--border-color);">
+                    <div style="padding: 0.85rem 1.25rem; border-top: 1px solid #e2e8f0; background: #f8fafc;">
                         <?= partial('partials.pagination', $pagination) ?>
                     </div>
                 <?php endif; ?>
@@ -832,10 +979,10 @@ $backLabel = $role === 'admin' ? 'Dashboard Admin' : 'Ruang kerja';
 
         const fileHelp = document.getElementById('arc_file_help');
         if (fileHelp) {
-            fileHelp.innerHTML = 'Berkas saat ini: <strong>' + (filename || '-') + '</strong> (Kosongkan jika tidak mengganti berkas. Jika diganti, sistem akan meregenerasi duplikasi otomatis).';
+            fileHelp.innerHTML = '<i class="bi bi-file-earmark-check" style="color:#0284c7;"></i> Berkas saat ini: <strong>' + (filename || 'Belum ada lampiran') + '</strong> (Kosongkan jika tidak mengganti berkas. Jika diganti, sistem akan meregenerasi duplikasi otomatis).';
         }
 
-        document.getElementById('btnSubmitArc').innerHTML = '💾 Perbarui Arsip & Duplikasi';
+        document.getElementById('btnSubmitArc').innerHTML = '<i class="bi bi-check2-circle"></i> <span>Perbarui Arsip & Duplikasi</span>';
         document.getElementById('btnCancelEditArc').style.display = 'inline-flex';
 
         // Scroll halus ke form jika di perangkat mobile
@@ -864,10 +1011,10 @@ $backLabel = $role === 'admin' ? 'Dashboard Admin' : 'Ruang kerja';
 
         const fileHelp = document.getElementById('arc_file_help');
         if (fileHelp) {
-            fileHelp.innerHTML = '🛡️ <em>Opsional. Jika diunggah, sistem otomatis menduplikasi berkas ke brankas cadangan dengan hash identik (SHA-256).</em>';
+            fileHelp.innerHTML = '<i class="bi bi-shield-check" style="color: #059669;"></i> <em>Jika diunggah, berkas otomatis disalin ke brankas cadangan dengan hash SHA-256 identik.</em>';
         }
 
-        document.getElementById('btnSubmitArc').innerHTML = '💾 Simpan Arsip & Buat Duplikasi';
+        document.getElementById('btnSubmitArc').innerHTML = '<i class="bi bi-hdd-stack-fill"></i> <span>Simpan Arsip & Duplikasi</span>';
         document.getElementById('btnCancelEditArc').style.display = 'none';
     }
 
@@ -1912,100 +2059,4 @@ $backLabel = $role === 'admin' ? 'Dashboard Admin' : 'Ruang kerja';
     }
     </script>
 
-<?php elseif ($section === 'coordination'): ?>
-    <?php
-    $senderRoleNames = $participants;
-    $senderRoleNames['admin'] = 'Sekfung Medko';
-    $currentParticipantRole = $role === 'admin' ? 'sekfung_medko' : $role;
-    $lastMessage = $messages ? end($messages) : null;
-    ?>
-    <section class="coordination-chat"
-        data-messages-url="<?= e($messagesUrl) ?>"
-        data-latest-id="<?= $messages ? (int)end($messages)['id'] : 0 ?>"
-        data-oldest-id="<?= $messages ? (int)$messages[0]['id'] : 0 ?>"
-        data-has-older="<?= $hasOlderMessages ? 'true' : 'false' ?>">
-        <aside class="coordination-chat-list" aria-label="Daftar chat">
-            <div class="coordination-list-header">
-                <div><strong>Chat</strong><span>GMKI Cabang Padang</span></div>
-                <span class="coordination-compose-icon" aria-hidden="true">✎</span>
-            </div>
-            <div class="coordination-search">
-                <span aria-hidden="true">⌕</span>
-                <span>Cari percakapan</span>
-            </div>
-            <div class="coordination-contacts-heading">Percakapan</div>
-            <div class="coordination-contact active" aria-current="page">
-                <span class="coordination-group-avatar" aria-hidden="true"><span>G</span><i>●</i></span>
-                <span class="coordination-contact-copy">
-                    <strong>Koordinasi Pengurus BPC</strong>
-                    <small><?= $lastMessage ? e($lastMessage['sender_name'] . ': ' . mb_strimwidth((string)$lastMessage['body'], 0, 52, '…')) : 'Ketcab, Sekcab, Bencab, dan Medko' ?></small>
-                </span>
-                <time><?= $lastMessage ? e(date('H:i', strtotime($lastMessage['created_at']))) : '' ?></time>
-            </div>
-            <div class="coordination-list-note">
-                <strong>Grup bersama</strong>
-                <p>Semua pesan koordinasi tampil di percakapan yang sama untuk seluruh pengurus.</p>
-            </div>
-            <div class="coordination-member-list" aria-label="Anggota grup">
-                <span>ANGGOTA GRUP</span>
-            <?php foreach ($participants as $participantRole => $participantName): ?>
-                <?php $isCurrentUser = $participantRole === $currentParticipantRole; ?>
-                <?php $initial = strtoupper(mb_substr($participantName, 0, 1)); ?>
-                <div class="coordination-member">
-                    <span class="coordination-avatar"><?= e($initial) ?></span>
-                    <span><strong><?= e($participantName) ?></strong><small><?= $isCurrentUser ? 'Anda' : 'Anggota' ?></small></span>
-                </div>
-            <?php endforeach; ?>
-            </div>
-        </aside>
-        <div class="coordination-conversation">
-            <header class="coordination-conversation-header">
-                <span class="coordination-group-avatar coordination-header-avatar" aria-hidden="true"><span>G</span><i>●</i></span>
-                <div>
-                    <strong>Koordinasi Pengurus BPC</strong>
-                    <small><?= count($participants) ?> pengurus · Ketcab, Sekcab, Bencab, Medko</small>
-                </div>
-                <div class="coordination-header-actions">
-                    <button type="button" class="coordination-action-btn" id="coordinationSoundToggle" title="Nyalakan/Matikan Suara Pesan">
-                        <span class="coordination-action-icon" id="soundIcon">🔊</span>
-                        <span class="coordination-action-text">Suara</span>
-                    </button>
-                    <button type="button" class="coordination-action-btn" id="coordinationNotifyToggle" title="Aktifkan Notifikasi Popup Browser">
-                        <span class="coordination-action-icon" id="notifyIcon">🔔</span>
-                        <span class="coordination-action-text" id="notifyText">Notifikasi</span>
-                    </button>
-                    <span class="coordination-live" id="coordinationLiveStatus" aria-live="polite">
-                        <span class="coordination-live-dot"></span>
-                        <span class="coordination-live-label">Real-time</span>
-                    </span>
-                </div>
-            </header>
-            <div class="coordination-messages" id="coordinationMessages" aria-live="polite" aria-label="Pesan percakapan">
-                <button type="button" class="coordination-load-older" id="coordinationLoadOlder" <?= $hasOlderMessages ? '' : 'hidden' ?>>Muat pesan sebelumnya</button>
-                <?php foreach ($messages as $message): ?>
-                    <?php $ownMessage = (int)$message['sender_id'] === (int)$currentUserId; ?>
-                    <article class="coordination-message <?= $ownMessage ? 'outgoing' : 'incoming' ?>" data-message-id="<?= (int)$message['id'] ?>">
-                        <?php if (!$ownMessage): ?><strong class="coordination-sender"><?= e($message['sender_name']) ?> <span>· <?= e($senderRoleNames[$message['sender_role']] ?? $message['sender_role']) ?></span></strong><?php endif; ?>
-                        <p><?= nl2br(e($message['body'])) ?></p>
-                        <time datetime="<?= e($message['created_at']) ?>"><?= e(date('H:i', strtotime($message['created_at']))) ?></time>
-                    </article>
-                <?php endforeach; ?>
-                <?php if (!$messages): ?>
-                    <div class="coordination-welcome" id="coordinationEmpty">
-                        <span class="coordination-welcome-icon" aria-hidden="true">G</span>
-                        <strong>Koordinasi Pengurus BPC</strong>
-                        <p>Ruang bersama untuk Ketcab, Sekcab, Bencab, dan Sekfung Medko.</p>
-                        <small>Mulai percakapan dengan mengirim pesan di bawah.</small>
-                    </div>
-                <?php endif; ?>
-            </div>
-            <form class="coordination-composer" id="coordinationForm" method="post" data-user-id="<?= (int)$currentUserId ?>" action="<?= e($role === 'admin' ? '/admin/koordinasi' : ($role === 'ketcab' ? '/ketcab/koordinasi' : '/ruang-kerja/koordinasi')) ?>">
-                <?= csrf_field() ?>
-                <label class="sr-only" for="coordinationBody">Tulis pesan</label>
-                <textarea id="coordinationBody" name="body" rows="1" maxlength="5000" placeholder="Ketik pesan" required></textarea>
-                <button type="submit" aria-label="Kirim pesan"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m22 2-7 20-4-9-9-4 20-7Z"/><path d="M22 2 11 13"/></svg></button>
-                <p class="coordination-error" id="coordinationError" role="alert" hidden></p>
-            </form>
-        </div>
-    </section>
 <?php endif; ?>

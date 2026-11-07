@@ -20,9 +20,29 @@ class Firewall implements Middleware
 {
     public function handle(Request $request, ?string $param = null): ?Response
     {
+        // Pasang Header Keamanan HTTP Standar Industri secara Aktif
+        if (!headers_sent()) {
+            header('X-Content-Type-Options: nosniff');
+            header('X-Frame-Options: SAMEORIGIN');
+            header('X-XSS-Protection: 1; mode=block');
+            header('Referrer-Policy: strict-origin-when-cross-origin');
+            header('Permissions-Policy: geolocation=(), microphone=(), camera=()');
+        }
+
+        $clientIp = function_exists('client_ip') ? client_ip() : ($_SERVER['REMOTE_ADDR'] ?? '127.0.0.1');
+        $currentUser = \App\Core\Auth::user();
+        $isAdminSession = $currentUser && ($currentUser['role'] ?? '') === 'admin';
+
+        // -1. Gerbang IPS Aktif: Tolak Akses dari IP yang Masuk Daftar Hitam (Blacklist)
+        $isTrusted = $isAdminSession || (function_exists('is_trusted_admin_ip') && is_trusted_admin_ip($clientIp));
+        if (!$isTrusted && function_exists('is_ip_blacklisted') && is_ip_blacklisted($clientIp)) {
+            return $this->blockAttack('Blocked IP Address (Active IPS Quarantine)', "IP {$clientIp} berada dalam daftar blokir otomatis WAF.", false);
+        }
+
         $rawUri = $_SERVER['REQUEST_URI'] ?? '';
         $rawQuery = $_SERVER['QUERY_STRING'] ?? '';
         $uri = rawurldecode($rawUri);
+        $userAgent = $_SERVER['HTTP_USER_AGENT'] ?? '';
         $postBody = $request->post();
 
         // 0. Perisai Anti-CVE-2024-4577 (PHP-CGI Argument Injection pada Windows)
@@ -32,6 +52,14 @@ class Firewall implements Middleware
             preg_match('/(?:^|[?&;\s])(?:-|\xAD|%ad)(?:d|n|c|s|w|r|B|F|R|E)\b/i', $rawQuery)
         ) {
             return $this->blockAttack('CVE-2024-4577 PHP-CGI Argument Injection', substr($rawQuery, 0, 200));
+        }
+
+        // 0.5. Perisai Anti-Scanner Bot & Honeypot Probe (.env, .git, wp-admin, phpmyadmin, phpunit, sqlmap)
+        if (function_exists('detect_scanner_probe')) {
+            $scannerProbe = detect_scanner_probe($uri, $userAgent);
+            if ($scannerProbe !== null) {
+                return $this->blockAttack($scannerProbe['type'], $scannerProbe['payload']);
+            }
         }
 
         // 1. Perisai Anti-PHP2Shell / Anti-RCE (Remote Code Execution) pada GET, POST/JSON, URI, Cookie & Header
@@ -127,6 +155,38 @@ class Firewall implements Middleware
             }
         }
 
+        // 5. Perisai Anti-XSS & Anti-SSRF/XXE pada GET, URI & Cookie
+        if (function_exists('detect_xss_payload')) {
+            $xssGet = detect_xss_payload($_GET);
+            if ($xssGet !== null) {
+                return $this->blockAttack('Cross-Site Scripting / XSS (GET)', $xssGet);
+            }
+
+            $xssUri = detect_xss_payload($uri);
+            if ($xssUri !== null) {
+                return $this->blockAttack('Cross-Site Scripting / XSS (URI)', $xssUri);
+            }
+
+            if (!empty($_COOKIE)) {
+                $xssCookie = detect_xss_payload($_COOKIE);
+                if ($xssCookie !== null) {
+                    return $this->blockAttack('Cross-Site Scripting / XSS (COOKIE)', $xssCookie);
+                }
+            }
+        }
+
+        if (function_exists('detect_ssrf_xxe_payload')) {
+            $ssrfGet = detect_ssrf_xxe_payload($_GET);
+            if ($ssrfGet !== null) {
+                return $this->blockAttack('SSRF / XXE Injection (GET)', $ssrfGet);
+            }
+
+            $ssrfPost = detect_ssrf_xxe_payload($postBody);
+            if ($ssrfPost !== null) {
+                return $this->blockAttack('SSRF / XXE Injection (POST)', $ssrfPost);
+            }
+        }
+
         return null;
     }
 
@@ -201,10 +261,11 @@ class Firewall implements Middleware
     /**
      * Blokir permintaan dan catat ancaman ke tabel security_threats
      */
-    protected function blockAttack(string $type, string $payload): Response
+    protected function blockAttack(string $type, string $payload, bool $logToDb = true): Response
     {
-        // Catat serangan ke database keamanan
-        record_threat($type, $payload, 'critical');
+        if ($logToDb) {
+            record_threat($type, $payload, 'critical', 'blocked');
+        }
 
         $response = new Response();
         $response->setStatusCode(403);

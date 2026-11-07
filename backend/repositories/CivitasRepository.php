@@ -106,77 +106,99 @@ class CivitasRepository
         return Database::fetchOne($sql, [':nim' => $nim]);
     }
 
-    public function create(array $data): int
+    /**
+     * Ekstrak inisial huruf kapital dari nama lengkap peserta/civitas.
+     * Contoh: "Erantus Paripurna Samaloisa" -> "EPS"
+     */
+    public static function extractInitials(string $namaLengkap): string
     {
-        // Jika NIM kosong, gunakan nomor ID berikutnya atau custom ID
-        if (empty($data['nim']) || trim((string)$data['nim']) === '') {
-            if (!empty($data['id']) && is_numeric($data['id'])) {
-                $data['nim'] = (string)$data['id'];
-            } else {
-                $nextRow = Database::fetchOne("SELECT COALESCE(MAX(id), 0) + 1 AS next_id FROM `civitas`");
-                $data['nim'] = (string)($nextRow['next_id'] ?? 1);
+        $clean = trim($namaLengkap);
+        if ($clean === '') {
+            return 'XX';
+        }
+        $words = preg_split('/[\s\-]+/u', $clean) ?: [];
+        $initials = '';
+        foreach ($words as $word) {
+            $lettersOnly = preg_replace('/[^a-zA-Z]/', '', $word);
+            if ($lettersOnly !== '') {
+                $initials .= strtoupper(substr($lettersOnly, 0, 1));
             }
         }
+        return $initials !== '' ? $initials : 'XX';
+    }
 
-        // Cek jika ID khusus diberikan
-        $hasCustomId = false;
-        $customId = null;
-        if (!empty($data['id']) && is_numeric($data['id'])) {
-            $customId = (int)$data['id'];
-            $exists = Database::fetchOne("SELECT `id` FROM `civitas` WHERE `id` = :id LIMIT 1", [':id' => $customId]);
-            if (!$exists) {
-                $hasCustomId = true;
-            }
-        } elseif (is_numeric($data['nim'])) {
-            $potentialId = (int)$data['nim'];
-            if ($potentialId > 0) {
-                $exists = Database::fetchOne("SELECT `id` FROM `civitas` WHERE `id` = :id LIMIT 1", [':id' => $potentialId]);
-                if (!$exists) {
-                    $hasCustomId = true;
-                    $customId = $potentialId;
+    /**
+     * Bentuk ID Anggota / Civitas / Maperca Cabang Padang:
+     * Format: {TAHUN_MAPER}-{2_DIGIT_TAHUN_LAHIR}-{INISIAL_NAMA}
+     * Contoh: 2025-04-EPS
+     */
+    public function generateMemberCode(string $namaLengkap, ?string $tanggalLahir, $tahunMaperca, ?int $ignoreId = null): string
+    {
+        $yearMaper = (!empty($tahunMaperca) && is_numeric($tahunMaperca) && (int)$tahunMaperca >= 1950)
+            ? (string)((int)$tahunMaperca)
+            : date('Y');
+
+        $birthTwoDigit = '00';
+        if (!empty($tanggalLahir)) {
+            if (preg_match('/^(\d{4})/', trim($tanggalLahir), $m)) {
+                $birthTwoDigit = substr($m[1], -2);
+            } else {
+                $ts = strtotime($tanggalLahir);
+                if ($ts !== false) {
+                    $birthTwoDigit = date('y', $ts);
                 }
             }
         }
 
-        if ($hasCustomId && $customId !== null) {
-            $sql = "INSERT INTO `civitas` (
-                        `id`, `nim`, `nama_lengkap`, `jenis_kelamin`, `tempat_lahir`, `tanggal_lahir`,
-                        `telepon`, `email`, `perguruan_tinggi`, `fakultas`, `jurusan`,
-                        `komisariat`, `anggota_komisariat`, `tahun_maperca`, `tingkat_kaderisasi`, `status_keanggotaan`,
-                        `alamat_padang`, `asal_civitas`, `foto_anggota`, `file_kta`, `catatan`,
-                        `created_by`, `created_at`
-                    ) VALUES (
-                        :id, :nim, :nama_lengkap, :jenis_kelamin, :tempat_lahir, :tanggal_lahir,
-                        :telepon, :email, :perguruan_tinggi, :fakultas, :jurusan,
-                        :komisariat, :anggota_komisariat, :tahun_maperca, :tingkat_kaderisasi, :status_keanggotaan,
-                        :alamat_padang, :asal_civitas, :foto_anggota, :file_kta, :catatan,
-                        :created_by, NOW()
-                    )";
-            Database::execute($sql, [
-                ':id' => $customId,
-                ':nim' => $data['nim'],
-                ':nama_lengkap' => $data['nama_lengkap'],
-                ':jenis_kelamin' => $data['jenis_kelamin'],
-                ':tempat_lahir' => $data['tempat_lahir'] ?? null,
-                ':tanggal_lahir' => !empty($data['tanggal_lahir']) ? $data['tanggal_lahir'] : null,
-                ':telepon' => $data['telepon'] ?? null,
-                ':email' => $data['email'] ?? null,
-                ':perguruan_tinggi' => $data['perguruan_tinggi'],
-                ':fakultas' => $data['fakultas'] ?? null,
-                ':jurusan' => $data['jurusan'] ?? null,
-                ':komisariat' => $data['komisariat'] ?? null,
-                ':anggota_komisariat' => $data['anggota_komisariat'] ?? 1,
-                ':tahun_maperca' => $data['tahun_maperca'] ?? null,
-                ':tingkat_kaderisasi' => $data['tingkat_kaderisasi'] ?? 'Maperca',
-                ':status_keanggotaan' => $data['status_keanggotaan'] ?? 'Aktif',
-                ':alamat_padang' => $data['alamat_padang'] ?? null,
-                ':asal_civitas' => $data['asal_civitas'] ?? $data['alamat_asal'] ?? null,
-                ':foto_anggota' => $data['foto_anggota'] ?? null,
-                ':file_kta' => $data['file_kta'] ?? null,
-                ':catatan' => $data['catatan'] ?? null,
-                ':created_by' => $data['created_by'] ?? null,
-            ]);
-            return $customId;
+        $initials = self::extractInitials($namaLengkap);
+        $baseCode = "{$yearMaper}-{$birthTwoDigit}-{$initials}";
+
+        return $this->ensureUniqueMemberCode($baseCode, $ignoreId);
+    }
+
+    /**
+     * Pastikan kode ID Anggota unik pada kolom `nim`.
+     */
+    public function ensureUniqueMemberCode(string $baseCode, ?int $ignoreId = null): string
+    {
+        $candidate = strtoupper(trim($baseCode));
+        $suffix = 1;
+        while (true) {
+            if ($ignoreId !== null) {
+                $row = Database::fetchOne(
+                    "SELECT `id` FROM `civitas` WHERE `nim` = :nim AND `id` <> :id LIMIT 1",
+                    [':nim' => $candidate, ':id' => $ignoreId]
+                );
+            } else {
+                $row = Database::fetchOne(
+                    "SELECT `id` FROM `civitas` WHERE `nim` = :nim LIMIT 1",
+                    [':nim' => $candidate]
+                );
+            }
+            if (!$row) {
+                return $candidate;
+            }
+            $suffix++;
+            $candidate = strtoupper(trim($baseCode)) . '-' . $suffix;
+        }
+    }
+
+    public function create(array $data): int
+    {
+        $tahunMaperca = !empty($data['tahun_maperca']) && is_numeric($data['tahun_maperca'])
+            ? (int)$data['tahun_maperca']
+            : (int)date('Y');
+        $data['tahun_maperca'] = $tahunMaperca;
+
+        $rawNim = trim((string)($data['nim'] ?? ''));
+        if ($rawNim === '' || !preg_match('/^\d{4}-\d{2}-[A-Z0-9]+(-\d+)?$/i', $rawNim)) {
+            $data['nim'] = $this->generateMemberCode(
+                (string)($data['nama_lengkap'] ?? ''),
+                !empty($data['tanggal_lahir']) ? (string)$data['tanggal_lahir'] : null,
+                $tahunMaperca
+            );
+        } else {
+            $data['nim'] = $this->ensureUniqueMemberCode($rawNim);
         }
 
         $sql = "INSERT INTO `civitas` (
@@ -224,6 +246,32 @@ class CivitasRepository
     {
         if (array_key_exists('alamat_asal', $data) && !array_key_exists('asal_civitas', $data)) {
             $data['asal_civitas'] = $data['alamat_asal'];
+        }
+
+        $existing = $this->findById($id);
+        if ($existing) {
+            $nama = (string)($data['nama_lengkap'] ?? $existing['nama_lengkap'] ?? '');
+            $tglLahir = array_key_exists('tanggal_lahir', $data)
+                ? (!empty($data['tanggal_lahir']) ? (string)$data['tanggal_lahir'] : null)
+                : (!empty($existing['tanggal_lahir']) ? (string)$existing['tanggal_lahir'] : null);
+            $thnMaper = !empty($data['tahun_maperca'])
+                ? $data['tahun_maperca']
+                : ($existing['tahun_maperca'] ?? date('Y'));
+
+            $expectedBase = $this->generateMemberCode($nama, $tglLahir, $thnMaper, $id);
+            $rawNim = isset($data['nim']) ? trim((string)$data['nim']) : '';
+            $oldNim = trim((string)($existing['nim'] ?? ''));
+
+            // Perbarui kode ID secara otomatis jika dikosongkan, masih memakai format lama, atau data pembentuk ID berubah
+            if (
+                $rawNim === '' ||
+                $rawNim === $oldNim ||
+                !preg_match('/^\d{4}-\d{2}-[A-Z0-9]+(-\d+)?$/i', $rawNim)
+            ) {
+                $data['nim'] = $expectedBase;
+            } else {
+                $data['nim'] = $this->ensureUniqueMemberCode($rawNim, $id);
+            }
         }
 
         $fields = [];

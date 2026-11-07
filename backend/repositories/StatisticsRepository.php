@@ -12,6 +12,9 @@ class StatisticsRepository
         $totalCivitas = (int)(Database::fetchOne("SELECT COUNT(*) as c FROM `civitas` WHERE {$notMaperca}")['c'] ?? 0);
         $totalMaperca = (int)(Database::fetchOne("SELECT COUNT(*) as c FROM `civitas` WHERE `tingkat_kaderisasi` = 'Maperca'")['c'] ?? 0);
         $activeCivitas = (int)(Database::fetchOne("SELECT COUNT(*) as c FROM `civitas` WHERE `status_keanggotaan` = 'Aktif' AND {$notMaperca}")['c'] ?? 0);
+        $pasifCivitas = (int)(Database::fetchOne("SELECT COUNT(*) as c FROM `civitas` WHERE `status_keanggotaan` = 'Pasif' AND {$notMaperca}")['c'] ?? 0);
+        $alumniOnlyCivitas = (int)(Database::fetchOne("SELECT COUNT(*) as c FROM `civitas` WHERE `status_keanggotaan` = 'Alumni' AND {$notMaperca}")['c'] ?? 0);
+        $seniorCivitas = (int)(Database::fetchOne("SELECT COUNT(*) as c FROM `civitas` WHERE `status_keanggotaan` = 'Senior' AND {$notMaperca}")['c'] ?? 0);
         $alumniCivitas = (int)(Database::fetchOne("SELECT COUNT(*) as c FROM `civitas` WHERE `status_keanggotaan` IN ('Alumni', 'Senior', 'Alumni/Senior') AND {$notMaperca}")['c'] ?? 0);
         $totalKomisariat = (int)(Database::fetchOne("SELECT COUNT(DISTINCT `komisariat`) as c FROM `civitas` WHERE `anggota_komisariat` = 1 AND `komisariat` != ''")['c'] ?? 0);
         $totalBerita = (int)(Database::fetchOne("SELECT COUNT(*) as c FROM `berita` WHERE `status` = 'published'")['c'] ?? 0);
@@ -26,6 +29,9 @@ class StatisticsRepository
             'total_civitas' => $totalCivitas,
             'total_maperca' => $totalMaperca,
             'active_civitas' => $activeCivitas,
+            'pasif_civitas' => $pasifCivitas,
+            'alumni_only_civitas' => $alumniOnlyCivitas,
+            'senior_civitas' => $seniorCivitas,
             'alumni_civitas' => $alumniCivitas,
             'total_komisariat' => $totalKomisariat,
             'total_berita' => $totalBerita,

@@ -19,28 +19,32 @@
             <a href="<?= e($basePath) ?>" class="btn btn-outline btn-sm">&larr; Kembali</a>
         </div>
 
-        <form action="<?= $isEdit ? e($basePath) . '/' . $member['id'] : e($basePath) ?>" method="POST" enctype="multipart/form-data" data-validate>
+        <form action="<?= $isEdit ? e($basePath) . '/' . $member['id'] : e($basePath) ?>" method="POST"
+            enctype="multipart/form-data" data-validate>
             <?= csrf_field() ?>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div class="form-group">
                     <label class="form-label" for="nim">
-                        ID Anggota / NIM
-                        <span style="font-weight: normal; font-size: 0.78rem; color: var(--text-muted);">(Bisa ID angka berapapun atau NIM)</span>
+                        ID <?= $isMaperca ? 'Calon Anggota (Maper)' : 'Anggota / Civitas' ?>
+                        <span style="font-weight: normal; font-size: 0.78rem; color: var(--text-muted);">(Otomatis:
+                            TahunMaper-ThnLahir-Inisial)</span>
                     </label>
-                    <input type="text" id="nim" name="nim" class="form-control" 
-                           placeholder="Berapapun angka ID atau NIM (contoh: 1, 12, 100)" 
-                           value="<?= e($isEdit ? ($member['nim'] ?? $member['id']) : old('nim')) ?>">
+                    <input type="text" id="nim" name="nim" class="form-control"
+                        placeholder="Otomatis (contoh: 2025-04-EPS)"
+                        value="<?= e($isEdit ? ($member['nim'] ?? '') : old('nim')) ?>" readonly
+                        style="background-color: #f8fafc; font-family: monospace; font-weight: 700; color: var(--primary);">
                     <div class="form-help" style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">
-                        Boleh diisi angka ID berapapun, NIM, atau kosongkan untuk otomatis generate ID.
+                        Dibentuk otomatis dari <strong>Tahun Maper</strong> + <strong>2 angka Tahun Lahir</strong> +
+                        <strong>Inisial Nama</strong> (contoh: <code>2025-04-EPS</code>).
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label class="form-label" for="nama_lengkap">Nama Lengkap</label>
-                    <input type="text" id="nama_lengkap" name="nama_lengkap" class="form-control" 
-                           placeholder="<?= $isMaperca ? 'Nama lengkap anggota baru' : 'Nama lengkap civitas' ?>" 
-                           value="<?= e($isEdit ? $member['nama_lengkap'] : old('nama_lengkap')) ?>" required>
+                    <input type="text" id="nama_lengkap" name="nama_lengkap" class="form-control"
+                        placeholder="<?= $isMaperca ? 'Nama lengkap anggota baru' : 'Nama lengkap civitas' ?>"
+                        value="<?= e($isEdit ? $member['nama_lengkap'] : old('nama_lengkap')) ?>" required>
                 </div>
             </div>
 
@@ -56,30 +60,28 @@
 
                 <div class="form-group">
                     <label class="form-label" for="tempat_lahir">Tempat Lahir</label>
-                    <input type="text" id="tempat_lahir" name="tempat_lahir" class="form-control" 
-                           value="<?= e($isEdit ? $member['tempat_lahir'] : old('tempat_lahir')) ?>">
+                    <input type="text" id="tempat_lahir" name="tempat_lahir" class="form-control"
+                        value="<?= e($isEdit ? $member['tempat_lahir'] : old('tempat_lahir')) ?>">
                 </div>
 
                 <div class="form-group">
                     <label class="form-label" for="tanggal_lahir">Tanggal Lahir</label>
-                    <input type="date" id="tanggal_lahir" name="tanggal_lahir" class="form-control" 
-                           value="<?= e($isEdit ? $member['tanggal_lahir'] : old('tanggal_lahir')) ?>">
+                    <input type="date" id="tanggal_lahir" name="tanggal_lahir" class="form-control"
+                        value="<?= e($isEdit ? $member['tanggal_lahir'] : old('tanggal_lahir')) ?>" required>
                 </div>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div class="form-group">
                     <label class="form-label" for="telepon">Nomor WhatsApp / HP</label>
-                    <input type="text" id="telepon" name="telepon" class="form-control" 
-                           placeholder="08xxxxxxxxxx" 
-                           value="<?= e($isEdit ? $member['telepon'] : old('telepon')) ?>">
+                    <input type="text" id="telepon" name="telepon" class="form-control" placeholder="08xxxxxxxxxx"
+                        value="<?= e($isEdit ? $member['telepon'] : old('telepon')) ?>">
                 </div>
 
                 <div class="form-group">
                     <label class="form-label" for="email">Alamat Email</label>
-                    <input type="email" id="email" name="email" class="form-control" 
-                           placeholder="nama@email.com" 
-                           value="<?= e($isEdit ? $member['email'] : old('email')) ?>">
+                    <input type="email" id="email" name="email" class="form-control" placeholder="nama@email.com"
+                        value="<?= e($isEdit ? $member['email'] : old('email')) ?>">
                 </div>
             </div>
 
@@ -88,105 +90,122 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div class="form-group">
                     <label class="form-label" for="perguruan_tinggi">Perguruan Tinggi</label>
-                    <input type="text" id="perguruan_tinggi" name="perguruan_tinggi" class="form-control" 
-                           placeholder="Contoh: Universitas Andalas" 
-                           value="<?= e($isEdit ? $member['perguruan_tinggi'] : old('perguruan_tinggi', 'Universitas Andalas')) ?>" required>
+                    <input type="text" id="perguruan_tinggi" name="perguruan_tinggi" class="form-control"
+                        placeholder="Contoh: Universitas Andalas"
+                        value="<?= e($isEdit ? $member['perguruan_tinggi'] : old('perguruan_tinggi', 'Universitas Andalas')) ?>"
+                        required>
                 </div>
 
                 <div class="form-group">
                     <label class="form-label" for="fakultas">Fakultas</label>
-                    <input type="text" id="fakultas" name="fakultas" class="form-control" 
-                           value="<?= e($isEdit ? $member['fakultas'] : old('fakultas')) ?>">
+                    <input type="text" id="fakultas" name="fakultas" class="form-control"
+                        value="<?= e($isEdit ? $member['fakultas'] : old('fakultas')) ?>">
                 </div>
 
                 <div class="form-group">
                     <label class="form-label" for="jurusan">Jurusan / Program Studi</label>
-                    <input type="text" id="jurusan" name="jurusan" class="form-control" 
-                           value="<?= e($isEdit ? $member['jurusan'] : old('jurusan')) ?>">
+                    <input type="text" id="jurusan" name="jurusan" class="form-control"
+                        value="<?= e($isEdit ? $member['jurusan'] : old('jurusan')) ?>">
                 </div>
             </div>
 
             <?php if (!$isMaperca): ?>
-            <?php
-            $isAnggotaKom = $isEdit
-                ? (isset($member['anggota_komisariat']) ? (int)$member['anggota_komisariat'] : (!empty($member['komisariat']) ? 1 : 0))
-                : (old('anggota_komisariat') !== null ? (int)old('anggota_komisariat') : 0);
-            $komCurrent = $isEdit ? ($member['komisariat'] ?? '') : old('komisariat', '');
-            ?>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <?php
+                $isAnggotaKom = $isEdit
+                    ? (isset($member['anggota_komisariat']) ? (int) $member['anggota_komisariat'] : (!empty($member['komisariat']) ? 1 : 0))
+                    : (old('anggota_komisariat') !== null ? (int) old('anggota_komisariat') : 0);
+                $komCurrent = $isEdit ? ($member['komisariat'] ?? '') : old('komisariat', '');
+                ?>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="form-group">
+                        <label class="form-label" for="anggota_komisariat">Apakah pernah menjadi anggota komisariat?</label>
+                        <select id="anggota_komisariat" name="anggota_komisariat" class="form-control" required>
+                            <option value="0" <?= $isAnggotaKom === 0 ? 'selected' : '' ?>>Tidak pernah sama sekali</option>
+                            <option value="1" <?= $isAnggotaKom === 1 ? 'selected' : '' ?>>Ya, anggota komisariat</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" id="komisariat-wrapper"
+                        style="<?= $isAnggotaKom === 1 ? '' : 'display:none;' ?>">
+                        <label class="form-label" for="komisariat">Pilih Komisariat</label>
+                        <select id="komisariat" name="komisariat" class="form-control">
+                            <option value="">-- Pilih Komisariat --</option>
+                            <?php foreach (($komisariatNames ?? []) as $kn): ?>
+                                <option value="<?= e($kn) ?>" <?= $komCurrent === $kn ? 'selected' : '' ?>><?= e($kn) ?></option>
+                            <?php endforeach; ?>
+                            <?php if ($komCurrent !== '' && !in_array($komCurrent, $komisariatNames ?? [], true)): ?>
+                                <option value="<?= e($komCurrent) ?>" selected><?= e($komCurrent) ?></option>
+                            <?php endif; ?>
+                        </select>
+                        <div class="form-help">Pilih komisariat yang ada.</div>
+                    </div>
+                </div>
+            <?php endif; ?>
+
+            <div class="grid grid-cols-1 <?= !$isMaperca ? 'md:grid-cols-2' : '' ?> gap-4">
                 <div class="form-group">
-                    <label class="form-label" for="anggota_komisariat">Apakah pernah menjadi anggota komisariat?</label>
-                    <select id="anggota_komisariat" name="anggota_komisariat" class="form-control" required>
-                        <option value="0" <?= $isAnggotaKom === 0 ? 'selected' : '' ?>>Tidak pernah sama sekali</option>
-                        <option value="1" <?= $isAnggotaKom === 1 ? 'selected' : '' ?>>Ya, anggota komisariat</option>
-                    </select>
+                    <label class="form-label" for="tahun_maperca">Tahun Maper</label>
+                    <input type="number" id="tahun_maperca" name="tahun_maperca" class="form-control"
+                        placeholder="Contoh: 2025"
+                        value="<?= e($isEdit ? ($member['tahun_maperca'] ?? date('Y')) : old('tahun_maperca', date('Y'))) ?>"
+                        required>
+                    <div class="form-help">Tahun saat mengikuti Maperca (digunakan sebagai 4 digit awal ID Anggota).
+                    </div>
                 </div>
 
-                <div class="form-group" id="komisariat-wrapper" style="<?= $isAnggotaKom === 1 ? '' : 'display:none;' ?>">
-                    <label class="form-label" for="komisariat">Pilih Komisariat</label>
-                    <select id="komisariat" name="komisariat" class="form-control">
-                        <option value="">-- Pilih Komisariat --</option>
-                        <?php foreach (($komisariatNames ?? []) as $kn): ?>
-                            <option value="<?= e($kn) ?>" <?= $komCurrent === $kn ? 'selected' : '' ?>><?= e($kn) ?></option>
-                        <?php endforeach; ?>
-                        <?php if ($komCurrent !== '' && !in_array($komCurrent, $komisariatNames ?? [], true)): ?>
-                            <option value="<?= e($komCurrent) ?>" selected><?= e($komCurrent) ?></option>
-                        <?php endif; ?>
-                    </select>
-                    <div class="form-help">Pilih komisariat yang ada.</div>
-                </div>
+                <?php if (!$isMaperca): ?>
+                    <div class="form-group">
+                        <label class="form-label" for="status_keanggotaan">Status Keanggotaan</label>
+                        <?php
+                        $sk = $isEdit ? ($member['status_keanggotaan'] ?? 'Aktif') : old('status_keanggotaan', 'Aktif');
+                        if ($sk === 'Alumni/Senior') {
+                            $sk = 'Alumni';
+                        } elseif (!in_array($sk, ['Aktif', 'Pasif', 'Alumni', 'Senior'], true)) {
+                            $sk = 'Aktif';
+                        }
+                        ?>
+                        <select id="status_keanggotaan" name="status_keanggotaan" class="form-control" required>
+                            <option value="Aktif" <?= ($sk === 'Aktif') ? 'selected' : '' ?>>Aktif &mdash; Mahasiswa aktif
+                                berkegiatan</option>
+                            <option value="Pasif" <?= ($sk === 'Pasif') ? 'selected' : '' ?>>Pasif &mdash; Tercatat anggota,
+                                tetapi jarang/tidak aktif</option>
+                            <option value="Alumni" <?= ($sk === 'Alumni') ? 'selected' : '' ?>>Alumni &mdash; Sudah wisuda /
+                                tamat kuliah</option>
+                            <option value="Senior" <?= ($sk === 'Senior') ? 'selected' : '' ?>>Senior &mdash; Anggota senior
+                                sesuai ketentuan organisasi</option>
+                        </select>
+                    </div>
+                <?php endif; ?>
             </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div class="form-group">
-                    <label class="form-label" for="tahun_maperca">Tahun Maperca</label>
-                    <input type="number" id="tahun_maperca" name="tahun_maperca" class="form-control" 
-                           placeholder="Contoh: 2024"
-                           value="<?= e($isEdit ? ($member['tahun_maperca'] ?? '') : old('tahun_maperca', date('Y'))) ?>" required>
-                    <div class="form-help">Tahun saat pertama kali mengikuti Maperca.</div>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label" for="status_keanggotaan">Status Keanggotaan</label>
-                    <?php
-                    $sk = $isEdit ? ($member['status_keanggotaan'] ?? 'Aktif') : old('status_keanggotaan', 'Aktif');
-                    if ($sk === 'Alumni/Senior') {
-                        $sk = 'Alumni';
-                    } elseif (!in_array($sk, ['Aktif', 'Pasif', 'Alumni', 'Senior'], true)) {
-                        $sk = 'Aktif';
-                    }
-                    ?>
-                    <select id="status_keanggotaan" name="status_keanggotaan" class="form-control" required>
-                        <option value="Aktif" <?= ($sk === 'Aktif') ? 'selected' : '' ?>>Aktif &mdash; Mahasiswa aktif berkegiatan</option>
-                        <option value="Pasif" <?= ($sk === 'Pasif') ? 'selected' : '' ?>>Pasif &mdash; Tercatat anggota, tetapi jarang/tidak aktif</option>
-                        <option value="Alumni" <?= ($sk === 'Alumni') ? 'selected' : '' ?>>Alumni &mdash; Sudah wisuda / tamat kuliah</option>
-                        <option value="Senior" <?= ($sk === 'Senior') ? 'selected' : '' ?>>Senior &mdash; Anggota senior sesuai ketentuan organisasi</option>
-                    </select>
-                </div>
-            </div>
-            <input type="hidden" name="tingkat_kaderisasi" value="<?= e($isEdit ? ($member['tingkat_kaderisasi'] ?? 'Anggota') : 'Anggota') ?>">
+            <?php if (!$isMaperca): ?>
+                <input type="hidden" name="tingkat_kaderisasi"
+                    value="<?= e($isEdit ? ($member['tingkat_kaderisasi'] ?? 'Anggota') : 'Anggota') ?>">
             <?php else: ?>
-                <input type="hidden" name="status_keanggotaan" value="<?= e($isEdit ? $member['status_keanggotaan'] : old('status_keanggotaan', 'Aktif')) ?>">
+                <input type="hidden" name="status_keanggotaan"
+                    value="<?= e($isEdit ? $member['status_keanggotaan'] : old('status_keanggotaan', 'Aktif')) ?>">
             <?php endif; ?>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div class="form-group">
                     <label class="form-label" for="alamat_padang">Alamat Domisili di Padang</label>
-                    <textarea id="alamat_padang" name="alamat_padang" class="form-control" rows="2"><?= e($isEdit ? $member['alamat_padang'] : old('alamat_padang')) ?></textarea>
+                    <textarea id="alamat_padang" name="alamat_padang" class="form-control"
+                        rows="2"><?= e($isEdit ? $member['alamat_padang'] : old('alamat_padang')) ?></textarea>
                 </div>
 
                 <div class="form-group">
                     <label class="form-label" for="asal_civitas">Asal Civitas</label>
                     <input type="text" id="asal_civitas" name="asal_civitas" class="form-control"
-                           placeholder="Contoh: Mentawai, Bengkulu, Solok, Medan, Sidikalang, Jakarta..."
-                           value="<?= e($isEdit ? ($member['asal_civitas'] ?? $member['alamat_asal'] ?? '') : old('asal_civitas', old('alamat_asal'))) ?>">
-                    <div class="form-help">Kota atau daerah asal civitas / anggota (misal: Mentawai, Bengkulu, Solok, Medan, Sidikalang, Jakarta, dsb.).</div>
+                        placeholder="Contoh: Mentawai, Bengkulu, Solok, Medan, Sidikalang, Jakarta..."
+                        value="<?= e($isEdit ? ($member['asal_civitas'] ?? $member['alamat_asal'] ?? '') : old('asal_civitas', old('alamat_asal'))) ?>">
+                    <div class="form-help">Kota atau daerah asal civitas / anggota (misal: Mentawai, Bengkulu, Solok,
+                        Medan, Sidikalang, Jakarta, dsb.).</div>
                 </div>
             </div>
 
             <h3 style="font-size: 1.15rem; margin: 1.5rem 0 1rem; color: var(--primary);">Foto Diri</h3>
             <p class="text-muted" style="font-size: 0.8125rem; margin-bottom: 1rem;">
-                Foto disimpan secara aman di folder penyimpanan privat (storage/private/) dan hanya dapat dibuka oleh pengguna yang login.
+                Foto disimpan secara aman di folder penyimpanan privat (storage/private/) dan hanya dapat dibuka oleh
+                pengguna yang login.
             </p>
 
             <div class="form-group">
@@ -195,7 +214,8 @@
                 <div class="form-help">JPG, PNG, atau WebP. Maksimal 3 MB.</div>
                 <?php if ($isEdit && !empty($member['foto_anggota'])): ?>
                     <div style="margin-top: 0.5rem; font-size: 0.8125rem;">
-                        <a href="/private/foto-anggota/<?= e($member['foto_anggota']) ?>" target="_blank" class="btn btn-outline btn-sm">
+                        <a href="/private/foto-anggota/<?= e($member['foto_anggota']) ?>" target="_blank"
+                            class="btn btn-outline btn-sm">
                             🖼️ Lihat Foto Saat Ini
                         </a>
                     </div>
@@ -204,7 +224,8 @@
 
             <div class="form-group">
                 <label class="form-label" for="catatan">Catatan Tambahan</label>
-                <textarea id="catatan" name="catatan" class="form-control" rows="2" placeholder="Catatan khusus kaderisasi atau keterangan keaktifan..."><?= e($isEdit ? $member['catatan'] : old('catatan')) ?></textarea>
+                <textarea id="catatan" name="catatan" class="form-control" rows="2"
+                    placeholder="Catatan khusus kaderisasi atau keterangan keaktifan..."><?= e($isEdit ? $member['catatan'] : old('catatan')) ?></textarea>
             </div>
 
             <div class="flex items-center gap-3" style="margin-top: 2rem;">
@@ -219,9 +240,46 @@
             </div>
         </form>
 
-        <?php if (!$isMaperca): ?>
         <script>
-            (function() {
+            (function () {
+                const namaInput = document.getElementById('nama_lengkap');
+                const tglLahirInput = document.getElementById('tanggal_lahir');
+                const thnMaperInput = document.getElementById('tahun_maperca');
+                const nimInput = document.getElementById('nim');
+
+                function computePreviewId() {
+                    if (!nimInput) return;
+                    const nama = (namaInput ? namaInput.value : '').trim();
+                    const tgl = (tglLahirInput ? tglLahirInput.value : '').trim();
+                    const thn = (thnMaperInput ? thnMaperInput.value : '').trim() || new Date().getFullYear().toString();
+
+                    if (!nama && !tgl) return;
+
+                    let yy = '00';
+                    const matchYear = tgl.match(/^(\d{4})/);
+                    if (matchYear) {
+                        yy = matchYear[1].slice(-2);
+                    }
+
+                    let initials = '';
+                    if (nama) {
+                        nama.split(/[\s\-]+/).forEach(function (word) {
+                            const clean = word.replace(/[^a-zA-Z]/g, '');
+                            if (clean.length > 0) {
+                                initials += clean.charAt(0).toUpperCase();
+                            }
+                        });
+                    }
+                    if (!initials) initials = 'XX';
+
+                    nimInput.value = thn + '-' + yy + '-' + initials;
+                }
+
+                if (namaInput) namaInput.addEventListener('input', computePreviewId);
+                if (tglLahirInput) tglLahirInput.addEventListener('change', computePreviewId);
+                if (thnMaperInput) thnMaperInput.addEventListener('input', computePreviewId);
+                computePreviewId();
+
                 const anggotaKomisariatSelect = document.getElementById('anggota_komisariat');
                 const komisariatWrapper = document.getElementById('komisariat-wrapper');
                 const komisariatSelect = document.getElementById('komisariat');
@@ -244,6 +302,5 @@
                 }
             })();
         </script>
-        <?php endif; ?>
     </div>
 </div>

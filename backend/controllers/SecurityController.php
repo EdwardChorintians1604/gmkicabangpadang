@@ -54,20 +54,8 @@ class SecurityController
 
     public function ancaman(Request $request): Response
     {
-        Authorization::authorize('security.threats');
-
-        $page = (int)$request->query('page', 1);
-        $threatData = $this->securityService->getThreatsList($page, 25);
-        $healthChecks = $this->securityService->getSecurityHealth();
-
-        return view('keamanan.ancaman', [
-            'pageTitle' => 'Deteksi Ancaman & Keamanan - GMKI Cabang Padang',
-            'threats' => $threatData['data'],
-            'total' => $threatData['total'],
-            'currentPage' => $threatData['current_page'],
-            'totalPages' => $threatData['total_pages'],
-            'healthChecks' => $healthChecks,
-        ], 'dashboard');
+        $adminCtrl = new \App\Controllers\Admin\SecurityController();
+        return $adminCtrl->threats($request);
     }
 
     public function resolveAncaman(Request $request, string $id): Response

@@ -8,11 +8,11 @@
         </p>
     </div>
     <div class="executive-dashboard-actions flex flex-wrap gap-2">
-        <a href="/pengawas/civitas/export" class="btn btn-secondary btn-sm inline-flex items-center justify-center gap-1.5 shadow-sm hover:shadow transition-all w-full sm:w-auto px-3.5 py-2 rounded-xl font-bold">
+        <a href="/admin/civitas/export" class="btn btn-secondary btn-sm inline-flex items-center justify-center gap-1.5 shadow-sm hover:shadow transition-all w-full sm:w-auto px-3.5 py-2 rounded-xl font-bold">
             <i class="bi bi-download"></i>
             <span>Ekspor Laporan Civitas</span>
         </a>
-        <a href="/pengawas/statistik" class="btn btn-outline btn-sm inline-flex items-center justify-center gap-1.5 shadow-sm hover:shadow transition-all w-full sm:w-auto px-3.5 py-2 rounded-xl font-bold">
+        <a href="/admin/statistik" class="btn btn-outline btn-sm inline-flex items-center justify-center gap-1.5 shadow-sm hover:shadow transition-all w-full sm:w-auto px-3.5 py-2 rounded-xl font-bold">
             <i class="bi bi-bar-chart-line-fill"></i>
             <span>Analisis Grafik</span>
         </a>

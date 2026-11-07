@@ -1,4 +1,4 @@
-<?php $isMaperca = ($kelompok ?? 'anggota') === 'maperca'; ?>
+<?php $isMaperca = ($kelompok ?? 'anggota') === 'maper'; ?>
 <div class="flex justify-between items-center" style="margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
     <div>
         <h1 style="font-size: 1.75rem; font-weight: 800; color: var(--primary);">
@@ -18,10 +18,12 @@
     $csvUrl = e($basePath) . '/export?' . http_build_query($paramsCsv);
     ?>
     <div class="flex flex-wrap sm:flex-nowrap gap-2 w-full sm:w-auto">
-        <a href="<?= $excelUrl ?>" class="btn btn-outline btn-sm flex-1 sm:flex-none justify-center" title="Unduh data dalam format Excel (.xlsx)">
+        <a href="<?= $excelUrl ?>" class="btn btn-outline btn-sm flex-1 sm:flex-none justify-center"
+            title="Unduh data dalam format Excel (.xlsx)">
             📊 Unduh Excel
         </a>
-        <a href="<?= $csvUrl ?>" class="btn btn-outline btn-sm flex-1 sm:flex-none justify-center" title="Unduh data dalam format CSV (.csv)">
+        <a href="<?= $csvUrl ?>" class="btn btn-outline btn-sm flex-1 sm:flex-none justify-center"
+            title="Unduh data dalam format CSV (.csv)">
             📥 Unduh CSV
         </a>
         <?php if (can('civitas.import')): ?>
@@ -38,20 +40,23 @@
 </div>
 
 <div class="card" style="margin-bottom: 1.5rem; padding: 1.25rem;">
-    <form action="<?= e($basePath) ?>" method="GET" class="grid <?= $isMaperca ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-5' ?> gap-3">
+    <form action="<?= e($basePath) ?>" method="GET"
+        class="grid <?= $isMaperca ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-5' ?> gap-3">
         <div class="form-group" style="margin-bottom: 0;">
-            <input type="text" name="q" class="form-control" placeholder="Cari ID (#1), nama, NIM, kampus..." value="<?= e($search ?? '') ?>">
+            <input type="text" name="q" class="form-control" placeholder="Cari ID (2025-04-EPS), nama, kampus..."
+                value="<?= e($search ?? '') ?>">
         </div>
 
         <?php if (!$isMaperca): ?>
-        <div class="form-group" style="margin-bottom: 0;">
-            <select name="komisariat" class="form-control">
-                <option value="">Semua Komisariat</option>
-                <?php foreach ($komisariatList as $kom): ?>
-                    <option value="<?= e($kom) ?>" <?= ($selectedKomisariat === $kom) ? 'selected' : '' ?>><?= e($kom) ?></option>
-                <?php endforeach; ?>
-            </select>
-        </div>
+            <div class="form-group" style="margin-bottom: 0;">
+                <select name="komisariat" class="form-control">
+                    <option value="">Semua Komisariat</option>
+                    <?php foreach ($komisariatList as $kom): ?>
+                        <option value="<?= e($kom) ?>" <?= ($selectedKomisariat === $kom) ? 'selected' : '' ?>><?= e($kom) ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
         <?php endif; ?>
 
         <div class="form-group" style="margin-bottom: 0;">
@@ -64,15 +69,15 @@
         </div>
 
         <?php if (!$isMaperca): ?>
-        <div class="form-group" style="margin-bottom: 0;">
-            <select name="status" class="form-control">
-                <option value="">Semua Status</option>
-                <option value="Aktif" <?= ($selectedStatus === 'Aktif') ? 'selected' : '' ?>>Aktif</option>
-                <option value="Pasif" <?= ($selectedStatus === 'Pasif') ? 'selected' : '' ?>>Pasif</option>
-                <option value="Alumni" <?= ($selectedStatus === 'Alumni') ? 'selected' : '' ?>>Alumni</option>
-                <option value="Senior" <?= ($selectedStatus === 'Senior') ? 'selected' : '' ?>>Senior</option>
-            </select>
-        </div>
+            <div class="form-group" style="margin-bottom: 0;">
+                <select name="status" class="form-control">
+                    <option value="">Semua Status</option>
+                    <option value="Aktif" <?= ($selectedStatus === 'Aktif') ? 'selected' : '' ?>>Aktif</option>
+                    <option value="Pasif" <?= ($selectedStatus === 'Pasif') ? 'selected' : '' ?>>Pasif</option>
+                    <option value="Alumni" <?= ($selectedStatus === 'Alumni') ? 'selected' : '' ?>>Alumni</option>
+                    <option value="Senior" <?= ($selectedStatus === 'Senior') ? 'selected' : '' ?>>Senior</option>
+                </select>
+            </div>
         <?php endif; ?>
 
         <div class="flex gap-2">
@@ -90,14 +95,14 @@
         <table class="data-table">
             <thead>
                 <tr>
-                    <th style="min-width: 90px;">ID / NIM</th>
+                    <th style="min-width: 115px;">ID Anggota</th>
                     <th>Nama Lengkap</th>
                     <th>L/P</th>
                     <th>Perguruan Tinggi</th>
                     <?php if (!$isMaperca): ?>
-                    <th>Komisariat</th>
+                        <th>Komisariat</th>
                     <?php endif; ?>
-                    <th><?= $isMaperca ? 'Tahun Maperca' : 'Maperca' ?></th>
+                    <th><?= $isMaperca ? 'Tahun Maper' : 'Maper' ?></th>
                     <th>Status Keanggotaan</th>
                     <th>Aksi</th>
                 </tr>
@@ -107,46 +112,46 @@
                     <?php foreach ($civitas as $row): ?>
                         <tr>
                             <td>
-                                <div class="flex items-center gap-1.5">
-                                    <span class="badge badge-neutral" style="font-weight: 700; font-size: 0.75rem;">#<?= (int)$row['id'] ?></span>
-                                    <?php if (!empty($row['nim']) && (string)$row['nim'] !== (string)$row['id']): ?>
-                                        <code style="font-size: 0.78rem;"><?= e($row['nim']) ?></code>
-                                    <?php endif; ?>
-                                </div>
+                                <code
+                                    style="font-weight: 700; font-size: 0.82rem; color: var(--primary); background: rgba(13, 71, 161, 0.08); padding: 0.2rem 0.5rem; border-radius: 6px;"><?= e($row['nim']) ?></code>
                             </td>
                             <td>
-                                <a href="<?= e($basePath) ?>/<?= $row['id'] ?>" style="font-weight: 700; color: var(--primary);">
+                                <a href="<?= e($basePath) ?>/<?= $row['id'] ?>"
+                                    style="font-weight: 700; color: var(--primary);">
                                     <?= e($row['nama_lengkap']) ?>
                                 </a>
                             </td>
                             <td><?= e($row['jenis_kelamin']) ?></td>
                             <td><?= e($row['perguruan_tinggi']) ?></td>
                             <?php if (!$isMaperca): ?>
-                            <td>
-                                <?php if (!empty($row['komisariat'])): ?>
-                                    <span class="badge badge-primary"><?= e($row['komisariat']) ?></span>
-                                <?php else: ?>
-                                    <span class="text-muted">Tanpa Komisariat</span>
-                                <?php endif; ?>
-                            </td>
+                                <td>
+                                    <?php if (!empty($row['komisariat'])): ?>
+                                        <span class="badge badge-primary"><?= e($row['komisariat']) ?></span>
+                                    <?php else: ?>
+                                        <span class="text-muted">Tanpa Komisariat</span>
+                                    <?php endif; ?>
+                                </td>
                             <?php endif; ?>
                             <td><?= e($row['tahun_maperca'] ?? '-') ?></td>
                             <td>
                                 <?php if ($row['status_keanggotaan'] === 'Aktif'): ?>
                                     <span class="badge badge-success">Aktif</span>
                                 <?php elseif ($row['status_keanggotaan'] === 'Pasif'): ?>
-                                    <span class="badge" style="background: #fef3c7; color: #92400e; border: 1px solid #fde68a;">Pasif</span>
+                                    <span class="badge"
+                                        style="background: #fef3c7; color: #92400e; border: 1px solid #fde68a;">Pasif</span>
                                 <?php elseif ($row['status_keanggotaan'] === 'Alumni' || $row['status_keanggotaan'] === 'Alumni/Senior'): ?>
                                     <span class="badge badge-warning">Alumni</span>
                                 <?php elseif ($row['status_keanggotaan'] === 'Senior'): ?>
-                                    <span class="badge" style="background: #ede9fe; color: #5b21b6; border: 1px solid #ddd6fe;">Senior</span>
+                                    <span class="badge"
+                                        style="background: #ede9fe; color: #5b21b6; border: 1px solid #ddd6fe;">Senior</span>
                                 <?php else: ?>
                                     <span class="badge badge-neutral"><?= e($row['status_keanggotaan']) ?></span>
                                 <?php endif; ?>
                             </td>
                             <td>
                                 <div class="flex gap-2">
-                                    <a href="<?= e($basePath) ?>/<?= $row['id'] ?>" class="btn btn-outline btn-sm" title="Lihat Profil">
+                                    <a href="<?= e($basePath) ?>/<?= $row['id'] ?>" class="btn btn-outline btn-sm"
+                                        title="Lihat Profil">
                                         Detail
                                     </a>
                                     <?php if (can('civitas.update')): ?>
@@ -155,17 +160,21 @@
                                         </a>
                                     <?php endif; ?>
                                     <?php if ($isMaperca && can('civitas.update')): ?>
-                                        <form action="/admin/maperca/<?= $row['id'] ?>/lantik" method="POST" style="display:inline;">
+                                        <form action="/admin/maperca/<?= $row['id'] ?>/lantik" method="POST"
+                                            style="display:inline;">
                                             <?= csrf_field() ?>
-                                            <button type="submit" class="btn btn-primary btn-sm" data-confirm="Lantik <?= e($row['nama_lengkap']) ?> menjadi Anggota sah GMKI Cabang Padang?">
+                                            <button type="submit" class="btn btn-primary btn-sm"
+                                                data-confirm="Lantik <?= e($row['nama_lengkap']) ?> menjadi Anggota sah GMKI Cabang Padang?">
                                                 Lantik Jadi Anggota
                                             </button>
                                         </form>
                                     <?php endif; ?>
                                     <?php if (can('civitas.delete')): ?>
-                                        <form action="<?= e($basePath) ?>/<?= $row['id'] ?>/delete" method="POST" style="display:inline;">
+                                        <form action="<?= e($basePath) ?>/<?= $row['id'] ?>/delete" method="POST"
+                                            style="display:inline;">
                                             <?= csrf_field() ?>
-                                            <button type="submit" class="btn btn-danger btn-sm" data-confirm="Hapus data <?= e($row['nama_lengkap']) ?>?">
+                                            <button type="submit" class="btn btn-danger btn-sm"
+                                                data-confirm="Hapus data <?= e($row['nama_lengkap']) ?>?">
                                                 ✕
                                             </button>
                                         </form>
@@ -193,8 +202,8 @@
             </div>
             <div class="pagination-pages">
                 <?php for ($i = 1; $i <= $totalPages; $i++): ?>
-                    <a href="<?= e($basePath) ?>?page=<?= $i ?><?= !empty($search) ? '&q='.urlencode($search) : '' ?><?= !empty($selectedKomisariat) ? '&komisariat='.urlencode($selectedKomisariat) : '' ?>" 
-                       class="page-link <?= ($i === $currentPage) ? 'active' : '' ?>">
+                    <a href="<?= e($basePath) ?>?page=<?= $i ?><?= !empty($search) ? '&q=' . urlencode($search) : '' ?><?= !empty($selectedKomisariat) ? '&komisariat=' . urlencode($selectedKomisariat) : '' ?>"
+                        class="page-link <?= ($i === $currentPage) ? 'active' : '' ?>">
                         <?= $i ?>
                     </a>
                 <?php endfor; ?>

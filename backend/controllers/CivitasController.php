@@ -76,12 +76,10 @@ class CivitasController
             'jenis_kelamin' => 'required|in:L,P',
             'perguruan_tinggi' => 'required',
             'komisariat' => 'required',
+            'tanggal_lahir' => 'required',
             'tahun_maperca' => 'required|numeric',
         ];
         $postData = $request->post();
-        if (!empty($postData['nim']) && trim((string)$postData['nim']) !== '') {
-            $rules['nim'] = 'unique:civitas,nim';
-        }
         $validator = Validator::make($postData, $rules);
 
         if ($validator->fails()) {
@@ -159,12 +157,10 @@ class CivitasController
             'jenis_kelamin' => 'required|in:L,P',
             'perguruan_tinggi' => 'required',
             'komisariat' => 'required',
+            'tanggal_lahir' => 'required',
             'tahun_maperca' => 'required|numeric',
         ];
         $postData = $request->post();
-        if (!empty($postData['nim']) && trim((string)$postData['nim']) !== '') {
-            $rules['nim'] = "unique:civitas,nim,{$id}";
-        }
         $validator = Validator::make($postData, $rules);
 
         if ($validator->fails()) {

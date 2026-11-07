@@ -6,11 +6,6 @@ $roleNames = [
     'bencab' => 'Bendahara Cabang',
     'sekfung_medko' => 'Sekfung Medko',
 ];
-$coordinationPath = match ($role) {
-    'admin' => '/admin/koordinasi',
-    'ketcab' => '/ketcab/koordinasi',
-    default => '/ruang-kerja/koordinasi',
-};
 $navigation = [
     'ketcab' => [
         ['Pusat Pengawasan', [
@@ -87,13 +82,6 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
                 </li>
             <?php endforeach; ?>
         <?php endforeach; ?>
-        <li class="nav-category">Koordinasi BPC</li>
-        <li class="sidebar-nav-item">
-            <a href="<?= e($coordinationPath) ?>" class="sidebar-nav-link <?= str_contains($currentPath, '/koordinasi') ? 'active' : '' ?> flex items-center gap-2">
-                <span class="sidebar-nav-icon flex items-center justify-center text-base"><i class="bi bi-chat-dots-fill"></i></span>
-                <span>Chat Koordinasi</span>
-            </a>
-        </li>
         <li class="sidebar-nav-item" style="margin-top:1.5rem;border-top:1px solid rgba(255,255,255,.08);padding-top:1rem;">
             <a href="/ubah-password" class="sidebar-nav-link flex items-center gap-2">
                 <span class="sidebar-nav-icon flex items-center justify-center text-base"><i class="bi bi-shield-lock-fill"></i></span>

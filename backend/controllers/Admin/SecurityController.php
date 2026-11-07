@@ -129,18 +129,143 @@ class SecurityController
     {
         Authorization::authorize('security.threats');
 
-        $page = (int)$request->query('page', 1);
-        $threatData = $this->securityService->getThreatsList($page, 25);
+        $page = max(1, (int)$request->query('page', 1));
+        $q = trim((string)$request->query('q', ''));
+        $severity = trim((string)$request->query('severity', ''));
+        $status = trim((string)$request->query('status', ''));
+
+        $filters = array_filter([
+            'q' => $q,
+            'severity' => $severity,
+            'status' => $status,
+        ]);
+
+        $threatData = $this->securityService->getThreatsList($page, 25, $filters);
         $healthChecks = $this->securityService->getSecurityHealth();
+        $summary = $this->securityService->getSummaryStats();
+
+        $okCount = 0;
+        $openGaps = 0;
+        foreach ($healthChecks as $chk) {
+            if (($chk['status'] ?? '') === 'ok') {
+                $okCount++;
+            } else {
+                $openGaps++;
+            }
+        }
+        $securityScore = (int)round(($okCount / max(1, count($healthChecks))) * 100);
 
         return view('admin.keamanan.ancaman', [
-            'pageTitle' => 'Deteksi Ancaman & Kesehatan Sistem - GMKI Cabang Padang',
+            'pageTitle' => 'Deteksi Ancaman, WAF & Auto-Hardening - GMKI Cabang Padang',
             'threats' => $threatData['data'],
             'total' => $threatData['total'],
             'currentPage' => $threatData['current_page'],
             'totalPages' => $threatData['total_pages'],
             'healthChecks' => $healthChecks,
+            'summary' => $summary,
+            'securityScore' => $securityScore,
+            'openGaps' => $openGaps,
+            'searchQuery' => $q,
+            'selectedSeverity' => $severity,
+            'selectedStatus' => $status,
         ], 'admin');
+    }
+
+    /**
+     * Eksekusi Perbaikan Langsung & Penutupan Celah Keamanan (One-Click Auto-Remediation)
+     */
+    public function autoFix(Request $request): Response
+    {
+        Authorization::authorize('security.threats');
+
+        $target = trim((string)$request->input('target', 'all'));
+        $actions = $this->securityService->autoFixVulnerabilities($target);
+
+        if (!empty($actions)) {
+            Session::flash('success', 'Perbaikan Langsung & Penutupan Celah Berhasil: ' . implode(' | ', $actions));
+        } else {
+            Session::flash('success', 'Seluruh lapisan keamanan telah diverifikasi dan berada dalam kondisi tertutup aman.');
+        }
+
+        redirect('/admin/keamanan/ancaman');
+    }
+
+    /**
+     * Jalankan Pemindaian Mendalam (Deep Security & WebShell Scan)
+     */
+    public function deepScan(Request $request): Response
+    {
+        Authorization::authorize('security.threats');
+
+        $report = $this->securityService->runDeepSecurityScan();
+        $suspiciousCount = count($report['suspicious_files'] ?? []);
+        $unprotectedCount = count($report['unprotected_dirs'] ?? []);
+
+        if ($suspiciousCount === 0 && $unprotectedCount === 0) {
+            Session::flash('success', "Pemindaian Mendalam Selesai ({$report['scanned_at']}): Skor Keamanan {$report['score']}% ({$report['passed_checks']}/{$report['total_checks']} perisai lulus). Tidak ditemukan backdoor PHP2Shell atau berkas berbahaya.");
+        } else {
+            Session::flash('error', "Pemindaian Mendalam menemukan {$suspiciousCount} berkas mencurigakan dan {$unprotectedCount} direktori belum terproteksi. Klik 'Perbaiki & Tutup Seluruh Celah' untuk memitigasi otomatis!");
+        }
+
+        redirect('/admin/keamanan/ancaman');
+    }
+
+    /**
+     * Blokir / Karantina alamat IP penyerang ke daftar hitam WAF
+     */
+    public function blockIp(Request $request): Response
+    {
+        Authorization::authorize('security.threats');
+
+        $ip = trim((string)$request->input('ip_address', ''));
+        $reason = trim((string)$request->input('reason', 'Diblokir dari konsol Deteksi Ancaman'));
+
+        if ($ip === '' || !filter_var($ip, FILTER_VALIDATE_IP)) {
+            Session::flash('error', 'Format alamat IP tidak valid.');
+            redirect('/admin/keamanan/ancaman');
+        }
+
+        if (in_array($ip, ['127.0.0.1', '::1'], true)) {
+            Session::flash('error', 'Alamat IP localhost (loopback) tidak dapat dimasukkan ke daftar hitam.');
+            redirect('/admin/keamanan/ancaman');
+        }
+
+        if ($this->securityService->blockAttackerIp($ip, $reason)) {
+            Session::flash('success', "Alamat IP {$ip} berhasil dikunci dalam daftar hitam (IPS Blacklist) WAF.");
+        } else {
+            Session::flash('error', "Gagal memblokir alamat IP {$ip}.");
+        }
+
+        redirect('/admin/keamanan/ancaman');
+    }
+
+    /**
+     * Buka blokir alamat IP dari daftar hitam WAF
+     */
+    public function unblockIp(Request $request): Response
+    {
+        Authorization::authorize('security.threats');
+
+        $ip = trim((string)$request->input('ip_address', ''));
+        if ($ip !== '' && $this->securityService->unblockAttackerIp($ip)) {
+            Session::flash('success', "Alamat IP {$ip} telah dihapus dari daftar hitam WAF.");
+        } else {
+            Session::flash('error', "Gagal membuka blokir alamat IP {$ip}.");
+        }
+
+        redirect('/admin/keamanan/ancaman');
+    }
+
+    /**
+     * Tandai seluruh insiden ancaman sebagai selesai dimitigasi
+     */
+    public function resolveAll(Request $request): Response
+    {
+        Authorization::authorize('security.threats');
+
+        $this->securityService->resolveAllThreats();
+        Session::flash('success', 'Seluruh catatan insiden ancaman telah ditandai selesai dimitigasi.');
+        redirect('/admin/keamanan/ancaman');
     }
 
     /**
@@ -151,7 +276,19 @@ class SecurityController
         Authorization::authorize('security.threats');
 
         $this->securityService->resolveThreat((int)$id);
-        Session::flash('success', 'Status ancaman telah diperbarui menjadi Terselesaikan.');
+        Session::flash('success', 'Status ancaman #' . (int)$id . ' telah diperbarui menjadi Terselesaikan.');
+        redirect('/admin/keamanan/ancaman');
+    }
+
+    /**
+     * Hapus catatan insiden ancaman dari log
+     */
+    public function deleteAncaman(Request $request, string $id): Response
+    {
+        Authorization::authorize('security.threats');
+
+        $this->securityService->deleteThreat((int)$id);
+        Session::flash('success', 'Catatan insiden ancaman #' . (int)$id . ' berhasil dihapus.');
         redirect('/admin/keamanan/ancaman');
     }
 

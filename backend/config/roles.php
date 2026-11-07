@@ -37,8 +37,6 @@ return [
             'backup.view',
             'backup.create',
             'backup.download',
-            'coordination.view',
-            'coordination.manage',
         ],
         'operator' => [
             'dashboard.view',
@@ -61,8 +59,6 @@ return [
             'statistics.view',
             'reports.view',
             'reports.download',
-            'coordination.view',
-            'coordination.manage',
             'strategy.view',
             'strategy.manage',
             'security.audit_log',
@@ -75,8 +71,6 @@ return [
             'inventory.manage',
             'archive.view',
             'archive.manage',
-            'coordination.view',
-            'coordination.manage',
             'statistics.view',
         ],
         'bencab' => [
@@ -84,8 +78,6 @@ return [
             'finance.view',
             'finance.manage',
             'reports.download',
-            'coordination.view',
-            'coordination.manage',
         ],
         'sekfung_medko' => [
             'dashboard.view',
@@ -95,8 +87,6 @@ return [
             'news.delete',
             'statistics.view',
             'reports.download',
-            'coordination.view',
-            'coordination.manage',
         ],
     ],
 ];

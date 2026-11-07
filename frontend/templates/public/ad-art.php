@@ -2983,8 +2983,7 @@ if (!defined('GMKI_SECURE_ACCESS')) {
                     <div id="po-pasal-1" class="ad-card p-6 sm:p-8" data-searchable>
                         <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-100">
                             <div class="flex items-center gap-3">
-                                <span class="px-2.5 py-1 rounded-md bg-blue-800 text-white text-xs font-extrabold">PO
-                                    PASAL 1</span>
+                                <span class="px-2.5 py-1 rounded-md bg-blue-800 text-white text-xs font-extrabold">PO PASAL 1</span>
                                 <h3 class="text-lg sm:text-xl font-bold text-slate-900">Ketentuan Umum</h3>
                             </div>
                             <button type="button" onclick="copyPasalLink('po-pasal-1')"
@@ -2993,14 +2992,10 @@ if (!defined('GMKI_SECURE_ACCESS')) {
                                 <span>🔗</span>
                             </button>
                         </div>
-                        <ol
-                            class="list-decimal list-inside space-y-2 text-slate-700 text-sm sm:text-base leading-relaxed">
-                            <li><strong>Pengertian Peraturan Organisasi:</strong> Peraturan yang mengatur serta mengikat
-                                semua anggota dan alat perlengkapan organisasi termasuk mekanisme kerjanya yang belum
-                                diatur dalam AD/ART dan Keputusan Kongres.</li>
-                            <li><strong>Fungsi Peraturan Organisasi:</strong> Memberikan keseragaman interpretasi
-                                terhadap konstitusi organisasi sehingga terwujud pemerataan tindak kerja seluruh aparat
-                                organisasi sesuai aturan konstitusi.</li>
+                        <ol class="list-decimal list-inside space-y-2.5 text-slate-700 text-sm sm:text-base leading-relaxed font-sacred">
+                            <li><strong>Pengertian tentang Peraturan Organisasi GMKI</strong> adalah suatu peraturan yang mengatur serta mengikat semua anggota dan alat perlengkapan organisasi termasuk mekanisme kerjanya yang belum diatur dalam Anggaran Dasar/Anggaran Rumah Tangga GMKI dan Keputusan Kongres.</li>
+                            <li><strong>Fungsi Peraturan Organisasi GMKI</strong> adalah untuk memberikan keseragaman interpretasi terhadap konstitusi organisasi. Sehingga terwujud pemerataan tindak kerja seluruh aparat organisasi. Sesuai dengan aturan-aturan dalam konstitusi organisasi.</li>
+                            <li><strong>Peraturan Organisasi ini</strong> adalah keputusan Pengurus Pusat.</li>
                         </ol>
                     </div>
 
@@ -3008,10 +3003,8 @@ if (!defined('GMKI_SECURE_ACCESS')) {
                     <div id="po-pasal-2" class="ad-card p-6 sm:p-8" data-searchable>
                         <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-100">
                             <div class="flex items-center gap-3">
-                                <span class="px-2.5 py-1 rounded-md bg-blue-800 text-white text-xs font-extrabold">PO
-                                    PASAL 2</span>
-                                <h3 class="text-lg sm:text-xl font-bold text-slate-900">Keanggotaan & Prosedur
-                                    Penerimaan</h3>
+                                <span class="px-2.5 py-1 rounded-md bg-blue-800 text-white text-xs font-extrabold">PO PASAL 2</span>
+                                <h3 class="text-lg sm:text-xl font-bold text-slate-900">Keanggotaan</h3>
                             </div>
                             <button type="button" onclick="copyPasalLink('po-pasal-2')"
                                 class="text-slate-400 hover:text-slate-600 text-xs flex items-center gap-1"
@@ -3019,34 +3012,68 @@ if (!defined('GMKI_SECURE_ACCESS')) {
                                 <span>🔗</span>
                             </button>
                         </div>
-                        <div class="space-y-4 text-slate-700 text-sm sm:text-base leading-relaxed">
+                        <div class="space-y-5 text-slate-700 text-sm sm:text-base leading-relaxed font-sacred">
                             <div>
-                                <strong class="text-slate-900 block mb-1">1. Anggota Biasa :</strong>
-                                <ul class="list-disc list-inside pl-3 space-y-1 text-slate-700">
-                                    <li>Diterima oleh BPC melalui <strong>Masa Perkenalan (Maper)</strong>.</li>
-                                    <li>Wajib menandatangani formulir kesediaan menerima Visi & Misi serta menjalankan
-                                        Usaha Organisasi.</li>
-                                    <li>Bila kondisi Cabang belum memungkinkan, Pengurus Pusat dapat mengambil peran
-                                        proses penerimaan.</li>
-                                    <li>Dapat pindah ke cabang lain dengan menunjukkan Surat Keterangan Pindah dari
-                                        Cabang asal.</li>
-                                </ul>
+                                <h4 class="font-bold text-slate-900 text-base mb-2 flex items-center gap-2">
+                                    <span class="w-6 h-6 rounded-full bg-blue-100 text-blue-900 font-extrabold flex items-center justify-center text-xs">1</span>
+                                    <span>Anggota Biasa:</span>
+                                </h4>
+                                <ol class="list-none space-y-2 pl-4 sm:pl-8 text-slate-700">
+                                    <li class="flex items-start gap-2.5">
+                                        <span class="font-bold text-slate-900 shrink-0">a.</span>
+                                        <span>Anggota Biasa diterima oleh Badan Pengurus Cabang melalui Masa Perkenalan.</span>
+                                    </li>
+                                    <li class="flex items-start gap-2.5">
+                                        <span class="font-bold text-slate-900 shrink-0">b.</span>
+                                        <span>Anggota Biasa yang diterima ialah mereka yang mengikuti acara Masa Perkenalan yang kriterianya diatur oleh Badan Pengurus Cabang.</span>
+                                    </li>
+                                    <li class="flex items-start gap-2.5">
+                                        <span class="font-bold text-slate-900 shrink-0">c.</span>
+                                        <span>Anggota Biasa yang diterima diwajibkan untuk menandatangani formulir kesediaan menjadi anggota GMKI dengan menerima Visi dan Misi serta bersedia menjalankan Usaha Organisasi.</span>
+                                    </li>
+                                    <li class="flex items-start gap-2.5">
+                                        <span class="font-bold text-slate-900 shrink-0">d.</span>
+                                        <span>Pengurus Pusat menerbitkan Petunjuk Pelaksanaan Masa Perkenalan sebagai pedoman penerimaan anggota biasa.</span>
+                                    </li>
+                                </ol>
                             </div>
-                            <div>
-                                <strong class="text-slate-900 block mb-1">2. Anggota Luar Biasa :</strong>
-                                <p>Bekas Anggota Biasa otomatis menjadi Anggota Luar Biasa. Pendaftar lainnya mengajukan
-                                    permohonan tertulis ke BPC.</p>
+
+                            <div class="pt-3 border-t border-slate-100">
+                                <h4 class="font-bold text-slate-900 text-base mb-2 flex items-center gap-2">
+                                    <span class="w-6 h-6 rounded-full bg-blue-100 text-blue-900 font-extrabold flex items-center justify-center text-xs">4</span>
+                                    <span>Anggota Penyokong:</span>
+                                </h4>
+                                <ol class="list-none space-y-2 pl-4 sm:pl-8 text-slate-700">
+                                    <li class="flex items-start gap-2.5">
+                                        <span class="font-bold text-slate-900 shrink-0">a.</span>
+                                        <span>Anggota Penyokong GMKI tidak pernah menjadi anggota biasa GMKI.</span>
+                                    </li>
+                                    <li class="flex items-start gap-2.5">
+                                        <span class="font-bold text-slate-900 shrink-0">b.</span>
+                                        <span>Anggota Penyokong dalam memberikan bantuan sifatnya tidak mengikat organisasi.</span>
+                                    </li>
+                                    <li class="flex items-start gap-2.5">
+                                        <span class="font-bold text-slate-900 shrink-0">c.</span>
+                                        <span>Apabila dalam tiga kali jadwal yang sudah ditentukan, Anggota Penyokong tidak memberikan bantuannya kepada organisasi tanpa alasan yang jelas maka Badan Pengurus Cabang dapat membebaskan status keanggotaannya.</span>
+                                    </li>
+                                </ol>
                             </div>
-                            <div>
-                                <strong class="text-slate-900 block mb-1">3. Anggota Kehormatan & Penyokong :</strong>
-                                <p>WNI tokoh nasional/gerejawi yang berjasa besar diusulkan tertulis oleh BPC ke PP.
-                                    Anggota penyokong tidak pernah menjadi anggota biasa dan bantuannya tidak mengikat
-                                    organisasi.</p>
-                            </div>
-                            <div>
-                                <strong class="text-slate-900 block mb-1">4. Daftar Anggota :</strong>
-                                <p>Wajib diserahkan BPC ke PP sekurang-kurangnya menjelaskan nama anggota, status
-                                    kemahasiswaan (asal kampus, jurusan/departemen, fakultas), dan tahun penerimaan.</p>
+
+                            <div class="pt-3 border-t border-slate-100">
+                                <h4 class="font-bold text-slate-900 text-base mb-2 flex items-center gap-2">
+                                    <span class="w-6 h-6 rounded-full bg-blue-100 text-blue-900 font-extrabold flex items-center justify-center text-xs">5</span>
+                                    <span>Daftar Anggota:</span>
+                                </h4>
+                                <ol class="list-none space-y-2 pl-4 sm:pl-8 text-slate-700">
+                                    <li class="flex items-start gap-2.5">
+                                        <span class="font-bold text-slate-900 shrink-0">a.</span>
+                                        <span><strong>Daftar Anggota</strong> yang wajib diserahkan Badan Pengurus Cabang kepada Pengurus Pusat adalah Daftar Anggota, yang sekurang-kurangnya menjelaskan tentang nama anggota, status kemahasiswaan (asal perguruan tinggi, jurusan/departemen dan fakultas) dan tahun penerimaannya sebagai anggota GMKI.</span>
+                                    </li>
+                                    <li class="flex items-start gap-2.5">
+                                        <span class="font-bold text-slate-900 shrink-0">b.</span>
+                                        <span>Apabila dalam waktu tiga bulan sebelum Kongres, Badan Pengurus Cabang tidak menyerahkan daftar anggotanya, maka Pengurus Pusat dapat memutuskan jumlah utusan Cabang untuk menghadiri Kongres.</span>
+                                    </li>
+                                </ol>
                             </div>
                         </div>
                     </div>
@@ -3055,10 +3082,8 @@ if (!defined('GMKI_SECURE_ACCESS')) {
                     <div id="po-pasal-3" class="ad-card p-6 sm:p-8" data-searchable>
                         <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-100">
                             <div class="flex items-center gap-3">
-                                <span class="px-2.5 py-1 rounded-md bg-blue-800 text-white text-xs font-extrabold">PO
-                                    PASAL 3</span>
-                                <h3 class="text-lg sm:text-xl font-bold text-slate-900">Pengurus Pusat & Tahapan Kongres
-                                </h3>
+                                <span class="px-2.5 py-1 rounded-md bg-blue-800 text-white text-xs font-extrabold">PO PASAL 3</span>
+                                <h3 class="text-lg sm:text-xl font-bold text-slate-900">Pengurus Pusat</h3>
                             </div>
                             <button type="button" onclick="copyPasalLink('po-pasal-3')"
                                 class="text-slate-400 hover:text-slate-600 text-xs flex items-center gap-1"
@@ -3066,26 +3091,59 @@ if (!defined('GMKI_SECURE_ACCESS')) {
                                 <span>🔗</span>
                             </button>
                         </div>
-                        <p class="text-slate-700 text-sm mb-3">Pengurus Pusat bertugas mempersiapkan Kongres dengan
-                            tahapan:</p>
-                        <ul class="list-disc list-inside space-y-1.5 text-slate-700 text-xs sm:text-sm pl-2">
-                            <li>Membentuk dan melantik Panitia Nasional Kongres GMKI.</li>
-                            <li>Menyampaikan waktu pelaksanaan & batas daftar anggota selambat-lambatnya <strong>4
-                                    bulan</strong> sebelum Kongres.</li>
-                            <li>Memanggil Cabang selambat-lambatnya <strong>2 bulan</strong> sebelum Kongres.</li>
-                            <li>Mempersiapkan rancangan dokumen & Laporan Umum Pengurus Pusat.</li>
-                            <li>Membuka Persidangan Kongres dan memimpin pemilihan Majelis Ketua.</li>
-                            <li>Serah Terima PP dilaksanakan selengkap-lengkapnya termasuk inventarisasi kekayaan.</li>
-                        </ul>
+                        <div class="space-y-4 text-slate-700 text-sm sm:text-base leading-relaxed font-sacred">
+                            <div>
+                                <h4 class="font-bold text-slate-900 text-base mb-2">1. Pengurus Pusat bertugas mempersiapkan Kongres dengan tahapan sebagai berikut:</h4>
+                                <ol class="list-none space-y-2 pl-4 sm:pl-8 text-slate-700">
+                                    <li class="flex items-start gap-2.5">
+                                        <span class="font-bold text-slate-900 shrink-0">a.</span>
+                                        <span>Membentuk dan Melantik Panitia Nasional Kongres GMKI.</span>
+                                    </li>
+                                    <li class="flex items-start gap-2.5">
+                                        <span class="font-bold text-slate-900 shrink-0">b.</span>
+                                        <span>Menyampaikan waktu pelaksanaan Kongres dan batas waktu penyampaian daftar anggota kepada Cabang-Cabang selambat-lambatnya empat bulan sebelum Kongres.</span>
+                                    </li>
+                                    <li class="flex items-start gap-2.5">
+                                        <span class="font-bold text-slate-900 shrink-0">c.</span>
+                                        <span>Menetapkan jumlah utusan Cabang yang akan menghadiri Kongres.</span>
+                                    </li>
+                                    <li class="flex items-start gap-2.5">
+                                        <span class="font-bold text-slate-900 shrink-0">d.</span>
+                                        <span>Memanggil Cabang untuk menghadiri Kongres. Selambat-lambatnya dua bulan sebelum Kongres.</span>
+                                    </li>
+                                    <li class="flex items-start gap-2.5">
+                                        <span class="font-bold text-slate-900 shrink-0">e.</span>
+                                        <span>Mempersiapkan rancangan-rancangan yang diperlukan untuk pelaksanaan Kongres.</span>
+                                    </li>
+                                    <li class="flex items-start gap-2.5">
+                                        <span class="font-bold text-slate-900 shrink-0">f.</span>
+                                        <span>Mempersiapkan Laporan Umum Pengurus Pusat.</span>
+                                    </li>
+                                    <li class="flex items-start gap-2.5">
+                                        <span class="font-bold text-slate-900 shrink-0">g.</span>
+                                        <span>Membuka dan memimpin persidangan kongres sampai pemilihan Majelis Ketua.</span>
+                                    </li>
+                                    <li class="flex items-start gap-2.5">
+                                        <span class="font-bold text-slate-900 shrink-0">h.</span>
+                                        <span>Memimpin Pemilihan Majelis Ketua berdasarkan Tata Cara Pemilihan Majelis Ketua yang ditetapkan di forum Kongres.</span>
+                                    </li>
+                                </ol>
+                            </div>
+                            <p class="pt-3 border-t border-slate-100">
+                                <strong>2.</strong> Anggota GMKI yang menghadiri Kongres tapi bukan utusan cabang dapat ditetapkan oleh Pengurus Pusat sebagai undangan dengan persyaratan yang ditetapkan oleh Pengurus Pusat.
+                            </p>
+                            <p class="pt-3 border-t border-slate-100">
+                                <strong>3.</strong> Serah Terima Pengurus Pusat dilaksanakan selengkap-lengkapnya termasuk inventarisasi kekayaan organisasi.
+                            </p>
+                        </div>
                     </div>
 
                     <!-- Pasal 4 PO -->
                     <div id="po-pasal-4" class="ad-card p-6 sm:p-8" data-searchable>
                         <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-100">
                             <div class="flex items-center gap-3">
-                                <span class="px-2.5 py-1 rounded-md bg-blue-800 text-white text-xs font-extrabold">PO
-                                    PASAL 4</span>
-                                <h3 class="text-lg sm:text-xl font-bold text-slate-900">Konperensi Cabang & Kuorum</h3>
+                                <span class="px-2.5 py-1 rounded-md bg-blue-800 text-white text-xs font-extrabold">PO PASAL 4</span>
+                                <h3 class="text-lg sm:text-xl font-bold text-slate-900">Konperensi Cabang</h3>
                             </div>
                             <button type="button" onclick="copyPasalLink('po-pasal-4')"
                                 class="text-slate-400 hover:text-slate-600 text-xs flex items-center gap-1"
@@ -3093,18 +3151,109 @@ if (!defined('GMKI_SECURE_ACCESS')) {
                                 <span>🔗</span>
                             </button>
                         </div>
-                        <div class="space-y-3 text-slate-700 text-sm sm:text-base leading-relaxed">
-                            <p><strong>1.</strong> Konpercab berlangsung sekurang-kurangnya 1 kali dalam 2 tahun.</p>
-                            <p><strong>2. Pelaksanaan:</strong> BPC mengundang anggota mendaftar selambat-lambatnya 1
-                                bulan sebelum Konpercab. Jumlah peserta sekurang-kurangnya <strong>2/3</strong> dari
-                                pendaftar dan hadir <strong>minimal 25 orang</strong>.</p>
-                            <p><strong>3. Cabang Berkomisariat:</strong> Sah bila dihadiri sekurang-kurangnya <strong>½
-                                    n + 1</strong> jumlah komisariat dan utusan komisariat.</p>
-                            <p><strong>4. Perubahan Masa Kerja:</strong> Harus melalui pengkajian objektif dan
-                                disepakati <strong>2/3</strong> peserta Konpercab.</p>
-                            <p><strong>5. Permintaan Anggota:</strong> Konpercab dapat diselenggarakan atas permintaan
-                                anggota apabila BPC menyimpang dari asas/visi/misi atau keputusan organisasi (ditentukan
-                                oleh PP).</p>
+                        <div class="space-y-4 text-slate-700 text-sm sm:text-base leading-relaxed font-sacred">
+                            <p><strong>1.</strong> Konperensi Cabang berlangsung sekurang-kurangnya satu kali dalam dua tahun.</p>
+
+                            <div class="pt-3 border-t border-slate-100">
+                                <h4 class="font-bold text-slate-900 text-base mb-2">2. Pelaksanaan Konperensi Cabang:</h4>
+                                <ol class="list-none space-y-2 pl-4 sm:pl-8 text-slate-700">
+                                    <li class="flex items-start gap-2.5">
+                                        <span class="font-bold text-slate-900 shrink-0">a.</span>
+                                        <span>Badan Pengurus Cabang mengundang anggota untuk mendaftarkan diri sebagai peserta Konperensi Cabang selambat-lambatnya satu bulan sebelum Konperensi Cabang.</span>
+                                    </li>
+                                    <li class="flex items-start gap-2.5">
+                                        <span class="font-bold text-slate-900 shrink-0">b.</span>
+                                        <span>Konperensi Cabang sah berlangsung jika dihadiri sekurang-kurangnya 25 (dua puluh lima) orang dari yang mendaftarkan diri pada Badan Pengurus Cabang dan yang hadir mengikuti seluruh agenda persidangan adalah sekurang-kurangnya 25 orang dari yang telah ditetapkan sebagai peserta persidangan Konperensi Cabang.</span>
+                                    </li>
+                                    <li class="flex items-start gap-2.5">
+                                        <span class="font-bold text-slate-900 shrink-0">c.</span>
+                                        <span>Pendaftaran ditutup selambat-lambatnya sebelum pengesahan Konperensi Cabang.</span>
+                                    </li>
+                                </ol>
+                            </div>
+
+                            <div class="pt-3 border-t border-slate-100">
+                                <h4 class="font-bold text-slate-900 text-base mb-2">3. Pelaksanaan Konperensi Cabang yang memiliki Komisariat adalah sebagai berikut:</h4>
+                                <ol class="list-none space-y-2 pl-4 sm:pl-8 text-slate-700">
+                                    <li class="flex items-start gap-2.5">
+                                        <span class="font-bold text-slate-900 shrink-0">a.</span>
+                                        <span>Konperensi Cabang berlangsung atas panggilan Badan Pengurus Cabang atau atas permintaan sekurang-kurangnya dua pertiga dari jumlah anggota biasa yang disalurkan dan disetujui Pengurus Komisariat.</span>
+                                    </li>
+                                    <li class="flex items-start gap-2.5">
+                                        <span class="font-bold text-slate-900 shrink-0">b.</span>
+                                        <span>Konperensi Cabang sah berlangsung jika dihadiri oleh sekurang-kurangnya 25 (dua puluh lima) orang dari utusan komisariat yang mendaftarkan diri pada Badan Pengurus Cabang dan yang hadir mengikuti seluruh agenda persidangan adalah sekurang-kurangnya 25 orang dari yang telah ditetapkan sebagai peserta persidangan Konperensi Cabang.</span>
+                                    </li>
+                                    <li class="flex items-start gap-2.5">
+                                        <span class="font-bold text-slate-900 shrink-0">c.</span>
+                                        <span>Badan Pengurus Cabang mengundang Komisariat untuk mendaftarkan diri sebagai peserta Konperensi Cabang.</span>
+                                    </li>
+                                    <li class="flex items-start gap-2.5">
+                                        <span class="font-bold text-slate-900 shrink-0">d.</span>
+                                        <span>Konperensi Cabang berlangsung sah apabila dihadiri sekurang-kurangnya setengah ditambah satu jumlah komisariat. Dan sekurang-kurangnya setengah ditambah satu jumlah utusan komisariat.</span>
+                                    </li>
+                                    <li class="flex items-start gap-2.5">
+                                        <span class="font-bold text-slate-900 shrink-0">e.</span>
+                                        <span>Ketentuan tentang kehadiran anggota sebagai perwakilan tiap komisariat atau utusan komisariat dalam Konperensi Cabang diatur oleh Cabang yang bersangkutan.</span>
+                                    </li>
+                                    <li class="flex items-start gap-2.5">
+                                        <span class="font-bold text-slate-900 shrink-0">f.</span>
+                                        <span>Pendaftaran bagi komisariat ditutup selambat-lambatnya sebelum pengesahan Konperensi Cabang.</span>
+                                    </li>
+                                </ol>
+                            </div>
+
+                            <div class="pt-3 border-t border-slate-100">
+                                <h4 class="font-bold text-slate-900 text-base mb-2">4. Perubahan masa kerja kepengurusan:</h4>
+                                <ol class="list-none space-y-2 pl-4 sm:pl-8 text-slate-700">
+                                    <li class="flex items-start gap-2.5">
+                                        <span class="font-bold text-slate-900 shrink-0">a.</span>
+                                        <span>Perubahan masa kerja kepengurusan harus melalui proses pengkajian yang mendalam terhadap kondisi obyektif cabang oleh Badan Pengurus Cabang dan usulan perubahan disampaikan kepada anggota atau komisariat dan Pengurus Pusat selambat-lambatnya satu bulan sebelum Konperensi Cabang.</span>
+                                    </li>
+                                    <li class="flex items-start gap-2.5">
+                                        <span class="font-bold text-slate-900 shrink-0">b.</span>
+                                        <span>Keputusan pengesahan perubahan masa kerja kepengurusan harus disepakati 2/3 jumlah peserta Konperensi Cabang.</span>
+                                    </li>
+                                </ol>
+                            </div>
+
+                            <div class="pt-3 border-t border-slate-100">
+                                <h4 class="font-bold text-slate-900 text-base mb-2">5. Persidangan Konperensi Cabang:</h4>
+                                <ol class="list-none space-y-2 pl-4 sm:pl-8 text-slate-700">
+                                    <li class="flex items-start gap-2.5">
+                                        <span class="font-bold text-slate-900 shrink-0">a.</span>
+                                        <span>Badan Pengurus Cabang membuka Persidangan Konperensi Cabang dan memimpin pemilihan Majelis Ketua.</span>
+                                    </li>
+                                    <li class="flex items-start gap-2.5">
+                                        <span class="font-bold text-slate-900 shrink-0">b.</span>
+                                        <span>Konperensi Cabang dipimpin oleh Majelis Ketua yang terdiri dari unsur Badan Pengurus Cabang dan peserta yang dipilih oleh Konperensi Cabang.</span>
+                                    </li>
+                                    <li class="flex items-start gap-2.5">
+                                        <span class="font-bold text-slate-900 shrink-0">c.</span>
+                                        <span>Unsur Badan Pengurus Cabang ditunjuk oleh Badan Pengurus Cabang dan ditetapkan oleh Konperensi Cabang.</span>
+                                    </li>
+                                </ol>
+                            </div>
+
+                            <div class="pt-3 border-t border-slate-100">
+                                <h4 class="font-bold text-slate-900 text-base mb-2">6. Konperensi Cabang berlangsung atas permintaan anggota/komisariat apabila:</h4>
+                                <ol class="list-none space-y-2 pl-4 sm:pl-8 text-slate-700">
+                                    <li class="flex items-start gap-2.5">
+                                        <span class="font-bold text-slate-900 shrink-0">a.</span>
+                                        <span>Badan Pengurus Cabang dalam menjalankan usaha-usaha organisasi telah menyimpang dari asas, visi dan misi organisasi.</span>
+                                    </li>
+                                    <li class="flex items-start gap-2.5">
+                                        <span class="font-bold text-slate-900 shrink-0">b.</span>
+                                        <span>Badan Pengurus Cabang telah menyimpang dari keputusan Kongres, Keputusan Pengurus Pusat dan Keputusan Konperensi Cabang.</span>
+                                    </li>
+                                </ol>
+                            </div>
+
+                            <p class="pt-3 border-t border-slate-100">
+                                <strong>7.</strong> Konperensi Cabang atas permintaan anggota/komisariat ditentukan oleh Pengurus Pusat.
+                            </p>
+                            <p class="pt-3 border-t border-slate-100">
+                                <strong>8.</strong> Konferensi Cabang harus dihadiri Pengurus Pusat atau yang telah diberi mandat oleh Pengurus Pusat.
+                            </p>
                         </div>
                     </div>
 
@@ -3112,10 +3261,8 @@ if (!defined('GMKI_SECURE_ACCESS')) {
                     <div id="po-pasal-5" class="ad-card p-6 sm:p-8" data-searchable>
                         <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-100">
                             <div class="flex items-center gap-3">
-                                <span class="px-2.5 py-1 rounded-md bg-blue-800 text-white text-xs font-extrabold">PO
-                                    PASAL 5</span>
-                                <h3 class="text-lg sm:text-xl font-bold text-slate-900">Badan Pengurus Cabang,
-                                    Pelantikan & Larangan Rangkap Jabatan</h3>
+                                <span class="px-2.5 py-1 rounded-md bg-blue-800 text-white text-xs font-extrabold">PO PASAL 5</span>
+                                <h3 class="text-lg sm:text-xl font-bold text-slate-900">Badan Pengurus Cabang</h3>
                             </div>
                             <button type="button" onclick="copyPasalLink('po-pasal-5')"
                                 class="text-slate-400 hover:text-slate-600 text-xs flex items-center gap-1"
@@ -3123,24 +3270,94 @@ if (!defined('GMKI_SECURE_ACCESS')) {
                                 <span>🔗</span>
                             </button>
                         </div>
-                        <div class="space-y-3 text-slate-700 text-sm sm:text-base leading-relaxed">
-                            <p><strong>1. Pelantikan & Serah Terima:</strong> BPC dilantik oleh Pengurus Pusat (atau
-                                mandataris yang ditunjuk). Naskah serah terima ditulis di atas kertas bermeterai
-                                ditandatangani unsur demisioner, terpilih, dan saksi.</p>
-                            <p><strong>2. Pergantian Antar Waktu (PAW):</strong> Fungsionaris yang meninggal,
-                                berhalangan tetap, mengundurkan diri, atau melanggar aturan dapat di-PAW atas
-                                persetujuan Pengurus Pusat.</p>
-                            <div class="p-3 bg-red-50 rounded-xl border border-red-200 text-red-900 text-xs sm:text-sm">
-                                <strong>⚠️ Larangan Rangkap Jabatan:</strong><br>
-                                • Seluruh fungsionaris BPC <strong>tidak diperkenankan</strong> rangkap jabatan di dalam
-                                organisasi.<br>
-                                • Penanggung jawab Cabang (Ketua/Sekretaris) <strong>tidak diperkenankan</strong>
-                                rangkap jabatan di luar organisasi.
+                        <div class="space-y-4 text-slate-700 text-sm sm:text-base leading-relaxed font-sacred">
+                            <p><strong>1.</strong> Badan Pengurus Cabang mempersiapkan tugas-tugas Konperensi Cabang dan menetapkan waktu pelaksanaan Konperensi Cabang.</p>
+
+                            <div class="pt-3 border-t border-slate-100">
+                                <h4 class="font-bold text-slate-900 text-base mb-2">2. Pelantikan dan serah terima Badan Pengurus Cabang:</h4>
+                                <ol class="list-none space-y-2 pl-4 sm:pl-8 text-slate-700">
+                                    <li class="flex items-start gap-2.5">
+                                        <span class="font-bold text-slate-900 shrink-0">a.</span>
+                                        <span>Badan Pengurus Cabang dilantik oleh Pengurus Pusat, atau mandataris yang ditunjuk oleh Pengurus Pusat.</span>
+                                    </li>
+                                    <li class="flex items-start gap-2.5">
+                                        <span class="font-bold text-slate-900 shrink-0">b.</span>
+                                        <span>Naskah serah terima ditulis diatas kertas bermeterai dan ditandatangani oleh Badan Pengurus Cabang Demisioner, Badan Pengurus Cabang terpilih, dan Pengurus Pusat sebagai saksi.</span>
+                                    </li>
+                                    <li class="flex items-start gap-2.5">
+                                        <span class="font-bold text-slate-900 shrink-0">c.</span>
+                                        <span>Badan Pengurus Demisioner tetap bertanggung jawab sampai dilakukan serah terima.</span>
+                                    </li>
+                                </ol>
                             </div>
-                            <p><strong>3. CareTaker:</strong> Pengurus Pusat berhak menunjuk Caretaker jika kalender
-                                konstitusi berakhir sebelum Konpercab atau BPC menyimpang.</p>
-                            <p><strong>4. Pernyataan Sikap:</strong> BPC hanya mengeluarkan sikap dalam ruang lingkup
-                                lokal medan layanannya dan wajib dilaporkan ke PP.</p>
+
+                            <div class="pt-3 border-t border-slate-100">
+                                <h4 class="font-bold text-slate-900 text-base mb-2">3. Pergantian antar waktu (PAW) Fungsionaris Badan Pengurus Cabang:</h4>
+                                <ol class="list-none space-y-2 pl-4 sm:pl-8 text-slate-700">
+                                    <li class="flex items-start gap-2.5">
+                                        <span class="font-bold text-slate-900 shrink-0">a.</span>
+                                        <span>Pergantian antar waktu fungsionaris Badan Pengurus Cabang termasuk penanggung jawab Badan Pengurus Cabang dapat dilakukan apabila yang bersangkutan meninggal dunia atau berhalangan tetap, mengundurkan diri, kurang aktif atau melanggar aturan organisasi dan disampaikan kepada Pengurus Pusat.</span>
+                                    </li>
+                                    <li class="flex items-start gap-2.5">
+                                        <span class="font-bold text-slate-900 shrink-0">b.</span>
+                                        <span>Pergantian antar waktu Fungsionaris Badan Pengurus Cabang harus atas persetujuan Pengurus Pusat.</span>
+                                    </li>
+                                    <li class="flex items-start gap-2.5">
+                                        <span class="font-bold text-slate-900 shrink-0">c.</span>
+                                        <span>Calon pengganti fungsionaris Badan Pengurus Cabang diusulkan oleh Badan Pengurus Cabang kepada Pengurus Pusat untuk dipelajari, dipertimbangkan dan diputuskan.</span>
+                                    </li>
+                                    <li class="flex items-start gap-2.5">
+                                        <span class="font-bold text-slate-900 shrink-0">d.</span>
+                                        <span>Usulan pergantian antar waktu harus disertai dengan data-data/kronologis yang terjadi sehingga Badan Pengurus Cabang perlu untuk mengusulkan pergantian antar waktu.</span>
+                                    </li>
+                                    <li class="flex items-start gap-2.5">
+                                        <span class="font-bold text-slate-900 shrink-0">e.</span>
+                                        <span>Apabila Pengurus Pusat memutuskan untuk tidak menerima pergantian fungsionaris Badan Pengurus Cabang tersebut, maka fungsionaris tersebut masih sah sebagai Badan Pengurus Cabang.</span>
+                                    </li>
+                                </ol>
+                            </div>
+
+                            <div class="pt-3 border-t border-slate-100">
+                                <h4 class="font-bold text-slate-900 text-base mb-2 flex items-center gap-2 text-red-900">
+                                    <span>⚠️</span> 4. Larangan Rangkap Jabatan:
+                                </h4>
+                                <ol class="list-none space-y-2 pl-4 sm:pl-8 text-slate-700">
+                                    <li class="flex items-start gap-2.5">
+                                        <span class="font-bold text-slate-900 shrink-0">a.</span>
+                                        <span>Seluruh Fungsionaris Badan Pengurus Cabang <strong>tidak diperkenankan rangkap jabatan didalam organisasi</strong>.</span>
+                                    </li>
+                                    <li class="flex items-start gap-2.5">
+                                        <span class="font-bold text-slate-900 shrink-0">b.</span>
+                                        <span>Penanggung jawab Cabang <strong>tidak diperkenankan rangkap jabatan diluar organisasi</strong>.</span>
+                                    </li>
+                                </ol>
+                            </div>
+
+                            <p class="pt-3 border-t border-slate-100">
+                                <strong>5.</strong> Masa Kerja Badan Pengurus Cabang terhitung mulai tanggal berakhirnya pelaksanaan Konperensi Cabang.
+                            </p>
+
+                            <div class="pt-3 border-t border-slate-100">
+                                <h4 class="font-bold text-slate-900 text-base mb-2">6. Pengurus Pusat dapat menunjuk "CareTaker" Badan Pengurus Cabang apabila:</h4>
+                                <ol class="list-none space-y-2 pl-4 sm:pl-8 text-slate-700">
+                                    <li class="flex items-start gap-2.5">
+                                        <span class="font-bold text-slate-900 shrink-0">a.</span>
+                                        <span>Kalender Konstitusi telah berakhir sedang Konperensi Cabang belum dilaksanakan.</span>
+                                    </li>
+                                    <li class="flex items-start gap-2.5">
+                                        <span class="font-bold text-slate-900 shrink-0">b.</span>
+                                        <span>Badan Pengurus Cabang menyimpang dari asas, visi dan misi organisasi, dari Keputusan Kongres, Keputusan Pengurus Pusat, dan Keputusan Konperensi Cabang.</span>
+                                    </li>
+                                </ol>
+                            </div>
+
+                            <p class="pt-3 border-t border-slate-100">
+                                <strong>7.</strong> Badan Pengurus Cabang hanya diperkenankan mengeluarkan sikap dan pernyataan keluar meliputi ruang lingkup lokal Medan Pelayanannya yang tidak bertentangan dengan kebijakan organisasi dan harus dilaporkan kepada Pengurus Pusat.
+                            </p>
+
+                            <p class="pt-3 border-t border-slate-100">
+                                <strong>8.</strong> Sistematika Laporan Umum Pertanggungjawaban Badan Pengurus Cabang harus mengikuti Mekanisme Kerja Internal yang ditetapkan oleh Pengurus Pusat GMKI. Laporan Hasil Konperensi Cabang dan Keputusan tentang Personalia Badan Pengurus Cabang berdasarkan hasil Konperensi Cabang/Formatur harus dikirimkan kepada Pengurus Pusat GMKI selambat-lambatnya 30 (tiga puluh) hari setelah tanggal berakhirnya Konperensi Cabang.
+                            </p>
                         </div>
                     </div>
 
@@ -3148,10 +3365,8 @@ if (!defined('GMKI_SECURE_ACCESS')) {
                     <div id="po-pasal-6" class="ad-card p-6 sm:p-8" data-searchable>
                         <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-100">
                             <div class="flex items-center gap-3">
-                                <span class="px-2.5 py-1 rounded-md bg-blue-800 text-white text-xs font-extrabold">PO
-                                    PASAL 6</span>
-                                <h3 class="text-lg sm:text-xl font-bold text-slate-900">Pembentukan dan Pembubaran
-                                    Cabang</h3>
+                                <span class="px-2.5 py-1 rounded-md bg-blue-800 text-white text-xs font-extrabold">PO PASAL 6</span>
+                                <h3 class="text-lg sm:text-xl font-bold text-slate-900">Pembentukan, Pembubaran, dan Penamaan Cabang</h3>
                             </div>
                             <button type="button" onclick="copyPasalLink('po-pasal-6')"
                                 class="text-slate-400 hover:text-slate-600 text-xs flex items-center gap-1"
@@ -3159,14 +3374,11 @@ if (!defined('GMKI_SECURE_ACCESS')) {
                                 <span>🔗</span>
                             </button>
                         </div>
-                        <ol
-                            class="list-decimal list-inside space-y-2 text-slate-700 text-sm sm:text-base leading-relaxed">
-                            <li>Mempertimbangkan keberadaan Perguruan Tinggi dan kondisi masyarakat sekitar yang
-                                mendukung eksistensi Cabang.</li>
-                            <li>Bila mahasiswa di suatu kota sulit mendirikan Cabang mandiri, mereka dapat diterima
-                                menjadi anggota Cabang terdekat.</li>
-                            <li>Pembentukan dan pembubaran diberitahukan kepada pihak Gereja dan Pemerintah Daerah
-                                setempat.</li>
+                        <ol class="list-decimal list-inside space-y-3 text-slate-700 text-sm sm:text-base leading-relaxed font-sacred">
+                            <li><strong>Pembentukan Cabang</strong> harus mempertimbangkan keberadaan Perguruan Tinggi dan kondisi masyarakat disekitarnya yang mendukung eksistensi Cabang.</li>
+                            <li>Apabila ada kesediaan mahasiswa di suatu kota perguruan tinggi untuk menjadi anggota GMKI tetapi sulit didirikan Cabang GMKI, maka mahasiswa tersebut dapat diterima menjadi anggota GMKI dari Cabang terdekat dan menjadi bagian dari Cabang yang menerimanya.</li>
+                            <li>Pembentukan dan pembubaran Cabang diberitahukan kepada pihak Gereja dan Pemerintah Daerah setempat.</li>
+                            <li><strong>Penamaan cabang</strong> dapat berdasarkan; pertama, nama kota; kedua, nama kabupaten; ketiga, nama ibu kota kabupaten; keempat, nama struktur administratif pemerintahan lainnya; atau kelima, kombinasi dari dua nama di atas; dan ditetapkan melalui Keputusan Pengurus Pusat.</li>
                         </ol>
                     </div>
 
@@ -3174,8 +3386,7 @@ if (!defined('GMKI_SECURE_ACCESS')) {
                     <div id="po-pasal-7" class="ad-card p-6 sm:p-8" data-searchable>
                         <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-100">
                             <div class="flex items-center gap-3">
-                                <span class="px-2.5 py-1 rounded-md bg-blue-800 text-white text-xs font-extrabold">PO
-                                    PASAL 7</span>
+                                <span class="px-2.5 py-1 rounded-md bg-blue-800 text-white text-xs font-extrabold">PO PASAL 7</span>
                                 <h3 class="text-lg sm:text-xl font-bold text-slate-900">Komisariat</h3>
                             </div>
                             <button type="button" onclick="copyPasalLink('po-pasal-7')"
@@ -3184,29 +3395,24 @@ if (!defined('GMKI_SECURE_ACCESS')) {
                                 <span>🔗</span>
                             </button>
                         </div>
-                        <div class="space-y-3 text-slate-700 text-sm sm:text-base leading-relaxed">
-                            <p><strong>1.</strong> BPC dapat membentuk Komisariat sebagai alat pembinaan dan pelayanan
-                                yang membantu BPC memudahkan koordinasi anggota.</p>
-                            <p><strong>2.</strong> Pembentukan berdasarkan tempat kuliah dan/atau pengelompokan wilayah
-                                serta tempat tinggal.</p>
-                            <p><strong>3.</strong> Pengurus Komisariat dilantik dan disahkan oleh BPC.</p>
-                            <div
-                                class="p-3 bg-amber-50 rounded-xl border border-amber-200 text-amber-900 text-xs sm:text-sm">
-                                📌 <strong>Batasan Kewenangan:</strong> Pengurus Komisariat <strong>tidak dapat mewakili
-                                    organisasi ke luar</strong> dan <strong>tidak diperkenankan menerima anggota secara
-                                    mandiri</strong> (tanggung jawab penerimaan tetap pada BPC).
-                            </div>
-                        </div>
+                        <ol class="list-decimal list-inside space-y-3 text-slate-700 text-sm sm:text-base leading-relaxed font-sacred">
+                            <li>Dalam rangka memudahkan koordinasi terhadap anggota Badan Pengurus Cabang dapat membentuk Komisariat sebagai alat pembinaan dan pelayanan yang membantu Badan Pengurus Cabang.</li>
+                            <li>Pembentukan Komisariat dapat berdasarkan pengelompokan tempat kuliah dan/atau berdasarkan pengelompokan wilayah serta tempat tinggal.</li>
+                            <li>Pemberian nama Komisariat ditentukan sendiri oleh komisariat yang bersangkutan atau bersama-sama dengan Badan Pengurus Cabang.</li>
+                            <li>Pengurus Komisariat dilantik dan disahkan oleh Badan Pengurus Cabang.</li>
+                            <li>Pengurus Komisariat tidak dapat mewakili organisasi keluar.</li>
+                            <li><strong class="text-red-700">Pengurus Komisariat tidak diperkenankan menerima anggota.</strong></li>
+                            <li>Pengurus komisariat menggunakan atribut organisasi.</li>
+                            <li>Persyaratan lain tentang pembentukan, pembubaran dan mekanisme kerja Pengurus Komisariat diatur oleh Cabang yang bersangkutan.</li>
+                        </ol>
                     </div>
 
                     <!-- Pasal 8 PO -->
                     <div id="po-pasal-8" class="ad-card p-6 sm:p-8" data-searchable>
                         <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-100">
                             <div class="flex items-center gap-3">
-                                <span class="px-2.5 py-1 rounded-md bg-blue-800 text-white text-xs font-extrabold">PO
-                                    PASAL 8</span>
-                                <h3 class="text-lg sm:text-xl font-bold text-slate-900">Tata Penggunaan Lambang & Mars
-                                </h3>
+                                <span class="px-2.5 py-1 rounded-md bg-blue-800 text-white text-xs font-extrabold">PO PASAL 8</span>
+                                <h3 class="text-lg sm:text-xl font-bold text-slate-900">Lambang dan Mars</h3>
                             </div>
                             <button type="button" onclick="copyPasalLink('po-pasal-8')"
                                 class="text-slate-400 hover:text-slate-600 text-xs flex items-center gap-1"
@@ -3214,35 +3420,89 @@ if (!defined('GMKI_SECURE_ACCESS')) {
                                 <span>🔗</span>
                             </button>
                         </div>
-                        <div class="space-y-3 text-slate-700 text-sm sm:text-base leading-relaxed">
-                            <p><strong>1.</strong> Digunakan dalam upacara resmi bersifat umum (Hari Proklamasi & hari
-                                nasional, upacara ekstern) dan khusus (Dies Natalis, Pembukaan/Penutupan Program,
-                                Pelantikan/Serah Terima).</p>
-                            <p><strong>2. Penempatan Bendera:</strong> Bendera organisasi ditempatkan <strong>di sebelah
-                                    kiri</strong> bendera nasional Merah Putih.</p>
-                            <p><strong>3. Penempatan Panji:</strong> Panji organisasi ditempatkan di depan mimbar
-                                <strong>di antara</strong> bendera GMKI dan bendera nasional.
+                        <div class="space-y-4 text-slate-700 text-sm sm:text-base leading-relaxed font-sacred">
+                            <p><strong>1.</strong> Lambang yang dapat digunakan sesuai dengan Anggaran Rumah Tangga GMKI Pasal 10 baik dalam jenis, bentuk, ukuran, gambar, bahan dan warna.</p>
+
+                            <div class="pt-3 border-t border-slate-100">
+                                <h4 class="font-bold text-slate-900 text-base mb-2">2. Lambang organisasi digunakan dalam upacara resmi yang bersifat umum, terdiri dari:</h4>
+                                <ol class="list-none space-y-2 pl-4 sm:pl-8 text-slate-700">
+                                    <li class="flex items-start gap-2.5">
+                                        <span class="font-bold text-slate-900 shrink-0">a.</span>
+                                        <span>Upacara resmi bersifat umum intern organisasi, yaitu upacara peringatan hari Proklamasi dan hari-hari nasional lainnya.</span>
+                                    </li>
+                                    <li class="flex items-start gap-2.5">
+                                        <span class="font-bold text-slate-900 shrink-0">b.</span>
+                                        <span>Upacara resmi bersifat umum ekstern organisasi, yaitu upacara diluar organisasi yang dihadiri oleh GMKI.</span>
+                                    </li>
+                                </ol>
+                            </div>
+
+                            <div class="pt-3 border-t border-slate-100">
+                                <h4 class="font-bold text-slate-900 text-base mb-2">3. Lambang organisasi digunakan dalam upacara resmi yang bersifat khusus organisasi, yaitu:</h4>
+                                <ol class="list-none space-y-2 pl-4 sm:pl-8 text-slate-700">
+                                    <li class="flex items-start gap-2.5">
+                                        <span class="font-bold text-slate-900 shrink-0">a.</span>
+                                        <span>Upacara Dies Natalis</span>
+                                    </li>
+                                    <li class="flex items-start gap-2.5">
+                                        <span class="font-bold text-slate-900 shrink-0">b.</span>
+                                        <span>Upacara Pembukaan dan/atau Penutupan Program GMKI.</span>
+                                    </li>
+                                    <li class="flex items-start gap-2.5">
+                                        <span class="font-bold text-slate-900 shrink-0">c.</span>
+                                        <span>Upacara Pelantikan atau Serah Terima.</span>
+                                    </li>
+                                </ol>
+                            </div>
+
+                            <p class="pt-3 border-t border-slate-100">
+                                <strong>4.</strong> Kedudukan lambang organisasi GMKI dalam upacara resmi bersifat umum ekstern organisasi harus setara dengan kedudukan lambang organisasi lain yang sederajat.
                             </p>
-                            <div
-                                class="p-3 bg-blue-50 rounded-xl border border-blue-200 text-blue-900 font-semibold text-xs sm:text-sm">
-                                🎵 <strong>Sikap Sempurna:</strong> Pada waktu menyanyikan Mars GMKI, seluruh hadirin
-                                <strong>diwajibkan berdiri dalam sikap sempurna</strong>.
+                            <p class="pt-3 border-t border-slate-100">
+                                <strong>5.</strong> Bendera organisasi ditempatkan disebelah kiri bendera nasional.
+                            </p>
+                            <p class="pt-3 border-t border-slate-100">
+                                <strong>6.</strong> Panji organisasi ditempatkan didepan mimbar diantara bendera GMKI dan bendera nasional.
+                            </p>
+
+                            <div class="pt-3 border-t border-slate-100">
+                                <h4 class="font-bold text-slate-900 text-base mb-2">7. Pita kepengurusan (kordon) organisasi:</h4>
+                                <div class="pl-4 sm:pl-8 space-y-2 text-slate-700">
+                                    <p class="flex items-start gap-2.5">
+                                        <span class="font-bold text-slate-900 shrink-0">a.</span>
+                                        <span>Pengurus Pusat dan Badan Pengurus Cabang dapat menggunakan pita (kordon) dalam kegiatan eksternal organisasi.</span>
+                                    </p>
+                                    <div>
+                                        <p class="flex items-start gap-2.5">
+                                            <span class="font-bold text-slate-900 shrink-0">b.</span>
+                                            <span>Pengurus komisariat menggunakan pita (kordon):</span>
+                                        </p>
+                                        <ol class="list-none space-y-1.5 pl-6 text-slate-700 text-xs sm:text-sm mt-1.5">
+                                            <li><strong>1)</strong> Dibuat dari kain berwarna biru tua dan abu-abu.</li>
+                                            <li><strong>2)</strong> Lebar pita kepengurusan (kordon) untuk Pengurus Komisariat: 4 cm dengan perincian 1 cm biru tua, 1 cm abu-abu, 1 cm biru tua, 1 cm abu-abu.</li>
+                                            <li><strong>3)</strong> Dipergunakan melingkari leher dan pada kedua ujungnya diletakkan lencana pita (kordon) berukuran 8 cm pada bagian muka.</li>
+                                            <li><strong>4)</strong> Warna biru tua terletak di sebelah dalam.</li>
+                                            <li><strong>5)</strong> Panjang pita (kordon) 100 cm.</li>
+                                            <li><strong>6)</strong> Dipergunakan hanya dalam kegiatan internal organisasi, di tingkat komisariat, cabang, wilayah maupun nasional.</li>
+                                        </ol>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="p-4 bg-blue-50/80 rounded-xl border border-blue-200 text-blue-900 font-semibold text-xs sm:text-sm">
+                                🎵 <strong>8.</strong> Pada waktu menyanyikan Mars GMKI semua hadirin diwajibkan untuk berdiri dalam sikap sempurna.
                             </div>
                         </div>
                     </div>
 
-                    <!-- Pasal 9 PO: MEKANISME PROTOKOLER UPACARA -->
-                    <div id="po-pasal-9"
-                        class="ad-card p-6 sm:p-10 border-blue-200 bg-gradient-to-br from-white to-blue-50/20"
-                        data-searchable>
+                    <!-- Pasal 9 PO: MEKANISME PROTOKOLER -->
+                    <div id="po-pasal-9" class="ad-card p-6 sm:p-10 border-blue-200 bg-gradient-to-br from-white to-blue-50/20" data-searchable>
                         <div class="flex items-center justify-between mb-6 pb-4 border-b border-blue-100">
                             <div class="flex items-center gap-3">
                                 <span class="p-2 rounded-lg bg-blue-900 text-white text-xl">📋</span>
                                 <div>
-                                    <span class="text-xs font-bold uppercase tracking-wider text-blue-800">Protokoler &
-                                        Tata Upacara</span>
-                                    <h3 class="text-xl sm:text-2xl font-extrabold text-slate-900">PO PASAL 9: Mekanisme
-                                        Protokoler</h3>
+                                    <span class="text-xs font-bold uppercase tracking-wider text-blue-800">Protokoler &amp; Tata Upacara</span>
+                                    <h3 class="text-xl sm:text-2xl font-extrabold text-slate-900">PO PASAL 9: Mekanisme Protokoler</h3>
                                 </div>
                             </div>
                             <button type="button" onclick="copyPasalLink('po-pasal-9')"
@@ -3252,69 +3512,96 @@ if (!defined('GMKI_SECURE_ACCESS')) {
                             </button>
                         </div>
 
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
-                            <!-- Urutan Upacara Umum Intern -->
-                            <div class="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-3">
-                                <h4
-                                    class="font-bold text-slate-900 flex items-center gap-2 border-b pb-2 text-sm sm:text-base">
-                                    <span>🇮🇩</span> 1. Upacara Resmi Umum Intern
-                                </h4>
-                                <ol class="space-y-2 text-xs sm:text-sm text-slate-700">
-                                    <li class="flex items-center gap-2"><span
-                                            class="w-5 h-5 rounded-full bg-blue-100 text-blue-900 font-bold flex items-center justify-center text-[11px]">1</span>
-                                        Kebaktian</li>
-                                    <li class="flex items-center gap-2"><span
-                                            class="w-5 h-5 rounded-full bg-blue-100 text-blue-900 font-bold flex items-center justify-center text-[11px]">2</span>
-                                        Lagu Indonesia Raya & Mengheningkan Cipta <em>(berdiri)</em></li>
-                                    <li class="flex items-center gap-2"><span
-                                            class="w-5 h-5 rounded-full bg-blue-100 text-blue-900 font-bold flex items-center justify-center text-[11px]">3</span>
-                                        Lagu Mars GMKI <em>(berdiri)</em></li>
-                                    <li class="flex items-center gap-2"><span
-                                            class="w-5 h-5 rounded-full bg-blue-100 text-blue-900 font-bold flex items-center justify-center text-[11px]">4</span>
-                                        Pembacaan Pembukaan AD GMKI <em>(duduk)</em></li>
-                                    <li class="flex items-center gap-2"><span
-                                            class="w-5 h-5 rounded-full bg-blue-100 text-blue-900 font-bold flex items-center justify-center text-[11px]">5</span>
-                                        Sambutan-sambutan</li>
-                                    <li class="flex items-center gap-2"><span
-                                            class="w-5 h-5 rounded-full bg-blue-100 text-blue-900 font-bold flex items-center justify-center text-[11px]">6</span>
-                                        Penutup</li>
-                                </ol>
-                            </div>
+                        <div class="space-y-5 text-slate-700 text-sm sm:text-base leading-relaxed font-sacred">
+                            <p><strong>1.</strong> Mekanisme Protokoler digunakan dalam upacara-upacara resmi.</p>
 
-                            <!-- Urutan Upacara Khusus -->
-                            <div class="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-3">
-                                <h4
-                                    class="font-bold text-slate-900 flex items-center gap-2 border-b pb-2 text-sm sm:text-base">
-                                    <span>🏛️</span> 2. Upacara Resmi Khusus Organisasi
-                                </h4>
-                                <ol class="space-y-2 text-xs sm:text-sm text-slate-700">
-                                    <li class="flex items-center gap-2"><span
-                                            class="w-5 h-5 rounded-full bg-amber-100 text-amber-900 font-bold flex items-center justify-center text-[11px]">1</span>
-                                        Kebaktian</li>
-                                    <li class="flex items-center gap-2"><span
-                                            class="w-5 h-5 rounded-full bg-amber-100 text-amber-900 font-bold flex items-center justify-center text-[11px]">2</span>
-                                        Lagu Indonesia Raya & Mengheningkan Cipta <em>(berdiri)</em></li>
-                                    <li class="flex items-center gap-2"><span
-                                            class="w-5 h-5 rounded-full bg-amber-100 text-amber-900 font-bold flex items-center justify-center text-[11px]">3</span>
-                                        Lagu Mars GMKI <em>(berdiri)</em></li>
-                                    <li class="flex items-center gap-2"><span
-                                            class="w-5 h-5 rounded-full bg-amber-100 text-amber-900 font-bold flex items-center justify-center text-[11px]">4</span>
-                                        Pembacaan Pembukaan AD GMKI <em>(duduk)</em></li>
-                                    <li class="flex items-center gap-2"><span
-                                            class="w-5 h-5 rounded-full bg-amber-100 text-amber-900 font-bold flex items-center justify-center text-[11px]">5</span>
-                                        Acara Khusus Organisasi (Pelantikan/Serah Terima)</li>
-                                    <li class="flex items-center gap-2"><span
-                                            class="w-5 h-5 rounded-full bg-amber-100 text-amber-900 font-bold flex items-center justify-center text-[11px]">6</span>
-                                        Pidato Ketua Umum / Ketua Cabang</li>
-                                    <li class="flex items-center gap-2"><span
-                                            class="w-5 h-5 rounded-full bg-amber-100 text-amber-900 font-bold flex items-center justify-center text-[11px]">7</span>
-                                        Sambutan-sambutan & Penutup</li>
-                                </ol>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
+                                <!-- Urutan Upacara Resmi Bersifat Umum Intern -->
+                                <div class="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-3">
+                                    <h4 class="font-bold text-slate-900 flex items-center gap-2 border-b pb-2 text-sm sm:text-base">
+                                        <span>🇮🇩</span> 2. Tata Urutan Upacara Resmi Bersifat Umum Intern Organisasi:
+                                    </h4>
+                                    <ol class="space-y-2.5 text-xs sm:text-sm text-slate-700">
+                                        <li class="flex items-start gap-2.5">
+                                            <span class="w-5 h-5 rounded-full bg-blue-100 text-blue-900 font-bold flex items-center justify-center text-[11px] shrink-0 mt-0.5">a</span>
+                                            <span>Prosesi (diiringi Hymne GMKI atau musik/lagu gerejawi).</span>
+                                        </li>
+                                        <li class="flex items-start gap-2.5">
+                                            <span class="w-5 h-5 rounded-full bg-blue-100 text-blue-900 font-bold flex items-center justify-center text-[11px] shrink-0 mt-0.5">b</span>
+                                            <span>Kebaktian.</span>
+                                        </li>
+                                        <li class="flex items-start gap-2.5">
+                                            <span class="w-5 h-5 rounded-full bg-blue-100 text-blue-900 font-bold flex items-center justify-center text-[11px] shrink-0 mt-0.5">c</span>
+                                            <span>Upacara Nasional yang terdiri dari menyanyi lagu kebangsaan Indonesia Raya dan Mengheningkan Cipta <em>(berdiri)</em>.</span>
+                                        </li>
+                                        <li class="flex items-start gap-2.5">
+                                            <span class="w-5 h-5 rounded-full bg-blue-100 text-blue-900 font-bold flex items-center justify-center text-[11px] shrink-0 mt-0.5">d</span>
+                                            <div>
+                                                <span>Upacara organisasi yang terdiri dari:</span>
+                                                <ul class="list-disc list-inside pl-2 text-slate-600 mt-1 space-y-0.5">
+                                                    <li>Menyanyikan Lagu Mars GMKI <em>(berdiri)</em>.</li>
+                                                    <li>Pembacaan Pembukaan Anggaran Dasar GMKI <em>(duduk)</em>.</li>
+                                                </ul>
+                                            </div>
+                                        </li>
+                                        <li class="flex items-start gap-2.5">
+                                            <span class="w-5 h-5 rounded-full bg-blue-100 text-blue-900 font-bold flex items-center justify-center text-[11px] shrink-0 mt-0.5">e</span>
+                                            <span>Sambutan-sambutan.</span>
+                                        </li>
+                                        <li class="flex items-start gap-2.5">
+                                            <span class="w-5 h-5 rounded-full bg-blue-100 text-blue-900 font-bold flex items-center justify-center text-[11px] shrink-0 mt-0.5">f</span>
+                                            <span>Penutup.</span>
+                                        </li>
+                                    </ol>
+                                </div>
+
+                                <!-- Urutan Upacara Resmi Bersifat Khusus -->
+                                <div class="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-3">
+                                    <h4 class="font-bold text-slate-900 flex items-center gap-2 border-b pb-2 text-sm sm:text-base">
+                                        <span>🏛️</span> 3. Tata Urutan Upacara Resmi Bersifat Khusus Organisasi:
+                                    </h4>
+                                    <ol class="space-y-2.5 text-xs sm:text-sm text-slate-700">
+                                        <li class="flex items-start gap-2.5">
+                                            <span class="w-5 h-5 rounded-full bg-amber-100 text-amber-900 font-bold flex items-center justify-center text-[11px] shrink-0 mt-0.5">a</span>
+                                            <span>Prosesi (diiringi Hymne GMKI atau musik/lagu gerejawi).</span>
+                                        </li>
+                                        <li class="flex items-start gap-2.5">
+                                            <span class="w-5 h-5 rounded-full bg-amber-100 text-amber-900 font-bold flex items-center justify-center text-[11px] shrink-0 mt-0.5">b</span>
+                                            <span>Kebaktian.</span>
+                                        </li>
+                                        <li class="flex items-start gap-2.5">
+                                            <span class="w-5 h-5 rounded-full bg-amber-100 text-amber-900 font-bold flex items-center justify-center text-[11px] shrink-0 mt-0.5">c</span>
+                                            <span>Upacara Nasional yang terdiri dari menyanyi Lagu Kebangsaan Indonesia Raya dan Mengheningkan Cipta <em>(berdiri)</em>.</span>
+                                        </li>
+                                        <li class="flex items-start gap-2.5">
+                                            <span class="w-5 h-5 rounded-full bg-amber-100 text-amber-900 font-bold flex items-center justify-center text-[11px] shrink-0 mt-0.5">d</span>
+                                            <div>
+                                                <span>Upacara organisasi yang terdiri dari:</span>
+                                                <ul class="list-disc list-inside pl-2 text-slate-600 mt-1 space-y-0.5">
+                                                    <li>Menyanyikan Lagu Mars GMKI <em>(berdiri)</em>.</li>
+                                                    <li>Pembacaan Pembukaan Anggaran Dasar GMKI <em>(duduk)</em>.</li>
+                                                </ul>
+                                            </div>
+                                        </li>
+                                        <li class="flex items-start gap-2.5">
+                                            <span class="w-5 h-5 rounded-full bg-amber-100 text-amber-900 font-bold flex items-center justify-center text-[11px] shrink-0 mt-0.5">e</span>
+                                            <span>Acara khusus Organisasi.</span>
+                                        </li>
+                                        <li class="flex items-start gap-2.5">
+                                            <span class="w-5 h-5 rounded-full bg-amber-100 text-amber-900 font-bold flex items-center justify-center text-[11px] shrink-0 mt-0.5">f</span>
+                                            <span>Pidato.</span>
+                                        </li>
+                                        <li class="flex items-start gap-2.5">
+                                            <span class="w-5 h-5 rounded-full bg-amber-100 text-amber-900 font-bold flex items-center justify-center text-[11px] shrink-0 mt-0.5">g</span>
+                                            <span>Sambutan-sambutan.</span>
+                                        </li>
+                                        <li class="flex items-start gap-2.5">
+                                            <span class="w-5 h-5 rounded-full bg-amber-100 text-amber-900 font-bold flex items-center justify-center text-[11px] shrink-0 mt-0.5">h</span>
+                                            <span>Penutup.</span>
+                                        </li>
+                                    </ol>
+                                </div>
                             </div>
-                        </div>
-                        <div class="mt-4 text-xs text-slate-500 italic">
-                            * Upacara resmi organisasi diawali dengan prosesi yang dipimpin oleh PP (tingkat
-                            nasional/wilayah) atau BPC (tingkat lokal cabang).
                         </div>
                     </div>
 
@@ -3322,8 +3609,7 @@ if (!defined('GMKI_SECURE_ACCESS')) {
                     <div id="po-pasal-10" class="ad-card p-6 sm:p-8" data-searchable>
                         <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-100">
                             <div class="flex items-center gap-3">
-                                <span class="px-2.5 py-1 rounded-md bg-blue-800 text-white text-xs font-extrabold">PO
-                                    PASAL 10</span>
+                                <span class="px-2.5 py-1 rounded-md bg-blue-800 text-white text-xs font-extrabold">PO PASAL 10</span>
                                 <h3 class="text-lg sm:text-xl font-bold text-slate-900">Hal Mewakili Organisasi</h3>
                             </div>
                             <button type="button" onclick="copyPasalLink('po-pasal-10')"
@@ -3332,13 +3618,10 @@ if (!defined('GMKI_SECURE_ACCESS')) {
                                 <span>🔗</span>
                             </button>
                         </div>
-                        <ol
-                            class="list-decimal list-inside space-y-2 text-slate-700 text-sm sm:text-base leading-relaxed">
-                            <li>Pengurus Pusat mewakili organisasi di tingkat Nasional dan Internasional.</li>
-                            <li>Tingkat setaraf propinsi diwakili oleh Koordinator Wilayah dan/atau BPC di bawah
-                                koordinasi unsur Pengurus Pusat di wilayah.</li>
-                            <li>Bila terdapat lebih dari satu Cabang di propinsi/kabupaten, semua Cabang mempunyai
-                                status dan hak yang sama di bawah koordinasi unsur PP di wilayah.</li>
+                        <ol class="list-decimal list-inside space-y-3 text-slate-700 text-sm sm:text-base leading-relaxed font-sacred">
+                            <li>Pengurus Pusat mewakili organisasi dalam kegiatan-kegiatan yang dilaksanakan oleh organisasi/lembaga/instansi lain ditingkat Nasional dan Internasional yang mengundang GMKI.</li>
+                            <li>Mewakili organisasi dalam kegiatan-kegiatan yang dilaksanakan oleh organisasi/lembaga/instansi lain setinggi-tingginya setaraf daerah provinsi yang mengundang GMKI, adalah Koordinator Wilayah dan atau Badan Pengurus Cabang dibawah koordinasi unsur Pengurus Pusat diwilayah.</li>
+                            <li>Bila dalam suatu daerah provinsi atau daerah kabupaten/kota terdapat lebih dari satu cabang GMKI maka semua cabang di daerah tersebut mempunyai status dan hak yang sama untuk mewakili organisasi di bawah koordinasi unsur Pengurus Pusat di wilayah.</li>
                         </ol>
                     </div>
 
@@ -3346,8 +3629,7 @@ if (!defined('GMKI_SECURE_ACCESS')) {
                     <div id="po-pasal-11" class="ad-card p-6 sm:p-8" data-searchable>
                         <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-100">
                             <div class="flex items-center gap-3">
-                                <span class="px-2.5 py-1 rounded-md bg-blue-800 text-white text-xs font-extrabold">PO
-                                    PASAL 11</span>
+                                <span class="px-2.5 py-1 rounded-md bg-blue-800 text-white text-xs font-extrabold">PO PASAL 11</span>
                                 <h3 class="text-lg sm:text-xl font-bold text-slate-900">P e n u t u p</h3>
                             </div>
                             <button type="button" onclick="copyPasalLink('po-pasal-11')"
@@ -3356,15 +3638,12 @@ if (!defined('GMKI_SECURE_ACCESS')) {
                                 <span>🔗</span>
                             </button>
                         </div>
-                        <p class="text-slate-700 text-sm sm:text-base leading-relaxed">
-                            Hal-hal yang belum diatur dalam Peraturan Organisasi ini, akan diatur dalam
-                            keputusan-keputusan Pengurus Pusat yang lain, Keputusan Konperensi Cabang dan Keputusan
-                            Badan Pengurus Cabang.
+                        <p class="text-slate-700 text-sm sm:text-base leading-relaxed font-sacred">
+                            Hal-hal yang belum diatur dalam Peraturan Organisasi ini, akan diatur dalam keputusan-keputusan Pengurus Pusat yang lain, Keputusan Konperensi Cabang dan Keputusan Badan Pengurus Cabang, yang tidak bertentangan dengan Anggaran Dasar, Anggaran Rumah Tangga, Dan Peraturan Organisasi.
                         </p>
                     </div>
 
                 </div>
-
                 <!-- ================================================================= -->
                 <!-- 4. PENJELASAN RESMI PERATURAN ORGANISASI -->
                 <!-- ================================================================= -->

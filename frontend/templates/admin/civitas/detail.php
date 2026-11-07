@@ -65,10 +65,9 @@
                     <table class="data-table" style="border: none;">
                         <tbody>
                             <tr>
-                                <th style="width: 180px; background: none;">ID / NIM</th>
+                                <th style="width: 180px; background: none;">ID Anggota / Civitas</th>
                                 <td>
-                                    <span class="badge badge-neutral" style="font-weight: 700; font-size: 0.85rem; margin-right: 6px;">#<?= (int)$member['id'] ?></span>
-                                    <code style="font-size: 1rem;"><?= e($member['nim']) ?></code>
+                                    <code style="font-size: 1rem; font-weight: 700; color: var(--primary); background: rgba(13, 71, 161, 0.08); padding: 0.25rem 0.6rem; border-radius: 6px;"><?= e($member['nim']) ?></code>
                                 </td>
                             </tr>
                             <tr>

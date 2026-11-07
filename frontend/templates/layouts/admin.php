@@ -10,12 +10,10 @@
     <link rel="stylesheet" href="<?= asset('vendor/animate.min.css') ?>">
     <link rel="stylesheet" href="<?= asset('vendor/leaflet/leaflet.css') ?>">
     <link rel="stylesheet" href="<?= asset('css/app.css') ?>?v=5">
-    <link rel="stylesheet" href="<?= asset('css/admin.css') ?>?v=13">
+    <link rel="stylesheet" href="<?= asset('css/admin.css') ?>?v=18">
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <?php if (($section ?? '') === 'coordination'): ?>
-        <link rel="stylesheet" href="<?= asset('css/coordination.css') ?>?v=7">
-    <?php endif; ?>
+
     <!-- Tailwind CSS with custom GMKI palette -->
     <script defer src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -67,12 +65,7 @@
                         <span>Dashboard</span>
                     </a>
                 </li>
-                <li class="sidebar-nav-item">
-                    <a href="/admin/koordinasi" class="sidebar-nav-link <?= active_nav('/admin/koordinasi') ?> flex items-center gap-2">
-                        <span class="sidebar-nav-icon flex items-center justify-center text-base"><i class="bi bi-chat-dots-fill"></i></span>
-                        <span>Chat Koordinasi BPC</span>
-                    </a>
-                </li>
+
 
                 <li class="nav-category">Civitas &amp; Kaderisasi</li>
                 <li class="sidebar-nav-item">
@@ -281,9 +274,7 @@
     <script src="<?= asset('js/validation.js') ?>"></script>
     <script src="<?= asset('js/admin.js') ?>"></script>
     <script src="<?= asset('js/statistik.js') ?>"></script>
-    <?php if (($section ?? '') === 'coordination'): ?>
-        <script src="<?= asset('js/coordination.js') ?>?v=6"></script>
-    <?php endif; ?>
+
     <script>
         window.__AUTH_USER_ID__ = <?= !empty(auth()['id']) ? (int)auth()['id'] : 'null' ?>;
     </script>

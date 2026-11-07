@@ -185,8 +185,8 @@ class CivitasService
 
         // Kamus alias nama kolom (fleksibel menerima berbagai penamaan kolom)
         $aliasMap = [
-            'id_or_nim' => ['id / nim', 'id/nim', 'id nim', 'id_nim', 'nim / id', 'nim/id', 'nim id', 'nim_id'],
-            'id' => ['id', 'id_anggota', 'no_id', 'nomor_id'],
+            'id_or_nim' => ['id / nim', 'id/nim', 'id nim', 'id_nim', 'nim / id', 'nim/id', 'nim id', 'nim_id', 'id anggota', 'id_anggota', 'id civitas', 'id_civitas', 'kode anggota', 'kode_anggota'],
+            'id' => ['id', 'no_id', 'nomor_id'],
             'nim' => ['nim', 'npm', 'no_mahasiswa', 'nomor_induk', 'no_induk'],
             'nama_lengkap' => ['nama_lengkap', 'nama', 'nama_anggota', 'nama_kader', 'fullname', 'name', 'nama lengkap'],
             'jenis_kelamin' => ['jenis_kelamin', 'jk', 'gender', 'sex', 'kelamin', 'jenis kelamin', 'jenis kelamin (l/p)', 'jenis kelamin l p'],
@@ -355,16 +355,15 @@ class CivitasService
                 'created_by' => Auth::id(),
             ];
 
-            if ($customId !== null) {
-                $dataToSave['id'] = $customId;
-            }
-            if (!empty($rawNim)) {
-                $dataToSave['nim'] = $rawNim;
-            } elseif ($customId !== null) {
-                $dataToSave['nim'] = (string) $customId;
+            // Bentuk atau validasi ID Anggota / Civitas: {TAHUN_MAPER}-{2_DIGIT_TAHUN_LAHIR}-{INISIAL_NAMA}
+            $generatedCode = $this->civitasRepo->generateMemberCode($nama, $tanggalLahir, $tahunMaperca, $customId);
+            if (!empty($rawNim) && preg_match('/^\d{4}-\d{2}-[A-Z0-9]+(-\d+)?$/i', $rawNim)) {
+                $dataToSave['nim'] = strtoupper(trim($rawNim));
+            } else {
+                $dataToSave['nim'] = $generatedCode;
             }
 
-            // Cek apakah data sudah ada (berdasarkan custom ID jika ada, atau berdasarkan NIM)
+            // Cek apakah data sudah ada (berdasarkan custom ID jika ada, atau berdasarkan kode ID)
             $existing = null;
             if ($customId !== null) {
                 $existing = $this->civitasRepo->findById($customId);
@@ -372,9 +371,12 @@ class CivitasService
             if (!$existing && !empty($rawNim)) {
                 $existing = $this->civitasRepo->findByNim($rawNim);
             }
+            if (!$existing) {
+                $existing = $this->civitasRepo->findByNim($dataToSave['nim']);
+            }
 
             if ($existing) {
-                $this->civitasRepo->update($existing['id'], $dataToSave);
+                $this->civitasRepo->update((int)$existing['id'], $dataToSave);
             } else {
                 $this->civitasRepo->create($dataToSave);
             }
@@ -406,7 +408,7 @@ class CivitasService
     {
         if ($kelompok === 'maperca') {
             $headers = [
-                'ID / NIM',
+                'ID Anggota',
                 'Nama Lengkap',
                 'Jenis Kelamin (L/P)',
                 'Tempat Lahir',
@@ -423,24 +425,24 @@ class CivitasService
             ];
 
             $sampleRow = [
-                '101',
-                'Yohanes Christian',
+                '2025-04-EPS',
+                'Erantus Paripurna Samaloisa',
                 'L',
-                'Padang',
-                '2004-05-12',
+                'Mentawai',
+                '2004-06-16',
                 '081234567890',
-                'yohanes@example.com',
+                'erantus@example.com',
                 'Universitas Andalas',
                 'Teknik',
                 'Teknik Elektro',
-                date('Y'),
+                '2025',
                 'Aktif',
                 'Jl. Belimbing No. 12, Padang',
                 'Mentawai'
             ];
         } else {
             $headers = [
-                'ID / NIM',
+                'ID Anggota',
                 'Nama Lengkap',
                 'Jenis Kelamin (L/P)',
                 'Tempat Lahir',
@@ -459,18 +461,18 @@ class CivitasService
             ];
 
             $sampleRow = [
-                '101',
-                'Yohanes Christian',
+                '2025-04-EPS',
+                'Erantus Paripurna Samaloisa',
                 'L',
-                'Padang',
-                '2004-05-12',
+                'Mentawai',
+                '2004-06-16',
                 '081234567890',
-                'yohanes@example.com',
+                'erantus@example.com',
                 'Universitas Andalas',
                 'Teknik',
                 'Teknik Elektro',
                 'Komisariat Unand',
-                date('Y'),
+                '2025',
                 'Anggota',
                 'Aktif',
                 'Jl. Belimbing No. 12, Padang',
@@ -514,7 +516,7 @@ class CivitasService
 
         if ($isMaperca) {
             fputcsv($output, [
-                'ID/NIM',
+                'ID Anggota',
                 'Nama Lengkap',
                 'Jenis Kelamin',
                 'Tempat Lahir',
@@ -550,7 +552,7 @@ class CivitasService
             }
         } else {
             fputcsv($output, [
-                'NIM',
+                'ID Anggota',
                 'Nama Lengkap',
                 'Jenis Kelamin',
                 'Tempat Lahir',
@@ -604,7 +606,7 @@ class CivitasService
         $rows = [];
         if ($isMaperca) {
             $rows[] = [
-                'ID / NIM',
+                'ID Anggota',
                 'Nama Lengkap',
                 'Jenis Kelamin',
                 'Tempat Lahir',
@@ -640,7 +642,7 @@ class CivitasService
             }
         } else {
             $rows[] = [
-                'NIM',
+                'ID Anggota',
                 'Nama Lengkap',
                 'Jenis Kelamin',
                 'Tempat Lahir',

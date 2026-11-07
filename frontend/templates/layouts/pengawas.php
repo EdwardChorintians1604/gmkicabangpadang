@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="<?= asset('vendor/animate.min.css') ?>">
     <link rel="stylesheet" href="<?= asset('vendor/leaflet/leaflet.css') ?>">
     <link rel="stylesheet" href="<?= asset('css/app.css') ?>?v=5">
-    <link rel="stylesheet" href="<?= asset('css/pengawas.css') ?>?v=6">
+    <link rel="stylesheet" href="<?= asset('css/pengawas.css') ?>?v=7">
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <!-- Tailwind CSS with custom GMKI palette -->
@@ -81,10 +81,7 @@
                                 class="sidebar-nav-link <?= active_nav('/bencab/laporan') ?>"><span
                                     class="sidebar-nav-icon"><?= svg_icon('download', 18) ?></span><span>Laporan
                                     Keuangan</span></a></li>
-                        <li class="sidebar-nav-item"><a href="/ketcab/koordinasi"
-                                class="sidebar-nav-link <?= active_nav('/ketcab/koordinasi') ?>"><span
-                                    class="sidebar-nav-icon"><?= svg_icon('users', 18) ?></span><span>Koordinasi &amp;
-                                    Request</span></a></li>
+
                         <li class="nav-category">Pemantauan</li>
                         <li class="sidebar-nav-item"><a href="/pengawas/civitas"
                                 class="sidebar-nav-link <?= active_nav('/pengawas/civitas') ?>"><span

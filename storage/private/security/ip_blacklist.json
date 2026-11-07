@@ -1,0 +1,10 @@
+{
+    "2404:c0:d001:f9f7:485:bcd5:12d7:fe8d": {
+        "ip": "2404:c0:d001:f9f7:485:bcd5:12d7:fe8d",
+        "reason": "Agresi 3x",
+        "source": "SUPERADMIN",
+        "hits": 1,
+        "blocked_at": "2026-11-02 22:30:12",
+        "updated_at": "2026-11-02 22:30:12"
+    }
+}

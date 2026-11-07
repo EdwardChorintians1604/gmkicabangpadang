@@ -73,7 +73,7 @@ class CivitasController
             $data['tingkat_kaderisasi'] = 'Maperca';
             $data['anggota_komisariat'] = 0;
             $data['komisariat'] = null;
-            $data['tahun_maperca'] = !empty($data['tahun_maperca']) ? (int) $data['tahun_maperca'] : null;
+            $data['tahun_maperca'] = !empty($data['tahun_maperca']) ? (int) $data['tahun_maperca'] : (int) date('Y');
         } else {
             $isAnggotaKom = isset($data['anggota_komisariat']) ? (int) $data['anggota_komisariat'] : 0;
             if ($isAnggotaKom === 1 && !empty($data['komisariat']) && trim((string) $data['komisariat']) !== '') {
@@ -87,6 +87,7 @@ class CivitasController
             if (!in_array($tk, ['Anggota', 'KK', 'Alumni'], true)) {
                 $data['tingkat_kaderisasi'] = 'Anggota';
             }
+            $data['tahun_maperca'] = !empty($data['tahun_maperca']) ? (int) $data['tahun_maperca'] : (int) date('Y');
         }
 
         return $data;
@@ -175,18 +176,12 @@ class CivitasController
             'nama_lengkap' => 'required|min:3',
             'jenis_kelamin' => 'required|in:L,P',
             'perguruan_tinggi' => 'required',
+            'tanggal_lahir' => 'required',
+            'tahun_maperca' => 'required|numeric',
         ];
         $postData = $request->post();
-        if (!empty($postData['nim']) && trim((string)$postData['nim']) !== '') {
-            $rules['nim'] = 'unique:civitas,nim';
-        }
-        if ($this->kelompok !== 'maperca') {
-            $rules['tahun_maperca'] = 'required|numeric';
-            if (($postData['anggota_komisariat'] ?? '') === '1') {
-                $rules['komisariat'] = 'required';
-            }
-        } else {
-            $rules['tahun_maperca'] = 'numeric';
+        if ($this->kelompok !== 'maperca' && ($postData['anggota_komisariat'] ?? '') === '1') {
+            $rules['komisariat'] = 'required';
         }
 
         $validator = Validator::make($request->post(), $rules);
@@ -261,18 +256,12 @@ class CivitasController
             'nama_lengkap' => 'required|min:3',
             'jenis_kelamin' => 'required|in:L,P',
             'perguruan_tinggi' => 'required',
+            'tanggal_lahir' => 'required',
+            'tahun_maperca' => 'required|numeric',
         ];
         $postData = $request->post();
-        if (!empty($postData['nim']) && trim((string)$postData['nim']) !== '') {
-            $rules['nim'] = "unique:civitas,nim,{$id}";
-        }
-        if ($this->kelompok !== 'maperca') {
-            $rules['tahun_maperca'] = 'required|numeric';
-            if (($postData['anggota_komisariat'] ?? '') === '1') {
-                $rules['komisariat'] = 'required';
-            }
-        } else {
-            $rules['tahun_maperca'] = 'numeric';
+        if ($this->kelompok !== 'maperca' && ($postData['anggota_komisariat'] ?? '') === '1') {
+            $rules['komisariat'] = 'required';
         }
 
         $validator = Validator::make($request->post(), $rules);
@@ -306,21 +295,20 @@ class CivitasController
         $komisariatInput = trim((string) ($request->post()['komisariat'] ?? ''));
         $hasKomisariat = !empty($komisariatInput) && (new KomisariatRepository())->findByName($komisariatInput);
 
+        $tahunMaperca = !empty($member['tahun_maperca']) ? (int) $member['tahun_maperca'] : (int) date('Y');
         $updateData = [
             'tingkat_kaderisasi' => 'Anggota',
             'status_keanggotaan' => 'Aktif',
             'komisariat' => $hasKomisariat ? $komisariatInput : null,
             'anggota_komisariat' => $hasKomisariat ? 1 : 0,
+            'tahun_maperca' => $tahunMaperca,
         ];
 
-        // Jika tahun maperca belum terisi, otomatis gunakan tahun berjalan
-        if (empty($member['tahun_maperca'])) {
-            $updateData['tahun_maperca'] = (int) date('Y');
-        }
-
         $this->civitasService->update((int) $id, $updateData);
+        $updatedMember = $this->civitasService->getById((int) $id);
+        $kodeAnggota = $updatedMember['nim'] ?? $member['nim'];
 
-        Session::flash('success', "{$member['nama_lengkap']} resmi dilantik menjadi Anggota sah GMKI Cabang Padang dan dipindahkan ke Data Civitas.");
+        Session::flash('success', "{$member['nama_lengkap']} (ID: {$kodeAnggota}) resmi dilantik menjadi Anggota sah GMKI Cabang Padang dan dipindahkan ke Data Civitas.");
         redirect('/admin/maperca');
     }
 

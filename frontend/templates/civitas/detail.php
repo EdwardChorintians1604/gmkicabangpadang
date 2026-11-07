@@ -54,8 +54,8 @@
                     <table class="data-table" style="border: none;">
                         <tbody>
                             <tr>
-                                <th style="width: 180px; background: none;">NIM</th>
-                                <td><code style="font-size: 1rem;"><?= e($member['nim']) ?></code></td>
+                                <th style="width: 180px; background: none;">ID Anggota / Civitas</th>
+                                <td><code style="font-size: 1rem; font-weight: 700; color: var(--primary);"><?= e($member['nim']) ?></code></td>
                             </tr>
                             <tr>
                                 <th style="background: none;">Nama Lengkap</th>
