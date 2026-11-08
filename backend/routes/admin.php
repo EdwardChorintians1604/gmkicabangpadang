@@ -128,3 +128,9 @@ $router->get('/admin/keamanan/backup/unduh-sekarang', 'Admin\BackupController@cr
 $router->get('/admin/keamanan/backup/unduh-total-sekarang', 'Admin\BackupController@createAndDownloadTotal', ['auth', 'role:admin']);
 $router->get('/admin/keamanan/backup/database/{filename}', 'Admin\BackupController@download', ['auth', 'role:admin']);
 $router->get('/admin/keamanan/backup/total/{filename}', 'Admin\BackupController@downloadTotal', ['auth', 'role:admin']);
+
+// 9. Direktori Berkas Keuangan & Persuratan Cabang Khusus Admin
+$router->get('/admin/keuangan/berkas', 'WorkspaceController@financeFiles', ['auth', 'role:admin']);
+$router->get('/admin/keuangan/berkas/backup', 'WorkspaceController@downloadArchiveZip', ['auth', 'role:admin']);
+$router->get('/admin/persuratan/berkas', 'WorkspaceController@archiveFiles', ['auth', 'role:admin']);
+$router->get('/admin/persuratan/berkas/backup', 'WorkspaceController@downloadArchiveZip', ['auth', 'role:admin']);

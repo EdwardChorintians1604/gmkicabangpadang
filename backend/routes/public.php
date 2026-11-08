@@ -33,6 +33,16 @@ $router->get('/berita/{slug}', 'PublicController@detailBerita');
 $router->get('/kontak', 'PublicController@kontak');
 $router->post('/kontak', 'PublicController@kirimKontak', ['csrf']);
 
+// Portal Pendaftaran & Registrasi Civitas & Calon Anggota (Maperca)
+$router->get('/register_for_civitas', 'PublicController@registerIndex');
+$router->get('/register_as_member_and_cadet', 'PublicController@registerIndex');
+$router->get('/register_for_civitas/maperca', 'PublicController@registerMaperca');
+$router->get('/register_as_cadet', 'PublicController@registerMaperca');
+$router->post('/register_for_civitas/maperca', 'PublicController@submitRegisterMaperca', ['csrf']);
+$router->get('/register_for_civitas/member', 'PublicController@registerMember');
+$router->get('/register_as_member', 'PublicController@registerMember');
+$router->post('/register_for_civitas/member', 'PublicController@submitRegisterMember', ['csrf']);
+
 // Penanganan Berkas Privat Terotentikasi (Foto Anggota & KTA)
 $router->get('/private/foto-anggota/{filename}', 'FileController@streamFoto', ['auth']);
 $router->get('/private/kta/{filename}', 'FileController@streamKta', ['auth']);

@@ -179,15 +179,15 @@
 
                 <li class="nav-category">Tools &amp; Berkas</li>
                 <li class="sidebar-nav-item">
-                    <a href="/sekcab/berkas"
-                        class="sidebar-nav-link <?= active_nav('/sekcab/berkas') ?> flex items-center gap-2">
+                    <a href="/admin/persuratan/berkas"
+                        class="sidebar-nav-link <?= (active_nav('/admin/persuratan/berkas') || active_nav('/sekcab/berkas')) ?> flex items-center gap-2">
                         <span class="sidebar-nav-icon flex items-center justify-center text-base"><i class="bi bi-folder2-open"></i></span>
                         <span>Direktori Berkas Persuratan</span>
                     </a>
                 </li>
                 <li class="sidebar-nav-item">
-                    <a href="/bencab/berkas"
-                        class="sidebar-nav-link <?= active_nav('/bencab/berkas') ?> flex items-center gap-2">
+                    <a href="/admin/keuangan/berkas"
+                        class="sidebar-nav-link <?= (active_nav('/admin/keuangan/berkas') || active_nav('/bencab/berkas')) ?> flex items-center gap-2">
                         <span class="sidebar-nav-icon flex items-center justify-center text-base"><i class="bi bi-file-earmark-spreadsheet-fill"></i></span>
                         <span>Direktori Berkas Keuangan</span>
                     </a>

@@ -5,6 +5,10 @@ namespace App\Controllers;
 use App\Core\Request;
 use App\Core\Response;
 use App\Core\Session;
+use App\Core\Validator;
+use App\Repositories\CivitasRepository;
+use App\Repositories\KomisariatRepository;
+use App\Services\CivitasService;
 use App\Services\NewsService;
 use App\Services\OrganizationService;
 use App\Services\StatisticsService;
@@ -156,5 +160,201 @@ class PublicController
 
         Session::flash('success', 'Pesan Anda telah berhasil dikirim ke sekretariat BPC GMKI Cabang Padang.');
         redirect('/kontak');
+    }
+
+    public function registerIndex(Request $request): Response
+    {
+        $summary = $this->statsService->getDashboardSummary();
+        $profile = $this->orgService->getProfile();
+
+        return view('register_for_civitas.index', [
+            'pageTitle' => 'Portal Registrasi Civitas & Calon Anggota (Maper) - GMKI Cabang Padang',
+            'summary' => $summary,
+            'profile' => $profile,
+        ], 'public');
+    }
+
+    public function registerMaperca(Request $request): Response
+    {
+        $civitasRepo = new CivitasRepository();
+        $perguruanTinggiList = $civitasRepo->getDistinctPerguruanTinggi();
+
+        return view('register_for_civitas.register_as_cadet_(maper)', [
+            'pageTitle' => 'Pendaftaran Calon Anggota (Maperca) - GMKI Cabang Padang',
+            'perguruanTinggiList' => $perguruanTinggiList,
+            'tahunSekarang' => (int) date('Y'),
+        ], 'public');
+    }
+
+    public function submitRegisterMaperca(Request $request): Response
+    {
+        $postData = $request->post();
+        $rules = [
+            'nama_lengkap' => 'required|min:3',
+            'jenis_kelamin' => 'required|in:L,P',
+            'tempat_lahir' => 'required',
+            'tanggal_lahir' => 'required',
+            'telepon' => 'required',
+            'email' => 'required|email',
+            'perguruan_tinggi' => 'required',
+        ];
+
+        $validator = Validator::make($postData, $rules);
+        if ($validator->fails()) {
+            Session::flash('error', $validator->first());
+            Session::setOld($postData);
+            redirect('/register_for_civitas/maperca');
+        }
+
+        $civitasService = new CivitasService();
+        $catatanTambahan = trim((string) ($postData['catatan'] ?? ''));
+        $catatanFull = '[Registrasi Mandiri Maperca ' . date('d/m/Y H:i') . '] ' . $catatanTambahan;
+
+        $dataToSave = [
+            'nim' => trim((string) ($postData['nim'] ?? '')),
+            'nama_lengkap' => trim((string) $postData['nama_lengkap']),
+            'jenis_kelamin' => trim((string) $postData['jenis_kelamin']),
+            'tempat_lahir' => trim((string) ($postData['tempat_lahir'] ?? '')),
+            'tanggal_lahir' => trim((string) ($postData['tanggal_lahir'] ?? '')),
+            'telepon' => trim((string) ($postData['telepon'] ?? '')),
+            'email' => trim((string) ($postData['email'] ?? '')),
+            'perguruan_tinggi' => trim((string) ($postData['perguruan_tinggi'] ?? '')),
+            'fakultas' => trim((string) ($postData['fakultas'] ?? '')),
+            'jurusan' => trim((string) ($postData['jurusan'] ?? '')),
+            'alamat_padang' => trim((string) ($postData['alamat_padang'] ?? '')),
+            'asal_civitas' => trim((string) ($postData['asal_civitas'] ?? '')),
+            'tahun_maperca' => !empty($postData['tahun_maperca']) ? (int) $postData['tahun_maperca'] : (int) date('Y'),
+            'tingkat_kaderisasi' => 'Maperca',
+            'status_keanggotaan' => 'Aktif',
+            'anggota_komisariat' => 0,
+            'komisariat' => null,
+            'catatan' => $catatanFull,
+            'created_by' => null,
+        ];
+
+        $foto = $request->file('foto_anggota');
+        $res = $civitasService->create($dataToSave, $foto);
+
+        if (!$res['success']) {
+            Session::flash('error', 'Terjadi kendala saat menyimpan data pendaftaran. Silakan coba kembali.');
+            Session::setOld($postData);
+            redirect('/register_for_civitas/maperca');
+        }
+
+        $created = $civitasService->getById($res['id']);
+        $assignedNim = $created['nim'] ?? $dataToSave['nim'];
+
+        audit_log('PUBLIC_REGISTER_MAPERCA', 'civitas', (string) $res['id'], [
+            'nim' => $assignedNim,
+            'nama_lengkap' => $dataToSave['nama_lengkap'],
+            'kampus' => $dataToSave['perguruan_tinggi'],
+            'ip' => $_SERVER['REMOTE_ADDR'] ?? 'unknown',
+        ]);
+
+        Session::flash('success', "Puji Tuhan! Pendaftaran Calon Anggota (Maperca) atas nama {$dataToSave['nama_lengkap']} berhasil disimpan dengan ID: {$assignedNim}. Tim Kaderisasi BPC GMKI Padang akan segera menghubungi Anda.");
+        redirect('/register_for_civitas');
+    }
+
+    public function registerMember(Request $request): Response
+    {
+        $komisariatRepo = new KomisariatRepository();
+        $civitasRepo = new CivitasRepository();
+
+        $komisariatNames = $komisariatRepo->names();
+        $perguruanTinggiList = $civitasRepo->getDistinctPerguruanTinggi();
+        $tahunList = $civitasRepo->getDistinctTahunMaperca();
+
+        return view('register_for_civitas.register_as_member', [
+            'pageTitle' => 'Registrasi & Pemutakhiran Civitas Terdaftar - GMKI Cabang Padang',
+            'komisariatNames' => $komisariatNames,
+            'perguruanTinggiList' => $perguruanTinggiList,
+            'tahunList' => $tahunList,
+            'tahunSekarang' => (int) date('Y'),
+        ], 'public');
+    }
+
+    public function submitRegisterMember(Request $request): Response
+    {
+        $postData = $request->post();
+        $rules = [
+            'nama_lengkap' => 'required|min:3',
+            'jenis_kelamin' => 'required|in:L,P',
+            'tempat_lahir' => 'required',
+            'tanggal_lahir' => 'required',
+            'telepon' => 'required',
+            'email' => 'required|email',
+            'perguruan_tinggi' => 'required',
+            'tahun_maperca' => 'required|numeric',
+        ];
+
+        $isAnggotaKom = isset($postData['anggota_komisariat']) ? (int) $postData['anggota_komisariat'] : 0;
+        if ($isAnggotaKom === 1) {
+            $rules['komisariat'] = 'required';
+        }
+
+        $validator = Validator::make($postData, $rules);
+        if ($validator->fails()) {
+            Session::flash('error', $validator->first());
+            Session::setOld($postData);
+            redirect('/register_for_civitas/member');
+        }
+
+        $civitasService = new CivitasService();
+        $catatanTambahan = trim((string) ($postData['catatan'] ?? ''));
+        $catatanFull = '[Registrasi Mandiri Civitas ' . date('d/m/Y H:i') . '] ' . $catatanTambahan;
+
+        $rawStatus = trim((string) ($postData['status_keanggotaan'] ?? 'Aktif'));
+        if (!in_array($rawStatus, ['Aktif', 'Pasif', 'Alumni', 'Senior'], true)) {
+            $rawStatus = 'Aktif';
+        }
+
+        $rawTingkat = trim((string) ($postData['tingkat_kaderisasi'] ?? 'Anggota'));
+        if (!in_array($rawTingkat, ['Anggota', 'KK', 'Alumni', 'Maperca'], true)) {
+            $rawTingkat = 'Anggota';
+        }
+
+        $dataToSave = [
+            'nim' => trim((string) ($postData['nim'] ?? '')),
+            'nama_lengkap' => trim((string) $postData['nama_lengkap']),
+            'jenis_kelamin' => trim((string) $postData['jenis_kelamin']),
+            'tempat_lahir' => trim((string) ($postData['tempat_lahir'] ?? '')),
+            'tanggal_lahir' => trim((string) ($postData['tanggal_lahir'] ?? '')),
+            'telepon' => trim((string) ($postData['telepon'] ?? '')),
+            'email' => trim((string) ($postData['email'] ?? '')),
+            'perguruan_tinggi' => trim((string) ($postData['perguruan_tinggi'] ?? '')),
+            'fakultas' => trim((string) ($postData['fakultas'] ?? '')),
+            'jurusan' => trim((string) ($postData['jurusan'] ?? '')),
+            'alamat_padang' => trim((string) ($postData['alamat_padang'] ?? '')),
+            'asal_civitas' => trim((string) ($postData['asal_civitas'] ?? '')),
+            'tahun_maperca' => !empty($postData['tahun_maperca']) ? (int) $postData['tahun_maperca'] : (int) date('Y'),
+            'tingkat_kaderisasi' => $rawTingkat,
+            'status_keanggotaan' => $rawStatus,
+            'anggota_komisariat' => $isAnggotaKom,
+            'komisariat' => ($isAnggotaKom === 1 && !empty($postData['komisariat'])) ? trim((string) $postData['komisariat']) : null,
+            'catatan' => $catatanFull,
+            'created_by' => null,
+        ];
+
+        $foto = $request->file('foto_anggota');
+        $res = $civitasService->create($dataToSave, $foto);
+
+        if (!$res['success']) {
+            Session::flash('error', 'Terjadi kendala saat menyimpan pemutakhiran data civitas.');
+            Session::setOld($postData);
+            redirect('/register_for_civitas/member');
+        }
+
+        $created = $civitasService->getById($res['id']);
+        $assignedNim = $created['nim'] ?? $dataToSave['nim'];
+
+        audit_log('PUBLIC_REGISTER_CIVITAS', 'civitas', (string) $res['id'], [
+            'nim' => $assignedNim,
+            'nama_lengkap' => $dataToSave['nama_lengkap'],
+            'komisariat' => $dataToSave['komisariat'],
+            'ip' => $_SERVER['REMOTE_ADDR'] ?? 'unknown',
+        ]);
+
+        Session::flash('success', "Puji Tuhan! Data civitas atas nama {$dataToSave['nama_lengkap']} berhasil disimpan ke basis data cabang dengan ID: {$assignedNim}.");
+        redirect('/register_for_civitas');
     }
 }

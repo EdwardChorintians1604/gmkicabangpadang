@@ -39,7 +39,7 @@ $backLabel = $role === 'admin' ? 'Dashboard Admin' : 'Dashboard Sekcab';
                         <i class="bi bi-file-earmark-zip-fill"></i>
                         <span>Backup Arsip (ZIP)</span>
                     </a>
-                    <a href="/bencab/berkas" class="exec-btn exec-btn-emerald">
+                    <a href="/admin/keuangan/berkas" class="exec-btn exec-btn-emerald">
                         <i class="bi bi-wallet2"></i>
                         <span>Direktori Keuangan</span>
                     </a>

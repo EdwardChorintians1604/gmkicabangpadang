@@ -1,35 +1,169 @@
 <!-- Hero Section -->
 <section class="hero-section relative overflow-hidden">
     <div class="container relative z-10">
-        <div class="hero-content animate__animated animate__fadeIn">
-            <div
-                class="hero-badge animate__animated animate__pulse animate__infinite animate__slower inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-amber-300 text-xs sm:text-sm font-semibold shadow-sm">
-                <i class="bi bi-peace text-base sm:text-lg text-amber-300 flex-shrink-0"></i>
-                <span><?= e($profile['tema_periode'] ?? 'Ut Omnes Unum Sint') ?></span>
-            </div>
-            <h1 class="hero-title animate__animated animate__fadeInUp font-extrabold tracking-tight">
-                Melahirkan Pemimpin Berintegritas & Berkarakter Kristus
-            </h1>
-            <p class="hero-subtitle animate__animated animate__fadeInUp text-slate-200">
-                Selamat datang di portal resmi <strong>GMKI Cabang Padang</strong>. Wadah persekutuan dan kaderisasi
-                mahasiswa Kristen di Kota Padang untuk melayani di tiga medan layan: Gereja, Perguruan Tinggi, dan
-                Masyarakat.
-            </p>
-            <div class="hero-actions animate__animated animate__fadeInUp flex flex-wrap gap-3 sm:gap-4">
-                <a href="/profil"
-                    class="btn btn-secondary btn-lg w-full sm:w-auto text-center transform hover:-translate-y-1 transition-all duration-300 inline-flex items-center justify-center gap-2">
-                    <i class="bi bi-info-circle text-lg"></i>
-                    <span>Pelajari Profil Cabang</span>
-                </a>
-                <a href="/berita"
-                    class="btn btn-lg hero-btn-glass w-full sm:w-auto text-center transform hover:-translate-y-1 transition-all duration-300 inline-flex items-center justify-center gap-2 group">
-                    <span>Warta Kegiatan</span>
-                    <i
-                        class="bi bi-arrow-right text-base transition-transform duration-200 group-hover:translate-x-1"></i>
-                </a>
-            </div>
-        </div>
-    </div>
+        <div class="hero-content">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
+                <!-- Left: Headline & Call-to-actions -->
+                <div class="lg:col-span-7 animate__animated animate__fadeIn">
+                    <div
+                        class="hero-badge animate__animated animate__pulse animate__infinite animate__slower inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-amber-300 text-xs sm:text-sm font-semibold shadow-sm">
+                        <i class="bi bi-peace text-base sm:text-lg text-amber-300 flex-shrink-0"></i>
+                        <span><?= e($profile['tema_periode'] ?? 'Ut Omnes Unum Sint') ?></span>
+                    </div>
+
+                    <h1 class="hero-title animate__animated animate__fadeInUp font-extrabold tracking-tight">
+                        Melahirkan Pemimpin <span
+                            class="text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-yellow-200 to-amber-400">Berintegritas</span>
+                        &amp; Berkarakter Kristus
+                    </h1>
+
+                    <p class="hero-subtitle animate__animated animate__fadeInUp text-slate-200">
+                        Selamat datang di portal resmi <strong>GMKI Cabang Padang</strong>. Wadah persekutuan,
+                        kesaksian, dan kaderisasi
+                        mahasiswa Kristen di Kota Padang untuk melayani di tiga medan layan: Gereja, Perguruan Tinggi,
+                        dan
+                        Masyarakat.
+                    </p>
+
+                    <div class="hero-actions animate__animated animate__fadeInUp flex flex-wrap gap-3 sm:gap-4 mb-6">
+                        <a href="/profil"
+                            class="btn btn-secondary btn-lg w-full sm:w-auto text-center transform hover:-translate-y-1 transition-all duration-300 inline-flex items-center justify-center gap-2 shadow-lg shadow-amber-950/30">
+                            <i class="bi bi-info-circle text-lg"></i>
+                            <span>Pelajari Profil Cabang</span>
+                        </a>
+                        <a href="/berita"
+                            class="btn btn-lg hero-btn-glass w-full sm:w-auto text-center transform hover:-translate-y-1 transition-all duration-300 inline-flex items-center justify-center gap-2 group">
+                            <span>Warta Kegiatan</span>
+                            <i
+                                class="bi bi-arrow-right text-base transition-transform duration-200 group-hover:translate-x-1"></i>
+                        </a>
+                    </div>
+
+                    <!-- Tri Medan Highlights Badge -->
+                    <div class="pt-4 border-t border-white/10 flex flex-wrap items-center gap-2 text-xs text-slate-300">
+                        <span class="text-slate-400 font-semibold mr-1 flex items-center gap-1.5">
+                            <i class="bi bi-layers-fill text-amber-300"></i> Medan Layan:
+                        </span>
+                        <span
+                            class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/10 backdrop-blur-xs border border-white/10 font-medium text-slate-200">
+                            <i class="bi bi-building text-amber-300"></i> Gereja
+                        </span>
+                        <span
+                            class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/10 backdrop-blur-xs border border-white/10 font-medium text-slate-200">
+                            <i class="bi bi-mortarboard-fill text-sky-300"></i> Perguruan Tinggi
+                        </span>
+                        <span
+                            class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/10 backdrop-blur-xs border border-white/10 font-medium text-slate-200">
+                            <i class="bi bi-people-fill text-emerald-300"></i> Masyarakat
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Right: Quick Portal Registrasi Civitas & Maper Card -->
+                <div class="lg:col-span-5 animate__animated animate__fadeInRight">
+                    <div class="relative group">
+                        <!-- Glow Accent Behind Card -->
+                        <div
+                            class="absolute -inset-1 rounded-3xl bg-gradient-to-r from-amber-500/20 via-blue-500/20 to-indigo-500/30 blur-xl opacity-75 group-hover:opacity-100 transition duration-500">
+                        </div>
+
+                        <div
+                            class="relative rounded-3xl bg-slate-900/75 backdrop-blur-xl border border-white/20 p-5 sm:p-7 shadow-2xl text-white w-full">
+                            <!-- Card Header -->
+                            <div class="flex items-center justify-between gap-3 mb-4">
+                                <span
+                                    class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-400/20 text-amber-300 border border-amber-300/30">
+                                    <i class="bi bi-lightning-charge-fill text-amber-300"></i> Pendaftaran Online
+                                </span>
+                                <span
+                                    class="inline-flex items-center gap-1.5 text-[11px] font-semibold text-emerald-300 bg-emerald-950/60 px-2.5 py-1 rounded-full border border-emerald-400/30">
+                                    <span class="relative flex h-2 w-2">
+                                        <span
+                                            class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                                        <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                                    </span>
+                                    Pendaftaran Buka
+                                </span>
+                            </div>
+
+                            <h2 class="text-xl sm:text-2xl font-bold tracking-tight text-white mb-1.5">
+                                Portal Registrasi Mandiri
+                            </h2>
+                            <p class="text-xs sm:text-sm text-slate-300 mb-5 leading-relaxed">
+                                Pilih jalur pendaftaran resmi sesuai status keanggotaan Anda di GMKI Cabang Padang:
+                            </p>
+
+                            <!-- Dual Choices -->
+                            <div class="space-y-3.5">
+                                <!-- Option 1: Calon Anggota (Maperca) -->
+                                <a href="/register_for_civitas/maperca"
+                                    class="group/item flex items-center gap-3.5 p-3.5 sm:p-4 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/15 hover:border-amber-400/50 transition-all duration-300 hover:shadow-lg hover:shadow-amber-500/10 no-underline">
+                                    <div
+                                        class="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-500/25 to-amber-600/35 border border-amber-400/40 flex items-center justify-center flex-shrink-0 text-amber-300 group-hover/item:scale-105 group-hover/item:bg-amber-500 group-hover/item:text-slate-950 transition-all duration-300 shadow-sm">
+                                        <i class="bi bi-mortarboard-fill text-2xl"></i>
+                                    </div>
+                                    <div class="flex-grow min-w-0">
+                                        <div class="flex flex-wrap items-center gap-2 mb-0.5">
+                                            <h3
+                                                class="text-sm sm:text-base font-bold text-white group-hover/item:text-amber-300 transition-colors">
+                                                Calon Anggota (Maperca)
+                                            </h3>
+                                            <span
+                                                class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-400/20 text-amber-300 border border-amber-400/30">Kader
+                                                Baru</span>
+                                        </div>
+                                        <p class="text-xs text-slate-300 line-clamp-1 leading-relaxed">
+                                            Untuk mahasiswa Kristen baru yang ingin mengikuti Masa Perkenalan.
+                                        </p>
+                                    </div>
+                                    <div
+                                        class="text-slate-400 group-hover/item:text-amber-300 group-hover/item:translate-x-1 transition-all flex-shrink-0 ml-1">
+                                        <i class="bi bi-chevron-right text-base"></i>
+                                    </div>
+                                </a>
+
+                                <!-- Option 2: Civitas & Anggota Terdaftar -->
+                                <a href="/register_for_civitas/member"
+                                    class="group/item flex items-center gap-3.5 p-3.5 sm:p-4 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/15 hover:border-sky-400/50 transition-all duration-300 hover:shadow-lg hover:shadow-sky-500/10 no-underline">
+                                    <div
+                                        class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500/25 to-indigo-600/35 border border-sky-400/40 flex items-center justify-center flex-shrink-0 text-sky-300 group-hover/item:scale-105 group-hover/item:bg-sky-500 group-hover/item:text-slate-950 transition-all duration-300 shadow-sm">
+                                        <i class="bi bi-person-vcard-fill text-2xl"></i>
+                                    </div>
+                                    <div class="flex-grow min-w-0">
+                                        <div class="flex flex-wrap items-center gap-2 mb-0.5">
+                                            <h3
+                                                class="text-sm sm:text-base font-bold text-white group-hover/item:text-sky-300 transition-colors">
+                                                Civitas &amp; Anggota Cabang
+                                            </h3>
+                                            <span
+                                                class="px-2 py-0.5 rounded text-[10px] font-bold bg-sky-400/20 text-sky-300 border border-sky-400/30">Anggota
+                                                Sah</span>
+                                        </div>
+                                        <p class="text-xs text-slate-300 line-clamp-1 leading-relaxed">
+                                            Pemutakhiran data civitas, verifikasi KTA &amp; pangkalan data cabang.
+                                        </p>
+                                    </div>
+                                    <div
+                                        class="text-slate-400 group-hover/item:text-sky-300 group-hover/item:translate-x-1 transition-all flex-shrink-0 ml-1">
+                                        <i class="bi bi-chevron-right text-base"></i>
+                                    </div>
+                                </a>
+                            </div>
+
+                            <!-- Card Footer -->
+                            <div
+                                class="mt-4 pt-3.5 border-t border-white/10 flex items-center justify-between text-[11px] text-slate-300 flex-wrap gap-2">
+                                <span class="flex items-center gap-1.5 text-slate-300">
+                                    <i class="bi bi-shield-check text-emerald-400 text-sm"></i>
+                                    Basis Data BPC Resmi
+                                </span>
+                                <a href="/login"
+                                    class="text-amber-300 hover:text-amber-200 font-semibold inline-flex items-center gap-1 transition-colors no-underline">
+                                    <span>Sudah berakun? Masuk</span>
+                                    <i class="bi bi-arrow-right"></i>
+                                </a>
+                            </div>
+                        </div>
 </section>
 
 <!-- Stats Strip -->

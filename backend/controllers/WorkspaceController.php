@@ -466,6 +466,10 @@ class WorkspaceController
             Authorization::authorize('archive.view');
         }
 
+        $isAdminMode = ($role === 'admin' || str_starts_with($request->getPath(), '/admin'));
+        $basePath = $isAdminMode ? '/admin/persuratan/berkas' : '/sekcab/berkas';
+        $layout = $isAdminMode ? 'admin' : 'dashboard';
+
         $query = trim((string) $request->query('q', ''));
         $nature = trim((string) $request->query('nature', ''));
         $status = trim((string) $request->query('status', ''));
@@ -587,6 +591,8 @@ class WorkspaceController
 
         return view('workspaces.archive_files', [
             'pageTitle' => 'Direktori Berkas Laporan & Persuratan Sekcab - GMKI Cabang Padang',
+            'basePath' => $basePath,
+            'isAdminMode' => $isAdminMode,
             'documents' => $documents,
             'stats' => $stats,
             'query' => $query,
@@ -605,6 +611,17 @@ class WorkspaceController
         if (!in_array($role, ['admin', 'bencab'], true)) {
             Authorization::authorize('finance.view');
         }
+
+        $isAdminMode = ($role === 'admin' || str_starts_with($request->getPath(), '/admin'));
+
+        // Jika Administrator mengakses link lama /bencab/berkas, alihkan secara mulus ke alamat khusus admin /admin/keuangan/berkas
+        if ($role === 'admin' && str_starts_with($request->getPath(), '/bencab/berkas')) {
+            $qs = !empty($_SERVER['QUERY_STRING']) ? '?' . $_SERVER['QUERY_STRING'] : '';
+            redirect('/admin/keuangan/berkas' . $qs);
+        }
+
+        $basePath = $isAdminMode ? '/admin/keuangan/berkas' : '/bencab/berkas';
+        $layout = $isAdminMode ? 'admin' : 'dashboard';
 
         $query = trim((string) $request->query('q', ''));
         $period = trim((string) $request->query('period', ''));
@@ -684,6 +701,7 @@ class WorkspaceController
         $financeTotal = (int) (Database::fetchOne("SELECT COUNT(*) AS total FROM office_documents WHERE document_type = 'finance'")['total'] ?? 0);
         $excelCount = (int) (Database::fetchOne("SELECT COUNT(*) AS total FROM office_documents WHERE document_type = 'finance' AND LOWER(SUBSTRING_INDEX(original_name, '.', -1)) IN ('xls', 'xlsx')")['total'] ?? 0);
         $pdfCount = (int) (Database::fetchOne("SELECT COUNT(*) AS total FROM office_documents WHERE document_type = 'finance' AND LOWER(SUBSTRING_INDEX(original_name, '.', -1)) = 'pdf'")['total'] ?? 0);
+        $duplicatedCount = (int) (Database::fetchOne("SELECT COUNT(*) AS total FROM office_documents WHERE document_type = 'finance' AND backup_stored_name IS NOT NULL AND backup_stored_name != ''")['total'] ?? 0);
 
         $allDocs = Database::fetchAll("SELECT stored_name FROM office_documents WHERE document_type = 'finance' AND stored_name IS NOT NULL");
         $totalStorageBytes = 0;
@@ -700,14 +718,17 @@ class WorkspaceController
             'total' => $financeTotal,
             'excel' => $excelCount,
             'pdf' => $pdfCount,
+            'duplicated' => $duplicatedCount,
             'storage_used' => $this->formatBytes($totalStorageBytes),
             'storage_bytes' => $totalStorageBytes,
         ];
 
-        $layout = Auth::role() === 'admin' ? 'admin' : 'dashboard';
-
         return view('workspaces.finance_files', [
-            'pageTitle' => 'Direktori Berkas Laporan Keuangan - GMKI Cabang Padang',
+            'pageTitle' => $isAdminMode 
+                ? 'Direktori Berkas Keuangan Cabang - Administrator GMKI Padang' 
+                : 'Direktori Berkas Laporan Keuangan - GMKI Cabang Padang',
+            'basePath' => $basePath,
+            'isAdminMode' => $isAdminMode,
             'documents' => $documents,
             'stats' => $stats,
             'query' => $query,
@@ -752,7 +773,17 @@ class WorkspaceController
             exit('Akses ditolak: Hanya Administrator yang berhak membuat dan mengunduh paket cadangan arsip berkas.');
         }
 
-        $type = trim((string) $request->query('type', 'all'));
+        $type = trim((string) $request->query('type', ''));
+        if ($type === '') {
+            $path = $request->getPath();
+            if (str_contains($path, 'keuangan')) {
+                $type = 'finance';
+            } elseif (str_contains($path, 'persuratan') || str_contains($path, 'arsip')) {
+                $type = 'archive';
+            } else {
+                $type = 'all';
+            }
+        }
         if (!in_array($type, ['all', 'archive', 'finance'], true)) {
             $type = 'all';
         }

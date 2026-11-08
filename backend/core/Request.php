@@ -65,12 +65,27 @@ class Request
         return $this->method;
     }
 
+    public function method(): string
+    {
+        return $this->method;
+    }
+
     public function getPath(): string
     {
         return $this->path;
     }
 
+    public function path(): string
+    {
+        return $this->path;
+    }
+
     public function getUri(): string
+    {
+        return $this->uri;
+    }
+
+    public function uri(): string
     {
         return $this->uri;
     }

@@ -31,6 +31,11 @@ class Response
         return $this;
     }
 
+    public function getContent(): ?string
+    {
+        return $this->content;
+    }
+
     public function json(mixed $data, int $status = 200): self
     {
         $this->statusCode = $status;

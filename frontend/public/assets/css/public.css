@@ -717,10 +717,10 @@ body.mobile-nav-open {
 }
 
 .hero-section {
-    min-height: 490px;
+    min-height: 440px;
     display: flex;
     align-items: center;
-    padding: clamp(3.75rem, 8vw, 6rem) 0;
+    padding: clamp(2.5rem, 5vw, 4rem) 0;
     background:
         radial-gradient(circle at 82% 22%, rgba(237, 169, 64, .19), transparent 19rem),
         linear-gradient(118deg, #071e33 0%, #0d3659 54%, #1b5680 100%);
@@ -736,30 +736,32 @@ body.mobile-nav-open {
 }
 
 .hero-content {
-    max-width: 760px;
+    width: 100%;
+    max-width: 100%;
 }
 
 .hero-badge {
-    margin-bottom: 1.25rem;
-    padding: .45rem .9rem;
+    margin-bottom: 1rem;
+    padding: .4rem .85rem;
     border-color: rgba(255, 255, 255, .24);
     background: rgba(255, 255, 255, .09);
     color: #ffdfa0;
 }
 
 .hero-title {
-    max-width: 760px;
+    max-width: 100%;
     margin-bottom: 1rem;
-    font-size: clamp(2.25rem, 5vw, 3.75rem);
-    letter-spacing: -.055em;
-    line-height: 1.08;
+    font-size: clamp(1.85rem, 3.2vw, 2.75rem);
+    letter-spacing: -.03em;
+    line-height: 1.15;
 }
 
 .hero-subtitle {
-    max-width: 660px;
-    margin-bottom: 1.75rem;
-    color: rgba(232, 240, 248, .84);
-    font-size: clamp(1rem, 1.5vw, 1.12rem);
+    max-width: 100%;
+    margin-bottom: 1.5rem;
+    color: rgba(232, 240, 248, .88);
+    font-size: clamp(0.95rem, 1.25vw, 1.075rem);
+    line-height: 1.6;
 }
 
 .hero-actions {
