@@ -18,6 +18,10 @@ $navigation = [
             ['/admin/komisariat', 'bi-buildings-fill', 'Data Komisariat (Lihat & Unduh)'],
             ['/admin/statistik', 'bi-bar-chart-line-fill', 'Statistik Cabang'],
         ]],
+        ['Tools & Berkas', [
+            ['/sekcab/berkas', 'bi-folder2-open', 'Direktori Berkas Persuratan'],
+            ['/bencab/berkas', 'bi-file-earmark-spreadsheet-fill', 'Direktori Berkas Keuangan'],
+        ]],
     ],
     'sekcab' => [
         ['Administrasi Cabang', [
@@ -31,6 +35,7 @@ $navigation = [
         ]],
         ['Tools & Berkas', [
             ['/sekcab/berkas', 'bi-folder2-open', 'Direktori Berkas Persuratan'],
+            ['/bencab/berkas', 'bi-file-earmark-spreadsheet-fill', 'Direktori Berkas Keuangan'],
         ]],
     ],
     'bencab' => [
@@ -40,7 +45,8 @@ $navigation = [
             ['/ruang-kerja/antrian', 'bi-hourglass-split', 'Antrean Ekspor'],
         ]],
         ['Tools & Berkas', [
-            ['/bencab/berkas', 'bi-folder2-open', 'Direktori Berkas Keuangan'],
+            ['/bencab/berkas', 'bi-file-earmark-spreadsheet-fill', 'Direktori Berkas Keuangan'],
+            ['/sekcab/berkas', 'bi-folder2-open', 'Direktori Berkas Persuratan'],
         ]],
     ],
     'sekfung_medko' => [

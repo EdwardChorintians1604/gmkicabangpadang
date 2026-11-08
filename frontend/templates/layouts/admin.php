@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="<?= asset('vendor/animate.min.css') ?>">
     <link rel="stylesheet" href="<?= asset('vendor/leaflet/leaflet.css') ?>">
     <link rel="stylesheet" href="<?= asset('css/app.css') ?>?v=5">
-    <link rel="stylesheet" href="<?= asset('css/admin.css') ?>?v=19">
+    <link rel="stylesheet" href="<?= asset('css/admin.css') ?>?v=20">
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
@@ -224,26 +224,60 @@
                 </div>
 
                 <div class="header-actions flex items-center gap-1.5 sm:gap-2.5 flex-shrink-0">
-                    <a href="/" target="_blank" class="btn btn-outline btn-sm flex items-center gap-1 px-2 sm:px-3"
-                        title="Lihat Portal Pengunjung">
-                        <?= svg_icon('external', 14) ?>
-                        <span class="btn-label hidden sm:inline">Lihat Web</span>
-                    </a>
+                    <?php if (in_array(auth()['role'] ?? '', ['ketcab', 'sekcab', 'bencab', 'sekfung_medko'], true)): ?>
+                        <div class="user-profile-badge">
+                            <img src="<?= asset('images/default-profile.png') ?>" alt="Foto Pengguna" class="user-avatar-sm">
+                            <div class="user-meta-details hidden md:block">
+                                <div style="font-weight: 700; line-height: 1.2; max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                    <?= e(auth()['nama_lengkap'] ?? auth()['username']) ?>
+                                </div>
+                                <div style="font-size: 0.72rem; color: var(--text-muted); text-transform: capitalize;">
+                                    <?= match (auth()['role'] ?? '') {
+                                        'ketcab' => 'Ketua Cabang',
+                                        'sekcab' => 'Sekretaris Cabang',
+                                        'bencab' => 'Bendahara Cabang',
+                                        'sekfung_medko' => 'Sekfung Medko',
+                                        default => e(auth()['role'])
+                                    } ?>
+                                </div>
+                            </div>
+                        </div>
 
-                    <div class="user-dropdown">
-                        <a href="/ubah-password" class="btn btn-outline btn-sm px-2 sm:px-2.5" title="Ubah Password">
-                            <?= svg_icon('lock', 14) ?>
+                        <a href="/ubah-password" class="btn btn-outline btn-sm px-2 sm:px-2.5" title="Ubah Kata Sandi">
+                            🔑 <span class="btn-label hidden sm:inline">Sandi</span>
                         </a>
-                    </div>
 
-                    <form action="/logout" method="POST" style="margin: 0;"
-                        onsubmit="sessionStorage.clear(); return confirm('Apakah Anda yakin ingin keluar dari sistem?');">
-                        <?= csrf_field() ?>
-                        <button type="submit" class="btn btn-danger btn-sm flex items-center gap-1 px-2 sm:px-3" title="Keluar dari sistem">
-                            <?= svg_icon('logout', 14) ?>
-                            <span class="btn-label hidden sm:inline">Keluar</span>
-                        </button>
-                    </form>
+                        <form action="/logout" method="POST" style="display: inline; margin: 0;"
+                            onsubmit="sessionStorage.clear(); return confirm('Apakah Anda yakin ingin keluar dari sistem?');">
+                            <?= csrf_field() ?>
+                            <button type="submit" class="btn btn-danger btn-sm flex items-center gap-1 px-2 sm:px-3"
+                                title="Keluar dari sistem">
+                                <?= svg_icon('logout', 14) ?>
+                                <span class="btn-label hidden sm:inline">Keluar</span>
+                            </button>
+                        </form>
+                    <?php else: ?>
+                        <a href="/" target="_blank" class="btn btn-outline btn-sm flex items-center gap-1 px-2 sm:px-3"
+                            title="Lihat Portal Pengunjung">
+                            <?= svg_icon('external', 14) ?>
+                            <span class="btn-label hidden sm:inline">Lihat Web</span>
+                        </a>
+
+                        <div class="user-dropdown">
+                            <a href="/ubah-password" class="btn btn-outline btn-sm px-2 sm:px-2.5" title="Ubah Password">
+                                <?= svg_icon('lock', 14) ?>
+                            </a>
+                        </div>
+
+                        <form action="/logout" method="POST" style="margin: 0;"
+                            onsubmit="sessionStorage.clear(); return confirm('Apakah Anda yakin ingin keluar dari sistem?');">
+                            <?= csrf_field() ?>
+                            <button type="submit" class="btn btn-danger btn-sm flex items-center gap-1 px-2 sm:px-3" title="Keluar dari sistem">
+                                <?= svg_icon('logout', 14) ?>
+                                <span class="btn-label hidden sm:inline">Keluar</span>
+                            </button>
+                        </form>
+                    <?php endif; ?>
                 </div>
             </header>
 

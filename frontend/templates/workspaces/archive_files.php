@@ -3,10 +3,25 @@ $role = $user['role'] ?? '';
 $isSekcab = ($role === 'sekcab');
 $backPath = match ($role) {
     'admin' => '/admin/dashboard',
+    'ketcab' => '/ketcab/dashboard',
     'sekcab' => '/ruang-kerja',
+    'bencab' => '/ruang-kerja',
     default => '/ruang-kerja',
 };
-$backLabel = $role === 'admin' ? 'Dashboard Admin' : 'Dashboard Sekcab';
+$backLabel = match ($role) {
+    'admin' => 'Dashboard Admin',
+    'ketcab' => 'Dashboard Ketcab',
+    'sekcab' => 'Dashboard Sekcab',
+    'bencab' => 'Dashboard Bencab',
+    default => 'Ruang Kerja',
+};
+$modeLabel = match ($role) {
+    'admin' => 'Pantauan Admin (Read-Only)',
+    'ketcab' => 'Pantauan Ketua Cabang',
+    'sekcab' => 'Kelola Sekretaris Cabang',
+    'bencab' => 'Pantauan Bendahara Cabang',
+    default => 'Pengurus Cabang',
+};
 ?>
 
 <div class="ws-page-wrap file-directory-page">
@@ -29,7 +44,7 @@ $backLabel = $role === 'admin' ? 'Dashboard Admin' : 'Dashboard Sekcab';
                     </span>
                     <span class="exec-banner-pill">
                         <i class="bi bi-person-badge" style="color: #fde68a;"></i>
-                        Mode Akses: <code><?= $role === 'admin' ? 'Pantauan Admin (Read-Only)' : 'Kelola Sekcab' ?></code>
+                        Mode Akses: <code><?= e($modeLabel) ?></code>
                     </span>
                 </div>
             </div>
@@ -48,10 +63,16 @@ $backLabel = $role === 'admin' ? 'Dashboard Admin' : 'Dashboard Sekcab';
                         <span>Buku Agenda</span>
                     </a>
                 <?php else: ?>
-                    <a href="/sekcab/arsip" class="exec-btn exec-btn-sky">
-                        <i class="bi bi-plus-circle-fill"></i>
-                        <span>Catat &amp; Unggah Surat</span>
+                    <a href="/bencab/berkas" class="exec-btn exec-btn-emerald" title="Beralih ke Direktori Berkas Keuangan Bencab">
+                        <i class="bi bi-file-earmark-spreadsheet-fill"></i>
+                        <span>Direktori Keuangan</span>
                     </a>
+                    <?php if ($role === 'sekcab'): ?>
+                        <a href="/sekcab/arsip" class="exec-btn exec-btn-sky">
+                            <i class="bi bi-plus-circle-fill"></i>
+                            <span>Catat &amp; Unggah Surat</span>
+                        </a>
+                    <?php endif; ?>
                     <a href="<?= e($backPath) ?>" class="exec-btn exec-btn-glass">
                         <i class="bi bi-arrow-left"></i>
                         <span><?= e($backLabel) ?></span>

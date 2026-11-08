@@ -462,7 +462,7 @@ class WorkspaceController
     public function archiveFiles(Request $request): Response
     {
         $role = Auth::role();
-        if (!in_array($role, ['admin', 'sekcab'], true)) {
+        if (!in_array($role, ['admin', 'sekcab', 'ketcab', 'bencab'], true)) {
             Authorization::authorize('archive.view');
         }
 
@@ -608,7 +608,7 @@ class WorkspaceController
     public function financeFiles(Request $request): Response
     {
         $role = Auth::role();
-        if (!in_array($role, ['admin', 'bencab'], true)) {
+        if (!in_array($role, ['admin', 'bencab', 'ketcab', 'sekcab'], true)) {
             Authorization::authorize('finance.view');
         }
 

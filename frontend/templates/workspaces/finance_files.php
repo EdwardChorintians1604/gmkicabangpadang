@@ -5,10 +5,25 @@ $basePath = $basePath ?? ($isAdmin ? '/admin/keuangan/berkas' : '/bencab/berkas'
 $backupZipUrl = '/admin/keuangan/berkas/backup';
 $backPath = match ($role) {
     'admin' => '/admin/dashboard',
+    'ketcab' => '/ketcab/dashboard',
     'bencab' => '/ruang-kerja',
+    'sekcab' => '/ruang-kerja',
     default => '/ruang-kerja',
 };
-$backLabel = $role === 'admin' ? 'Dashboard Admin' : 'Dashboard Bencab';
+$backLabel = match ($role) {
+    'admin' => 'Dashboard Admin',
+    'ketcab' => 'Dashboard Ketcab',
+    'bencab' => 'Dashboard Bencab',
+    'sekcab' => 'Dashboard Sekcab',
+    default => 'Ruang Kerja',
+};
+$modeLabel = match ($role) {
+    'admin' => 'Pantauan Admin (Read-Only)',
+    'ketcab' => 'Pantauan Ketua Cabang',
+    'bencab' => 'Kelola Bendahara Cabang',
+    'sekcab' => 'Pantauan Sekretaris Cabang',
+    default => 'Pengurus Cabang',
+};
 ?>
 
 <div class="ws-page-wrap file-directory-page">
@@ -31,7 +46,7 @@ $backLabel = $role === 'admin' ? 'Dashboard Admin' : 'Dashboard Bencab';
                     </span>
                     <span class="exec-banner-pill">
                         <i class="bi bi-person-badge" style="color: #fde68a;"></i>
-                        Mode Akses: <code><?= $isAdmin ? 'Pantauan Admin (Read-Only)' : 'Kelola Bendahara Cabang' ?></code>
+                        Mode Akses: <code><?= e($modeLabel) ?></code>
                     </span>
                     <span class="exec-banner-pill">
                         <i class="bi bi-file-earmark-spreadsheet-fill" style="color: #38bdf8;"></i>
@@ -58,10 +73,16 @@ $backLabel = $role === 'admin' ? 'Dashboard Admin' : 'Dashboard Bencab';
                         <span>Rekap Kas</span>
                     </a>
                 <?php else: ?>
-                    <a href="/bencab/laporan" class="exec-btn exec-btn-emerald">
-                        <i class="bi bi-plus-circle-fill"></i>
-                        <span>Unggah Laporan Baru</span>
+                    <a href="/sekcab/berkas" class="exec-btn exec-btn-sky" title="Beralih ke Direktori Berkas Persuratan Sekcab">
+                        <i class="bi bi-folder2-open"></i>
+                        <span>Direktori Persuratan</span>
                     </a>
+                    <?php if ($role === 'bencab'): ?>
+                        <a href="/bencab/laporan" class="exec-btn exec-btn-emerald">
+                            <i class="bi bi-plus-circle-fill"></i>
+                            <span>Unggah Laporan Baru</span>
+                        </a>
+                    <?php endif; ?>
                     <a href="/bencab/laporan" class="exec-btn exec-btn-glass">
                         <i class="bi bi-journal-text"></i>
                         <span>Buku Kas</span>

@@ -24,9 +24,9 @@ $router->post('/sekcab/arsip/{id}/delete', 'WorkspaceController@deleteArchive', 
 $router->get('/bencab/laporan', 'WorkspaceController@finance', ['auth', 'role:admin,ketcab,bencab']);
 $router->post('/bencab/laporan', 'WorkspaceController@saveFinance', ['auth', 'role:bencab', 'csrf']);
 $router->post('/bencab/laporan/{id}/delete', 'WorkspaceController@deleteFinance', ['auth', 'role:bencab', 'csrf']);
-$router->get('/sekcab/berkas', 'WorkspaceController@archiveFiles', ['auth', 'role:admin,sekcab']);
-$router->get('/bencab/berkas', 'WorkspaceController@financeFiles', ['auth', 'role:admin,bencab']);
-$router->get('/ruang-kerja/berkas', 'WorkspaceController@files', ['auth', 'role:admin,sekcab,bencab']);
+$router->get('/sekcab/berkas', 'WorkspaceController@archiveFiles', ['auth', 'role:admin,sekcab,ketcab,bencab']);
+$router->get('/bencab/berkas', 'WorkspaceController@financeFiles', ['auth', 'role:admin,bencab,ketcab,sekcab']);
+$router->get('/ruang-kerja/berkas', 'WorkspaceController@files', ['auth', 'role:admin,sekcab,bencab,ketcab']);
 $router->get('/dokumen/{id}/unduh', 'WorkspaceController@downloadDocument', ['auth']);
 $router->get('/admin/berkas/backup', 'WorkspaceController@downloadArchiveZip', ['auth', 'role:admin']);
 

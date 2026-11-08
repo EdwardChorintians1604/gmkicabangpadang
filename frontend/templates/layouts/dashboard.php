@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id" class="admin-html">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,7 +8,7 @@
     <link rel="icon" type="image/png" href="<?= asset('images/favicon.png') ?>">
     <link rel="stylesheet" href="<?= asset('vendor/animate.min.css') ?>">
     <link rel="stylesheet" href="<?= asset('css/app.css') ?>?v=5">
-    <link rel="stylesheet" href="<?= asset('css/dashboard.css') ?>?v=12">
+    <link rel="stylesheet" href="<?= asset('css/dashboard.css') ?>?v=13">
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
@@ -31,188 +32,239 @@
         }
     </script>
 </head>
+
 <body class="dashboard-body">
 
     <div class="dashboard-wrapper">
         <?php if (in_array(auth()['role'] ?? '', ['ketcab', 'sekcab', 'bencab', 'sekfung_medko'], true)): ?>
             <?= partial('layouts.partials.officer-sidebar') ?>
         <?php else: ?>
-        <!-- Sidebar -->
-        <aside class="dashboard-sidebar">
-            <div class="sidebar-brand flex items-center justify-between">
-                <div class="flex items-center gap-2">
-                    <img src="<?= asset('images/logo-gmki.png') ?>" alt="Logo GMKI" style="width: 36px; height: 36px; object-fit: contain;">
-                    <div>
-                        <div class="sidebar-brand-title">GMKI Padang</div>
-                        <div class="sidebar-brand-sub">Sistem Manajemen Cabang</div>
+            <!-- Sidebar -->
+            <aside class="dashboard-sidebar">
+                <div class="sidebar-brand flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <img src="<?= asset('images/logo-gmki.png') ?>" alt="Logo GMKI"
+                            style="width: 36px; height: 36px; object-fit: contain;">
+                        <div>
+                            <div class="sidebar-brand-title">GMKI Padang</div>
+                            <div class="sidebar-brand-sub">Sistem Manajemen Cabang</div>
+                        </div>
                     </div>
+                    <button type="button" class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="Tutup Menu">
+                        ✕
+                    </button>
                 </div>
-                <button type="button" class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="Tutup Menu">
-                    ✕
-                </button>
-            </div>
 
-            <ul class="sidebar-nav">
-                <li class="nav-category">Navigasi Utama</li>
-                
-                <?php if (can('dashboard.view')): ?>
-                    <li class="sidebar-nav-item">
-                        <a href="/dashboard" class="sidebar-nav-link <?= ($_SERVER['REQUEST_URI'] === '/dashboard') ? 'active' : '' ?> flex items-center gap-2">
-                            <span class="sidebar-nav-icon flex items-center justify-center text-base"><i class="bi bi-speedometer2"></i></span>
-                            <span>Dashboard</span>
-                        </a>
-                    </li>
-                <?php endif; ?>
+                <ul class="sidebar-nav">
+                    <li class="nav-category">Navigasi Utama</li>
 
-                <?php if (can('dashboard.pengawas') && !in_array(auth()['role'] ?? '', ['admin', 'sekfung_medko'], true)): ?>
-                    <li class="sidebar-nav-item">
-                        <a href="/ketcab/dashboard" class="sidebar-nav-link <?= (str_starts_with($_SERVER['REQUEST_URI'], '/ketcab/dashboard')) ? 'active' : '' ?> flex items-center gap-2">
-                            <span class="sidebar-nav-icon flex items-center justify-center text-base"><i class="bi bi-eye-fill"></i></span>
-                            <span>Panel Ketcab</span>
-                        </a>
-                    </li>
-                <?php endif; ?>
-
-                <?php if (can('inventory.view') || can('archive.view') || can('finance.view') || can('reports.view') || can('strategy.view')): ?>
-                    <li class="nav-category">Ruang Kerja BPC</li>
-                    <?php if (can('inventory.view')): ?>
-                        <li class="sidebar-nav-item"><a href="/sekcab/inventaris" class="sidebar-nav-link flex items-center gap-2"><span class="sidebar-nav-icon flex items-center justify-center text-base"><i class="bi bi-boxes"></i></span><span>Inventaris</span></a></li>
+                    <?php if (can('dashboard.view')): ?>
+                        <li class="sidebar-nav-item">
+                            <a href="/dashboard"
+                                class="sidebar-nav-link <?= ($_SERVER['REQUEST_URI'] === '/dashboard') ? 'active' : '' ?> flex items-center gap-2">
+                                <span class="sidebar-nav-icon flex items-center justify-center text-base"><i
+                                        class="bi bi-speedometer2"></i></span>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
                     <?php endif; ?>
-                    <?php if (can('archive.view')): ?>
-                        <li class="sidebar-nav-item"><a href="/sekcab/arsip" class="sidebar-nav-link <?= active_nav('/sekcab/arsip') ?> flex items-center gap-2"><span class="sidebar-nav-icon flex items-center justify-center text-base"><i class="bi bi-archive-fill"></i></span><span>Arsip Surat</span></a></li>
-                        <li class="sidebar-nav-item"><a href="/sekcab/berkas" class="sidebar-nav-link <?= active_nav('/sekcab/berkas') ?> flex items-center gap-2"><span class="sidebar-nav-icon flex items-center justify-center text-base"><i class="bi bi-folder2-open"></i></span><span>Direktori Berkas Persuratan</span></a></li>
+
+                    <?php if (can('dashboard.pengawas') && !in_array(auth()['role'] ?? '', ['admin', 'sekfung_medko'], true)): ?>
+                        <li class="sidebar-nav-item">
+                            <a href="/ketcab/dashboard"
+                                class="sidebar-nav-link <?= (str_starts_with($_SERVER['REQUEST_URI'], '/ketcab/dashboard')) ? 'active' : '' ?> flex items-center gap-2">
+                                <span class="sidebar-nav-icon flex items-center justify-center text-base"><i
+                                        class="bi bi-eye-fill"></i></span>
+                                <span>Panel Ketcab</span>
+                            </a>
+                        </li>
                     <?php endif; ?>
-                    <?php if (can('finance.view') || can('reports.view')): ?>
-                        <li class="sidebar-nav-item"><a href="/bencab/laporan" class="sidebar-nav-link <?= active_nav('/bencab/laporan') ?> flex items-center gap-2"><span class="sidebar-nav-icon flex items-center justify-center text-base"><i class="bi bi-cash-stack"></i></span><span>Laporan Keuangan</span></a></li>
-                        <?php if (can('finance.view')): ?>
-                            <li class="sidebar-nav-item"><a href="/bencab/berkas" class="sidebar-nav-link <?= active_nav('/bencab/berkas') ?> flex items-center gap-2"><span class="sidebar-nav-icon flex items-center justify-center text-base"><i class="bi bi-file-earmark-spreadsheet-fill"></i></span><span>Direktori Berkas Keuangan</span></a></li>
+
+                    <?php if (can('inventory.view') || can('archive.view') || can('finance.view') || can('reports.view') || can('strategy.view')): ?>
+                        <li class="nav-category">Ruang Kerja BPC</li>
+                        <?php if (can('inventory.view')): ?>
+                            <li class="sidebar-nav-item"><a href="/sekcab/inventaris"
+                                    class="sidebar-nav-link flex items-center gap-2"><span
+                                        class="sidebar-nav-icon flex items-center justify-center text-base"><i
+                                            class="bi bi-boxes"></i></span><span>Inventaris</span></a></li>
                         <?php endif; ?>
+                        <?php if (can('archive.view')): ?>
+                            <li class="sidebar-nav-item"><a href="/sekcab/arsip"
+                                    class="sidebar-nav-link <?= active_nav('/sekcab/arsip') ?> flex items-center gap-2"><span
+                                        class="sidebar-nav-icon flex items-center justify-center text-base"><i
+                                            class="bi bi-archive-fill"></i></span><span>Arsip Surat</span></a></li>
+                            <li class="sidebar-nav-item"><a href="/sekcab/berkas"
+                                    class="sidebar-nav-link <?= active_nav('/sekcab/berkas') ?> flex items-center gap-2"><span
+                                        class="sidebar-nav-icon flex items-center justify-center text-base"><i
+                                            class="bi bi-folder2-open"></i></span><span>Direktori Berkas Persuratan</span></a></li>
+                        <?php endif; ?>
+                        <?php if (can('finance.view') || can('reports.view')): ?>
+                            <li class="sidebar-nav-item"><a href="/bencab/laporan"
+                                    class="sidebar-nav-link <?= active_nav('/bencab/laporan') ?> flex items-center gap-2"><span
+                                        class="sidebar-nav-icon flex items-center justify-center text-base"><i
+                                            class="bi bi-cash-stack"></i></span><span>Laporan Keuangan</span></a></li>
+                            <?php if (can('finance.view')): ?>
+                                <li class="sidebar-nav-item"><a href="/bencab/berkas"
+                                        class="sidebar-nav-link <?= active_nav('/bencab/berkas') ?> flex items-center gap-2"><span
+                                            class="sidebar-nav-icon flex items-center justify-center text-base"><i
+                                                class="bi bi-file-earmark-spreadsheet-fill"></i></span><span>Direktori Berkas
+                                            Keuangan</span></a></li>
+                            <?php endif; ?>
+                        <?php endif; ?>
+                        <?php if (can('strategy.view')): ?>
+                            <li class="sidebar-nav-item"><a href="/ketcab/proker"
+                                    class="sidebar-nav-link <?= (active_nav('/ketcab/proker') || active_nav('/ketcab/strategi')) ?> flex items-center gap-2"><span
+                                        class="sidebar-nav-icon flex items-center justify-center text-base"><i
+                                            class="bi bi-kanban"></i></span><span>Program Kerja Sekfung</span></a></li>
+                        <?php endif; ?>
+
                     <?php endif; ?>
-                    <?php if (can('strategy.view')): ?>
-                        <li class="sidebar-nav-item"><a href="/ketcab/proker" class="sidebar-nav-link <?= (active_nav('/ketcab/proker') || active_nav('/ketcab/strategi')) ?> flex items-center gap-2"><span class="sidebar-nav-icon flex items-center justify-center text-base"><i class="bi bi-kanban"></i></span><span>Program Kerja Sekfung</span></a></li>
+
+                    <li class="nav-category">Database &amp; Kaderisasi</li>
+
+                    <?php if (can('civitas.view')): ?>
+                        <li class="sidebar-nav-item">
+                            <a href="/admin/civitas"
+                                class="sidebar-nav-link <?= (str_starts_with($_SERVER['REQUEST_URI'], '/admin/civitas') && !str_contains($_SERVER['REQUEST_URI'], '/create') && !str_contains($_SERVER['REQUEST_URI'], '/impor')) ? 'active' : '' ?> flex items-center gap-2">
+                                <span class="sidebar-nav-icon flex items-center justify-center text-base"><i
+                                        class="bi bi-people-fill"></i></span>
+                                <span>Data Civitas</span>
+                            </a>
+                        </li>
                     <?php endif; ?>
 
-                <?php endif; ?>
+                    <?php if (can('civitas.create')): ?>
+                        <li class="sidebar-nav-item">
+                            <a href="/admin/civitas/create"
+                                class="sidebar-nav-link <?= (str_starts_with($_SERVER['REQUEST_URI'], '/admin/civitas/create')) ? 'active' : '' ?> flex items-center gap-2">
+                                <span class="sidebar-nav-icon flex items-center justify-center text-base"><i
+                                        class="bi bi-person-plus-fill"></i></span>
+                                <span>Tambah Anggota</span>
+                            </a>
+                        </li>
+                    <?php endif; ?>
 
-                <li class="nav-category">Database &amp; Kaderisasi</li>
+                    <?php if (can('civitas.import')): ?>
+                        <li class="sidebar-nav-item">
+                            <a href="/admin/civitas/impor"
+                                class="sidebar-nav-link <?= (str_starts_with($_SERVER['REQUEST_URI'], '/admin/civitas/impor')) ? 'active' : '' ?> flex items-center gap-2">
+                                <span class="sidebar-nav-icon flex items-center justify-center text-base"><i
+                                        class="bi bi-file-earmark-excel-fill"></i></span>
+                                <span>Impor Data (CSV/Excel)</span>
+                            </a>
+                        </li>
+                    <?php endif; ?>
 
-                <?php if (can('civitas.view')): ?>
-                    <li class="sidebar-nav-item">
-                        <a href="/admin/civitas" class="sidebar-nav-link <?= (str_starts_with($_SERVER['REQUEST_URI'], '/admin/civitas') && !str_contains($_SERVER['REQUEST_URI'], '/create') && !str_contains($_SERVER['REQUEST_URI'], '/impor')) ? 'active' : '' ?> flex items-center gap-2">
-                            <span class="sidebar-nav-icon flex items-center justify-center text-base"><i class="bi bi-people-fill"></i></span>
-                            <span>Data Civitas</span>
+                    <?php if (can('statistics.view')): ?>
+                        <li class="sidebar-nav-item">
+                            <a href="/admin/statistik"
+                                class="sidebar-nav-link <?= (str_starts_with($_SERVER['REQUEST_URI'], '/admin/statistik')) ? 'active' : '' ?> flex items-center gap-2">
+                                <span class="sidebar-nav-icon flex items-center justify-center text-base"><i
+                                        class="bi bi-bar-chart-line-fill"></i></span>
+                                <span>Statistik &amp; Grafik</span>
+                            </a>
+                        </li>
+                    <?php endif; ?>
+
+                    <li class="nav-category">Publikasi &amp; Cabang</li>
+
+                    <?php if (can('news.view')): ?>
+                        <li class="sidebar-nav-item">
+                            <?php $newsPath = (auth()['role'] ?? '') === 'ketcab' ? '/pengawas/berita' : '/admin/berita'; ?>
+                            <a href="<?= e($newsPath) ?>"
+                                class="sidebar-nav-link <?= (str_starts_with($_SERVER['REQUEST_URI'], '/admin/berita') || str_starts_with($_SERVER['REQUEST_URI'], '/pengawas/berita')) ? 'active' : '' ?> flex items-center gap-2">
+                                <span class="sidebar-nav-icon flex items-center justify-center text-base"><i
+                                        class="bi bi-newspaper"></i></span>
+                                <span>Warta &amp; Berita</span>
+                            </a>
+                        </li>
+                    <?php endif; ?>
+
+                    <?php if (can('organization.view')): ?>
+                        <li class="sidebar-nav-item">
+                            <?php $organizationPath = (auth()['role'] ?? '') === 'ketcab' ? '/pengawas/organisasi/profil' : '/admin/organisasi/profil'; ?>
+                            <a href="<?= e($organizationPath) ?>"
+                                class="sidebar-nav-link <?= (str_starts_with($_SERVER['REQUEST_URI'], '/admin/organisasi/profil') || str_starts_with($_SERVER['REQUEST_URI'], '/pengawas/organisasi/profil')) ? 'active' : '' ?> flex items-center gap-2">
+                                <span class="sidebar-nav-icon flex items-center justify-center text-base"><i
+                                        class="bi bi-building"></i></span>
+                                <span>Profil Cabang</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-nav-item">
+                            <?php $structurePath = (auth()['role'] ?? '') === 'ketcab' ? '/pengawas/organisasi/struktur' : '/admin/organisasi/struktur'; ?>
+                            <a href="<?= e($structurePath) ?>"
+                                class="sidebar-nav-link <?= (str_starts_with($_SERVER['REQUEST_URI'], '/admin/organisasi/struktur') || str_starts_with($_SERVER['REQUEST_URI'], '/pengawas/organisasi/struktur')) ? 'active' : '' ?> flex items-center gap-2">
+                                <span class="sidebar-nav-icon flex items-center justify-center text-base"><i
+                                        class="bi bi-diagram-3-fill"></i></span>
+                                <span>Struktur BPC</span>
+                            </a>
+                        </li>
+                    <?php endif; ?>
+
+                    <li class="nav-category">Sistem &amp; Keamanan</li>
+
+                    <?php if (can('users.view')): ?>
+                        <li class="sidebar-nav-item">
+                            <a href="/admin/users"
+                                class="sidebar-nav-link <?= (str_starts_with($_SERVER['REQUEST_URI'], '/admin/users')) ? 'active' : '' ?> flex items-center gap-2">
+                                <span class="sidebar-nav-icon flex items-center justify-center text-base"><i
+                                        class="bi bi-person-gear"></i></span>
+                                <span>Kelola Pengguna</span>
+                            </a>
+                        </li>
+                    <?php endif; ?>
+
+                    <?php if (can('security.audit_log')): ?>
+                        <li class="sidebar-nav-item">
+                            <a href="/admin/keamanan/audit-log"
+                                class="sidebar-nav-link <?= (str_starts_with($_SERVER['REQUEST_URI'], '/admin/keamanan/audit-log')) ? 'active' : '' ?> flex items-center gap-2">
+                                <span class="sidebar-nav-icon flex items-center justify-center text-base"><i
+                                        class="bi bi-shield-lock-fill"></i></span>
+                                <span>Jejak Audit</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-nav-item">
+                            <a href="/admin/keamanan/akses-log"
+                                class="sidebar-nav-link <?= (str_starts_with($_SERVER['REQUEST_URI'], '/admin/keamanan/akses-log')) ? 'active' : '' ?> flex items-center gap-2">
+                                <span class="sidebar-nav-icon flex items-center justify-center text-base"><i
+                                        class="bi bi-activity"></i></span>
+                                <span>Audit Akses Web</span>
+                            </a>
+                        </li>
+                    <?php endif; ?>
+
+                    <?php if (can('security.threats')): ?>
+                        <li class="sidebar-nav-item">
+                            <a href="/admin/keamanan/ancaman"
+                                class="sidebar-nav-link <?= (str_starts_with($_SERVER['REQUEST_URI'], '/admin/keamanan/ancaman')) ? 'active' : '' ?> flex items-center gap-2">
+                                <span class="sidebar-nav-icon flex items-center justify-center text-base"><i
+                                        class="bi bi-shield-exclamation"></i></span>
+                                <span>Deteksi Ancaman</span>
+                            </a>
+                        </li>
+                    <?php endif; ?>
+
+                    <?php if (can('backup.view')): ?>
+                        <li class="sidebar-nav-item">
+                            <a href="/admin/keamanan/backup"
+                                class="sidebar-nav-link <?= (str_starts_with($_SERVER['REQUEST_URI'], '/admin/keamanan/backup')) ? 'active' : '' ?> flex items-center gap-2">
+                                <span class="sidebar-nav-icon flex items-center justify-center text-base"><i
+                                        class="bi bi-database-fill-gear"></i></span>
+                                <span>Cadangan (Backup)</span>
+                            </a>
+                        </li>
+                    <?php endif; ?>
+
+                    <li class="sidebar-nav-item"
+                        style="margin-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 1rem;">
+                        <a href="/" target="_blank" class="sidebar-nav-link flex items-center gap-2">
+                            <span class="sidebar-nav-icon flex items-center justify-center text-base"><i
+                                    class="bi bi-globe2"></i></span>
+                            <span>Lihat Website</span>
                         </a>
                     </li>
-                <?php endif; ?>
-
-                <?php if (can('civitas.create')): ?>
-                    <li class="sidebar-nav-item">
-                        <a href="/admin/civitas/create" class="sidebar-nav-link <?= (str_starts_with($_SERVER['REQUEST_URI'], '/admin/civitas/create')) ? 'active' : '' ?> flex items-center gap-2">
-                            <span class="sidebar-nav-icon flex items-center justify-center text-base"><i class="bi bi-person-plus-fill"></i></span>
-                            <span>Tambah Anggota</span>
-                        </a>
-                    </li>
-                <?php endif; ?>
-
-                <?php if (can('civitas.import')): ?>
-                    <li class="sidebar-nav-item">
-                        <a href="/admin/civitas/impor" class="sidebar-nav-link <?= (str_starts_with($_SERVER['REQUEST_URI'], '/admin/civitas/impor')) ? 'active' : '' ?> flex items-center gap-2">
-                            <span class="sidebar-nav-icon flex items-center justify-center text-base"><i class="bi bi-file-earmark-excel-fill"></i></span>
-                            <span>Impor Data (CSV/Excel)</span>
-                        </a>
-                    </li>
-                <?php endif; ?>
-
-                <?php if (can('statistics.view')): ?>
-                    <li class="sidebar-nav-item">
-                        <a href="/admin/statistik" class="sidebar-nav-link <?= (str_starts_with($_SERVER['REQUEST_URI'], '/admin/statistik')) ? 'active' : '' ?> flex items-center gap-2">
-                            <span class="sidebar-nav-icon flex items-center justify-center text-base"><i class="bi bi-bar-chart-line-fill"></i></span>
-                            <span>Statistik &amp; Grafik</span>
-                        </a>
-                    </li>
-                <?php endif; ?>
-
-                <li class="nav-category">Publikasi &amp; Cabang</li>
-
-                <?php if (can('news.view')): ?>
-                    <li class="sidebar-nav-item">
-                        <?php $newsPath = (auth()['role'] ?? '') === 'ketcab' ? '/pengawas/berita' : '/admin/berita'; ?>
-                        <a href="<?= e($newsPath) ?>" class="sidebar-nav-link <?= (str_starts_with($_SERVER['REQUEST_URI'], '/admin/berita') || str_starts_with($_SERVER['REQUEST_URI'], '/pengawas/berita')) ? 'active' : '' ?> flex items-center gap-2">
-                            <span class="sidebar-nav-icon flex items-center justify-center text-base"><i class="bi bi-newspaper"></i></span>
-                            <span>Warta &amp; Berita</span>
-                        </a>
-                    </li>
-                <?php endif; ?>
-
-                <?php if (can('organization.view')): ?>
-                    <li class="sidebar-nav-item">
-                        <?php $organizationPath = (auth()['role'] ?? '') === 'ketcab' ? '/pengawas/organisasi/profil' : '/admin/organisasi/profil'; ?>
-                        <a href="<?= e($organizationPath) ?>" class="sidebar-nav-link <?= (str_starts_with($_SERVER['REQUEST_URI'], '/admin/organisasi/profil') || str_starts_with($_SERVER['REQUEST_URI'], '/pengawas/organisasi/profil')) ? 'active' : '' ?> flex items-center gap-2">
-                            <span class="sidebar-nav-icon flex items-center justify-center text-base"><i class="bi bi-building"></i></span>
-                            <span>Profil Cabang</span>
-                        </a>
-                    </li>
-                    <li class="sidebar-nav-item">
-                        <?php $structurePath = (auth()['role'] ?? '') === 'ketcab' ? '/pengawas/organisasi/struktur' : '/admin/organisasi/struktur'; ?>
-                        <a href="<?= e($structurePath) ?>" class="sidebar-nav-link <?= (str_starts_with($_SERVER['REQUEST_URI'], '/admin/organisasi/struktur') || str_starts_with($_SERVER['REQUEST_URI'], '/pengawas/organisasi/struktur')) ? 'active' : '' ?> flex items-center gap-2">
-                            <span class="sidebar-nav-icon flex items-center justify-center text-base"><i class="bi bi-diagram-3-fill"></i></span>
-                            <span>Struktur BPC</span>
-                        </a>
-                    </li>
-                <?php endif; ?>
-
-                <li class="nav-category">Sistem &amp; Keamanan</li>
-
-                <?php if (can('users.view')): ?>
-                    <li class="sidebar-nav-item">
-                        <a href="/admin/users" class="sidebar-nav-link <?= (str_starts_with($_SERVER['REQUEST_URI'], '/admin/users')) ? 'active' : '' ?> flex items-center gap-2">
-                            <span class="sidebar-nav-icon flex items-center justify-center text-base"><i class="bi bi-person-gear"></i></span>
-                            <span>Kelola Pengguna</span>
-                        </a>
-                    </li>
-                <?php endif; ?>
-
-                <?php if (can('security.audit_log')): ?>
-                    <li class="sidebar-nav-item">
-                        <a href="/admin/keamanan/audit-log" class="sidebar-nav-link <?= (str_starts_with($_SERVER['REQUEST_URI'], '/admin/keamanan/audit-log')) ? 'active' : '' ?> flex items-center gap-2">
-                            <span class="sidebar-nav-icon flex items-center justify-center text-base"><i class="bi bi-shield-lock-fill"></i></span>
-                            <span>Jejak Audit</span>
-                        </a>
-                    </li>
-                    <li class="sidebar-nav-item">
-                        <a href="/admin/keamanan/akses-log" class="sidebar-nav-link <?= (str_starts_with($_SERVER['REQUEST_URI'], '/admin/keamanan/akses-log')) ? 'active' : '' ?> flex items-center gap-2">
-                            <span class="sidebar-nav-icon flex items-center justify-center text-base"><i class="bi bi-activity"></i></span>
-                            <span>Audit Akses Web</span>
-                        </a>
-                    </li>
-                <?php endif; ?>
-
-                <?php if (can('security.threats')): ?>
-                    <li class="sidebar-nav-item">
-                        <a href="/admin/keamanan/ancaman" class="sidebar-nav-link <?= (str_starts_with($_SERVER['REQUEST_URI'], '/admin/keamanan/ancaman')) ? 'active' : '' ?> flex items-center gap-2">
-                            <span class="sidebar-nav-icon flex items-center justify-center text-base"><i class="bi bi-shield-exclamation"></i></span>
-                            <span>Deteksi Ancaman</span>
-                        </a>
-                    </li>
-                <?php endif; ?>
-
-                <?php if (can('backup.view')): ?>
-                    <li class="sidebar-nav-item">
-                        <a href="/admin/keamanan/backup" class="sidebar-nav-link <?= (str_starts_with($_SERVER['REQUEST_URI'], '/admin/keamanan/backup')) ? 'active' : '' ?> flex items-center gap-2">
-                            <span class="sidebar-nav-icon flex items-center justify-center text-base"><i class="bi bi-database-fill-gear"></i></span>
-                            <span>Cadangan (Backup)</span>
-                        </a>
-                    </li>
-                <?php endif; ?>
-
-                <li class="sidebar-nav-item" style="margin-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 1rem;">
-                    <a href="/" target="_blank" class="sidebar-nav-link flex items-center gap-2">
-                        <span class="sidebar-nav-icon flex items-center justify-center text-base"><i class="bi bi-globe2"></i></span>
-                        <span>Lihat Website</span>
-                    </a>
-                </li>
-            </ul>
-        </aside>
+                </ul>
+            </aside>
         <?php endif; ?>
 
         <!-- Main Dashboard Column -->
@@ -220,23 +272,28 @@
             <!-- Topbar -->
             <header class="dashboard-topbar">
                 <div class="topbar-left flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
-                    <button type="button" class="navbar-sidebar-toggle sidebar-toggle-btn" id="navbarSidebarToggle" aria-label="Buka / Tutup Sidebar" title="Buka / Tutup Sidebar (Ctrl+B)">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <button type="button" class="navbar-sidebar-toggle sidebar-toggle-btn" id="navbarSidebarToggle"
+                        aria-label="Buka / Tutup Sidebar" title="Buka / Tutup Sidebar (Ctrl+B)">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <line x1="4" x2="20" y1="12" y2="12"></line>
                             <line x1="4" x2="20" y1="6" y2="6"></line>
                             <line x1="4" x2="20" y1="18" y2="18"></line>
                         </svg>
                     </button>
-                    <div class="topbar-title font-bold text-slate-800 overflow-hidden text-ellipsis whitespace-nowrap flex-1 min-w-0 text-xs sm:text-sm md:text-base">
+                    <div
+                        class="topbar-title font-bold text-slate-800 overflow-hidden text-ellipsis whitespace-nowrap flex-1 min-w-0 text-xs sm:text-sm md:text-base">
                         <?= e(explode(' - ', $pageTitle ?? 'GMKI Padang')[0]) ?>
                     </div>
                 </div>
 
                 <div class="topbar-right flex items-center gap-1.5 sm:gap-2.5 flex-shrink-0">
                     <div class="user-profile-badge">
-                        <img src="<?= asset('images/default-profile.png') ?>" alt="Foto Pengguna" class="user-avatar-sm">
+                        <img src="<?= asset('images/default-profile.png') ?>" alt="Foto Pengguna"
+                            class="user-avatar-sm">
                         <div class="user-meta-details hidden md:block">
-                            <div style="font-weight: 700; line-height: 1.2; max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                            <div
+                                style="font-weight: 700; line-height: 1.2; max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
                                 <?= e(auth()['nama_lengkap'] ?? auth()['username']) ?>
                             </div>
                             <div style="font-size: 0.72rem; color: var(--text-muted); text-transform: capitalize;">
@@ -249,9 +306,11 @@
                         🔑 <span class="btn-label hidden sm:inline">Sandi</span>
                     </a>
 
-                    <form action="/logout" method="POST" style="display: inline; margin: 0;" onsubmit="sessionStorage.clear(); return confirm('Apakah Anda yakin ingin keluar dari sistem?');">
+                    <form action="/logout" method="POST" style="display: inline; margin: 0;"
+                        onsubmit="sessionStorage.clear(); return confirm('Apakah Anda yakin ingin keluar dari sistem?');">
                         <?= csrf_field() ?>
-                        <button type="submit" class="btn btn-danger btn-sm flex items-center gap-1 px-2 sm:px-3" title="Keluar dari sistem">
+                        <button type="submit" class="btn btn-danger btn-sm flex items-center gap-1 px-2 sm:px-3"
+                            title="Keluar dari sistem">
                             <?= svg_icon('logout', 14) ?>
                             <span class="btn-label hidden sm:inline">Keluar</span>
                         </button>
@@ -266,7 +325,8 @@
 
                 <!-- Dashboard Footer -->
                 <footer class="dashboard-footer">
-                    <div>&copy; 2026 BPC GMKI Cabang Padang. Sistem Informasi & Manajemen Keanggotaan Terintegrasi.</div>
+                    <div>&copy; 2026 BPC GMKI Cabang Padang. Sistem Informasi & Manajemen Keanggotaan Terintegrasi.
+                    </div>
                     <div class="text-muted">Amanat Pelayanan: Tinggi Iman, Tinggi Ilmu, Tinggi Pengabdian</div>
                 </footer>
             </main>
@@ -283,8 +343,9 @@
     <script src="<?= asset('js/statistik.js') ?>"></script>
 
     <script>
-        window.__AUTH_USER_ID__ = <?= !empty(auth()['id']) ? (int)auth()['id'] : 'null' ?>;
+        window.__AUTH_USER_ID__ = <?= !empty(auth()['id']) ? (int) auth()['id'] : 'null' ?>;
     </script>
     <script src="<?= asset('js/session-guard.js') ?>?v=1"></script>
 </body>
+
 </html>

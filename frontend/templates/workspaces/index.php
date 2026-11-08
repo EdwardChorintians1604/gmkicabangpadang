@@ -13,7 +13,7 @@ $backPath = match ($role) {
 };
 $backLabel = $role === 'admin' ? 'Dashboard Admin' : 'Ruang kerja';
 ?>
-<?php if ($section !== 'archive'): ?>
+<?php if ($section !== 'archive' && $section !== 'inventory'): ?>
 <header class="flex justify-between items-center" style="margin-bottom:1.25rem;flex-wrap:wrap;gap:1rem;">
     <div>
         <p class="text-muted" style="margin:0;"><a href="<?= e($backPath) ?>"><?= e($backLabel) ?></a> / <?= e($titles[$section] ?? '') ?></p>
@@ -23,172 +23,360 @@ $backLabel = $role === 'admin' ? 'Dashboard Admin' : 'Ruang kerja';
 <?php endif; ?>
 
 <?php if ($section === 'inventory'): ?>
-    <!-- Ringkasan Metrik Inventaris -->
-    <div class="metrics-grid" style="margin-bottom: 1.5rem;">
-        <div class="metric-card">
-            <div class="metric-info">
-                <span class="metric-label">Total Jenis Barang</span>
-                <span class="metric-value"><?= number_format((int)($summary['total_items'] ?? count($items))) ?></span>
-                <span class="text-muted" style="font-size: 0.8rem; margin-top: 0.25rem;">
-                    Total fisik: <strong><?= number_format((float)($summary['total_qty'] ?? 0), 0, ',', '.') ?></strong> unit
-                </span>
-            </div>
-            <div class="metric-icon-wrap metric-icon-primary">
-                📦
-            </div>
-        </div>
-
-        <div class="metric-card">
-            <div class="metric-info">
-                <span class="metric-label">Kondisi Baik</span>
-                <span class="metric-value" style="color: #10b981;"><?= number_format((int)($summary['total_baik'] ?? 0)) ?></span>
-                <span class="text-muted" style="font-size: 0.8rem; margin-top: 0.25rem;">Siap dipergunakan</span>
-            </div>
-            <div class="metric-icon-wrap metric-icon-success">
-                ✅
-            </div>
-        </div>
-
-        <div class="metric-card">
-            <div class="metric-info">
-                <span class="metric-label">Perlu Perbaikan</span>
-                <span class="metric-value" style="color: #f59e0b;"><?= number_format((int)($summary['total_perbaikan'] ?? 0)) ?></span>
-                <span class="text-muted" style="font-size: 0.8rem; margin-top: 0.25rem;">Perlu perawatan</span>
-            </div>
-            <div class="metric-icon-wrap metric-icon-secondary">
-                ⚠️
-            </div>
-        </div>
-
-        <div class="metric-card">
-            <div class="metric-info">
-                <span class="metric-label">Kondisi Rusak</span>
-                <span class="metric-value" style="color: #ef4444;"><?= number_format((int)($summary['total_rusak'] ?? 0)) ?></span>
-                <span class="text-muted" style="font-size: 0.8rem; margin-top: 0.25rem;">Perlu diganti / diafkir</span>
-            </div>
-            <div class="metric-icon-wrap" style="background:#fee2e2; color:#ef4444;">
-                ❌
-            </div>
-        </div>
-    </div>
-
-    <!-- Area Konten Utama Inventaris: Form + Tabel -->
-    <div class="grid grid-cols-1 <?= can('inventory.manage') ? 'lg:grid-cols-3' : '' ?> gap-6" style="align-items: start;">
-        <?php if (can('inventory.manage')): ?>
-            <!-- Kolom Form Tambah/Edit (Kiri) -->
-            <div class="card sticky-form-card" id="formInventoryCard">
-                <div class="card-body">
-                    <div class="flex items-center justify-between" style="margin-bottom: 1rem;">
-                        <div>
-                            <h2 id="invFormTitle" style="font-size: 1.15rem; font-weight: 700; color: var(--primary); margin: 0;">Tambah Inventaris</h2>
-                            <p id="invFormSubtitle" class="text-muted" style="font-size: 0.8rem; margin: 0.2rem 0 0;">Catat aset & barang milik cabang</p>
-                        </div>
-                        <span id="invModeBadge" class="badge badge-primary" style="font-size: 0.75rem;">Mode Baru</span>
+    <?php
+        $isSekcab = ($role === 'sekcab');
+        $totalItemsCount = (int)($summary['total_items'] ?? count($items));
+        $totalQty = (float)($summary['total_qty'] ?? 0);
+        $totalBaik = (int)($summary['total_baik'] ?? 0);
+        $totalPerbaikan = (int)($summary['total_perbaikan'] ?? 0);
+        $totalRusak = (int)($summary['total_rusak'] ?? 0);
+    ?>
+    <div class="ws-page-wrap">
+        <!-- 1. Executive Hero Banner Sekcab - Inventaris -->
+        <div class="exec-role-banner banner-sekcab">
+            <div class="exec-banner-inner">
+                <div class="exec-banner-content">
+                    <div class="exec-banner-eyebrow">
+                        <i class="bi bi-boxes"></i>
+                        <span>Tata Kelola Aset &amp; Fasilitas Sekretariat Cabang</span>
                     </div>
-
-                    <form id="inventoryForm" method="post" action="/sekcab/inventaris" data-validate>
-                        <?= csrf_field() ?>
-                        <input type="hidden" name="id" id="inv_id" value="">
-
-                        <div class="form-group" style="margin-bottom: 0.85rem;">
-                            <label class="form-label" for="inv_name" style="font-size: 0.85rem; font-weight: 600;">Nama Barang <span style="color:#ef4444;">*</span></label>
-                            <input class="form-control" id="inv_name" name="name" maxlength="180" placeholder="Contoh: Tiang Bendera GMKI" required>
-                        </div>
-
-                        <div class="form-group" style="margin-bottom: 0.85rem;">
-                            <label class="form-label" for="inv_category_select" style="font-size: 0.85rem; font-weight: 600;">Kategori <span style="color:#ef4444;">*</span></label>
-                            <select id="inv_category_select" class="form-control" onchange="pilihKategoriInv(this.value)" style="margin-bottom: 0.4rem;">
-                                <option value="">-- Pilih Kategori Cepat --</option>
-                                <option value="Perlengkapan Cabang">Perlengkapan Cabang</option>
-                                <option value="Elektronik & Multimedia">Elektronik & Multimedia</option>
-                                <option value="Perlengkapan Ibadah">Perlengkapan Ibadah</option>
-                                <option value="Furnitur & Kantor">Furnitur & Kantor</option>
-                                <option value="Atribut & Bendera">Atribut & Bendera</option>
-                                <option value="Dokumen & Arsip">Dokumen & Arsip</option>
-                                <option value="Lainnya">Lainnya (Ketik Manual)</option>
-                            </select>
-                            <input class="form-control" id="inv_category" name="category" maxlength="100" placeholder="Ketik kategori barang..." required>
-                        </div>
-
-                        <div class="grid grid-cols-2 gap-3" style="margin-bottom: 0.85rem;">
-                            <div class="form-group">
-                                <label class="form-label" for="inv_quantity" style="font-size: 0.85rem; font-weight: 600;">Jumlah <span style="color:#ef4444;">*</span></label>
-                                <input class="form-control" id="inv_quantity" name="quantity" type="number" min="0" step="0.01" value="1" required>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label" for="inv_unit" style="font-size: 0.85rem; font-weight: 600;">Satuan <span style="color:#ef4444;">*</span></label>
-                                <input class="form-control" id="inv_unit" name="unit" maxlength="40" value="unit" placeholder="unit, buah, set..." required>
-                            </div>
-                        </div>
-
-                        <div class="form-group" style="margin-bottom: 0.85rem;">
-                            <label class="form-label" for="inv_location" style="font-size: 0.85rem; font-weight: 600;">Lokasi Penyimpanan</label>
-                            <input class="form-control" id="inv_location" name="location" maxlength="180" placeholder="Contoh: Sekretariat Cabang / GPdI Karmel">
-                        </div>
-
-                        <div class="form-group" style="margin-bottom: 0.85rem;">
-                            <label class="form-label" for="inv_condition" style="font-size: 0.85rem; font-weight: 600;">Kondisi Barang <span style="color:#ef4444;">*</span></label>
-                            <select class="form-control" id="inv_condition" name="item_condition">
-                                <option value="Baik">Baik (Berfungsi Normal)</option>
-                                <option value="Perlu Perbaikan">Perlu Perbaikan (Rusak Ringan)</option>
-                                <option value="Rusak">Rusak (Tidak Dapat Digunakan)</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group" style="margin-bottom: 1.15rem;">
-                            <label class="form-label" for="inv_notes" style="font-size: 0.85rem; font-weight: 600;">Catatan / Keterangan</label>
-                            <textarea class="form-control" id="inv_notes" name="notes" rows="2" placeholder="Catatan kondisi, instruksi perawatan, dll..."></textarea>
-                        </div>
-
-                        <div class="flex gap-2">
-                            <button id="btnSubmitInv" class="btn btn-primary" type="submit" style="flex: 1; justify-content: center;">
-                                💾 Simpan Inventaris
-                            </button>
-                            <button id="btnCancelEditInv" class="btn btn-secondary" type="button" onclick="batalEditInv()" style="display: none;">
-                                ✖ Batal
-                            </button>
-                        </div>
-                    </form>
+                    <h1 class="exec-banner-title">Pangkalan Data Inventaris Aset GMKI</h1>
+                    <p class="exec-banner-desc">
+                        Pusat pencatatan aset fisik, perlengkapan seremonial, sarana kesekretariatan, dan fasilitas organisasi BPC GMKI Cabang Padang dengan pemantauan kondisi real-time serta pelacakan lokasi penyimpanan.
+                    </p>
+                    <div class="exec-banner-pills">
+                        <span class="exec-banner-pill">
+                            <i class="bi bi-box-seam-fill" style="color: #38bdf8;"></i>
+                            Total Aset: <code><?= number_format($totalItemsCount) ?> Macam Barang</code>
+                        </span>
+                        <span class="exec-banner-pill">
+                            <i class="bi bi-check2-circle" style="color: #34d399;"></i>
+                            Kondisi Baik: <code><?= number_format($totalBaik) ?> Siap Pakai</code>
+                        </span>
+                        <span class="exec-banner-pill">
+                            <i class="bi bi-person-badge" style="color: #fde68a;"></i>
+                            Otoritas: <code><?= $isSekcab ? 'Sekretaris Cabang (Sekcab)' : strtoupper(e($role)) ?></code>
+                        </span>
+                    </div>
+                </div>
+                <div class="exec-banner-actions">
+                    <?php if (can('inventory.manage')): ?>
+                        <button type="button" onclick="fokusTambahInventaris()" class="exec-btn exec-btn-gold">
+                            <i class="bi bi-plus-circle-fill"></i>
+                            <span>+ Tambah Barang</span>
+                        </button>
+                    <?php endif; ?>
+                    <a href="/sekcab/arsip" class="exec-btn exec-btn-sky">
+                        <i class="bi bi-journal-bookmark-fill"></i>
+                        <span>Arsip Persuratan</span>
+                    </a>
+                    <a href="/sekcab/berkas" class="exec-btn exec-btn-glass">
+                        <i class="bi bi-folder2-open"></i>
+                        <span>Direktori Berkas</span>
+                    </a>
+                    <a href="<?= e($backPath) ?>" class="exec-btn exec-btn-glass">
+                        <i class="bi bi-arrow-left"></i>
+                        <span><?= e($backLabel) ?></span>
+                    </a>
                 </div>
             </div>
-        <?php endif; ?>
+        </div>
 
-        <!-- Kolom Tabel Daftar Inventaris (Kanan) -->
-        <div class="<?= can('inventory.manage') ? 'lg:col-span-2' : 'col-span-1' ?>">
-            <div class="table-card" style="margin-bottom: 1.5rem;">
-                <div class="table-header flex items-center justify-between" style="gap: 1rem; flex-wrap: wrap;">
-                    <div>
-                        <h2 class="table-title" style="margin: 0; font-size: 1.15rem; color: var(--primary);">Daftar Aset & Inventaris</h2>
-                        <span class="text-muted" style="font-size: 0.8rem;">Daftar seluruh barang yang tercatat di GMKI Cabang Padang</span>
+        <!-- 2. Ringkasan Metrik Inventaris (4 KPI Cards) -->
+        <div class="ws-kpi-grid">
+            <div class="ws-kpi-card accent-blue">
+                <div>
+                    <div class="ws-kpi-top">
+                        <div>
+                            <div class="ws-kpi-label">Total Jenis Barang</div>
+                            <span class="badge badge-primary" style="font-size: 0.66rem; margin-top: 0.25rem;">Aset Terdata</span>
+                        </div>
+                        <div class="ws-kpi-icon" style="background: #e0f2fe; color: #0284c7;">
+                            <i class="bi bi-boxes"></i>
+                        </div>
+                    </div>
+                    <div class="ws-kpi-val"><?= number_format($totalItemsCount) ?></div>
+                </div>
+                <div class="ws-kpi-sub">
+                    <span>Total fisik: <strong><?= number_format($totalQty, 0, ',', '.') ?></strong> unit tercatat</span>
+                    <i class="bi bi-box-seam" style="color: #0284c7;"></i>
+                </div>
+            </div>
+
+            <div class="ws-kpi-card accent-emerald">
+                <div>
+                    <div class="ws-kpi-top">
+                        <div>
+                            <div class="ws-kpi-label">Kondisi Baik</div>
+                            <span class="badge badge-success" style="font-size: 0.66rem; margin-top: 0.25rem;">Siap Pakai</span>
+                        </div>
+                        <div class="ws-kpi-icon" style="background: #d1fae5; color: #059669;">
+                            <i class="bi bi-check2-circle"></i>
+                        </div>
+                    </div>
+                    <div class="ws-kpi-val" style="color: #059669;"><?= number_format($totalBaik) ?></div>
+                </div>
+                <div class="ws-kpi-sub">
+                    <span>Fasilitas normal &amp; siap beroperasi</span>
+                    <i class="bi bi-shield-check" style="color: #059669;"></i>
+                </div>
+            </div>
+
+            <div class="ws-kpi-card accent-amber">
+                <div>
+                    <div class="ws-kpi-top">
+                        <div>
+                            <div class="ws-kpi-label">Perlu Perawatan</div>
+                            <span class="badge badge-warning" style="font-size: 0.66rem; margin-top: 0.25rem;">Rusak Ringan</span>
+                        </div>
+                        <div class="ws-kpi-icon" style="background: #fef3c7; color: #d97706;">
+                            <i class="bi bi-tools"></i>
+                        </div>
+                    </div>
+                    <div class="ws-kpi-val" style="color: #d97706;"><?= number_format($totalPerbaikan) ?></div>
+                </div>
+                <div class="ws-kpi-sub">
+                    <span>Memerlukan servis / perbaikan rutin</span>
+                    <i class="bi bi-wrench-adjustable" style="color: #d97706;"></i>
+                </div>
+            </div>
+
+            <div class="ws-kpi-card accent-rose">
+                <div>
+                    <div class="ws-kpi-top">
+                        <div>
+                            <div class="ws-kpi-label">Kondisi Rusak / Afkir</div>
+                            <span class="badge badge-danger" style="font-size: 0.66rem; margin-top: 0.25rem;">Perlu Tindakan</span>
+                        </div>
+                        <div class="ws-kpi-icon" style="background: #ffe4e6; color: #e11d48;">
+                            <i class="bi bi-exclamation-octagon-fill"></i>
+                        </div>
+                    </div>
+                    <div class="ws-kpi-val" style="color: #e11d48;"><?= number_format($totalRusak) ?></div>
+                </div>
+                <div class="ws-kpi-sub">
+                    <span>Perlu penggantian atau pengafkiran</span>
+                    <i class="bi bi-slash-circle" style="color: #e11d48;"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Area Konten Utama Inventaris: Form + Tabel -->
+        <div class="ws-archive-layout <?= can('inventory.manage') ? '' : 'ws-single-col' ?>">
+            <?php if (can('inventory.manage')): ?>
+                <!-- Kolom Form Tambah/Edit (Kiri) -->
+                <div class="ws-card sticky-form-card" id="formInventoryCard">
+                    <div class="ws-card-header">
+                        <div class="ws-card-header-left">
+                            <div class="ws-card-icon" style="background: #e0f2fe; color: #0284c7;">
+                                <i class="bi bi-box-arrow-in-down-right"></i>
+                            </div>
+                            <div>
+                                <h2 id="invFormTitle" class="ws-card-title">Tambah Inventaris</h2>
+                                <p id="invFormSubtitle" class="ws-card-subtitle">Catat aset &amp; barang milik cabang</p>
+                            </div>
+                        </div>
+                        <span id="invModeBadge" class="badge badge-primary" style="font-size: 0.72rem; font-weight: 700;">Mode Baru</span>
                     </div>
 
-                    <!-- Toolbar Pencarian & Filter Cepat -->
-                    <div class="flex items-center gap-2" style="flex-wrap: wrap;">
-                        <div style="position: relative; min-width: 200px;">
-                            <input type="text" id="invSearchInput" onkeyup="filterInventoryTable()" placeholder="Cari barang, lokasi..." class="form-control" style="font-size: 0.85rem; padding-left: 2rem; height: 38px;">
-                            <span style="position: absolute; left: 0.65rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.85rem;">🔍</span>
+                    <div class="ws-card-body">
+                        <form id="inventoryForm" method="post" action="/sekcab/inventaris" data-validate>
+                            <?= csrf_field() ?>
+                            <input type="hidden" name="id" id="inv_id" value="">
+
+                            <!-- Nama Barang -->
+                            <div class="form-group" style="margin-bottom: 0.95rem;">
+                                <label class="form-label" for="inv_name" style="font-size: 0.82rem; font-weight: 700; color: #1e293b;">
+                                    Nama Barang <span style="color:#ef4444;">*</span>
+                                </label>
+                                <div style="position: relative;">
+                                    <input class="form-control" id="inv_name" name="name" maxlength="180" placeholder="Contoh: Tiang Bendera GMKI, Sound System..." required style="font-size: 0.85rem; padding-left: 2.2rem;">
+                                    <i class="bi bi-tag" style="position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 0.9rem;"></i>
+                                </div>
+                            </div>
+
+                            <!-- Kategori Barang -->
+                            <div class="form-group" style="margin-bottom: 0.95rem;">
+                                <label class="form-label" for="inv_category" style="font-size: 0.82rem; font-weight: 700; color: #1e293b; display: flex; justify-content: space-between; align-items: center;">
+                                    <span>Kategori Barang <span style="color:#ef4444;">*</span></span>
+                                    <span style="font-size: 0.7rem; color: #64748b; font-weight: normal;">Pilih cepat atau ketik</span>
+                                </label>
+                                
+                                <!-- Category Quick Chips -->
+                                <div class="inv-cat-chips" id="invCatChips">
+                                    <span class="inv-cat-chip" onclick="pilihKategoriChip('Perlengkapan Cabang', this)">
+                                        <i class="bi bi-box-seam"></i> Perlengkapan
+                                    </span>
+                                    <span class="inv-cat-chip" onclick="pilihKategoriChip('Atribut & Bendera', this)">
+                                        <i class="bi bi-flag"></i> Atribut &amp; Bendera
+                                    </span>
+                                    <span class="inv-cat-chip" onclick="pilihKategoriChip('Elektronik & Multimedia', this)">
+                                        <i class="bi bi-display"></i> Elektronik
+                                    </span>
+                                    <span class="inv-cat-chip" onclick="pilihKategoriChip('Furnitur & Kantor', this)">
+                                        <i class="bi bi-lamp"></i> Furnitur
+                                    </span>
+                                    <span class="inv-cat-chip" onclick="pilihKategoriChip('Perlengkapan Ibadah', this)">
+                                        <i class="bi bi-book"></i> Ibadah
+                                    </span>
+                                </div>
+
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                    <select id="inv_category_select" class="form-control" onchange="pilihKategoriInv(this.value)" style="font-size: 0.82rem;">
+                                        <option value="">-- Pilihan Kategori --</option>
+                                        <option value="Perlengkapan Cabang">Perlengkapan Cabang</option>
+                                        <option value="Atribut & Bendera">Atribut &amp; Bendera</option>
+                                        <option value="Elektronik & Multimedia">Elektronik &amp; Multimedia</option>
+                                        <option value="Furnitur & Kantor">Furnitur &amp; Kantor</option>
+                                        <option value="Perlengkapan Ibadah">Perlengkapan Ibadah</option>
+                                        <option value="Dokumen & Arsip">Dokumen &amp; Arsip</option>
+                                        <option value="Lainnya">Lainnya (Ketik Manual)</option>
+                                    </select>
+                                    <input class="form-control" id="inv_category" name="category" maxlength="100" placeholder="Kategori barang..." required style="font-size: 0.82rem;">
+                                </div>
+                            </div>
+
+                            <!-- Jumlah & Satuan -->
+                            <div class="grid grid-cols-2 gap-3" style="margin-bottom: 0.95rem;">
+                                <div class="form-group" style="margin-bottom: 0;">
+                                    <label class="form-label" for="inv_quantity" style="font-size: 0.82rem; font-weight: 700; color: #1e293b;">
+                                        Jumlah <span style="color:#ef4444;">*</span>
+                                    </label>
+                                    <input class="form-control" id="inv_quantity" name="quantity" type="number" min="0" step="0.01" value="1" required style="font-size: 0.85rem; font-weight: 700;">
+                                </div>
+                                <div class="form-group" style="margin-bottom: 0;">
+                                    <label class="form-label" for="inv_unit" style="font-size: 0.82rem; font-weight: 700; color: #1e293b;">
+                                        Satuan <span style="color:#ef4444;">*</span>
+                                    </label>
+                                    <input class="form-control" id="inv_unit" name="unit" maxlength="40" value="unit" placeholder="unit, buah, set..." required style="font-size: 0.85rem;">
+                                </div>
+                            </div>
+
+                            <!-- Lokasi Penyimpanan -->
+                            <div class="form-group" style="margin-bottom: 0.95rem;">
+                                <label class="form-label" for="inv_location" style="font-size: 0.82rem; font-weight: 700; color: #1e293b;">
+                                    Lokasi Penyimpanan
+                                </label>
+                                <div style="position: relative;">
+                                    <input class="form-control" id="inv_location" name="location" maxlength="180" placeholder="Contoh: Sekretariat Cabang / GPdI Karmel / Lemari A" style="font-size: 0.85rem; padding-left: 2.2rem;">
+                                    <i class="bi bi-geo-alt" style="position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 0.9rem;"></i>
+                                </div>
+                            </div>
+
+                            <!-- Kondisi Barang -->
+                            <div class="form-group" style="margin-bottom: 0.95rem;">
+                                <label class="form-label" for="inv_condition" style="font-size: 0.82rem; font-weight: 700; color: #1e293b;">
+                                    Kondisi Fisik Barang <span style="color:#ef4444;">*</span>
+                                </label>
+                                <select class="form-control" id="inv_condition" name="item_condition" style="font-size: 0.84rem;">
+                                    <option value="Baik">🟢 Baik (Berfungsi Normal &amp; Siap Digunakan)</option>
+                                    <option value="Perlu Perbaikan">🟡 Perlu Perbaikan (Rusak Ringan / Butuh Perawatan)</option>
+                                    <option value="Rusak">🔴 Rusak (Tidak Dapat Digunakan / Butuh Diganti)</option>
+                                </select>
+                            </div>
+
+                            <!-- Catatan / Keterangan -->
+                            <div class="form-group" style="margin-bottom: 1.15rem;">
+                                <label class="form-label" for="inv_notes" style="font-size: 0.82rem; font-weight: 700; color: #1e293b;">
+                                    Catatan / Keterangan Tambahan
+                                </label>
+                                <textarea class="form-control" id="inv_notes" name="notes" rows="3" placeholder="Tuliskan petunjuk perawatan, asal usul, riwayat perbaikan, atau instruksi peminjaman..." style="font-size: 0.84rem;"></textarea>
+                            </div>
+
+                            <!-- Tombol Aksi -->
+                            <div class="flex gap-2">
+                                <button id="btnSubmitInv" class="btn btn-primary" type="submit" style="flex: 1; justify-content: center; padding: 0.65rem 1rem; font-weight: 700; border-radius: 11px;">
+                                    <i class="bi bi-save2-fill"></i>
+                                    <span>Simpan Inventaris</span>
+                                </button>
+                                <button id="btnCancelEditInv" class="btn btn-secondary" type="button" onclick="batalEditInv()" style="display: none; border-radius: 11px; font-weight: 700;">
+                                    <i class="bi bi-x-lg"></i>
+                                    <span>Batal</span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            <?php endif; ?>
+
+            <!-- Kolom Tabel Daftar Inventaris (Kanan) -->
+            <div class="ws-card">
+                <div class="ws-card-header">
+                    <div class="ws-card-header-left">
+                        <div class="ws-card-icon" style="background: #f0f9ff; color: #0f3d64;">
+                            <i class="bi bi-box-seam-fill"></i>
                         </div>
-                        <select id="invConditionFilter" onchange="filterInventoryTable()" class="form-control" style="font-size: 0.85rem; height: 38px; width: auto;">
+                        <div>
+                            <h2 class="ws-card-title">Daftar Aset &amp; Inventaris Cabang</h2>
+                            <p class="ws-card-subtitle">Pangkalan data seluruh inventaris yang tercatat di BPC GMKI Cabang Padang</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2" style="flex-wrap: wrap;">
+                        <span class="badge badge-neutral" style="font-size: 0.74rem; font-weight: 700;" id="invCounterBadge">
+                            <i class="bi bi-boxes"></i> <?= number_format(count($items)) ?> Macam Barang
+                        </span>
+                        <?php if (can('inventory.manage')): ?>
+                            <button type="button" onclick="fokusTambahInventaris()" class="btn btn-outline btn-sm" style="font-size: 0.76rem; font-weight: 700; border-radius: 9px;">
+                                <i class="bi bi-plus-lg"></i> Tambah Baru
+                            </button>
+                        <?php endif; ?>
+                    </div>
+                </div>
+
+                <!-- Toolbar Pencarian & Filter Cepat -->
+                <div class="ws-filter-bar">
+                    <div class="ws-search-wrap">
+                        <i class="bi bi-search"></i>
+                        <input type="text" id="invSearchInput" onkeyup="filterInventoryTable()" placeholder="Cari nama barang, kategori, lokasi simpan, atau catatan..." class="ws-search-input">
+                    </div>
+                    <div class="ws-filter-group">
+                        <select id="invConditionFilter" onchange="filterInventoryTable()" class="ws-filter-select">
                             <option value="">Semua Kondisi</option>
-                            <option value="Baik">Baik</option>
-                            <option value="Perlu Perbaikan">Perlu Perbaikan</option>
-                            <option value="Rusak">Rusak</option>
+                            <option value="Baik">Kondisi: Baik</option>
+                            <option value="Perlu Perbaikan">Kondisi: Perlu Perbaikan</option>
+                            <option value="Rusak">Kondisi: Rusak</option>
                         </select>
                     </div>
                 </div>
 
-                <div class="table-responsive">
-                    <table class="data-table" id="inventoryTable">
+                <!-- Filter Kategori Cepat (Interactive Pills Bar) -->
+                <div style="padding: 0.65rem 1.4rem; background: #ffffff; border-bottom: 1px solid #f1f5f9; display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap;">
+                    <span style="font-size: 0.72rem; font-weight: 700; color: #64748b; margin-right: 0.2rem; text-transform: uppercase; letter-spacing: 0.04em;">
+                        Kategori:
+                    </span>
+                    <button type="button" class="quick-pill active" onclick="filterByCategory('', this)">
+                        Semua
+                    </button>
+                    <button type="button" class="quick-pill" onclick="filterByCategory('Perlengkapan Cabang', this)">
+                        <i class="bi bi-box-seam"></i> Perlengkapan
+                    </button>
+                    <button type="button" class="quick-pill" onclick="filterByCategory('Atribut & Bendera', this)">
+                        <i class="bi bi-flag"></i> Atribut &amp; Bendera
+                    </button>
+                    <button type="button" class="quick-pill" onclick="filterByCategory('Elektronik & Multimedia', this)">
+                        <i class="bi bi-display"></i> Elektronik
+                    </button>
+                    <button type="button" class="quick-pill" onclick="filterByCategory('Furnitur & Kantor', this)">
+                        <i class="bi bi-lamp"></i> Furnitur
+                    </button>
+                    <button type="button" class="quick-pill" onclick="filterByCategory('Perlengkapan Ibadah', this)">
+                        <i class="bi bi-book"></i> Ibadah
+                    </button>
+                </div>
+
+                <!-- Tabel Data Inventaris -->
+                <div class="ws-table-wrap">
+                    <table class="ws-table" id="inventoryTable">
                         <thead>
                             <tr>
                                 <th style="width: 45px; text-align: center;">No</th>
-                                <th>Nama Barang & Kategori</th>
-                                <th style="width: 100px;">Jumlah</th>
-                                <th>Lokasi</th>
-                                <th style="width: 130px; text-align: center;">Kondisi</th>
-                                <th>Catatan</th>
+                                <th>Nama Barang &amp; Kategori</th>
+                                <th style="width: 110px; text-align: center;">Jumlah Fisik</th>
+                                <th>Lokasi Penyimpanan</th>
+                                <th style="width: 135px; text-align: center;">Kondisi</th>
+                                <th>Catatan / Keterangan</th>
                                 <?php if (can('inventory.manage')): ?>
-                                    <th style="width: 120px; text-align: center;">Aksi</th>
+                                    <th style="width: 125px; text-align: center;">Aksi</th>
                                 <?php endif; ?>
                             </tr>
                         </thead>
@@ -196,12 +384,44 @@ $backLabel = $role === 'admin' ? 'Dashboard Admin' : 'Ruang kerja';
                             <?php if (!empty($items)): ?>
                                 <?php $no = 1; foreach ($items as $item): ?>
                                     <?php
-                                        $conditionBadge = match ($item['item_condition']) {
-                                            'Baik' => 'badge-success',
-                                            'Perlu Perbaikan' => 'badge-warning',
-                                            'Rusak' => 'badge-danger',
+                                        // Condition Pill Styling
+                                        $condClass = match ($item['item_condition']) {
+                                            'Baik' => 'inv-cond-baik',
+                                            'Perlu Perbaikan' => 'inv-cond-perbaikan',
+                                            'Rusak' => 'inv-cond-rusak',
                                             default => 'badge-neutral',
                                         };
+                                        $condIcon = match ($item['item_condition']) {
+                                            'Baik' => 'bi-check-circle-fill',
+                                            'Perlu Perbaikan' => 'bi-exclamation-triangle-fill',
+                                            'Rusak' => 'bi-x-octagon-fill',
+                                            default => 'bi-info-circle',
+                                        };
+
+                                        // Category Badge Styling
+                                        $catLower = strtolower($item['category'] ?? '');
+                                        $catBadgeClass = 'inv-cat-default';
+                                        $catIcon = 'bi-tag-fill';
+                                        if (str_contains($catLower, 'perlengkapan')) {
+                                            $catBadgeClass = 'inv-cat-perlengkapan';
+                                            $catIcon = 'bi-box-seam-fill';
+                                        } elseif (str_contains($catLower, 'atribut') || str_contains($catLower, 'bendera')) {
+                                            $catBadgeClass = 'inv-cat-atribut';
+                                            $catIcon = 'bi-flag-fill';
+                                        } elseif (str_contains($catLower, 'elektronik') || str_contains($catLower, 'multimedia')) {
+                                            $catBadgeClass = 'inv-cat-elektronik';
+                                            $catIcon = 'bi-display';
+                                        } elseif (str_contains($catLower, 'ibadah')) {
+                                            $catBadgeClass = 'inv-cat-ibadah';
+                                            $catIcon = 'bi-book-half';
+                                        } elseif (str_contains($catLower, 'furnitur') || str_contains($catLower, 'kantor')) {
+                                            $catBadgeClass = 'inv-cat-furnitur';
+                                            $catIcon = 'bi-lamp';
+                                        } elseif (str_contains($catLower, 'dokumen') || str_contains($catLower, 'arsip')) {
+                                            $catBadgeClass = 'inv-cat-arsip';
+                                            $catIcon = 'bi-archive-fill';
+                                        }
+
                                         $qtyDisplay = (float)$item['quantity'] == (int)$item['quantity'] 
                                             ? (int)$item['quantity'] 
                                             : number_format((float)$item['quantity'], 2, ',', '.');
@@ -215,62 +435,65 @@ $backLabel = $role === 'admin' ? 'Dashboard Admin' : 'Ruang kerja';
                                         data-location="<?= e($item['location'] ?? '') ?>"
                                         data-condition="<?= e($item['item_condition']) ?>"
                                         data-notes="<?= e($item['notes'] ?? '') ?>">
-                                        <td style="text-align: center; color: var(--text-muted); font-weight: 600;">
+                                        <td style="text-align: center; color: #94a3b8; font-weight: 700; font-size: 0.82rem;">
                                             <?= $no++ ?>
                                         </td>
                                         <td>
-                                            <div style="font-weight: 700; color: var(--text-main); font-size: 0.95rem; margin-bottom: 0.2rem;">
+                                            <div style="font-weight: 700; color: #0f172a; font-size: 0.92rem; margin-bottom: 0.3rem;">
                                                 <?= e($item['name']) ?>
                                             </div>
-                                            <span class="badge badge-primary" style="font-size: 0.725rem; font-weight: 600;">
-                                                📁 <?= e($item['category']) ?>
+                                            <span class="inv-cat-badge <?= $catBadgeClass ?>">
+                                                <i class="bi <?= $catIcon ?>"></i>
+                                                <?= e($item['category']) ?>
                                             </span>
                                         </td>
-                                        <td>
-                                            <span style="font-weight: 700; font-size: 0.95rem; color: var(--primary);">
-                                                <?= $qtyDisplay ?>
-                                            </span>
-                                            <span class="text-muted" style="font-size: 0.8rem; margin-left: 0.15rem;">
-                                                <?= e($item['unit']) ?>
-                                            </span>
+                                        <td style="text-align: center;">
+                                            <div class="inv-qty-badge">
+                                                <span class="inv-qty-num"><?= $qtyDisplay ?></span>
+                                                <span class="inv-qty-unit"><?= e($item['unit']) ?></span>
+                                            </div>
                                         </td>
                                         <td>
                                             <?php if (!empty($item['location'])): ?>
-                                                <div style="display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.85rem; color: var(--text-main);">
-                                                    <span>📍</span> <?= e($item['location']) ?>
+                                                <div class="inv-loc-tag">
+                                                    <i class="bi bi-geo-alt-fill" style="color: #0284c7; font-size: 0.78rem;"></i>
+                                                    <span><?= e($item['location']) ?></span>
                                                 </div>
                                             <?php else: ?>
-                                                <span class="text-muted" style="font-size: 0.8rem; font-style: italic;">Belum ditentukan</span>
+                                                <span style="font-size: 0.78rem; color: #94a3b8; font-style: italic;">
+                                                    <i class="bi bi-geo"></i> Belum ditentukan
+                                                </span>
                                             <?php endif; ?>
                                         </td>
                                         <td style="text-align: center;">
-                                            <span class="badge <?= $conditionBadge ?>" style="font-size: 0.775rem;">
+                                            <span class="inv-cond-pill <?= $condClass ?>">
+                                                <i class="bi <?= $condIcon ?>"></i>
                                                 <?= e($item['item_condition']) ?>
                                             </span>
                                         </td>
-                                        <td style="max-width: 220px;">
+                                        <td style="max-width: 240px;">
                                             <?php if (!empty($item['notes'])): ?>
-                                                <span style="font-size: 0.825rem; color: var(--text-muted); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;" title="<?= e($item['notes']) ?>">
+                                                <div style="font-size: 0.8rem; color: #475569; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;" title="<?= e($item['notes']) ?>">
                                                     <?= e($item['notes']) ?>
-                                                </span>
+                                                </div>
                                             <?php else: ?>
-                                                <span class="text-muted" style="font-size: 0.8rem;">-</span>
+                                                <span style="font-size: 0.78rem; color: #94a3b8;">-</span>
                                             <?php endif; ?>
                                         </td>
                                         <?php if (can('inventory.manage')): ?>
                                             <td style="text-align: center;">
                                                 <div class="flex items-center justify-center gap-1">
                                                     <button type="button" 
-                                                            class="btn btn-secondary btn-sm" 
-                                                            style="padding: 0.25rem 0.5rem; font-size: 0.8rem;"
+                                                            class="btn btn-outline btn-sm" 
+                                                            style="padding: 0.3rem 0.6rem; font-size: 0.76rem; font-weight: 700; border-radius: 8px; color: #0284c7; border-color: #bae6fd;" 
                                                             title="Edit data inventaris ini"
                                                             onclick='editInvFromRow(this)'>
-                                                        ✏️ Edit
+                                                        <i class="bi bi-pencil-square"></i> Edit
                                                     </button>
                                                     <form method="post" action="/sekcab/inventaris/<?= (int)$item['id'] ?>/delete" data-confirm="Hapus data inventaris '<?= e($item['name']) ?>'?" style="margin: 0; display: inline;">
                                                         <?= csrf_field() ?>
-                                                        <button class="btn btn-danger btn-sm" style="padding: 0.25rem 0.5rem; font-size: 0.8rem;" type="submit" title="Hapus inventaris">
-                                                            🗑️
+                                                        <button class="btn btn-danger btn-sm" style="padding: 0.3rem 0.55rem; font-size: 0.76rem; border-radius: 8px;" type="submit" title="Hapus inventaris">
+                                                            <i class="bi bi-trash3-fill"></i>
                                                         </button>
                                                     </form>
                                                 </div>
@@ -280,16 +503,32 @@ $backLabel = $role === 'admin' ? 'Dashboard Admin' : 'Ruang kerja';
                                 <?php endforeach; ?>
                             <?php else: ?>
                                 <tr id="noDataRow">
-                                    <td colspan="<?= can('inventory.manage') ? '7' : '6' ?>" style="text-align: center; padding: 3rem 1.5rem;">
-                                        <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">📦</div>
-                                        <div style="font-weight: 700; color: var(--text-main); margin-bottom: 0.25rem;">Belum ada data inventaris</div>
-                                        <div class="text-muted" style="font-size: 0.875rem;">Silakan gunakan form di samping untuk mulai mencatat aset cabang.</div>
+                                    <td colspan="<?= can('inventory.manage') ? '7' : '6' ?>" style="text-align: center; padding: 3.5rem 1.5rem;">
+                                        <div style="width: 54px; height: 54px; border-radius: 14px; background: #e0f2fe; color: #0284c7; display: inline-flex; align-items: center; justify-content: center; font-size: 1.6rem; margin-bottom: 0.85rem;">
+                                            <i class="bi bi-boxes"></i>
+                                        </div>
+                                        <div style="font-weight: 800; color: #0f172a; font-size: 1.05rem; margin-bottom: 0.35rem;">Belum Ada Data Inventaris</div>
+                                        <div style="font-size: 0.85rem; color: #64748b; max-width: 420px; margin: 0 auto 1.25rem;">
+                                            Gunakan formulir di samping untuk mulai mencatat fasilitas dan aset fisik milik GMKI Cabang Padang.
+                                        </div>
+                                        <?php if (can('inventory.manage')): ?>
+                                            <button type="button" onclick="fokusTambahInventaris()" class="btn btn-primary btn-sm" style="font-weight: 700; border-radius: 9px; padding: 0.5rem 1rem;">
+                                                <i class="bi bi-plus-circle-fill"></i> Tambah Barang Sekarang
+                                            </button>
+                                        <?php endif; ?>
                                     </td>
                                 </tr>
                             <?php endif; ?>
                             <tr id="noMatchRow" style="display: none;">
-                                <td colspan="<?= can('inventory.manage') ? '7' : '6' ?>" style="text-align: center; padding: 2rem 1.5rem;">
-                                    <div class="text-muted" style="font-size: 0.9rem;">Tidak ditemukan inventaris yang sesuai dengan pencarian.</div>
+                                <td colspan="<?= can('inventory.manage') ? '7' : '6' ?>" style="text-align: center; padding: 2.5rem 1.5rem;">
+                                    <div style="width: 44px; height: 44px; border-radius: 12px; background: #f1f5f9; color: #64748b; display: inline-flex; align-items: center; justify-content: center; font-size: 1.3rem; margin-bottom: 0.65rem;">
+                                        <i class="bi bi-search"></i>
+                                    </div>
+                                    <div style="font-weight: 700; color: #1e293b; font-size: 0.95rem; margin-bottom: 0.25rem;">Tidak Ditemukan Hasil yang Cocok</div>
+                                    <div style="font-size: 0.82rem; color: #64748b; margin-bottom: 0.85rem;">Coba periksa kembali kata kunci pencarian atau reset filter kategori.</div>
+                                    <button type="button" onclick="resetInventoryFilters()" class="btn btn-outline btn-sm" style="font-size: 0.78rem; font-weight: 700; border-radius: 8px;">
+                                        <i class="bi bi-arrow-counterclockwise"></i> Reset Semua Filter
+                                    </button>
                                 </td>
                             </tr>
                         </tbody>
@@ -297,7 +536,7 @@ $backLabel = $role === 'admin' ? 'Dashboard Admin' : 'Ruang kerja';
                 </div>
 
                 <?php if (!empty($pagination)): ?>
-                    <div style="padding: 0.75rem 1rem; border-top: 1px solid var(--border-color);">
+                    <div style="padding: 0.85rem 1.25rem; border-top: 1px solid #e2e8f0; background: #fafafa;">
                         <?= partial('partials.pagination', $pagination) ?>
                     </div>
                 <?php endif; ?>
@@ -305,15 +544,75 @@ $backLabel = $role === 'admin' ? 'Dashboard Admin' : 'Ruang kerja';
         </div>
     </div>
 
-    <!-- Script Interaktif untuk Pencarian, Filter, dan Edit Form -->
+    <!-- Script Interaktif untuk Pencarian, Filter Cepat, Chip, dan Form Edit -->
     <script>
+    let activeCategoryFilter = '';
+
+    function fokusTambahInventaris() {
+        const formCard = document.getElementById('formInventoryCard');
+        if (formCard) {
+            formCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            formCard.classList.remove('inv-form-glow');
+            void formCard.offsetWidth; // trigger reflow
+            formCard.classList.add('inv-form-glow');
+            setTimeout(() => {
+                const nameInput = document.getElementById('inv_name');
+                if (nameInput) nameInput.focus();
+            }, 300);
+        }
+    }
+
+    function pilihKategoriChip(val, chipEl) {
+        document.querySelectorAll('.inv-cat-chip').forEach(el => el.classList.remove('active'));
+        if (chipEl) chipEl.classList.add('active');
+
+        document.getElementById('inv_category').value = val;
+        const selectEl = document.getElementById('inv_category_select');
+        let matched = false;
+        for (let i = 0; i < selectEl.options.length; i++) {
+            if (selectEl.options[i].value === val) {
+                selectEl.selectedIndex = i;
+                matched = true;
+                break;
+            }
+        }
+        if (!matched) {
+            selectEl.value = 'Lainnya';
+        }
+    }
+
     function pilihKategoriInv(val) {
+        document.querySelectorAll('.inv-cat-chip').forEach(el => el.classList.remove('active'));
         if (!val || val === 'Lainnya') {
             document.getElementById('inv_category').value = '';
             document.getElementById('inv_category').focus();
         } else {
             document.getElementById('inv_category').value = val;
+            // Highlight chip if matches
+            document.querySelectorAll('.inv-cat-chip').forEach(el => {
+                if (el.textContent.includes(val) || val.includes(el.textContent.trim())) {
+                    el.classList.add('active');
+                }
+            });
         }
+    }
+
+    function filterByCategory(cat, btnEl) {
+        activeCategoryFilter = cat.toLowerCase().trim();
+        document.querySelectorAll('.quick-pill').forEach(el => el.classList.remove('active'));
+        if (btnEl) btnEl.classList.add('active');
+        filterInventoryTable();
+    }
+
+    function resetInventoryFilters() {
+        document.getElementById('invSearchInput').value = '';
+        document.getElementById('invConditionFilter').value = '';
+        activeCategoryFilter = '';
+        document.querySelectorAll('.quick-pill').forEach((el, idx) => {
+            if (idx === 0) el.classList.add('active');
+            else el.classList.remove('active');
+        });
+        filterInventoryTable();
     }
 
     function editInvFromRow(btn) {
@@ -338,6 +637,7 @@ $backLabel = $role === 'admin' ? 'Dashboard Admin' : 'Ruang kerja';
         document.getElementById('inv_condition').value = condition;
         document.getElementById('inv_notes').value = notes;
 
+        // Select and Chip sync
         const catSelect = document.getElementById('inv_category_select');
         let matched = false;
         for (let i = 0; i < catSelect.options.length; i++) {
@@ -351,20 +651,22 @@ $backLabel = $role === 'admin' ? 'Dashboard Admin' : 'Ruang kerja';
             catSelect.value = 'Lainnya';
         }
 
-        document.getElementById('invFormTitle').textContent = 'Edit Inventaris';
-        document.getElementById('invFormSubtitle').textContent = 'Memperbarui data: ' + name;
+        document.querySelectorAll('.inv-cat-chip').forEach(el => {
+            if (category && (el.textContent.includes(category) || category.includes(el.textContent.trim()))) {
+                el.classList.add('active');
+            } else {
+                el.classList.remove('active');
+            }
+        });
+
+        document.getElementById('invFormTitle').textContent = 'Edit Data Inventaris';
+        document.getElementById('invFormSubtitle').textContent = 'Memperbarui: ' + name;
         document.getElementById('invModeBadge').textContent = 'Mode Edit #' + id;
         document.getElementById('invModeBadge').className = 'badge badge-warning';
-        document.getElementById('btnSubmitInv').innerHTML = '💾 Simpan Perubahan';
+        document.getElementById('btnSubmitInv').innerHTML = '<i class="bi bi-check2-circle"></i> <span>Simpan Perubahan</span>';
         document.getElementById('btnCancelEditInv').style.display = 'inline-flex';
 
-        const formCard = document.getElementById('formInventoryCard');
-        if (formCard) {
-            formCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            formCard.style.outline = '2px solid #0284c7';
-            setTimeout(() => { formCard.style.outline = 'none'; }, 1500);
-        }
-        document.getElementById('inv_name').focus();
+        fokusTambahInventaris();
     }
 
     function batalEditInv() {
@@ -373,12 +675,13 @@ $backLabel = $role === 'admin' ? 'Dashboard Admin' : 'Ruang kerja';
         document.getElementById('inv_quantity').value = '1';
         document.getElementById('inv_unit').value = 'unit';
         document.getElementById('inv_condition').value = 'Baik';
+        document.querySelectorAll('.inv-cat-chip').forEach(el => el.classList.remove('active'));
 
         document.getElementById('invFormTitle').textContent = 'Tambah Inventaris';
         document.getElementById('invFormSubtitle').textContent = 'Catat aset & barang milik cabang';
         document.getElementById('invModeBadge').textContent = 'Mode Baru';
         document.getElementById('invModeBadge').className = 'badge badge-primary';
-        document.getElementById('btnSubmitInv').innerHTML = '💾 Simpan Inventaris';
+        document.getElementById('btnSubmitInv').innerHTML = '<i class="bi bi-save2-fill"></i> <span>Simpan Inventaris</span>';
         document.getElementById('btnCancelEditInv').style.display = 'none';
     }
 
@@ -397,8 +700,9 @@ $backLabel = $role === 'admin' ? 'Dashboard Admin' : 'Ruang kerja';
 
             const matchesQuery = !query || name.includes(query) || cat.includes(query) || loc.includes(query) || notes.includes(query);
             const matchesCond = !conditionFilter || cond === conditionFilter;
+            const matchesCat = !activeCategoryFilter || cat.includes(activeCategoryFilter);
 
-            if (matchesQuery && matchesCond) {
+            if (matchesQuery && matchesCond && matchesCat) {
                 row.style.display = '';
                 visibleCount++;
             } else {
@@ -412,6 +716,7 @@ $backLabel = $role === 'admin' ? 'Dashboard Admin' : 'Ruang kerja';
         }
     }
     </script>
+
 
 <?php elseif ($section === 'archive'): ?>
     <?php

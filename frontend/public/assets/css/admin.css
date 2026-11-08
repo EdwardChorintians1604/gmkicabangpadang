@@ -4297,5 +4297,37 @@ body.sidebar-open {
     background: #fbfcfe;
 }
 
+/* User Profile Badge for Officers in Header */
+.user-profile-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.35rem 0.75rem;
+    border-radius: 9999px;
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    font-size: 0.875rem;
+}
+
+.user-avatar-sm {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: #cbd5e1;
+}
+
+@media (max-width: 768px) {
+    .user-profile-badge {
+        padding: 0 !important;
+        background: transparent !important;
+        border: none !important;
+    }
+    .user-profile-badge .user-meta-details {
+        display: none !important;
+    }
+}
+
+
 
 
