@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="<?= asset('vendor/animate.min.css') ?>">
     <link rel="stylesheet" href="<?= asset('vendor/leaflet/leaflet.css') ?>">
     <link rel="stylesheet" href="<?= asset('css/app.css') ?>?v=5">
-    <link rel="stylesheet" href="<?= asset('css/admin.css') ?>?v=18">
+    <link rel="stylesheet" href="<?= asset('css/admin.css') ?>?v=19">
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 

@@ -13,7 +13,7 @@ $backLabel = $role === 'admin' ? 'Dashboard Admin' : 'Dashboard Sekcab';
     <!-- 1. Executive Hero Banner Direktori Berkas Sekcab -->
     <div class="exec-role-banner banner-sekcab">
         <div class="exec-banner-inner">
-            <div>
+            <div class="exec-banner-content">
                 <div class="exec-banner-eyebrow">
                     <i class="bi bi-folder2-open"></i>
                     <span>Brankas Dokumen &amp; Repositori Persuratan Cabang</span>

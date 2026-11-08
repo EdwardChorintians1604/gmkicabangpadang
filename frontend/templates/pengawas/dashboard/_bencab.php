@@ -13,7 +13,7 @@ $totalFinanceDocs = (int) ($counts['finance'] ?? 0);
     <!-- 1. Banner Akuntabilitas Keuangan & Integritas Aset Bencab -->
     <div class="exec-role-banner banner-bencab">
         <div class="exec-banner-inner">
-            <div>
+            <div class="exec-banner-content">
                 <div class="exec-banner-eyebrow">
                     <i class="bi bi-wallet2" style="color: #6ee7b7;"></i>
                     <span>AKUNTABILITAS KEUANGAN &amp; INTEGRITAS ASET BENCAB</span>

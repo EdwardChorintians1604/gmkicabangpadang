@@ -1,4 +1,4 @@
-<?php $isMaperca = ($kelompok ?? 'anggota') === 'maper'; ?>
+<?php $isMaperca = in_array($kelompok ?? 'anggota', ['maperca', 'maper'], true); ?>
 <div class="flex justify-between items-center" style="margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
     <div>
         <h1 style="font-size: 1.75rem; font-weight: 800; color: var(--primary);">
@@ -38,6 +38,57 @@
         <?php endif; ?>
     </div>
 </div>
+
+<?php if ($isMaperca): ?>
+    <?php 
+    $settingService = new \App\Services\SettingService();
+    $isMapercaOpen = $settingService->isMapercaRegistrationOpen();
+    ?>
+    <div class="card" style="margin-bottom: 1.5rem; border-left: 5px solid <?= $isMapercaOpen ? '#10b981' : '#f59e0b' ?>; background: <?= $isMapercaOpen ? 'linear-gradient(to right, #ecfdf5, #ffffff)' : 'linear-gradient(to right, #fffbeb, #ffffff)' ?>; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+        <div class="card-body" style="padding: 1.25rem 1.5rem;">
+            <div class="flex items-center justify-between" style="flex-wrap: wrap; gap: 1rem;">
+                <div class="flex items-start gap-3">
+                    <div style="width: 44px; height: 44px; border-radius: 10px; background: <?= $isMapercaOpen ? '#d1fae5' : '#fef3c7' ?>; color: <?= $isMapercaOpen ? '#059669' : '#d97706' ?>; display: flex; align-items: center; justify-content: center; font-size: 1.35rem; shrink-0;">
+                        <i class="bi <?= $isMapercaOpen ? 'bi-door-open-fill' : 'bi-door-closed-fill' ?>"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2" style="margin-bottom: 2px;">
+                            <strong style="font-size: 1rem; color: #0f172a;">Izin Pendaftaran Calon Anggota (Maperca)</strong>
+                            <span class="badge <?= $isMapercaOpen ? 'badge-success' : 'badge-warning' ?>" style="font-size: 0.75rem; padding: 0.25rem 0.65rem;">
+                                <?= $isMapercaOpen ? '● DIBUKA (Publik Dapat Mendaftar)' : '● DITUTUP (Terkunci)' ?>
+                            </span>
+                        </div>
+                        <p class="text-muted" style="font-size: 0.8rem; margin: 0; max-width: 650px;">
+                            <?= $isMapercaOpen 
+                                ? 'Mahasiswa baru dapat mendaftar secara mandiri melalui website publik (Jalur Kader Baru). Pendaftaran civitas & anggota sah tetap selalu dibuka.' 
+                                : 'Pendaftaran Maperca di website publik sedang dinonaktifkan. Pengunjung tidak bisa mendaftar sebagai kader baru. (Catatan: Pendaftaran Civitas & Anggota Sah tetap dibuka).' ?>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-2">
+                    <?php if ($isMapercaOpen): ?>
+                        <form action="/admin/maperca/toggle-izin" method="POST" style="margin: 0;">
+                            <?= csrf_field() ?>
+                            <input type="hidden" name="status" value="0">
+                            <button type="submit" class="btn btn-sm" style="background: #dc2626; color: white; border: none; font-weight: 700; padding: 0.45rem 0.9rem;" onclick="return confirm('Apakah Anda yakin ingin MENUTUP izin pendaftaran Maperca di portal website? Calon anggota baru tidak akan dapat mengisi formulir.')">
+                                <i class="bi bi-lock-fill"></i> Tutup Izin Pendaftaran
+                            </button>
+                        </form>
+                    <?php else: ?>
+                        <form action="/admin/maperca/toggle-izin" method="POST" style="margin: 0;">
+                            <?= csrf_field() ?>
+                            <input type="hidden" name="status" value="1">
+                            <button type="submit" class="btn btn-sm btn-success" style="font-weight: 700; padding: 0.45rem 0.9rem;" onclick="return confirm('Buka kembali izin pendaftaran Maperca di website? Calon anggota baru akan langsung dapat mendaftar.')">
+                                <i class="bi bi-unlock-fill"></i> Buka Izin Pendaftaran
+                            </button>
+                        </form>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php endif; ?>
 
 <div class="card" style="margin-bottom: 1.5rem; padding: 1.25rem;">
     <form action="<?= e($basePath) ?>" method="GET"

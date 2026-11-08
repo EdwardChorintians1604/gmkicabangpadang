@@ -52,6 +52,7 @@ $router->get('/admin/maperca/impor', 'Admin\MapercaController@imporForm', ['auth
 $router->post('/admin/maperca/impor', 'Admin\MapercaController@imporProcess', ['auth', 'role:admin,operator', 'csrf']);
 $router->get('/admin/maperca/template', 'Admin\MapercaController@downloadTemplate', ['auth', 'role:admin,operator']);
 $router->get('/admin/maperca/export', 'Admin\MapercaController@export', ['auth', 'role:admin,operator,sekcab,ketcab']);
+$router->post('/admin/maperca/toggle-izin', 'Admin\MapercaController@toggleIzin', ['auth', 'role:admin,operator,sekcab,ketcab', 'csrf']);
 $router->get('/admin/maperca/{id}', 'Admin\MapercaController@detail', ['auth', 'role:admin,operator,sekcab,ketcab']);
 $router->get('/admin/maperca/{id}/edit', 'Admin\MapercaController@edit', ['auth', 'role:admin,operator']);
 $router->post('/admin/maperca/{id}', 'Admin\MapercaController@update', ['auth', 'role:admin,operator', 'csrf']);

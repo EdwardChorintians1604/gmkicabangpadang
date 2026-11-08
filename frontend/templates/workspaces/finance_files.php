@@ -15,7 +15,7 @@ $backLabel = $role === 'admin' ? 'Dashboard Admin' : 'Dashboard Bencab';
     <!-- 1. Executive Hero Banner Direktori Berkas Keuangan Bencab / Admin -->
     <div class="exec-role-banner banner-bencab">
         <div class="exec-banner-inner">
-            <div>
+            <div class="exec-banner-content">
                 <div class="exec-banner-eyebrow">
                     <i class="bi bi-wallet2"></i>
                     <span>Brankas Pembukuan &amp; Repositori Finansial Cabang</span>
@@ -189,9 +189,9 @@ $backLabel = $role === 'admin' ? 'Dashboard Admin' : 'Dashboard Bencab';
     <div class="ws-card search-console-card" style="margin-bottom: 1.5rem;">
         <div class="ws-card-body">
             <form method="get" action="<?= e($basePath) ?>" id="fileSearchForm" style="display: flex; flex-direction: column; gap: 1rem;">
-                <div class="ws-search-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+                <div class="ws-search-grid ws-finance-search-grid">
                     <!-- Search Input Box -->
-                    <div style="grid-column: span 2;">
+                    <div class="ws-search-main-col">
                         <label for="searchQuery" style="display: block; font-size: 0.78rem; font-weight: 800; color: #334155; margin-bottom: 0.35rem; text-transform: uppercase; letter-spacing: 0.03em;">
                             Cari Berkas Laporan Keuangan
                         </label>

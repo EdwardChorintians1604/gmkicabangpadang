@@ -24,7 +24,7 @@ $pctSenior = $totalCivitas > 0 ? round(($seniorCivitas / $totalCivitas) * 100) :
     <!-- 1. Banner Amanat & Komando Strategis Ketua Cabang -->
     <div class="exec-role-banner banner-ketcab">
         <div class="exec-banner-inner">
-            <div>
+            <div class="exec-banner-content">
                 <div class="exec-banner-eyebrow">
                     <i class="bi bi-award-fill" style="color: #fbbf24;"></i>
                     <span>AMANAT &amp; KOMANDO STRATEGIS KETUA CABANG</span>

@@ -27,7 +27,7 @@ $seniorCivitas = (int) ($summary['senior_civitas'] ?? 0);
     <!-- 1. Banner Tata Usaha & Kesekretariatan Sekcab -->
     <div class="exec-role-banner banner-sekcab">
         <div class="exec-banner-inner">
-            <div>
+            <div class="exec-banner-content">
                 <div class="exec-banner-eyebrow">
                     <i class="bi bi-journal-bookmark-fill" style="color: #7dd3fc;"></i>
                     <span>PUSAT TATA USAHA &amp; KESEKRETARIATAN SEKCAB</span>

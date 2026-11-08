@@ -42,6 +42,10 @@ $router->post('/register_for_civitas/maperca', 'PublicController@submitRegisterM
 $router->get('/register_for_civitas/member', 'PublicController@registerMember');
 $router->get('/register_as_member', 'PublicController@registerMember');
 $router->post('/register_for_civitas/member', 'PublicController@submitRegisterMember', ['csrf']);
+$router->get('/register_for_civitas/bukti/{nim}', 'PublicController@buktiRegistrasi');
+$router->get('/register_as_member/bukti/{nim}', 'PublicController@buktiRegistrasi');
+$router->get('/register_for_civitas/foto/{nim}', 'PublicController@streamCivitasFoto');
+$router->get('/register_as_member/foto/{nim}', 'PublicController@streamCivitasFoto');
 
 // Penanganan Berkas Privat Terotentikasi (Foto Anggota & KTA)
 $router->get('/private/foto-anggota/{filename}', 'FileController@streamFoto', ['auth']);

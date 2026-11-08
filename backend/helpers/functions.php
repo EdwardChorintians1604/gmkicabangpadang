@@ -339,3 +339,17 @@ if (!function_exists('dd')) {
         exit;
     }
 }
+
+if (!function_exists('setting')) {
+    /**
+     * Dapatkan nilai pengaturan dinamis sistem
+     */
+    function setting(string $key, mixed $default = null): mixed
+    {
+        static $service = null;
+        if ($service === null) {
+            $service = new \App\Services\SettingService();
+        }
+        return $service->get($key, $default);
+    }
+}

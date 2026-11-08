@@ -1224,14 +1224,14 @@ body.sidebar-open {
     display: flex;
     flex-direction: column;
     gap: 1.25rem;
+    width: 100%;
 }
 
-@media (min-width: 1024px) {
-    .exec-banner-inner {
-        flex-direction: row;
-        align-items: center;
-        justify-content: space-between;
-    }
+.exec-banner-content,
+.exec-banner-inner > div:first-child {
+    flex: 1 1 auto;
+    min-width: 0;
+    max-width: 100%;
 }
 
 .exec-banner-eyebrow {
@@ -1252,19 +1252,21 @@ body.sidebar-open {
 }
 
 .exec-banner-title {
-    font-size: clamp(1.35rem, 2.2vw, 1.75rem);
+    font-size: clamp(1.22rem, 2vw, 1.7rem);
     font-weight: 800;
     color: #ffffff !important;
     margin: 0 0 0.45rem 0;
-    line-height: 1.25;
+    line-height: 1.3;
     letter-spacing: -0.02em;
+    word-break: normal;
+    overflow-wrap: break-word;
 }
 
 .exec-banner-desc {
     color: rgba(241, 245, 249, 0.92);
-    font-size: 0.88rem;
-    line-height: 1.6;
-    max-width: 680px;
+    font-size: clamp(0.82rem, 1vw, 0.88rem);
+    line-height: 1.55;
+    max-width: 720px;
     margin: 0;
 }
 
@@ -1298,7 +1300,30 @@ body.sidebar-open {
     display: flex;
     flex-wrap: wrap;
     gap: 0.65rem;
-    flex-shrink: 0;
+    align-items: center;
+}
+
+/* Hanya beralih ke layout 2 kolom berdampingan pada layar sangat lebar (>= 1280px)
+   karena di desktop 1024px-1200px terdapat sidebar 260px sehingga ruang konten hanya ~700px */
+@media (min-width: 1280px) {
+    .exec-banner-inner {
+        flex-direction: row;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 2rem;
+    }
+
+    .exec-banner-content,
+    .exec-banner-inner > div:first-child {
+        flex: 1 1 58%;
+        max-width: 65%;
+    }
+
+    .exec-banner-actions {
+        flex: 0 1 auto;
+        max-width: 42%;
+        justify-content: flex-end;
+    }
 }
 
 .exec-btn {
@@ -1372,7 +1397,13 @@ body.sidebar-open {
     width: 100%;
 }
 
-@media (min-width: 880px) {
+@media (min-width: 640px) {
+    .exec-grid-3 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (min-width: 1140px) {
     .exec-grid-3 {
         grid-template-columns: repeat(3, minmax(0, 1fr));
     }
@@ -1385,13 +1416,13 @@ body.sidebar-open {
     width: 100%;
 }
 
-@media (min-width: 520px) {
+@media (min-width: 540px) {
     .exec-grid-4 {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
 
-@media (min-width: 980px) {
+@media (min-width: 1140px) {
     .exec-grid-4 {
         grid-template-columns: repeat(4, minmax(0, 1fr));
     }
@@ -1693,17 +1724,36 @@ body.sidebar-open {
 
 @media (max-width: 640px) {
     .exec-role-banner {
-        padding: 1.25rem 1.1rem;
+        padding: 1.25rem 1rem;
         border-radius: 16px;
+    }
+
+    .exec-banner-eyebrow {
+        font-size: 0.68rem;
+        padding: 0.25rem 0.65rem;
+    }
+
+    .exec-banner-title {
+        font-size: 1.25rem;
+    }
+
+    .exec-banner-desc {
+        font-size: 0.82rem;
+        line-height: 1.5;
     }
 
     .exec-banner-actions {
         width: 100%;
-        flex-direction: column;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
     }
 
     .exec-btn {
         width: 100%;
+        justify-content: center;
+        padding: 0.55rem 1rem;
+        font-size: 0.8rem;
     }
 
     .exec-section-header,
@@ -1805,13 +1855,13 @@ body.sidebar-open {
     width: 100%;
 }
 
-@media (min-width: 520px) {
+@media (min-width: 580px) {
     .ws-kpi-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
 
-@media (min-width: 980px) {
+@media (min-width: 1180px) {
     .ws-kpi-grid {
         grid-template-columns: repeat(4, minmax(0, 1fr));
     }
@@ -2122,6 +2172,34 @@ body.sidebar-open {
 @media (min-width: 1024px) {
     .ws-search-grid {
         grid-template-columns: 2.2fr 1.2fr 1.2fr 1fr;
+    }
+}
+
+/* Khusus Search Grid Direktori Berkas Keuangan Bencab (5 Kolom Fleksibel) */
+.ws-finance-search-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.85rem;
+    align-items: end;
+}
+
+@media (min-width: 640px) {
+    .ws-finance-search-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .ws-search-main-col {
+        grid-column: span 2;
+    }
+}
+
+@media (min-width: 1100px) {
+    .ws-finance-search-grid {
+        grid-template-columns: 2fr 1.1fr 1.1fr 1.1fr auto;
+    }
+
+    .ws-search-main-col {
+        grid-column: span 1;
     }
 }
 

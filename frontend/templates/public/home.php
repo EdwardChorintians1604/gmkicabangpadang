@@ -90,64 +90,32 @@
                                 Portal Registrasi Mandiri
                             </h2>
                             <p class="text-xs sm:text-sm text-slate-300 mb-5 leading-relaxed">
-                                Pilih jalur pendaftaran resmi sesuai status keanggotaan Anda di GMKI Cabang Padang:
+                                Silahkan masuk untuk pendaftaran berikut ini
                             </p>
 
-                            <!-- Dual Choices -->
-                            <div class="space-y-3.5">
-                                <!-- Option 1: Calon Anggota (Maperca) -->
-                                <a href="/register_for_civitas/maperca"
-                                    class="group/item flex items-center gap-3.5 p-3.5 sm:p-4 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/15 hover:border-amber-400/50 transition-all duration-300 hover:shadow-lg hover:shadow-amber-500/10 no-underline">
-                                    <div
-                                        class="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-500/25 to-amber-600/35 border border-amber-400/40 flex items-center justify-center flex-shrink-0 text-amber-300 group-hover/item:scale-105 group-hover/item:bg-amber-500 group-hover/item:text-slate-950 transition-all duration-300 shadow-sm">
-                                        <i class="bi bi-mortarboard-fill text-2xl"></i>
-                                    </div>
-                                    <div class="flex-grow min-w-0">
-                                        <div class="flex flex-wrap items-center gap-2 mb-0.5">
-                                            <h3
-                                                class="text-sm sm:text-base font-bold text-white group-hover/item:text-amber-300 transition-colors">
-                                                Calon Anggota (Maperca)
-                                            </h3>
-                                            <span
-                                                class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-400/20 text-amber-300 border border-amber-400/30">Kader
-                                                Baru</span>
+                            <!-- Dual Choices / Tombol Pendaftaran Utama -->
+                            <div class="space-y-3">
+                                <a href="/register_for_civitas"
+                                    class="w-full py-3.5 px-4 sm:px-5 bg-gradient-to-r from-amber-500 via-amber-600 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white font-bold rounded-2xl shadow-lg shadow-amber-950/30 hover:shadow-amber-500/25 transition-all duration-300 flex items-center justify-between group no-underline text-decoration-none transform hover:-translate-y-0.5">
+                                    <div class="flex items-center gap-3 min-w-0">
+                                        <div
+                                            class="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center text-white text-lg flex-shrink-0 shadow-inner">
+                                            <i class="bi bi-person-plus-fill"></i>
                                         </div>
-                                        <p class="text-xs text-slate-300 line-clamp-1 leading-relaxed">
-                                            Untuk mahasiswa Kristen baru yang ingin mengikuti Masa Perkenalan.
-                                        </p>
+                                        <div class="text-left min-w-0">
+                                            <span
+                                                class="block text-sm sm:text-base font-extrabold text-white truncate">Daftarkan
+                                                Diri Anda di Sini</span>
+                                            <span class="block text-[11px] font-normal text-amber-100 truncate">Anggota
+                                                Civitas Resmi atau Calon Anggota (Maper)</span>
+                                        </div>
                                     </div>
                                     <div
-                                        class="text-slate-400 group-hover/item:text-amber-300 group-hover/item:translate-x-1 transition-all flex-shrink-0 ml-1">
-                                        <i class="bi bi-chevron-right text-base"></i>
+                                        class="w-8 h-8 rounded-lg bg-white/15 flex items-center justify-center flex-shrink-0 text-white group-hover:translate-x-1 transition-transform ml-2">
+                                        <i class="bi bi-arrow-right text-base"></i>
                                     </div>
                                 </a>
 
-                                <!-- Option 2: Civitas & Anggota Terdaftar -->
-                                <a href="/register_for_civitas/member"
-                                    class="group/item flex items-center gap-3.5 p-3.5 sm:p-4 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/15 hover:border-sky-400/50 transition-all duration-300 hover:shadow-lg hover:shadow-sky-500/10 no-underline">
-                                    <div
-                                        class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500/25 to-indigo-600/35 border border-sky-400/40 flex items-center justify-center flex-shrink-0 text-sky-300 group-hover/item:scale-105 group-hover/item:bg-sky-500 group-hover/item:text-slate-950 transition-all duration-300 shadow-sm">
-                                        <i class="bi bi-person-vcard-fill text-2xl"></i>
-                                    </div>
-                                    <div class="flex-grow min-w-0">
-                                        <div class="flex flex-wrap items-center gap-2 mb-0.5">
-                                            <h3
-                                                class="text-sm sm:text-base font-bold text-white group-hover/item:text-sky-300 transition-colors">
-                                                Civitas &amp; Anggota Cabang
-                                            </h3>
-                                            <span
-                                                class="px-2 py-0.5 rounded text-[10px] font-bold bg-sky-400/20 text-sky-300 border border-sky-400/30">Anggota
-                                                Sah</span>
-                                        </div>
-                                        <p class="text-xs text-slate-300 line-clamp-1 leading-relaxed">
-                                            Pemutakhiran data civitas, verifikasi KTA &amp; pangkalan data cabang.
-                                        </p>
-                                    </div>
-                                    <div
-                                        class="text-slate-400 group-hover/item:text-sky-300 group-hover/item:translate-x-1 transition-all flex-shrink-0 ml-1">
-                                        <i class="bi bi-chevron-right text-base"></i>
-                                    </div>
-                                </a>
                             </div>
 
                             <!-- Card Footer -->
@@ -157,13 +125,17 @@
                                     <i class="bi bi-shield-check text-emerald-400 text-sm"></i>
                                     Basis Data BPC Resmi
                                 </span>
-                                <a href="/login"
+                                <span
                                     class="text-amber-300 hover:text-amber-200 font-semibold inline-flex items-center gap-1 transition-colors no-underline">
-                                    <span>Sudah berakun? Masuk</span>
-                                    <i class="bi bi-arrow-right"></i>
-                                </a>
+                                    <span>Teruji dengan baik</span>
+                                </span>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </section>
 
 <!-- Stats Strip -->
